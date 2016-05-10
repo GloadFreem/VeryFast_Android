@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="165dp"
+    android:background="@android:color/white"
+    android:minHeight="165dp">
+
+    <com.jinzht.pro1.view.CircleImageView
+        android:id="@+id/item_project_img"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="15dp"
+        android:background="@mipmap/favicon_test" />
+
+    <TextView
+        android:id="@+id/item_project_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@id/item_project_img"
+        android:maxWidth="160dp"
+        android:singleLine="true"
+        android:text="逸景营地"
+        android:textColor="@color/bg_text"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/item_project_addr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="19dp"
+        android:layout_toRightOf="@id/item_project_title"
+        android:singleLine="true"
+        android:text="陕西|西安"
+        android:textColor="#474747"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/item_project_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:background="@mipmap/tag_dailuyan" />
+
+    <TextView
+        android:id="@+id/item_project_compname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_project_title"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/item_project_img"
+        android:maxWidth="230dp"
+        android:singleLine="true"
+        android:text="逸景营地投资有限公司"
+        android:textColor="#747474"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:id="@+id/item_line_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_project_compname"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="4dp"
+        android:layout_toRightOf="@id/item_project_img"
+        android:background="@mipmap/line_point" />
+
+    <LinearLayout
+        android:id="@+id/item_project_fields"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_line_point"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/item_project_img"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_item_project_field"
+            android:paddingBottom="1.5dp"
+            android:paddingLeft="2.5dp"
+            android:paddingRight="2.5dp"
+            android:paddingTop="1.5dp"
+            android:text="体育"
+            android:textColor="#00a0d9"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4.5dp"
+            android:background="@drawable/bg_item_project_field"
+            android:paddingBottom="1.5dp"
+            android:paddingLeft="2.5dp"
+            android:paddingRight="2.5dp"
+            android:paddingTop="1.5dp"
+            android:text="旅游"
+            android:textColor="#00a0d9"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4.5dp"
+            android:background="@drawable/bg_item_project_field"
+            android:paddingBottom="1.5dp"
+            android:paddingLeft="2.5dp"
+            android:paddingRight="2.5dp"
+            android:paddingTop="1.5dp"
+            android:text="电影"
+            android:textColor="#00a0d9"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_project_fields"
+        android:layout_marginTop="12dp"
+        android:background="@mipmap/line_item" />
+
+    <LinearLayout
+        android:id="@+id/item_bottom_data_roadshwo"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="188"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1024"
+                android:textColor="@color/bg_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="人气指数"
+                android:textColor="@color/bg_text"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="188"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16"
+                android:textColor="@color/bg_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="剩余时间"
+                android:textColor="@color/bg_text"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="344"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1000万"
+                android:textColor="@color/bg_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="融资额度"
+                android:textColor="@color/bg_text"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

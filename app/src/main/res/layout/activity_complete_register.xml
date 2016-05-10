@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_login_indistinct"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="65dp"
+        android:text="@string/congratulation_register_succeed"
+        android:textColor="@android:color/white"
+        android:textSize="21sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/get_invite_code"
+        android:textColor="@android:color/white"
+        android:textSize="19sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@mipmap/broken_line" />
+
+    <TextView
+        android:id="@+id/complete_register_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:shadowColor="#50000000"
+        android:shadowDx="10"
+        android:shadowDy="10"
+        android:shadowRadius="25"
+        android:text="JZT123456 "
+        android:textColor="@color/custom_orange"
+        android:textSize="40sp" />
+
+    <ImageButton
+        android:id="@+id/complete_register_btn_goto_identification"
+        android:layout_width="250dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="80dp"
+        android:background="@mipmap/btn_goto_identification" />
+
+    <Button
+        android:id="@+id/complete_register_btn_goto_try"
+        android:layout_width="250dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="33dp"
+        android:background="@drawable/bg_button_transparent"
+        android:text="@string/goto_try"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="45dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="温馨提示："
+            android:textColor="@android:color/white"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1.只有完成实名认证才可以参与平台股权投融资\n2.指环码可以分享给好友，好友注册时填写您的指环码，您将得到金指投平台“金条”10根。使用规则参见《金条使用协议》"
+            android:textColor="@android:color/white"
+            android:textSize="13sp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_back" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="65dp"
+        android:background="@mipmap/icon_email" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:text="点击复制邮箱地址"
+        android:textColor="@color/bg_text"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/upload_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:clickable="true"
+        android:text="xiangmu@jinzht.com"
+        android:textColor="#319ffd"
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:gravity="center"
+        android:lineSpacingExtra="6sp"
+        android:text="注：请上传您的项目信息、联系方式\n和项目图片至以上邮箱"
+        android:textColor="#f00909"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/upload_tel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:drawablePadding="26dp"
+        android:drawableTop="@mipmap/icon_tel"
+        android:text="400-1234-5896"
+        android:textColor="#319ffd"
+        android:textSize="28sp" />
+</LinearLayout>

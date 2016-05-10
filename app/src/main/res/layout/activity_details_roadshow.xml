@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_3btn" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/details_roadshow_ppt"
+                android:layout_width="match_parent"
+                android:layout_height="270dp" />
+
+            <RadioGroup
+                android:id="@+id/details_rg_tab"
+                android:layout_width="match_parent"
+                android:layout_height="39dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/details_rbtn_detail"
+                    style="@style/RadioBtn_Details_Tab"
+                    android:checked="true"
+                    android:text="详情" />
+
+                <RadioButton
+                    android:id="@+id/details_rbtn_member"
+                    style="@style/RadioBtn_Details_Tab"
+                    android:text="成员" />
+
+                <RadioButton
+                    android:id="@+id/details_rbtn_live"
+                    style="@style/RadioBtn_Details_Tab"
+                    android:text="现场" />
+            </RadioGroup>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/details_vp_module"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

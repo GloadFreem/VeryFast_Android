@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/main_bottom_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@mipmap/bg_bottomtab_padding"
+            android:visibility="invisible" />
+
+        <com.jinzht.pro1.view.NoScrollViewPager
+            android:id="@+id/main_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/main_bottom_padding" />
+
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/main_bottom_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@mipmap/bg_bottomtab"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/main_btn_project"
+            style="@style/RadioBtn_Main_BottomTab"
+            android:checked="true"
+            android:drawableTop="@drawable/selector_bottomtab_project"
+            android:text="@string/project" />
+
+        <RadioButton
+            android:id="@+id/main_btn_investor"
+            style="@style/RadioBtn_Main_BottomTab"
+            android:drawableTop="@drawable/selector_bottomtab_investor"
+            android:text="@string/investor" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/main_btn_me"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/logo" />
+        </RelativeLayout>
+
+        <RadioButton
+            android:id="@+id/main_btn_circle"
+            style="@style/RadioBtn_Main_BottomTab"
+            android:drawableTop="@drawable/selector_bottomtab_circle"
+            android:text="@string/circle" />
+
+        <RadioButton
+            android:id="@+id/main_btn_activity"
+            style="@style/RadioBtn_Main_BottomTab"
+            android:drawableTop="@drawable/selector_bottomtab_activity"
+            android:text="@string/activity" />
+    </RadioGroup>
+</FrameLayout>

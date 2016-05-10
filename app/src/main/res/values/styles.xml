@@ -1,0 +1,178 @@
+<resources>
+
+    <style name="AppTheme" parent="AppTheme.Base" />
+
+    <!--<style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">-->
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/title_bg</item>
+        <item name="colorPrimaryDark">@color/title_bg</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="AppTheme.Bases" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/login_btn</item>
+        <item name="colorPrimaryDark">@color/login_btn</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <style name="DefaultRootLayout">
+        <item name="android:background">@drawable/background_standard_gray</item>
+    </style>
+
+    <style name="DefaultText">
+        <item name="android:text">Default</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="SuperCardToast_Button_RootLayout" parent="DefaultRootLayout">
+        <item name="android:background">@drawable/selector_undobutton</item>
+    </style>
+
+    <style name="SuperActivityToast_Button_RootLayout" parent="DefaultRootLayout">
+        <item name="android:layout_marginBottom">@dimen/buttontoast_hover</item>
+        <item name="android:layout_marginLeft">@dimen/buttontoast_x_padding</item>
+        <item name="android:layout_marginRight">@dimen/buttontoast_x_padding</item>
+    </style>
+
+    <style name="SuperActivityToast_Button_TextView" parent="DefaultText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+    </style>
+
+    <style name="SuperActivityToast_Button_Divider">
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+
+    <style name="SuperActivityToast_Button_Button">
+        <item name="android:background">@drawable/selector_undobutton</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:drawablePadding">8dp</item>
+    </style>
+
+    <style name="SuperActivityToast_Progress_ProgressBar" parent="android:Widget.Holo.ProgressBar">
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+    </style>
+
+    <style name="SuperActivityToast_Progress_TextView" parent="DefaultText">
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="SuperActivityToast_ProgressHorizontal_RootLayout" parent="DefaultRootLayout">
+        <item name="android:minWidth">128dp</item>
+    </style>
+
+    <style name="SuperActivityToast_ProgressHorizontal_TextView" parent="DefaultText">
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="SuperActivityToast_ProgressHorizontal_ProgressBar" parent="android:Widget.Holo.ProgressBar.Horizontal">
+        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:layout_marginRight">12dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="MyWidget.DialogFull" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="RadioBtn_UserType">
+        <item name="android:layout_width">77dp</item>
+        <item name="android:layout_height">77dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/selector_radio_btn_user_type</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TV_Certification">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textColor">#1b1b1b</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ED_Certification">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorHint">#bdbdbd</item>
+    </style>
+
+    <!-- 主页的bottomtab样式-->
+    <style name="RadioBtn_Main_BottomTab">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@null</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawablePadding">2dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#747474</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <!-- 主页项目中路演项目和预选项目的tab样式-->
+    <style name="RadioBtn_Project_Tab">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@null</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/bg_text</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+    <!-- 主页项目中路演项目和预选项目的tab样式-->
+    <style name="RadioBtn_Details_Tab">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@null</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/bg_text</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:drawableBottom">@drawable/selector_viewpagertab_project</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+</resources>

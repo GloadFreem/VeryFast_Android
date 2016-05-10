@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lv_project_preselection"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:divider="@android:color/transparent"
+    android:dividerHeight="9dp"
+    android:fastScrollEnabled="false">
+
+</ListView>

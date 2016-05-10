@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_certification"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_back" />
+
+    <EditText
+        android:id="@+id/wechat_setpwd_ed1"
+        android:layout_width="288dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="19dp"
+        android:background="@drawable/bg_ed_wechat_verify"
+        android:hint="@string/password_limit2"
+        android:inputType="textPassword"
+        android:paddingLeft="15dp"
+        android:textColorHint="#b5b5b5"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/wechat_setpwd_ed2"
+        android:layout_width="288dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_ed_wechat_verify"
+        android:hint="@string/confirm_password"
+        android:inputType="textPassword"
+        android:paddingLeft="15dp"
+        android:textColorHint="#b5b5b5"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/wechat_setpwd_btn_confirm"
+        android:layout_width="288dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="43dp"
+        android:background="@drawable/bg_code_orange"
+        android:text="@string/confirm"
+        android:textColor="@android:color/white"
+        android:textSize="17sp" />
+</LinearLayout>

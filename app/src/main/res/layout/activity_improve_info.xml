@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_login"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <ImageButton
+            android:id="@+id/improve_info_bt_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="21dp"
+            android:background="@mipmap/button_left_arrow" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/improve_info"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/improve_info_bt_contact_service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="21dp"
+            android:background="@mipmap/iconfont_kefu" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="11dp"
+        android:background="@android:color/white" />
+
+    <TextView
+        android:layout_width="325dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/select_user_image"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <com.jinzht.pro1.view.CircleImageView
+        android:id="@+id/improve_info_iv_userimage"
+        android:layout_width="99dp"
+        android:layout_height="99dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        app:civ_border_color="#50ffffff"
+        app:civ_border_width="5dp" />
+
+    <TextView
+        android:id="@+id/improve_info_tv_select_usertype"
+        android:layout_width="325dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="@string/select_user_type"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:visibility="visible" />
+
+    <RadioGroup
+        android:id="@+id/improve_info_rg_select_usertype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/improve_info_rb_xiangmufang"
+            style="@style/RadioBtn_UserType"
+            android:drawableTop="@mipmap/iconfont_xiangmufang"
+            android:text="@string/user_type_xiangmufang" />
+
+        <RadioButton
+            android:id="@+id/improve_info_rb_touziren"
+            style="@style/RadioBtn_UserType"
+            android:drawableTop="@mipmap/iconfont_touziren"
+            android:text="@string/user_type_touziren" />
+
+        <RadioButton
+            android:id="@+id/improve_info_rb_touzijigou"
+            android:layout_width="77dp"
+            android:layout_height="77dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_radio_btn_user_type"
+            android:button="@null"
+            android:drawablePadding="4dp"
+            android:drawableTop="@mipmap/iconfont_touzijigou"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp"
+            android:text="@string/user_type_touzijigou"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/improve_info_rb_zhinangtuan"
+            style="@style/RadioBtn_UserType"
+            android:drawableTop="@mipmap/iconfont_zhinangtuan"
+            android:text="@string/user_type_zhinangtuan" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/improve_info_complete_register"
+        android:layout_width="250dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/bg_button_transparent"
+        android:text="@string/complete_register"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+</LinearLayout>

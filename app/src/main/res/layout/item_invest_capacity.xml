@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@null"
+    android:button="@null"
+    android:drawableLeft="@drawable/selector_invest_capacity_check_btn"
+    android:drawablePadding="11dp"
+    android:lineSpacingExtra="4dp"
+    android:paddingBottom="12dp"
+    android:paddingTop="12dp"
+    android:text="金融资产不低于300万元人民币或最近三年个人年均收入不低于50万元人民币的个人。上述个人除能提供相关财产、收a入证明外，还应当能辨识、判断和承担相应投资风险"
+    android:textColor="#1b1b1b"
+    android:textSize="12sp" />
