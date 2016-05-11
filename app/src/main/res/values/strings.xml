@@ -68,4 +68,7 @@
     <string name="project_preselection">预选项目</string>
     <string name="title_activity_details_roadshow">DetailsRoadshowActivity</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

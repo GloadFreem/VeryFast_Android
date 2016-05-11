@@ -24,4 +24,6 @@
     <color name="bg_main">#e6e6e6</color>
     <!-- 字体颜色-->
     <color name="bg_text">#1b1b1b</color>
+    <!-- 分割线颜色-->
+    <color name="line_partition">#bababa</color>
 </resources>

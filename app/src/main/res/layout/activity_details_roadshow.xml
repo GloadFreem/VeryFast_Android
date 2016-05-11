@@ -12,11 +12,13 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
+            android:id="@+id/details_ll"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <android.support.v4.view.ViewPager
@@ -48,10 +50,10 @@
                     android:text="现场" />
             </RadioGroup>
 
-            <android.support.v4.view.ViewPager
+            <com.jinzht.pro1.view.WrapContentHeightViewPager1
                 android:id="@+id/details_vp_module"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

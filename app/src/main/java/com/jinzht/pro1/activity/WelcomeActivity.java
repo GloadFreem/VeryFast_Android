@@ -19,7 +19,7 @@ public class WelcomeActivity extends FullBaseActivity {
     @Override
     protected void init() {
         SystemClock.sleep(1500);
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, RoadshowDetailsActivity.class);
         startActivity(intent);
     }
 

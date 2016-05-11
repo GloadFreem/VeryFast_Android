@@ -6,6 +6,5 @@
     android:background="@color/bg_main"
     android:divider="@android:color/transparent"
     android:dividerHeight="9dp"
-    android:fastScrollEnabled="false">
-
+    android:scrollbars="none">
 </ListView>
