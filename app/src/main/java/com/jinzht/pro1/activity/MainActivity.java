@@ -49,13 +49,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         mainBtnActivity = (RadioButton) findViewById(R.id.main_btn_activity);// 活动按钮
 
         mainBottomTab.setOnCheckedChangeListener(this);
-//        // 让ViewPager不可左右滑动，但可以响应点击事件
-//        mainViewpager.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return true;
-//            }
-//        });
     }
 
     private void initData() {

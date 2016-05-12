@@ -30,13 +30,15 @@
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/project_rv_teams"
         android:layout_width="match_parent"
         android:layout_height="117dp"
         android:background="@android:color/white" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/project_rv_reports"
         android:layout_width="match_parent"
-        android:layout_height="117dp"
+        android:layout_height="113.5dp"
         android:layout_marginTop="9dp"
         android:background="@android:color/white" />
 </LinearLayout>

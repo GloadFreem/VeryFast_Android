@@ -1,231 +1,217 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/bg_main"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/roadshow_module1"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:background="@android:color/white"
+        android:background="@color/bg_main"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/roadshow_module1"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:background="@android:color/white"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="13dp"
-                android:drawableLeft="@mipmap/icon_details_title"
-                android:drawablePadding="6dp"
-                android:text="逸景营地"
-                android:textColor="@color/bg_text"
-                android:textSize="18sp" />
-
-            <View
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/line_partition" />
-        </RelativeLayout>
+                android:layout_height="43dp"
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:paddingLeft="24dp">
+                <TextView
+                    android:id="@+id/roadshow_tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="13dp"
+                    android:drawableLeft="@mipmap/icon_details_title"
+                    android:drawablePadding="6dp"
+                    android:text="逸景营地"
+                    android:textColor="@color/bg_text"
+                    android:textSize="18sp" />
 
-            <TextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/line_partition" />
+            </RelativeLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/iconfont_rong"
-                android:drawablePadding="3.5dp"
-                android:text="融资额度"
-                android:textColor="#747474"
-                android:textSize="14sp" />
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="24dp">
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/iconfont_rong"
+                    android:drawablePadding="3.5dp"
+                    android:text="融资额度"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/roadshow_amount_plan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12.5dp"
+                    android:text="1000万"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12.5dp"
-                android:text="1000万"
-                android:textColor="#747474"
-                android:textSize="14sp" />
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/iconfont_jine"
+                    android:drawablePadding="3.5dp"
+                    android:text="已融金额"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/roadshow_amount_financed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12.5dp"
+                    android:text="800万"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/iconfont_time"
+                    android:drawablePadding="3.5dp"
+                    android:text="起止时间"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/roadshow_tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12.5dp"
+                    android:text="2016.2.26—2.16.3.2"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/iconfont_addr"
+                    android:drawablePadding="3.5dp"
+                    android:text="所在地"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/roadshow_tv_addr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12.5dp"
+                    android:text="陕西 | 西安"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="23dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp">
+
+                <TextView
+                    android:id="@+id/roadshow_tv_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lineSpacingExtra="3dp"
+                    android:maxLines="3"
+                    android:text="据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/roadshow_rv_photos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/roadshow_btn_more"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp">
+
+                <ImageButton
+                    android:id="@+id/roadshow_img_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/icon_bottom_more" />
+            </RelativeLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/roadshow_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:paddingLeft="24dp">
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="3.5dp"
+            android:background="@mipmap/tag_detail_project"
+            android:gravity="center"
+            android:text="路\n演\n中"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/iconfont_jine"
-                android:drawablePadding="3.5dp"
-                android:text="已融金额"
-                android:textColor="#747474"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12.5dp"
-                android:text="800万"
-                android:textColor="#747474"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:paddingLeft="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/iconfont_time"
-                android:drawablePadding="3.5dp"
-                android:text="起止时间"
-                android:textColor="#747474"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12.5dp"
-                android:text="2016.2.26—2.16.3.2"
-                android:textColor="#747474"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:paddingLeft="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/iconfont_addr"
-                android:drawablePadding="3.5dp"
-                android:text="所在地"
-                android:textColor="#747474"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12.5dp"
-                android:text="陕西 | 西安"
-                android:textColor="#747474"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <include
+            android:id="@+id/roadshow_module2"
+            layout="@layout/layout_team_report"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="23dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lineSpacingExtra="3dp"
-                android:maxLines="3"
-                android:text="据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元"
-                android:textColor="#747474"
-                android:textSize="14sp" />
-
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12.5dp" />
-        </LinearLayout>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="11dp"
-            android:background="@mipmap/icon_bottom_more" />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="3.5dp"
-        android:background="@mipmap/tag_detail_project"
-        android:gravity="center"
-        android:text="路\n演\n中"
-        android:textColor="@android:color/white"
-        android:textSize="17sp" />
-
-    <include
-        android:id="@+id/roadshow_module2"
-        layout="@layout/layout_team_report"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/roadshow_module1"
-        android:layout_marginTop="9dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_below="@id/roadshow_module2"
-        android:layout_marginTop="9dp"
-        android:background="@android:color/white"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="7.5dp"
-            android:layout_marginRight="11dp"
-            android:layout_weight="220"
-            android:background="@mipmap/iconfont_service" />
-
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="11dp"
-            android:layout_marginRight="7.5dp"
-            android:layout_weight="517"
-            android:background="@mipmap/icon_bg_invest"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/icon_rocket"
-                android:drawablePadding="10dp"
-                android:gravity="center"
-                android:text="认投"
-                android:textColor="@android:color/white"
-                android:textSize="19sp" />
-        </RelativeLayout>
-    </LinearLayout>
-</RelativeLayout>
+            android:layout_below="@id/roadshow_module1"
+            android:layout_marginTop="9dp" />
+    </RelativeLayout>
+</LinearLayout>

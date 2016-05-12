@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="73dp"
+    android:layout_height="117dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.jinzht.pro1.view.CircleImageView
+        android:id="@+id/project_iv_favicon"
+        android:layout_width="48.5dp"
+        android:layout_height="48.5dp"
+        android:layout_marginTop="21dp" />
+
+    <TextView
+        android:id="@+id/project_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:text="张三丰"
+        android:textColor="#474747"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/project_tv_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="总经理"
+        android:textColor="#747474"
+        android:textSize="11sp" />
+</LinearLayout>

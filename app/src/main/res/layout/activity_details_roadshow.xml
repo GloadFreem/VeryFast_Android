@@ -10,50 +10,98 @@
 
     <include layout="@layout/title_3btn" />
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/details_ll"
+            android:id="@+id/details_ll_invest"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/details_roadshow_ppt"
-                android:layout_width="match_parent"
-                android:layout_height="270dp" />
+            <ImageButton
+                android:id="@+id/details_btn_service"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7.5dp"
+                android:layout_marginRight="11dp"
+                android:layout_weight="220"
+                android:background="@mipmap/iconfont_service" />
 
-            <RadioGroup
-                android:id="@+id/details_rg_tab"
-                android:layout_width="match_parent"
-                android:layout_height="39dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/details_rbtn_detail"
-                    style="@style/RadioBtn_Details_Tab"
-                    android:checked="true"
-                    android:text="详情" />
+            <RelativeLayout
+                android:id="@+id/details_btn_invest"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="11dp"
+                android:layout_marginRight="7.5dp"
+                android:layout_weight="517"
+                android:background="@mipmap/icon_bg_invest"
+                android:gravity="center">
 
-                <RadioButton
-                    android:id="@+id/details_rbtn_member"
-                    style="@style/RadioBtn_Details_Tab"
-                    android:text="成员" />
-
-                <RadioButton
-                    android:id="@+id/details_rbtn_live"
-                    style="@style/RadioBtn_Details_Tab"
-                    android:text="现场" />
-            </RadioGroup>
-
-            <com.jinzht.pro1.view.WrapContentHeightViewPager1
-                android:id="@+id/details_vp_module"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_rocket"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:text="认投"
+                    android:textColor="@android:color/white"
+                    android:textSize="19sp" />
+            </RelativeLayout>
         </LinearLayout>
-    </ScrollView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/details_ll_invest"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/details_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/details_roadshow_ppt"
+                    android:layout_width="match_parent"
+                    android:layout_height="270dp" />
+
+                <RadioGroup
+                    android:id="@+id/details_rg_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="39dp"
+                    android:background="@android:color/white"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/details_rbtn_detail"
+                        style="@style/RadioBtn_Details_Tab"
+                        android:checked="true"
+                        android:text="详情" />
+
+                    <RadioButton
+                        android:id="@+id/details_rbtn_member"
+                        style="@style/RadioBtn_Details_Tab"
+                        android:text="成员" />
+
+                    <RadioButton
+                        android:id="@+id/details_rbtn_live"
+                        style="@style/RadioBtn_Details_Tab"
+                        android:text="现场" />
+                </RadioGroup>
+
+                <com.jinzht.pro1.view.WrapContentHeightViewPager
+                    android:id="@+id/details_vp_module"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/bg_main" />
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
 </LinearLayout>
