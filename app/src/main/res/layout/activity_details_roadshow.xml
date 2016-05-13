@@ -19,43 +19,54 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/details_btn_service"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="7.5dp"
-                android:layout_marginRight="11dp"
-                android:layout_weight="220"
-                android:background="@mipmap/iconfont_service" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/bg_main" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <RelativeLayout
-                android:id="@+id/details_btn_invest"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="11dp"
-                android:layout_marginRight="7.5dp"
-                android:layout_weight="517"
-                android:background="@mipmap/icon_bg_invest"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <ImageButton
+                    android:id="@+id/details_btn_service"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@mipmap/icon_rocket"
-                    android:drawablePadding="10dp"
-                    android:gravity="center"
-                    android:text="认投"
-                    android:textColor="@android:color/white"
-                    android:textSize="19sp" />
-            </RelativeLayout>
+                    android:layout_marginLeft="7.5dp"
+                    android:layout_marginRight="11dp"
+                    android:layout_weight="220"
+                    android:background="@mipmap/iconfont_service" />
+
+                <RelativeLayout
+                    android:id="@+id/details_btn_invest"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginRight="7.5dp"
+                    android:layout_weight="517"
+                    android:background="@mipmap/icon_bg_invest"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@mipmap/icon_rocket"
+                        android:drawablePadding="10dp"
+                        android:gravity="center"
+                        android:text="认投"
+                        android:textColor="@android:color/white"
+                        android:textSize="19sp" />
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <ScrollView
+            android:id="@+id/details_sl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/details_ll_invest"

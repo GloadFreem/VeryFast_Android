@@ -171,7 +171,8 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/roadshow_rv_photos"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white" />
 
             </LinearLayout>
 
@@ -214,4 +215,10 @@
             android:layout_below="@id/roadshow_module1"
             android:layout_marginTop="9dp" />
     </RelativeLayout>
+
+    <View
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@android:color/white" />
 </LinearLayout>

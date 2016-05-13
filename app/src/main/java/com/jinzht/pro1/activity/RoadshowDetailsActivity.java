@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.jinzht.pro1.R;
@@ -41,6 +42,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
     private ImageButton detailsBtnService;// 客服按钮
     private RelativeLayout detailsBtnInvest;// 认投按钮
     private WrapContentHeightViewPager detailsVpModule;// 详情页的ViewPager
+    private ScrollView detailsSl;// ScrollView
 
     @Override
     protected int getResourcesId() {
@@ -51,6 +53,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
     protected void init() {
         UiHelp.setTranslucentStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
 
+        detailsSl = (ScrollView) findViewById(R.id.details_sl);
         titleBtnLeft = (LinearLayout) findViewById(R.id.title_btn_left);// title左边按钮，返回
         titleBtnLeft.setOnClickListener(this);
         titleIvLeft = (ImageView) findViewById(R.id.title_iv_left);// title左侧按钮图标

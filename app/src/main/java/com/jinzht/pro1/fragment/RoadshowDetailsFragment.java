@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.adapter.HorizontalRecyclerViewData;
 import com.jinzht.pro1.adapter.ProjectPhotosAdapter;
+import com.jinzht.pro1.adapter.ProjectReportsAdapter;
 import com.jinzht.pro1.adapter.ProjectTeamsAdapter;
 import com.jinzht.pro1.base.BaseFragment;
 import com.jinzht.pro1.callback.ItemClickListener;
@@ -39,6 +40,7 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
     private TextView roadshowTag;// 融资状态标签
     private RecyclerView projectRvTeams;// 团队成员表
     private RecyclerView projectRvReports;// 项目报表
+    private View emptyView;// 填充色块
 
     private boolean isOpen = false;// 项目描述的开关状态
 
@@ -51,6 +53,10 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
     private List<String> names;// 团队成员姓名集合
     private List<String> positions;// 团队成员职位集合
     private ProjectTeamsAdapter teamsAdapter;// 团队成员数据适配器
+
+    private List<Integer> reportImgs;// 报表图标
+    private List<String> reportNames;// 报表名
+    private ProjectReportsAdapter reportsAdapter;// 各类报表数据适配器
 
     @Override
     protected int setLayout(LayoutInflater inflater) {
@@ -72,12 +78,15 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         roadshowTag = (TextView) mActivity.findViewById(R.id.roadshow_tag);// 融资状态标签
         projectRvTeams = (RecyclerView) mActivity.findViewById(R.id.project_rv_teams);// 团队成员表
         projectRvReports = (RecyclerView) mActivity.findViewById(R.id.project_rv_reports);// 项目报表
+        emptyView = mActivity.findViewById(R.id.empty_view);
+        emptyView.setVisibility(View.GONE);
 
         // 项目照片处理
         initPhotos();
         // 团队成员处理
         initTeam();
-
+        // 报表处理
+        initReport();
     }
 
     @Override
@@ -87,9 +96,11 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
                 if (isOpen) {// 打开状态，点击关闭
                     descClose();
                     isOpen = false;
+                    emptyView.setVisibility(View.GONE);
                 } else {// 关闭状态，点击打开
                     descOpen();
                     isOpen = true;
+                    emptyView.setVisibility(View.VISIBLE);
                 }
                 break;
         }
@@ -155,6 +166,23 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
             @Override
             public void onItemClick(View view, int postion) {
                 SuperToastUtils.showSuperToast(mContext, 2, "点击了" + postion + "张照片");
+            }
+        });
+    }
+
+    // 报表处理
+    private void initReport() {
+        // 准备数据
+        reportImgs = new ArrayList<Integer>(Arrays.asList(R.mipmap.icon_report1, R.mipmap.icon_report2, R.mipmap.icon_report3, R.mipmap.icon_report4));
+        reportNames = new ArrayList<>(Arrays.asList("财务\n状况", "融资\n方案", "退出\n渠道", "商业\n计划书"));
+        reportsAdapter = new ProjectReportsAdapter(mContext, reportImgs, reportNames);
+        // 填充数据
+        HorizontalRecyclerViewData.setData(projectRvReports, mContext, reportsAdapter);
+        // 报表点击事件
+        reportsAdapter.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int postion) {
+                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + postion + "张图片");
             }
         });
     }

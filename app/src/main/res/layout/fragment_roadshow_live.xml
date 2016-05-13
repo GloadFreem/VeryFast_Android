@@ -1,10 +1,95 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="226dp"
+    android:background="@color/bg_main">
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/roadshow_ll_voice"
+        android:layout_width="match_parent"
+        android:layout_height="38.5dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/roadshow_btn_play"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/roadshow_iv_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/icon_play" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/roadshow_sb_voice"
+            android:layout_width="222dp"
+            android:layout_height="match_parent"
+            android:maxHeight="38.5dp"
+            android:minHeight="38.5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:thumb="@mipmap/icon_progress"
+            android:thumbOffset="0dp" />
+
+        <TextView
+            android:id="@+id/roadshow_tv_voice_time"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="01:25:34"
+            android:textColor="#474747"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/roadshow_ll_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="现场" />
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:minHeight="38.5dp"
+        android:orientation="horizontal">
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/roadshow_ed_chat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="576"
+            android:background="@drawable/bg_ed_transparent_blackline"
+            android:maxHeight="90dp"
+            android:minHeight="30dp" />
+
+        <TextView
+            android:id="@+id/roadshow_btn_chat_send"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="144"
+            android:background="#00a0e9"
+            android:gravity="center"
+            android:text="发送"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/roadshow_lv_chat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/roadshow_ll_chat"
+        android:layout_below="@id/roadshow_ll_voice"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="1dp"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@null"
+        android:divider="@null"
+        android:dividerHeight="25dp"
+        android:scrollbars="none" />
+</RelativeLayout>
