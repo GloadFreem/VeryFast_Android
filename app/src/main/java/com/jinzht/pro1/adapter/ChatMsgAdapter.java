@@ -84,8 +84,9 @@ public class ChatMsgAdapter extends BaseAdapter {
         viewHolder.itemChatName.setText(chatMsg.getName());
         viewHolder.itemChatMsg.setText(chatMsg.getText());
         if (StringUtils.isEmpty(chatMsg.getDate())) {
-            viewHolder.itemChatTime.setVisibility(View.INVISIBLE);
+            viewHolder.itemChatTime.setVisibility(View.GONE);
         } else {
+            viewHolder.itemChatTime.setVisibility(View.VISIBLE);
             viewHolder.itemChatTime.setText(chatMsg.getDate());
         }
         return convertView;

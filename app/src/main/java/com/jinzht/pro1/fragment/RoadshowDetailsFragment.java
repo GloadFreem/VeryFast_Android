@@ -1,7 +1,6 @@
 package com.jinzht.pro1.fragment;
 
 
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,10 +10,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jinzht.pro1.R;
-import com.jinzht.pro1.adapter.HorizontalRecyclerViewData;
 import com.jinzht.pro1.adapter.ProjectPhotosAdapter;
 import com.jinzht.pro1.adapter.ProjectReportsAdapter;
 import com.jinzht.pro1.adapter.ProjectTeamsAdapter;
+import com.jinzht.pro1.adapter.RecyclerViewData;
 import com.jinzht.pro1.base.BaseFragment;
 import com.jinzht.pro1.callback.ItemClickListener;
 import com.jinzht.pro1.utils.SuperToastUtils;
@@ -134,15 +133,11 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
 
     // 项目照片处理
     private void initPhotos() {
-        // 使RecyclerView保持固定的大小，该信息被用于自身的优化。
-        roadshowRvPhotos.setHasFixedSize(true);
-        // 列表布局管理器
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 3);
-        roadshowRvPhotos.setLayoutManager(gridLayoutManager);
-        // 准备图片
+        // 准备数据
         imageViews1 = new ArrayList<Integer>(Arrays.asList(R.mipmap.photo1, R.mipmap.photo2, R.mipmap.photo1));
         photosAdapter1 = new ProjectPhotosAdapter(mContext, imageViews1);
-        roadshowRvPhotos.setAdapter(photosAdapter1);
+        // 填充数据
+        RecyclerViewData.setGrid(roadshowRvPhotos, mContext, photosAdapter1);
         // 项目照片的点击事件
         photosAdapter1.setItemClickListener(new ItemClickListener() {
             @Override
@@ -160,7 +155,7 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         positions = new ArrayList<>(Arrays.asList("项目经理", "UI", "Java", "IOS", "Android", "IOS", "Android"));
         teamsAdapter = new ProjectTeamsAdapter(mContext, favicons, names, positions);
         // 填充数据
-        HorizontalRecyclerViewData.setData(projectRvTeams, mContext, teamsAdapter);
+        RecyclerViewData.setHorizontal(projectRvTeams, mContext, teamsAdapter);
         // 团队成员的点击事件
         teamsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
@@ -177,7 +172,7 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         reportNames = new ArrayList<>(Arrays.asList("财务\n状况", "融资\n方案", "退出\n渠道", "商业\n计划书"));
         reportsAdapter = new ProjectReportsAdapter(mContext, reportImgs, reportNames);
         // 填充数据
-        HorizontalRecyclerViewData.setData(projectRvReports, mContext, reportsAdapter);
+        RecyclerViewData.setHorizontal(projectRvReports, mContext, reportsAdapter);
         // 报表点击事件
         reportsAdapter.setItemClickListener(new ItemClickListener() {
             @Override

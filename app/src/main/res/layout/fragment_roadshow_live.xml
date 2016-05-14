@@ -70,8 +70,9 @@
             android:id="@+id/roadshow_btn_chat_send"
             android:layout_width="0dp"
             android:layout_height="30dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="144"
-            android:background="#00a0e9"
+            android:background="@drawable/bg_btn_blue"
             android:gravity="center"
             android:text="发送"
             android:textColor="@android:color/white"
@@ -88,8 +89,18 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="1dp"
         android:background="@android:color/transparent"
-        android:cacheColorHint="@null"
+        android:cacheColorHint="@android:color/transparent"
         android:divider="@null"
         android:dividerHeight="25dp"
+        android:listSelector="@android:color/transparent"
         android:scrollbars="none" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="60dp"
+        android:layout_marginRight="13dp"
+        android:background="@mipmap/icon_full_screen" />
 </RelativeLayout>

@@ -177,7 +177,9 @@
         <activity android:name=".activity.SelectCityActivity" />
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.UploadActivity" />
-        <activity android:name=".activity.RoadshowDetailsActivity"/>
+        <activity android:name=".activity.RoadshowDetailsActivity" />
+        <activity android:name=".activity.PreselectionDetailsActivity" />
+        <activity android:name=".activity.InvestActivity"></activity>
     </application>
 
 </manifest>

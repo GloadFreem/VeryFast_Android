@@ -66,7 +66,7 @@
     <string name="activity">活动</string>
     <string name="project_roadshow">路演项目</string>
     <string name="project_preselection">预选项目</string>
-    <string name="title_activity_details_roadshow">DetailsRoadshowActivity</string>
+    <string name="invest_alert">温馨提示:\n1、此处领投，跟投仅为用户意向，待项目达成后项目方会协同各方确定最为合适的领投方；\n2、特别注意：投资金额后面的单位为“万”</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

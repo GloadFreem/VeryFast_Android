@@ -4,9 +4,9 @@
     <solid android:color="@color/custom_orange" />
 
     <corners
+        android:bottomLeftRadius="5dp"
+        android:bottomRightRadius="5dp"
         android:topLeftRadius="0dp"
-        android:topRightRadius="5dp"
-        android:bottomLeftRadius="0dp"
-        android:bottomRightRadius="5dp"/>
+        android:topRightRadius="0dp" />
 
-</shape><!--微信验证时的验证码--><!--认投项目是选领投 -->
+</shape><!--认投项目时选领投跟投的下拉背景-->

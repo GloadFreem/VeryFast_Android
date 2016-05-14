@@ -1,6 +1,5 @@
 package com.jinzht.pro1.fragment;
 
-
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
