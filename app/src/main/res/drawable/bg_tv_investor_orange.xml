@@ -3,9 +3,7 @@
 
     <solid android:color="@color/custom_orange" />
 
-    <corners android:radius="5dp" />
+    <corners android:radius="3dp" />
 
 </shape>
-<!--验证码-->
-<!--实名认证时的下一步按钮-->
-<!--投资人中提交项目按钮背景-->
+<!--投资人详情页中投资领域文字背景-->

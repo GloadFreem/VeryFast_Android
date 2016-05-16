@@ -158,7 +158,7 @@
         <item name="android:textColor">@color/bg_text</item>
         <item name="android:textSize">19sp</item>
     </style>
-    <!-- 主页项目中路演项目和预选项目的tab样式-->
+    <!-- 路演项目详情的tab样式-->
     <style name="RadioBtn_Details_Tab">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -168,7 +168,19 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/bg_text</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:drawableBottom">@drawable/selector_viewpagertab_project</item>
+        <item name="android:drawableBottom">@drawable/selector_viewpagertab_details</item>
+    </style>
+    <!-- 投资人的tab样式-->
+    <style name="RadioBtn_Investor_Tab">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@null</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/bg_text</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:drawableBottom">@drawable/selector_viewpagertab_investor</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

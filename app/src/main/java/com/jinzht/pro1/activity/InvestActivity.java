@@ -55,13 +55,16 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                 finish();
                 break;
             case R.id.invest_btn_pull_down:// 选择领投或者跟投
-                if (!isShowing) {// 如果是展开状态就啥都不干
+                if (isShowing) {// 如果是展开状态就合上
+                    isShowing = false;
+                    pullDownWindow.dismiss();
+                } else {
+                    isShowing = true;
                     if (pullDownWindow == null) {
                         initPopupWindow();
                     }
                     pullDownWindow.showAsDropDown(investBtnPullDown, 0, 0);
                     investBtnPullDown.setBackgroundResource(R.drawable.bg_invest_pull_down_ed);// 改变选中的TextView样式
-                    isShowing = true;
                 }
                 break;
             case R.id.invest_btn_pay:// 支付

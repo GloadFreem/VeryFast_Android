@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_investor_detail"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp">
+
+                <LinearLayout
+                    android:id="@+id/title_btn_back"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/btn_back" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="个人资料"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:id="@+id/title_btn_share"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/icon_share" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@mipmap/bg_brain_detail_card">
+
+                <com.jinzht.pro1.view.CircleImageView
+                    android:id="@+id/brain_detail_favicon"
+                    android:layout_width="92.5dp"
+                    android:layout_height="92.5dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="24dp"
+                    android:src="@mipmap/favicon_test"
+                    app:civ_border_color="#20000000"
+                    app:civ_border_width="4dp" />
+
+                <TextView
+                    android:id="@+id/brain_detail_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/brain_detail_favicon"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"
+                    android:text="胡丫郁"
+                    android:textColor="@color/bg_text"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/brain_detail_position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/brain_detail_favicon"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="21dp"
+                    android:layout_toRightOf="@id/brain_detail_name"
+                    android:text="总经理"
+                    android:textColor="#474747"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/brain_detail_comp_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/brain_detail_name"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:text="逸景营地投资有限公司"
+                    android:textColor="#474747"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/brain_detail_addr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/brain_detail_comp_name"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="河南 | 郑州"
+                    android:textColor="#474747"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="17.5dp"
+                android:layout_marginRight="17.5dp"
+                android:layout_marginTop="18.5dp"
+                android:background="@drawable/bg_tv_investor_transparent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:drawableLeft="@mipmap/icon_line_vertical"
+                    android:drawablePadding="2dp"
+                    android:drawableRight="@mipmap/icon_line_vertical"
+                    android:text="服务 · 领域"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/brain_detail_service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18.5dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="17dp"
+                    android:layout_marginTop="15dp"
+                    android:lineSpacingExtra="5dp"
+                    android:text="公司服务项目包括：企业项目考察评估、财务规划、企业股份制改革、推荐挂牌上市、定向增发、债券发行、融资担保、股份置换、股票交易、资产重组、转版上市、投融资对接、企业培训等"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="17.5dp"
+                android:layout_marginRight="17.5dp"
+                android:layout_marginTop="18.5dp"
+                android:background="@drawable/bg_tv_investor_transparent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:drawableLeft="@mipmap/icon_line_vertical"
+                    android:drawablePadding="2dp"
+                    android:drawableRight="@mipmap/icon_line_vertical"
+                    android:text="个人 · 简介"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/brain_detail_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18.5dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="17dp"
+                    android:layout_marginTop="15dp"
+                    android:lineSpacingExtra="5dp"
+                    android:text="完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/brain_btn_collect"
+                android:layout_width="298dp"
+                android:layout_height="38.5dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="19dp"
+                android:background="@drawable/bg_btn_green"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_collect_investor"
+                    android:drawablePadding="5dp"
+                    android:text="关注(269)"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

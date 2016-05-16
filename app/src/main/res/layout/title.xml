@@ -39,5 +39,4 @@
             android:layout_height="wrap_content"
             android:background="@mipmap/iconfont_add" />
     </LinearLayout>
-
 </RelativeLayout>

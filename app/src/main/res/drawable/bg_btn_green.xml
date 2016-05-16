@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <solid android:color="@color/custom_orange" />
+    <solid android:color="#26a69a" />
 
     <corners android:radius="5dp" />
 
 </shape>
-<!--验证码-->
-<!--实名认证时的下一步按钮-->
-<!--投资人中提交项目按钮背景-->
+<!--投资人中关注按钮背景-->

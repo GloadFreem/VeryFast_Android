@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <solid android:color="#00a0e9" />
+    <solid android:color="#26a69a" />
 
     <corners android:radius="3dp" />
 
 </shape>
-<!--聊天时发送按钮的背景-->
-<!--投资人详情中的投资领域文字背景-->
+<!--投资人中投资领率文字背景-->
