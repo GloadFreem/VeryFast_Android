@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include layout="@layout/title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white">
+
+                <com.jinzht.pro1.view.CircleImageView
+                    android:id="@+id/submit_iv_favicon"
+                    android:layout_width="58dp"
+                    android:layout_height="58dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@mipmap/favicon_test"
+                    app:civ_border_color="#20000000"
+                    app:civ_border_width="2dp" />
+
+                <TextView
+                    android:id="@+id/submit_tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_toRightOf="@id/submit_iv_favicon"
+                    android:text="王大锤"
+                    android:textColor="@color/bg_text"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/submit_tv_position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_toRightOf="@id/submit_tv_name"
+                    android:text="总经理"
+                    android:textColor="@color/bg_text"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/submit_tv_comp_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/submit_tv_name"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_toRightOf="@id/submit_iv_favicon"
+                    android:text="逸景营地投资有限公司"
+                    android:textColor="#747474"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/submit_tv_addr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/submit_tv_name"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="9dp"
+                    android:text="北京 | 海淀"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/submit_tv_recommend_reason"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginTop="12dp"
+                    android:text="推荐理由(20～300字)"
+                    android:textColor="#474747"
+                    android:textSize="16sp" />
+
+                <RelativeLayout
+                    android:id="@+id/submit_rl_recommend"
+                    android:layout_width="match_parent"
+                    android:layout_height="144dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="17dp"
+                    android:layout_marginTop="11dp"
+                    android:background="@color/bg_main">
+
+                    <EditText
+                        android:id="@+id/submit_et_recommend"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:lineSpacingExtra="3dp"
+                        android:maxLines="14"
+                        android:textColor="#474747"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginTop="12dp"
+                    android:text="项目"
+                    android:textColor="#474747"
+                    android:textSize="17sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="39dp"
+                    android:background="@android:color/white">
+
+                    <com.jinzht.pro1.view.CircleImageView
+                        android:id="@+id/submit_iv_pro_img"
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="13dp"
+                        android:src="@mipmap/favicon_test"
+                        app:civ_border_color="#20000000"
+                        app:civ_border_width="2dp" />
+
+                    <TextView
+                        android:id="@+id/submit_tv_pro_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="11dp"
+                        android:layout_marginTop="11dp"
+                        android:layout_toRightOf="@id/submit_iv_pro_img"
+                        android:maxWidth="160dp"
+                        android:singleLine="true"
+                        android:text="逸景营地"
+                        android:textColor="@color/bg_text"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/submit_iv_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"
+                        android:background="@mipmap/tag_rongzizhong" />
+
+                    <TextView
+                        android:id="@+id/submit_tv_pro_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/submit_tv_pro_title"
+                        android:layout_marginLeft="11dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@id/submit_iv_pro_img"
+                        android:maxWidth="230dp"
+                        android:singleLine="true"
+                        android:text="逸景营地投资有限公司"
+                        android:textColor="#747474"
+                        android:textSize="15sp" />
+
+                    <ImageView
+                        android:id="@+id/submit_line_point"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/submit_tv_pro_name"
+                        android:layout_marginLeft="11dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_toRightOf="@id/submit_iv_pro_img"
+                        android:background="@mipmap/line_point" />
+
+                    <TextView
+                        android:id="@+id/submit_tv_pro_desc"
+                        android:layout_width="256dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/submit_line_point"
+                        android:layout_marginLeft="11dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@id/submit_iv_pro_img"
+                        android:singleLine="true"
+                        android:text="新三板VR企业也在2015年下半年新三板VR" />
+
+                    <ImageView
+                        android:id="@+id/submit_line"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/submit_tv_pro_desc"
+                        android:layout_marginTop="12dp"
+                        android:background="@mipmap/line_item" />
+
+                    <LinearLayout
+                        android:id="@+id/submit_bottom_data_roadshow"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_below="@id/submit_line"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="188"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/submit_popularity"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="1024"
+                                android:textColor="@color/bg_text"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="人气指数"
+                                android:textColor="@color/bg_text"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="188"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/submit_remaining_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="16"
+                                android:textColor="@color/bg_text"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="剩余时间"
+                                android:textColor="@color/bg_text"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="344"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/submit_financing_amount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="1000万"
+                                android:textColor="@color/bg_text"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="融资额度"
+                                android:textColor="@color/bg_text"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/submit_btn_confirm"
+                android:layout_width="300dp"
+                android:layout_height="39dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="19dp"
+                android:layout_marginTop="19dp"
+                android:background="@drawable/bg_btn_blue"
+                android:gravity="center"
+                android:text="确  认"
+                android:textColor="@android:color/white"
+                android:textSize="25sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

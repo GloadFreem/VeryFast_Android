@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/activity_rl_title"
+        layout="@layout/title_back" />
+
+    <LinearLayout
+        android:id="@+id/activity_ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/activity_btn_apply"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/custom_orange"
+            android:text="我要报名"
+            android:textColor="@android:color/white"
+            android:textSize="19sp" />
+
+        <Button
+            android:id="@+id/activity_btn_share"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00a0e9"
+            android:text="分享活动"
+            android:textColor="@android:color/white"
+            android:textSize="19sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/activity_ll_bottom"
+        android:layout_below="@id/activity_rl_title"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/activity_tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="115dp"
+                android:background="@color/custom_orange"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="创业公司吸引投资人前应做哪些准备\n金指投产品学院第六期"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/activity_tv_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:layout_marginTop="17.5dp"
+                    android:ellipsize="end"
+                    android:lineSpacingExtra="3dp"
+                    android:maxLines="3"
+                    android:text="这两年，互联网金融行业如火如荼，但也因为发展不成熟，爆发出了一些问题。随之而来的是一系列监管重拳出击，在媒体的舆论中公众的质疑也越来越高。最近潘晓婷、黄晓明等明星也卷入了代言的P2P出事风波，现在舆论的架势，几乎是P2P=骗子的节奏。"
+                    android:textColor="#474747"
+                    android:textSize="14sp" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_rv_photos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:id="@+id/activity_btn_more"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp">
+
+                    <ImageButton
+                        android:id="@+id/activity_img_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@mipmap/icon_activity_more" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="14dp"
+                    android:drawableLeft="@mipmap/icon_activity_vertical_line"
+                    android:drawablePadding="3dp"
+                    android:gravity="center"
+                    android:text="活动信息"
+                    android:textColor="#474747"
+                    android:textSize="17sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/line_partition" />
+
+                <TextView
+                    android:id="@+id/activity_tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginTop="13dp"
+                    android:drawableLeft="@mipmap/icon_time"
+                    android:drawablePadding="5dp"
+                    android:text="2016.3.20  星期天  10:00"
+                    android:textColor="#747474"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginTop="9dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/activity_tv_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@mipmap/icon_num"
+                        android:drawablePadding="5dp"
+                        android:text="20-50人"
+                        android:textColor="#747474"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_free"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="9dp"
+                        android:background="@drawable/bg_btn_blue"
+                        android:padding="2dp"
+                        android:text="免费"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="13dp"
+                    android:layout_marginTop="9dp">
+
+                    <TextView
+                        android:id="@+id/activity_tv_addr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="14dp"
+                        android:drawableLeft="@mipmap/icon_location"
+                        android:drawablePadding="5dp"
+                        android:text="陕西省西安市雁塔区锦业路"
+                        android:textColor="#747474"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="9dp"
+                        android:text="1.2km"
+                        android:textColor="#747474"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp">
+
+                    <TextView
+                        android:id="@+id/activity_tv_people_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="14dp"
+                        android:drawableLeft="@mipmap/icon_activity_vertical_line"
+                        android:drawablePadding="3dp"
+                        android:text="报名人数"
+                        android:textColor="#474747"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_quantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/activity_tv_people_num"
+                        android:text="(369)"
+                        android:textColor="@color/custom_orange"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="12dp"
+                        android:text="查看全部"
+                        android:textColor="@color/custom_orange"
+                        android:textSize="13sp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

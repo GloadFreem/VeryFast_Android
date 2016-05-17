@@ -181,7 +181,9 @@
         <activity android:name=".activity.PreselectionDetailsActivity" />
         <activity android:name=".activity.InvestActivity" />
         <activity android:name=".activity.InvestorDetailActivity" />
-        <activity android:name=".activity.BrainDetailActivity"></activity>
+        <activity android:name=".activity.BrainDetailActivity" />
+        <activity android:name=".activity.SubmitProjectActivity" />
+        <activity android:name=".activity.ActivityDetailActivity"></activity>
     </application>
 
 </manifest>

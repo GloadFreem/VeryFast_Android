@@ -1,13 +1,52 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_green_light"
-    tools:context="com.jinzht.pro1.fragment.ActivityFragment">
+    android:background="@color/bg_main"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/title_bg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="7.5dp"
+        android:paddingRight="7.5dp">
+
+        <EditText
+            android:id="@+id/activity_edt_search"
+            android:layout_width="0dp"
+            android:layout_height="29dp"
+            android:layout_weight="59"
+            android:background="@android:color/white"
+            android:hint="互联网金融黑马预测…"
+            android:padding="5dp"
+            android:textSize="17sp" />
+
+        <RelativeLayout
+            android:id="@+id/activity_btn_search"
+            android:layout_width="0dp"
+            android:layout_height="29dp"
+            android:layout_weight="10"
+            android:background="@color/custom_orange">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/icon_search" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/activity_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="活动" />
-
-</FrameLayout>
+        android:background="@color/bg_main"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="19dp"
+        android:scrollbars="none" />
+</LinearLayout>
