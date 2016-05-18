@@ -183,7 +183,8 @@
         <activity android:name=".activity.InvestorDetailActivity" />
         <activity android:name=".activity.BrainDetailActivity" />
         <activity android:name=".activity.SubmitProjectActivity" />
-        <activity android:name=".activity.ActivityDetailActivity"></activity>
+        <activity android:name=".activity.ActivityDetailActivity" />
+        <activity android:name=".activity.MessageActivity"></activity>
     </application>
 
 </manifest>

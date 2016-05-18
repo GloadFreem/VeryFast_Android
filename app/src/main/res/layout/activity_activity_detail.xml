@@ -70,8 +70,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/activity_tv_desc"
@@ -236,16 +235,459 @@
                         android:textSize="17sp" />
 
                     <TextView
+                        android:id="@+id/activity_btn_quantity_totle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="12dp"
+                        android:drawablePadding="6dp"
+                        android:drawableRight="@mipmap/icon_totle"
                         android:text="查看全部"
                         android:textColor="@color/custom_orange"
                         android:textSize="13sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/line_partition" />
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="67dp">
+
+                    <com.jinzht.pro1.view.CircleImageView
+                        android:id="@+id/activity_iv_favicon1"
+                        android:layout_width="49dp"
+                        android:layout_height="49dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:src="@mipmap/favicon_test" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_name1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_toRightOf="@id/activity_iv_favicon1"
+                        android:text="王赛赛"
+                        android:textColor="@color/bg_text"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_position1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/activity_tv_name1"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@id/activity_iv_favicon1"
+                        android:text="金山运营总监"
+                        android:textColor="#747474"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_time1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="11:55" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/line_partition" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="67dp">
+
+                    <com.jinzht.pro1.view.CircleImageView
+                        android:id="@+id/activity_iv_favicon2"
+                        android:layout_width="49dp"
+                        android:layout_height="49dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:src="@mipmap/favicon_test" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_name2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_toRightOf="@id/activity_iv_favicon2"
+                        android:text="王赛赛"
+                        android:textColor="@color/bg_text"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_position2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/activity_tv_name2"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@id/activity_iv_favicon2"
+                        android:text="金山运营总监"
+                        android:textColor="#747474"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_time2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="11:55" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/line_partition" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="67dp">
+
+                    <com.jinzht.pro1.view.CircleImageView
+                        android:id="@+id/activity_iv_favicon3"
+                        android:layout_width="49dp"
+                        android:layout_height="49dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:src="@mipmap/favicon_test" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_name3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_toRightOf="@id/activity_iv_favicon3"
+                        android:text="王赛赛"
+                        android:textColor="@color/bg_text"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_position3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/activity_tv_name3"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@id/activity_iv_favicon3"
+                        android:text="金山运营总监"
+                        android:textColor="#747474"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_time3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="11:55" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/line_partition" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="67dp">
+
+                    <com.jinzht.pro1.view.CircleImageView
+                        android:id="@+id/activity_iv_favicon4"
+                        android:layout_width="49dp"
+                        android:layout_height="49dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:src="@mipmap/favicon_test" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_name4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_toRightOf="@id/activity_iv_favicon4"
+                        android:text="王赛赛"
+                        android:textColor="@color/bg_text"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_position4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/activity_tv_name4"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@id/activity_iv_favicon4"
+                        android:text="金山运营总监"
+                        android:textColor="#747474"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_time4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="11:55" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/line_partition" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="67dp">
+
+                    <com.jinzht.pro1.view.CircleImageView
+                        android:id="@+id/activity_iv_favicon5"
+                        android:layout_width="49dp"
+                        android:layout_height="49dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:src="@mipmap/favicon_test" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_name5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_toRightOf="@id/activity_iv_favicon5"
+                        android:text="王赛赛"
+                        android:textColor="@color/bg_text"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_position5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/activity_tv_name5"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@id/activity_iv_favicon5"
+                        android:text="金山运营总监"
+                        android:textColor="#747474"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/activity_tv_time5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="11:55" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="14dp"
+                        android:drawableLeft="@mipmap/icon_activity_vertical_line"
+                        android:drawablePadding="3dp"
+                        android:text="点赞评论"
+                        android:textColor="#474747"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/activity_btn_comment_totle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="12dp"
+                        android:drawablePadding="6dp"
+                        android:drawableRight="@mipmap/icon_totle"
+                        android:text="查看全部"
+                        android:textColor="@color/custom_orange"
+                        android:textSize="13sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/line_partition" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="18dp">
+
+                    <RelativeLayout
+                        android:layout_width="50dp"
+                        android:layout_height="50dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@mipmap/icon_praise" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/activity_tv_praise"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:ellipsize="end"
+                        android:lineSpacingExtra="3dp"
+                        android:maxLines="2"
+                        android:text="胡丫郁，陈生珠，段辉，刘延杰，王瑞，刘路，邓毅，王丹，胡丫郁，陈生珠，段辉，刘延杰，王瑞，刘路，邓毅，王丹"
+                        android:textColor="@color/custom_orange"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="18dp">
+
+                    <RelativeLayout
+                        android:layout_width="50dp"
+                        android:layout_height="50dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@mipmap/icon_activity_comment" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/activity_tv_comment1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:text="陈生珠：好，点个赞！"
+                            android:textColor="@color/bg_text"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/activity_tv_comment2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:text="刘延杰 回复 陈生珠：棒棒哒"
+                            android:textColor="@color/bg_text"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/activity_tv_comment3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:text="胡丫郁：萌萌哒"
+                            android:textColor="@color/bg_text"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/activity_tv_comment4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:text="胡丫郁：萌萌哒"
+                            android:textColor="@color/bg_text"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/activity_tv_comment5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:text="胡丫郁：萌萌哒"
+                            android:textColor="@color/bg_text"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/activity_tv_comment6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="……"
+                            android:textColor="@color/bg_text"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="35dp"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/activity_btn_praise"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="24dp"
+                        android:background="@mipmap/icon_btn_praise" />
+
+                    <ImageButton
+                        android:id="@+id/activity_btn_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:background="@mipmap/icon_activity_btn_comment" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

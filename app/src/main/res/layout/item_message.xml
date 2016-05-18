@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:padding="10dp">
+
+    <CheckBox
+        android:id="@+id/item_message_cb_select"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:button="@null"
+        android:drawableLeft="@drawable/selector_message_check_btn"
+        android:visibility="gone" />
+
+    <com.jinzht.pro1.view.CircleImageView
+        android:id="@+id/item_message_img"
+        android:layout_width="39dp"
+        android:layout_height="39dp"
+        android:layout_toRightOf="@id/item_message_cb_select"
+        android:src="@mipmap/favicon_test" />
+
+    <TextView
+        android:id="@+id/item_message_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/item_message_img"
+        android:text="金指投平台"
+        android:textColor="@color/bg_text"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/item_message_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_message_name"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="9dp"
+        android:layout_toRightOf="@id/item_message_img"
+        android:text="APP更新公告"
+        android:textColor="@color/bg_text"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/item_message_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_message_title"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="6dp"
+        android:layout_toRightOf="@id/item_message_img"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="新版本V3.0将于6月30日正式上线，这次是重大更新全新UI、全新交互、功能更加完善，满足不同用户"
+        android:textColor="#474747"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/item_message_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="4月22日" />
+</RelativeLayout>
