@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:padding="10dp">
+
+    >
 
     <CheckBox
         android:id="@+id/item_message_cb_select"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
+        android:paddingLeft="10dp"
         android:button="@null"
         android:drawableLeft="@drawable/selector_message_check_btn"
         android:visibility="gone" />
@@ -19,6 +20,8 @@
         android:id="@+id/item_message_img"
         android:layout_width="39dp"
         android:layout_height="39dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/item_message_cb_select"
         android:src="@mipmap/favicon_test" />
 
@@ -27,6 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/item_message_img"
         android:text="金指投平台"
         android:textColor="@color/bg_text"
@@ -49,12 +53,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_message_title"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="6dp"
         android:layout_toRightOf="@id/item_message_img"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="新版本V3.0将于6月30日正式上线，这次是重大更新全新UI、全新交互、功能更加完善，满足不同用户"
+        android:text="新版本V3.0将于6月30日正式上线，这次是重大更新全新UI、全新交互、功能更加完善，满足不同用户,全新交互、功能更加完善，满足不同用户"
         android:textColor="#474747"
         android:textSize="13sp" />
 
@@ -63,5 +69,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:text="4月22日" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/line_partition" />
 </RelativeLayout>

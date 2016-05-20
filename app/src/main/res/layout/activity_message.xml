@@ -86,7 +86,7 @@
             android:textSize="17sp" />
     </RelativeLayout>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/lv_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

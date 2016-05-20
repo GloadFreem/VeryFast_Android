@@ -124,8 +124,18 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         photosAdapter2 = new ProjectPhotosAdapter(mContext, imageViews2);
         photosAdapter2.setItemClickListener(new ItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion) {
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + postion + "张照片");
+            public void onItemClick(View view, int position) {
+                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张照片");
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemSubViewClick(View view, int position) {
+
             }
         });
         roadshowRvPhotos.setAdapter(photosAdapter2);
@@ -137,12 +147,22 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         imageViews1 = new ArrayList<Integer>(Arrays.asList(R.mipmap.photo1, R.mipmap.photo2, R.mipmap.photo1));
         photosAdapter1 = new ProjectPhotosAdapter(mContext, imageViews1);
         // 填充数据
-        RecyclerViewData.setGrid(roadshowRvPhotos, mContext, photosAdapter1);
+        RecyclerViewData.setGrid(roadshowRvPhotos, mContext, photosAdapter1, 3);
         // 项目照片的点击事件
         photosAdapter1.setItemClickListener(new ItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion) {
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + postion + "张照片");
+            public void onItemClick(View view, int position) {
+                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张照片");
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemSubViewClick(View view, int position) {
+
             }
         });
     }
@@ -159,8 +179,18 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         // 团队成员的点击事件
         teamsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion) {
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + postion + "张照片");
+            public void onItemClick(View view, int position) {
+                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张照片");
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemSubViewClick(View view, int position) {
+
             }
         });
     }
@@ -176,8 +206,18 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         // 报表点击事件
         reportsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion) {
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + postion + "张图片");
+            public void onItemClick(View view, int position) {
+                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张图片");
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemSubViewClick(View view, int position) {
+
             }
         });
     }

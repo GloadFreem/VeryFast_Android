@@ -24,5 +24,4 @@
         android:text="实名认证"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
-
 </RelativeLayout>

@@ -23,12 +23,24 @@ public class RecyclerViewData {
     }
 
     // 网格状RecyclerView数据填充
-    public static void setGrid(RecyclerView recyclerView, Context context, RecyclerView.Adapter adapter) {
+    public static void setGrid(RecyclerView recyclerView, Context context, RecyclerView.Adapter adapter, int column) {
         // 使RecyclerView保持固定的大小，该信息被用于自身的优化。
         recyclerView.setHasFixedSize(true);
         // 列表布局管理器
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, column);
         recyclerView.setLayoutManager(gridLayoutManager);
+        // 填充数据
+        recyclerView.setAdapter(adapter);
+    }
+
+    // 水平线性的RecyclerView数据填充
+    public static void setVertical(RecyclerView recyclerView, Context context, RecyclerView.Adapter adapter) {
+        // 使RecyclerView保持固定的大小，该信息被用于自身的优化。
+        recyclerView.setHasFixedSize(true);
+        // 水平线性布局管理器
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
         // 填充数据
         recyclerView.setAdapter(adapter);
     }

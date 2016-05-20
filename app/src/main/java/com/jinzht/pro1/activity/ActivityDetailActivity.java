@@ -159,12 +159,22 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         photo1 = new ArrayList<>(Arrays.asList(R.mipmap.activity_photo1, R.mipmap.activity_photo2, R.mipmap.activity_photo3));
         photosAdapter1 = new ActivityPhotosAdapter(mContext, photo1);
         // 填充数据
-        RecyclerViewData.setGrid(activityPhotos, mContext, photosAdapter1);
+        RecyclerViewData.setGrid(activityPhotos, mContext, photosAdapter1, 3);
         // 活动照片的点击事件
         photosAdapter1.setItemClickListener(new ItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion) {
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + postion + "张照片");
+            public void onItemClick(View view, int position) {
+                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张照片");
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemSubViewClick(View view, int position) {
+
             }
         });
     }
@@ -224,8 +234,18 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         photosAdapter2 = new ActivityPhotosAdapter(mContext, photo2);
         photosAdapter2.setItemClickListener(new ItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion) {
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + postion + "张照片");
+            public void onItemClick(View view, int position) {
+                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张照片");
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemSubViewClick(View view, int position) {
+
             }
         });
         activityPhotos.setAdapter(photosAdapter2);

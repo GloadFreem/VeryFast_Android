@@ -13,7 +13,7 @@ import com.jinzht.pro1.callback.ItemClickListener;
 import java.util.List;
 
 /**
- * Created by pc on 2016/5/18.
+ * 活动页面中照片适配器
  */
 public class ActivityPhotosAdapter extends RecyclerView.Adapter<ActivityPhotosAdapter.MViewHolder> {
 
