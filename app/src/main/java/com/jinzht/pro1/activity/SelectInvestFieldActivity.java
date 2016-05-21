@@ -27,7 +27,7 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
 
     @Override
     protected void init() {
-        UiHelp.setTranslucentStatus(true, this);// 设置系统状态栏背景与应用标题栏背景一致
+        UiHelp.setSameStatus(true, this);// 设置系统状态栏背景与应用标题栏背景一致
 
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);

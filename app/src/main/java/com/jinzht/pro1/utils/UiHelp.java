@@ -52,7 +52,7 @@ public class UiHelp {
 
     // 设置系统状态栏与应用标题栏背景一致
     @TargetApi(19)
-    public static void setTranslucentStatus(boolean on, Activity context) {
+    public static void setSameStatus(boolean on, Activity context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window win = context.getWindow();
             WindowManager.LayoutParams winParams = win.getAttributes();

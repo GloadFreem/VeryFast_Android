@@ -25,7 +25,7 @@ public class PreselectionFragment extends BaseFragment {
     @Override
     protected void onFirstUserVisible() {
         lvProject = (ListView) mActivity.findViewById(R.id.lv_project_preselection);// 项目列表
-        lvProject.addHeaderView(View.inflate(mContext, R.layout.layout_empty_view, null));
+        lvProject.addHeaderView(View.inflate(mContext, R.layout.layout_empty_view_9dp, null));
         lvProject.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {

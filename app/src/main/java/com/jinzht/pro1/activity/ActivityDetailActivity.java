@@ -89,7 +89,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void init() {
-        UiHelp.setTranslucentStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
+        UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
         findView();
         // 活动照片处理
         initPhotos();

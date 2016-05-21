@@ -25,7 +25,7 @@ public class RoadshowFragment extends BaseFragment {
     @Override
     protected void onFirstUserVisible() {
         lvProjectRaodshow = (ListView) mActivity.findViewById(R.id.lv_project_roadshow);// 项目列表
-        lvProjectRaodshow.addHeaderView(View.inflate(mContext, R.layout.layout_empty_view, null));
+        lvProjectRaodshow.addHeaderView(View.inflate(mContext, R.layout.layout_empty_view_9dp, null));
         lvProjectRaodshow.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {

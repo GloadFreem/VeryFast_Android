@@ -13,6 +13,8 @@ import com.jinzht.pro1.callback.ItemClickListener;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,7 +44,7 @@ public class BillActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void init() {
-        UiHelp.setTranslucentStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
+        UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
 
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);
@@ -56,6 +58,15 @@ public class BillActivity extends BaseActivity implements View.OnClickListener {
 
     private void initList() {
         // 准备数据
+        years = new ArrayList<>(Arrays.asList("","2016年", "", "", "2015年", "", "", "2014年", ""));
+        days = new ArrayList<>(Arrays.asList("","5月20日", "3月8日", "1月1日", "12月12日", "10月10日", "8月3日", "7月1日", "4月1日"));
+        mins = new ArrayList<>(Arrays.asList("","14:20", "11:16", "8:16", "23:50", "7:00", "9:36", "12:20", "16:16"));
+        types = new ArrayList<>(Arrays.asList("","账户充值", "项目认投", "账户提现", "账户充值", "项目认投", "账户提现", "项目认投", "账户提现"));
+        amounts = new ArrayList<>(Arrays.asList("","¥ 500万", "¥ 400万", "¥ 10万", "¥ 60万", "¥ 500万", "¥ 4000元", "¥ 30万", "¥ 600元"));
+        nums = new ArrayList<>(Arrays.asList("","cz160520142006", "rt160308111605", "tx160101081620", "cz151212235011", "rt151010070050", "tx150803093622", "rt140701122022", "tx140401161616"));
+        succeed = new ArrayList<>(Arrays.asList("","充值成功", "认投成功", "提现中", "充值失败", "退款中", "提现成功", "项目成功", "提现成功"));
+        imgs = new ArrayList<>(Arrays.asList(null,null, R.mipmap.activity_photo1, null, null, R.mipmap.activity_photo2, null, R.mipmap.activity_photo3, null));
+        titles = new ArrayList<>(Arrays.asList("","", "逸景营地", "", "", "国联质检", "", "杰邦科技", ""));
         adapter = new BillAdapter(mContext, years, days, mins, types, amounts, nums, succeed, imgs, titles);
         // 填充数据
         RecyclerViewData.setVertical(billRv, mContext, adapter);

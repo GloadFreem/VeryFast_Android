@@ -27,7 +27,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected void init() {
-        UiHelp.setTranslucentStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
+        UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
 
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);

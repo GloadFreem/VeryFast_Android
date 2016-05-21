@@ -75,7 +75,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
 
     @Override
     protected void init() {
-        UiHelp.setTranslucentStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
+        UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
 
         titleBtnLeft = (LinearLayout) findViewById(R.id.title_btn_left);// 返回键
         titleBtnLeft.setOnClickListener(this);

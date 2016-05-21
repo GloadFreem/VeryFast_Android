@@ -33,7 +33,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     @Override
     protected void init() {
-        UiHelp.setTranslucentStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
+        UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
         initView();
         initData();
     }

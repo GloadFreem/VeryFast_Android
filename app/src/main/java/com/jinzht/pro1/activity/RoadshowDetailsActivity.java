@@ -49,7 +49,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
 
     @Override
     protected void init() {
-        UiHelp.setTranslucentStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
+        UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
 
         detailsSl = (ScrollView) findViewById(R.id.details_sl);
         titleBtnLeft = (LinearLayout) findViewById(R.id.title_btn_left);// title左边按钮，返回

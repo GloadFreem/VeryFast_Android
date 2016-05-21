@@ -53,7 +53,7 @@ public abstract class FullBaseActivity extends Activity implements ProgressBarCa
         mContext = getApplicationContext();
         TAG = getRunningActivityName();
         MobclickAgent.setSessionContinueMillis(30000l);// 友盟
-//        UiHelp.setTranslucentStatus(true, this);// 设置透明状态栏
+//        UiHelp.setSameStatus(true, this);// 设置透明状态栏
         UiHelp.setFullScreenStatus(this);// 设置状态栏跟随应用背景
         init();
     }

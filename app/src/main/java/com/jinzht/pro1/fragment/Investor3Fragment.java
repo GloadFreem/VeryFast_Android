@@ -25,7 +25,7 @@ public class Investor3Fragment extends BaseFragment {
     @Override
     protected void onFirstUserVisible() {
         lvInvestor3 = (ListView) mActivity.findViewById(R.id.lv_investor3);// 智囊团列表
-        lvInvestor3.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view, null));
+        lvInvestor3.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null));
         lvInvestor3.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {

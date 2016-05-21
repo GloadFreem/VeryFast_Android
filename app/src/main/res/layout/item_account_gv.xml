@@ -27,9 +27,15 @@
     </LinearLayout>
 
     <View
-        android:layout_width="0.5dp"
+        android:layout_width="0.25dp"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
+        android:background="#d0d0d0" />
+
+    <View
+        android:layout_width="0.25dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
         android:background="#d0d0d0" />
 
     <View

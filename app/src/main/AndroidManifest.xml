@@ -187,7 +187,9 @@
         <activity android:name=".activity.MessageActivity" />
         <activity android:name=".activity.PersonalCenterActivity" />
         <activity android:name=".activity.AccountActivity" />
-        <activity android:name=".activity.BillActivity"></activity>
+        <activity android:name=".activity.BillActivity" />
+        <activity android:name=".activity.MyGoldActivity" />
+        <activity android:name=".activity.GoldInOutActivity"></activity>
     </application>
 
 </manifest>

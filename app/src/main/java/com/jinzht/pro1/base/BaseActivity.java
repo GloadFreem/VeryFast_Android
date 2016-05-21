@@ -60,7 +60,7 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
         aCache = ACache.get(mContext);
         MobclickAgent.openActivityDurationTrack(false);// 友盟
         MobclickAgent.setSessionContinueMillis(30000l);// 友盟
-//        UiHelp.setTranslucentStatus(true, this);// 透明状态栏
+//        UiHelp.setSameStatus(true, this);// 透明状态栏
 
         // 注册退出广播接收者
         IntentFilter filter = new IntentFilter();
