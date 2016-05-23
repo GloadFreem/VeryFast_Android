@@ -8,6 +8,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.jinzht.pro1.R;
@@ -58,6 +59,29 @@ public class DialogUtils {
             public void onClick(View v) {
                 SuperToastUtils.showSuperToast(activity, 2, "已报名");
                 dialog.dismiss();
+            }
+        });
+    }
+
+    // 项目中心中投资人忽略收到的项目是弹窗
+    public static void ingorePro(final Activity activity) {
+        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_ingore_project);
+        ImageView btnIngore = (ImageView) window.findViewById(R.id.dialog_ingore_pro_btn_ingore);
+        ImageView btnLook = (ImageView) window.findViewById(R.id.dialog_ingore_pro_btn_look);
+        btnIngore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SuperToastUtils.showSuperToast(activity, 2, "忽略");
+            }
+        });
+        btnLook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SuperToastUtils.showSuperToast(activity, 2, "看一下");
             }
         });
     }

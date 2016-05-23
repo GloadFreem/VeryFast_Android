@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/title_bg">
+
+        <LinearLayout
+            android:id="@+id/btn_back"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/btn_back" />
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/mycollect_rg"
+            android:layout_width="144dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_margin="7dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/mycollect_rb_project"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_mycollect_check_btn_project"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:text="项目"
+                android:textColor="@color/bg_text"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/mycollect_rb_investor"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_mycollect_check_btn_investor"
+                android:button="@null"
+                android:gravity="center"
+                android:text="投资"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+        </RadioGroup>
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/mycollect_vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

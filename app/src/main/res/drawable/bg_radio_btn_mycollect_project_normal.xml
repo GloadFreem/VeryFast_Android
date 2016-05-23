@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <solid android:color="@android:color/transparent" />
+
+
+    <corners
+        android:bottomLeftRadius="5dp"
+        android:bottomRightRadius="0dp"
+        android:topLeftRadius="5dp"
+        android:topRightRadius="0dp" />
+
+    <stroke
+        android:width="0.5dp"
+        android:color="@android:color/white" />
+
+</shape><!--我的关注中顶部title的项目按钮背景-->

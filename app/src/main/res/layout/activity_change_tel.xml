@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_back" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:paddingLeft="52dp"
+        android:text="188****2236"
+        android:textColor="@color/bg_text"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/change_tel_ed_tel_old"
+        android:layout_width="288dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_ed_wechat_verify"
+        android:hint="请补全原手机号码"
+        android:paddingLeft="15dp"
+        android:textColorHint="#b5b5b5"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/change_tel_ed_tel_new"
+        android:layout_width="288dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_ed_wechat_verify"
+        android:hint="请输入新手机号码"
+        android:paddingLeft="15dp"
+        android:textColorHint="#b5b5b5"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="288dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="15dp">
+
+        <EditText
+            android:id="@+id/change_tel_ed_code"
+            android:layout_width="182dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_ed_wechat_verify_left"
+            android:hint="@string/input_code"
+            android:paddingLeft="15dp"
+            android:textColorHint="#b5b5b5"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/change_tel_tv_code"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_ed_wechat_code_orange"
+            android:gravity="center"
+            android:text="@string/get_code"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/change_tel_ed_idcard"
+        android:layout_width="288dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_ed_wechat_verify"
+        android:hint="请输入身份证号"
+        android:paddingLeft="15dp"
+        android:textColorHint="#b5b5b5"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/change_tel_btn_confirm"
+        android:layout_width="288dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="43dp"
+        android:background="@drawable/bg_code_orange"
+        android:text="@string/confirm"
+        android:textColor="@android:color/white"
+        android:textSize="17sp" />
+</LinearLayout>

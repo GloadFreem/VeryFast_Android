@@ -189,7 +189,14 @@
         <activity android:name=".activity.AccountActivity" />
         <activity android:name=".activity.BillActivity" />
         <activity android:name=".activity.MyGoldActivity" />
-        <activity android:name=".activity.GoldInOutActivity"></activity>
+        <activity android:name=".activity.GoldInOutActivity" />
+        <activity android:name=".activity.ProCenterActivity" />
+        <activity android:name=".activity.MyCollectActivity" />
+        <activity android:name=".activity.AboutUsActivity" />
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.ChangeTelActivity" />
+        <activity android:name=".activity.ChangePwdActivity" />
+        <activity android:name=".activity.MyInfoActivity"></activity>
     </application>
 
 </manifest>

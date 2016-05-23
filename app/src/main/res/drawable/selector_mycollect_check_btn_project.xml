@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bg_radio_btn_mycollect_project_normal" android:state_checked="false" />
+    <item android:drawable="@drawable/bg_radio_btn_mycollect_project_checked" android:state_checked="true" />
+</selector><!--我的关注中title项目按钮-->
