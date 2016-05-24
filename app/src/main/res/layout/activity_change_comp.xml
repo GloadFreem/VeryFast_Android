@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/title_bg">
+
+        <LinearLayout
+            android:id="@+id/btn_back"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/btn_back" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="公司"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bg_tv_transparent_whiteline"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5.5dp"
+            android:paddingRight="5.5dp"
+            android:paddingTop="5dp"
+            android:text="保存"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_marginTop="9dp"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/btn_clean"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:scaleType="center"
+            android:src="@mipmap/icon_clean" />
+
+        <EditText
+            android:id="@+id/ed_comp_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/btn_clean"
+            android:background="@null"
+            android:paddingLeft="17dp"
+            android:singleLine="true"
+            android:textColor="@color/bg_text"
+            android:textColorHint="#9b9b9b"
+            android:textSize="17sp" />
+    </RelativeLayout>
+</LinearLayout>

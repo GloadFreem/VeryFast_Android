@@ -196,7 +196,11 @@
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.ChangeTelActivity" />
         <activity android:name=".activity.ChangePwdActivity" />
-        <activity android:name=".activity.MyInfoActivity"></activity>
+        <activity android:name=".activity.MyInfoActivity" />
+        <activity android:name=".activity.InviteCodeActivity" />
+        <activity android:name=".activity.UserTypeActivity" />
+        <activity android:name=".activity.ChangeCompActivity" />
+        <activity android:name=".activity.MyActivitysActivity"></activity>
     </application>
 
 </manifest>

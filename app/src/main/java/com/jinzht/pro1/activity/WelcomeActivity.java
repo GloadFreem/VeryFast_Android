@@ -18,7 +18,7 @@ public class WelcomeActivity extends FullBaseActivity {
     @Override
     protected void init() {
 
-        Intent intent = new Intent(this, ChangePwdActivity .class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 

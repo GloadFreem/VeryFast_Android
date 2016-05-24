@@ -63,10 +63,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="17dp"
         android:layout_marginTop="15dp"
+        android:paddingLeft="16dp"
         android:text="帮助中心"
-        android:textColor="#747474" />
+        android:textColor="#747474"
+        android:textSize="14sp" />
 
     <RelativeLayout
         android:id="@+id/about_us_btn_gudie"

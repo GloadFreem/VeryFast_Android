@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="116dp"
+    android:layout_height="116dp">
+
+    <ImageView
+        android:id="@+id/item_circle_photo"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/a" />
+</RelativeLayout>

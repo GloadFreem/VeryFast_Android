@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/title_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
+
+    <include layout="@layout/title_back" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:background="@mipmap/bg_invite_code"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.jinzht.pro1.view.CircleImageView
+            android:id="@+id/iv_favicon"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:layout_marginTop="19dp"
+            android:src="@mipmap/favicon_test"
+            app:civ_border_color="#50ffffff"
+            app:civ_border_width="0.5dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp">
+
+            <TextView
+                android:id="@+id/tv_invite_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="20160504"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/tv_invite_code"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="8dp"
+                android:layout_toLeftOf="@id/tv_invite_code"
+                android:text="指环码"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/btn_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@id/tv_invite_code"
+                android:background="@mipmap/icon_copy" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@mipmap/icon_2dimecode" />
+    </LinearLayout>
+</RelativeLayout>

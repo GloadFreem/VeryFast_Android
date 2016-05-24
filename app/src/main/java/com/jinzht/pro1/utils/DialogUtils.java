@@ -3,6 +3,7 @@ package com.jinzht.pro1.utils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -59,6 +60,12 @@ public class DialogUtils {
             public void onClick(View v) {
                 SuperToastUtils.showSuperToast(activity, 2, "已报名");
                 dialog.dismiss();
+            }
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                imm.hideSoftInputFromWindow(edt.getWindowToken(), 0);
             }
         });
     }
