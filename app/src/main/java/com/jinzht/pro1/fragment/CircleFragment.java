@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.adapter.CirclePhotosAdapter;
@@ -24,8 +23,6 @@ import java.util.List;
  */
 public class CircleFragment extends BaseFragment implements View.OnClickListener {
 
-    private LinearLayout titleBtnLeft;// title左侧按钮
-    private TextView tvTitle;// 标题
     private LinearLayout titleBtnRight;// title右侧按钮
     private ListView listview;// 列表
 
@@ -44,10 +41,6 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void findView() {
-        titleBtnLeft = (LinearLayout) mActivity.findViewById(R.id.title_btn_left);// title左侧按钮
-        titleBtnLeft.setVisibility(View.GONE);
-        tvTitle = (TextView) mActivity.findViewById(R.id.tv_title);// 标题
-        tvTitle.setText("广场");
         titleBtnRight = (LinearLayout) mActivity.findViewById(R.id.title_btn_right);// title右侧按钮
         titleBtnRight.setOnClickListener(this);
         listview = (ListView) mActivity.findViewById(R.id.listview);// 列表

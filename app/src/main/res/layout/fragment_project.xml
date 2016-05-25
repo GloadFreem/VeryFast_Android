@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_main"
@@ -7,7 +8,32 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <include layout="@layout/title" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/title_bg">
+
+        <LinearLayout
+            android:id="@+id/title_btn_left"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/title_iv_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/message_empty" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="项目"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -47,6 +73,32 @@
                 android:textColor="#d9d9d9"
                 android:textSize="12sp" />
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="left|bottom"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/icon_bg_progress" />
+
+            <com.jinzht.pro1.view.BannerRoundProgressBar
+                android:id="@+id/project_banner_project"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:roundColorB="@android:color/transparent"
+                app:roundProgressColorB="@color/custom_orange"
+                app:roundWidthB="8dp"
+                app:textBottom="800"
+                app:textColorB="@color/custom_orange"
+                app:textSizeB="10sp"
+                app:textTop="W" />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/project_banner_points"

@@ -3,8 +3,6 @@ package com.jinzht.pro1.fragment;
 
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -19,8 +17,6 @@ import com.jinzht.pro1.utils.UiUtils;
  */
 public class InvestorFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener {
 
-    private LinearLayout btnBack;// 返回按钮
-    private TextView tvTitle;// 本页标题
     private RadioGroup investorRgTab;// 选择投资人类型的RadioGroup
     private RadioButton investorRbtnInvestor;// 投资人
     private RadioButton investorRbtnInvestorg;// 投资机构
@@ -34,10 +30,6 @@ public class InvestorFragment extends BaseFragment implements RadioGroup.OnCheck
 
     @Override
     protected void onFirstUserVisible() {
-        btnBack = (LinearLayout) mActivity.findViewById(R.id.btn_back);// 返回按钮
-        btnBack.setVisibility(View.GONE);
-        tvTitle = (TextView) mActivity.findViewById(R.id.tv_title);// 本页标题
-        tvTitle.setText("投资人");
         investorRgTab = (RadioGroup) mActivity.findViewById(R.id.investor_rg_tab);// 选择投资人类型的RadioGroup页签
         investorRbtnInvestor = (RadioButton) mActivity.findViewById(R.id.investor_rbtn_investor);// 投资人
         investorRbtnInvestorg = (RadioButton) mActivity.findViewById(R.id.investor_rbtn_investorg);// 投资机构

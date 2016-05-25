@@ -8,5 +8,38 @@
         <attr name="civ_fill_color" format="color" />
     </declare-styleable>
 
+    <!-- 圆形进度条的属性-->
+    <declare-styleable name="RoundProgressBar">
+        <attr name="roundColor" format="color" />
+        <attr name="roundProgressColor" format="color" />
+        <attr name="roundWidth" format="dimension"></attr>
+        <attr name="textColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="numColor" format="color" />
+        <attr name="numSize" format="dimension" />
+        <attr name="max" format="integer"></attr>
+        <attr name="textIsDisplayable" format="boolean"></attr>
+        <attr name="style">
+            <enum name="STROKE" value="0"></enum>
+            <enum name="FILL" value="1"></enum>
+        </attr>
+    </declare-styleable>
+
+    <!-- banner上的圆形进度条的属性-->
+    <declare-styleable name="BannerRoundProgressBar">
+        <attr name="roundColorB" format="color" />
+        <attr name="roundProgressColorB" format="color" />
+        <attr name="roundWidthB" format="dimension"></attr>
+        <attr name="textColorB" format="color" />
+        <attr name="textSizeB" format="dimension" />
+        <attr name="maxB" format="integer"></attr>
+        <attr name="textIsDisplayableB" format="boolean"></attr>
+        <attr name="styleB">
+            <enum name="STROKE" value="0"></enum>
+            <enum name="FILL" value="1"></enum>
+        </attr>
+        <attr name="textTop" format="string"></attr>
+        <attr name="textBottom" format="string"></attr>
+    </declare-styleable>
 
 </resources>

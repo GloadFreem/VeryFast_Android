@@ -1,5 +1,8 @@
 package com.jinzht.pro1.fragment;
 
+import android.annotation.SuppressLint;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import com.jinzht.pro1.adapter.ProjectFragmentAdapter;
 import com.jinzht.pro1.base.BaseFragment;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiUtils;
+import com.jinzht.pro1.view.BannerRoundProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +31,6 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 
     private LinearLayout titleBtnLeft;// title的左侧按钮
     private ImageView titleIvLeft;// title左侧图标，站内信
-    private TextView tvTitle;// 标题
-    private LinearLayout titleBtnRight;// title的右侧按钮
     private ViewPager projectVpBanner;// banner轮播条
     private LinearLayout projectBannerBottombg;// banner底部的阴影
     private TextView projectBannerTitle;// banner标题
@@ -38,13 +40,19 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     private RadioButton projectRbtnRoadshow;// 路演项目按钮
     private RadioButton projectRbtnPreselection;// 预选项目按钮
     private ViewPager projectVpType;// 路演项目和预选项目
+    private BannerRoundProgressBar bannerProgress;// banner上的圆形进度条
 
     private List<ImageView> imageViews;// banner的图片资源
     private String[] bannerTitles;// banner图片的标题
     private String[] bannerDescs; // banner图片的描述
     private int prePointIndex = 0;// 记录当前指示点的位置
     private boolean isAutoPlay = true;// banner是否自动轮播
-    Runnable bannerRunnable;// banner自动轮播任务
+    private Runnable bannerRunnable;// banner自动轮播任务
+
+    private int proTotal = 80;// 要显示的全部进度
+    private int progress = 0;// 当前进度
+    private boolean isGoing = false;// 正在滑动的标识
+    private ProThread thread;// banner的进度条的线程
 
     @Override
     protected int setLayout(LayoutInflater inflater) {
@@ -53,26 +61,13 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     protected void onFirstUserVisible() {
-        titleBtnLeft = (LinearLayout) mActivity.findViewById(R.id.title_btn_left);// title的左侧按钮
-        titleBtnLeft.setOnClickListener(this);
-        titleIvLeft = (ImageView) mActivity.findViewById(R.id.title_iv_left);// title左侧图标，站内信
-        titleIvLeft.setBackgroundResource(R.mipmap.message_empty);// 左侧为站内信
-        tvTitle = (TextView) mActivity.findViewById(R.id.tv_title);// 标题
-        tvTitle.setText(UiUtils.getString(R.string.project));
-        titleBtnRight = (LinearLayout) mActivity.findViewById(R.id.title_btn_right);// title的右侧按钮
-        titleBtnRight.setVisibility(View.GONE);
-        projectVpBanner = (ViewPager) mActivity.findViewById(R.id.project_vp_banner);// banner轮播条
-        projectBannerBottombg = (LinearLayout) mActivity.findViewById(R.id.project_banner_bottombg);// banner底部的阴影
-        projectBannerTitle = (TextView) mActivity.findViewById(R.id.project_banner_title);// banner标题
-        projectBannerDesc = (TextView) mActivity.findViewById(R.id.project_banner_desc);// banner描述
-        projectBannerPoints = (LinearLayout) mActivity.findViewById(R.id.project_banner_points);// banner指示点
-        projectRgTab = (RadioGroup) mActivity.findViewById(R.id.project_rg_tab);// 项目页签的RadioGroup
-        projectRbtnRoadshow = (RadioButton) mActivity.findViewById(R.id.project_rbtn_roadshow);// 路演项目按钮
-        projectRbtnPreselection = (RadioButton) mActivity.findViewById(R.id.project_rbtn_preselection);// 预选项目按钮
-        projectVpType = (ViewPager) mActivity.findViewById(R.id.project_vp_type);// 路演项目和预选项目
+        findView();
 
         // 处理banner
         bannerPrepare();
+
+        // banner的圆形进度条开始动
+        startBannerProgress();
 
         // 设置tab的单选事件
         projectRgTab.setOnCheckedChangeListener(this);
@@ -94,6 +89,23 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         });
+    }
+
+
+    private void findView() {
+        titleBtnLeft = (LinearLayout) mActivity.findViewById(R.id.title_btn_left);// title的左侧按钮
+        titleBtnLeft.setOnClickListener(this);
+        titleIvLeft = (ImageView) mActivity.findViewById(R.id.title_iv_left);// title左侧图标，站内信
+        projectVpBanner = (ViewPager) mActivity.findViewById(R.id.project_vp_banner);// banner轮播条
+        projectBannerBottombg = (LinearLayout) mActivity.findViewById(R.id.project_banner_bottombg);// banner底部的阴影
+        projectBannerTitle = (TextView) mActivity.findViewById(R.id.project_banner_title);// banner标题
+        projectBannerDesc = (TextView) mActivity.findViewById(R.id.project_banner_desc);// banner描述
+        projectBannerPoints = (LinearLayout) mActivity.findViewById(R.id.project_banner_points);// banner指示点
+        projectRgTab = (RadioGroup) mActivity.findViewById(R.id.project_rg_tab);// 项目页签的RadioGroup
+        projectRbtnRoadshow = (RadioButton) mActivity.findViewById(R.id.project_rbtn_roadshow);// 路演项目按钮
+        projectRbtnPreselection = (RadioButton) mActivity.findViewById(R.id.project_rbtn_preselection);// 预选项目按钮
+        projectVpType = (ViewPager) mActivity.findViewById(R.id.project_vp_type);// 路演项目和预选项目
+        bannerProgress = (BannerRoundProgressBar) mActivity.findViewById(R.id.project_banner_project);// banner上的圆形进度条
     }
 
     // 处理banner
@@ -169,8 +181,9 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         };
     }
 
-    @Override
-    protected void onUserVisble() {
+    private void startBannerProgress() {
+        thread = new ProThread();
+        thread.start();
     }
 
     @Override
@@ -200,6 +213,10 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     }
 
     @Override
+    protected void onUserVisble() {
+    }
+
+    @Override
     protected void onFirstUserInvisble() {
 
     }
@@ -223,6 +240,9 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     public void onDestroy() {
         super.onDestroy();
         isAutoPlay = false;// 销毁时停止自动轮播
+        if (thread != null) {// 停止进度条
+            thread.stopThread();
+        }
     }
 
     // banner的数据适配器
@@ -259,4 +279,42 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             container.removeView((View) object);
         }
     }
+
+    // 控制banner进度条，更新UI
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            int temp = (int) msg.obj;
+            if (proTotal - temp > 0) {
+                bannerProgress.setProgress(temp);
+            } else {
+                bannerProgress.setProgress(proTotal);
+                thread.stopThread();
+            }
+        }
+    };
+
+    // banner的圆形进度条的线程
+    private class ProThread extends Thread {
+        @Override
+        public void run() {
+            while (!isGoing) {
+                try {
+                    progress += 1;
+                    Message msg = new Message();
+                    msg.obj = progress;
+                    Thread.sleep(50);
+                    mHandler.sendMessage(msg);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public void stopThread() {
+            isGoing = true;
+        }
+    }
+
 }

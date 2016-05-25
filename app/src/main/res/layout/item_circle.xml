@@ -93,5 +93,85 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_more"
             android:layout_marginTop="10dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/recyclerview"
+            android:layout_marginTop="7dp"
+            android:background="@color/line_partition" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recyclerview"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/btn_transpond"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_transpond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_transpond"
+                    android:drawablePadding="9dp"
+                    android:text="5625"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="20dp"
+                android:background="@color/line_partition" />
+
+            <RelativeLayout
+                android:id="@+id/btn_comment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_circle_comment"
+                    android:drawablePadding="9dp"
+                    android:text="5625"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="20dp"
+                android:background="@color/line_partition" />
+
+            <RelativeLayout
+                android:id="@+id/btn_good"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_good"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_good"
+                    android:drawablePadding="9dp"
+                    android:text="5625"
+                    android:textColor="#747474"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

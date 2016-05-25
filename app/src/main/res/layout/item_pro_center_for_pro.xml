@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white">
@@ -132,16 +133,14 @@
     <LinearLayout
         android:id="@+id/item_bottom_data_roadshwo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_below="@id/item_pro_center_for_pro_line"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="188"
             android:gravity="center"
             android:orientation="vertical">
@@ -159,7 +158,7 @@
                 android:layout_height="wrap_content"
                 android:text="人气指数"
                 android:textColor="@color/bg_text"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
         <View
@@ -169,7 +168,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="188"
             android:gravity="center"
             android:orientation="vertical">
@@ -187,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:text="剩余时间"
                 android:textColor="@color/bg_text"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
         <View
@@ -197,25 +196,46 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="344"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/item_project_amount"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1000万"
-                android:textColor="@color/bg_text"
-                android:textSize="16sp" />
+                android:layout_height="match_parent"
+                android:layout_marginRight="7dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="融资额度"
-                android:textColor="@color/bg_text"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/item_project_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1000万"
+                    android:textColor="@color/bg_text"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="融资额度"
+                    android:textColor="@color/bg_text"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <com.jinzht.pro1.view.RoundProgressBar
+                android:id="@+id/item_project_progress"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginLeft="7dp"
+                app:numColor="@color/custom_orange"
+                app:numSize="20sp"
+                app:roundColor="#d2d2d2"
+                app:roundProgressColor="@color/custom_orange"
+                app:roundWidth="5dp"
+                app:textColor="#747474"
+                app:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
 

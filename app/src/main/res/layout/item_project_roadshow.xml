@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="165dp"
     android:background="@android:color/white"
@@ -34,7 +35,7 @@
         android:layout_marginTop="19dp"
         android:layout_toRightOf="@id/item_project_title"
         android:singleLine="true"
-        android:text="陕西|西安"
+        android:text="陕西 | 西安"
         android:textColor="#474747"
         android:textSize="14sp" />
 
@@ -81,6 +82,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/item_project_field1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_item_project_field"
@@ -93,6 +95,7 @@
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/item_project_field2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4.5dp"
@@ -106,6 +109,7 @@
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/item_project_field3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4.5dp"
@@ -131,6 +135,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="visible">
 
@@ -142,6 +147,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/item_project_popularity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1024"
@@ -153,8 +159,13 @@
                 android:layout_height="wrap_content"
                 android:text="人气指数"
                 android:textColor="@color/bg_text"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="20dp"
+            android:background="@color/line_partition" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -164,6 +175,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/item_project_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="16"
@@ -175,29 +187,56 @@
                 android:layout_height="wrap_content"
                 android:text="剩余时间"
                 android:textColor="@color/bg_text"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="20dp"
+            android:background="@color/line_partition" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="344"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1000万"
-                android:textColor="@color/bg_text"
-                android:textSize="16sp" />
+                android:layout_height="match_parent"
+                android:layout_marginRight="7dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="融资额度"
-                android:textColor="@color/bg_text"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/item_project_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1000万"
+                    android:textColor="@color/bg_text"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="融资额度"
+                    android:textColor="@color/bg_text"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <com.jinzht.pro1.view.RoundProgressBar
+                android:id="@+id/item_project_progress"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginLeft="7dp"
+                app:numColor="@color/custom_orange"
+                app:numSize="20sp"
+                app:roundColor="#d2d2d2"
+                app:roundProgressColor="@color/custom_orange"
+                app:roundWidth="5dp"
+                app:textColor="#747474"
+                app:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
