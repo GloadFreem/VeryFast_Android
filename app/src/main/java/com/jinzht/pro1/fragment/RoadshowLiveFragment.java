@@ -1,8 +1,10 @@
 package com.jinzht.pro1.fragment;
 
-
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,23 +38,25 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
     private ChatMsgAdapter msgAdapter;// 聊天内容适配器
     private List<ChatMsgBean> mDataArrays = new ArrayList<>();// 聊天内容
 
+    @Nullable
     @Override
-    protected int setLayout(LayoutInflater inflater) {
-        return R.layout.fragment_roadshow_live;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_roadshow_live,container,false);
+        roadshowBtnPlay = (LinearLayout) view.findViewById(R.id.roadshow_btn_play);// 播放暂停按钮
+        roadshowBtnPlay.setOnClickListener(this);
+        roadshowIvPlay = (ImageView) view.findViewById(R.id.roadshow_iv_play);// 播放暂停按钮图标
+        roadshowSbVoice = (SeekBar) view.findViewById(R.id.roadshow_sb_voice);// 播放进度条
+        roadshowTvVoiceTime = (TextView) view.findViewById(R.id.roadshow_tv_voice_time);// 播放时间
+        roadshowEdChat = (EditText) view.findViewById(R.id.roadshow_ed_chat);// 发送消息输入框
+        roadshowBtnChatSend = (TextView) view.findViewById(R.id.roadshow_btn_chat_send);// 发送按钮
+        roadshowBtnChatSend.setOnClickListener(this);
+        roadshowLvChat = (ListView) view.findViewById(R.id.roadshow_lv_chat);// 聊天界面
+        return view;
     }
 
     @Override
-    protected void onFirstUserVisible() {
-        roadshowBtnPlay = (LinearLayout) mActivity.findViewById(R.id.roadshow_btn_play);// 播放暂停按钮
-        roadshowBtnPlay.setOnClickListener(this);
-        roadshowIvPlay = (ImageView) mActivity.findViewById(R.id.roadshow_iv_play);// 播放暂停按钮图标
-        roadshowSbVoice = (SeekBar) mActivity.findViewById(R.id.roadshow_sb_voice);// 播放进度条
-        roadshowTvVoiceTime = (TextView) mActivity.findViewById(R.id.roadshow_tv_voice_time);// 播放时间
-        roadshowEdChat = (EditText) mActivity.findViewById(R.id.roadshow_ed_chat);// 发送消息输入框
-        roadshowBtnChatSend = (TextView) mActivity.findViewById(R.id.roadshow_btn_chat_send);// 发送按钮
-        roadshowBtnChatSend.setOnClickListener(this);
-        roadshowLvChat = (ListView) mActivity.findViewById(R.id.roadshow_lv_chat);// 聊天界面
-
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         // 给聊天列表填充数据
         initChatData();
     }
@@ -103,21 +107,6 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
         }
         msgAdapter = new ChatMsgAdapter(mContext, mDataArrays);
         roadshowLvChat.setAdapter(msgAdapter);
-    }
-
-    @Override
-    protected void onUserVisble() {
-
-    }
-
-    @Override
-    protected void onFirstUserInvisble() {
-
-    }
-
-    @Override
-    protected void onUserInvisible() {
-
     }
 
     @Override

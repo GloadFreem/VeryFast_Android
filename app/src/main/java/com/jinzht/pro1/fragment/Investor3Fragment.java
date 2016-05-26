@@ -1,6 +1,7 @@
 package com.jinzht.pro1.fragment;
 
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +19,15 @@ public class Investor3Fragment extends BaseFragment {
     private ListView lvInvestor3;// 智囊团列表
 
     @Override
-    protected int setLayout(LayoutInflater inflater) {
-        return R.layout.fragment_investor3;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_investor3, container, false);
+        lvInvestor3 = (ListView) view.findViewById(R.id.lv_investor3);// 智囊团列表
+        return view;
     }
 
     @Override
-    protected void onFirstUserVisible() {
-        lvInvestor3 = (ListView) mActivity.findViewById(R.id.lv_investor3);// 智囊团列表
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         lvInvestor3.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null));
         lvInvestor3.setAdapter(new BaseAdapter() {
             @Override
@@ -48,21 +51,6 @@ public class Investor3Fragment extends BaseFragment {
                 return view;
             }
         });
-    }
-
-    @Override
-    protected void onUserVisble() {
-
-    }
-
-    @Override
-    protected void onFirstUserInvisble() {
-
-    }
-
-    @Override
-    protected void onUserInvisible() {
-
     }
 
     @Override

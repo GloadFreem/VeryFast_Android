@@ -1,10 +1,11 @@
 package com.jinzht.pro1.fragment;
 
-
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -58,28 +59,29 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
     private ProjectReportsAdapter reportsAdapter;// 各类报表数据适配器
 
     @Override
-    protected int setLayout(LayoutInflater inflater) {
-        return R.layout.fragment_roadshow_details;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_roadshow_details, container, false);
+        roadshowTvTitle = (TextView) view.findViewById(R.id.roadshow_tv_title);// 项目标题
+        roadshowAmountPlan = (TextView) view.findViewById(R.id.roadshow_amount_plan);// 融资金额
+        roadshowAmountFinanced = (TextView) view.findViewById(R.id.roadshow_amount_financed);// 已融金额
+        roadshowTvTime = (TextView) view.findViewById(R.id.roadshow_tv_time);// 起止时间
+        roadshowTvAddr = (TextView) view.findViewById(R.id.roadshow_tv_addr);// 公司所在地
+        roadshowTvDesc = (TextView) view.findViewById(R.id.roadshow_tv_desc);// 项目描述
+        roadshowRvPhotos = (RecyclerView) view.findViewById(R.id.roadshow_rv_photos);// 项目照片
+        roadshowBtnMore = (RelativeLayout) view.findViewById(R.id.roadshow_btn_more);// 更多按钮
+        roadshowBtnMore.setOnClickListener(this);
+        roadshowImgMore = (ImageButton) view.findViewById(R.id.roadshow_img_more);// 更多按钮图标
+        roadshowTag = (TextView) view.findViewById(R.id.roadshow_tag);// 融资状态标签
+        projectRvTeams = (RecyclerView) view.findViewById(R.id.project_rv_teams);// 团队成员表
+        projectRvReports = (RecyclerView) view.findViewById(R.id.project_rv_reports);// 项目报表
+        emptyView = view.findViewById(R.id.empty_view);
+        return view;
     }
 
     @Override
-    protected void onFirstUserVisible() {
-        roadshowTvTitle = (TextView) mActivity.findViewById(R.id.roadshow_tv_title);// 项目标题
-        roadshowAmountPlan = (TextView) mActivity.findViewById(R.id.roadshow_amount_plan);// 融资金额
-        roadshowAmountFinanced = (TextView) mActivity.findViewById(R.id.roadshow_amount_financed);// 已融金额
-        roadshowTvTime = (TextView) mActivity.findViewById(R.id.roadshow_tv_time);// 起止时间
-        roadshowTvAddr = (TextView) mActivity.findViewById(R.id.roadshow_tv_addr);// 公司所在地
-        roadshowTvDesc = (TextView) mActivity.findViewById(R.id.roadshow_tv_desc);// 项目描述
-        roadshowRvPhotos = (RecyclerView) mActivity.findViewById(R.id.roadshow_rv_photos);// 项目照片
-        roadshowBtnMore = (RelativeLayout) mActivity.findViewById(R.id.roadshow_btn_more);// 更多按钮
-        roadshowBtnMore.setOnClickListener(this);
-        roadshowImgMore = (ImageButton) mActivity.findViewById(R.id.roadshow_img_more);// 更多按钮图标
-        roadshowTag = (TextView) mActivity.findViewById(R.id.roadshow_tag);// 融资状态标签
-        projectRvTeams = (RecyclerView) mActivity.findViewById(R.id.project_rv_teams);// 团队成员表
-        projectRvReports = (RecyclerView) mActivity.findViewById(R.id.project_rv_reports);// 项目报表
-        emptyView = mActivity.findViewById(R.id.empty_view);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         emptyView.setVisibility(View.GONE);
-
         // 项目照片处理
         initPhotos();
         // 团队成员处理
@@ -220,21 +222,6 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
 
             }
         });
-    }
-
-    @Override
-    protected void onUserVisble() {
-
-    }
-
-    @Override
-    protected void onFirstUserInvisble() {
-
-    }
-
-    @Override
-    protected void onUserInvisible() {
-
     }
 
     @Override

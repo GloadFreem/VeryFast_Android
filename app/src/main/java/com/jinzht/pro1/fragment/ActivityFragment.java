@@ -1,6 +1,7 @@
 package com.jinzht.pro1.fragment;
 
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,18 +25,19 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
     private RelativeLayout activityBtnSearch;// 搜索按钮
     private ListView activityLv;// 活动列表
 
-
     @Override
-    protected int setLayout(LayoutInflater inflater) {
-        return R.layout.fragment_activity;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_activity, container, false);
+        activityEdtSearch = (EditText) view.findViewById(R.id.activity_edt_search);// 搜索输入框
+        activityBtnSearch = (RelativeLayout) view.findViewById(R.id.activity_btn_search);// 搜索按钮
+        activityBtnSearch.setOnClickListener(this);
+        activityLv = (ListView) view.findViewById(R.id.activity_lv);// 活动列表
+        return view;
     }
 
     @Override
-    protected void onFirstUserVisible() {
-        activityEdtSearch = (EditText) mActivity.findViewById(R.id.activity_edt_search);// 搜索输入框
-        activityBtnSearch = (RelativeLayout) mActivity.findViewById(R.id.activity_btn_search);// 搜索按钮
-        activityBtnSearch.setOnClickListener(this);
-        activityLv = (ListView) mActivity.findViewById(R.id.activity_lv);// 活动列表
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         activityLv.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
@@ -74,21 +76,6 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                 SuperToastUtils.showSuperToast(mContext, 2, "搜索");
                 break;
         }
-    }
-
-    @Override
-    protected void onUserVisble() {
-
-    }
-
-    @Override
-    protected void onFirstUserInvisble() {
-
-    }
-
-    @Override
-    protected void onUserInvisible() {
-
     }
 
     @Override

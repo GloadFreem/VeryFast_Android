@@ -200,7 +200,8 @@
         <activity android:name=".activity.InviteCodeActivity" />
         <activity android:name=".activity.UserTypeActivity" />
         <activity android:name=".activity.ChangeCompActivity" />
-        <activity android:name=".activity.MyActivitysActivity"></activity>
+        <activity android:name=".activity.MyActivitysActivity" />
+        <activity android:name=".activity.ReleaseTopicActivity"></activity>
     </application>
 
 </manifest>

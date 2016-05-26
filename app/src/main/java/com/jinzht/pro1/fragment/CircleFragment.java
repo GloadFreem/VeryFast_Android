@@ -1,6 +1,7 @@
 package com.jinzht.pro1.fragment;
 
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,20 +31,18 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
     private CirclePhotosAdapter photosAdapter;// 每个item的图片适配器
 
     @Override
-    protected int setLayout(LayoutInflater inflater) {
-        return R.layout.fragment_circle;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_circle, container, false);
+        titleBtnRight = (LinearLayout) view.findViewById(R.id.title_btn_right);// title右侧按钮
+        titleBtnRight.setOnClickListener(this);
+        listview = (ListView) view.findViewById(R.id.listview);// 列表
+        return view;
     }
 
     @Override
-    protected void onFirstUserVisible() {
-        findView();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         initList();
-    }
-
-    private void findView() {
-        titleBtnRight = (LinearLayout) mActivity.findViewById(R.id.title_btn_right);// title右侧按钮
-        titleBtnRight.setOnClickListener(this);
-        listview = (ListView) mActivity.findViewById(R.id.listview);// 列表
     }
 
     @Override
@@ -82,21 +81,6 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                 return view;
             }
         });
-    }
-
-    @Override
-    protected void onUserVisble() {
-
-    }
-
-    @Override
-    protected void onFirstUserInvisble() {
-
-    }
-
-    @Override
-    protected void onUserInvisible() {
-
     }
 
     @Override

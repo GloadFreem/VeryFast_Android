@@ -1,6 +1,7 @@
 package com.jinzht.pro1.fragment;
 
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +19,15 @@ public class PreselectionFragment extends BaseFragment {
     private ListView lvProject;// 项目列表
 
     @Override
-    protected int setLayout(LayoutInflater inflater) {
-        return R.layout.fragment_preselection;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_preselection, container, false);
+        lvProject = (ListView) view.findViewById(R.id.lv_project_preselection);// 项目列表
+        return view;
     }
 
     @Override
-    protected void onFirstUserVisible() {
-        lvProject = (ListView) mActivity.findViewById(R.id.lv_project_preselection);// 项目列表
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         lvProject.addHeaderView(View.inflate(mContext, R.layout.layout_empty_view_9dp, null));
         lvProject.setAdapter(new BaseAdapter() {
             @Override
@@ -48,21 +51,6 @@ public class PreselectionFragment extends BaseFragment {
                 return view;
             }
         });
-    }
-
-    @Override
-    protected void onUserVisble() {
-
-    }
-
-    @Override
-    protected void onFirstUserInvisble() {
-
-    }
-
-    @Override
-    protected void onUserInvisible() {
-
     }
 
     @Override

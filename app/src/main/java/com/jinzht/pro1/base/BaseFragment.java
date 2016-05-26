@@ -4,13 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.activity.LoginActivity;
@@ -41,13 +37,7 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
     protected Context mContext;// Application的Context
     protected FragmentActivity mActivity;// 当前Fragment的父类Activ
     protected ACache aCache;// 缓存工具类
-    protected int index = 0;
-    protected int top = 0;
-    private boolean isPrepared;
-    private boolean isFirstResume = true;
-    private boolean isFirstVisible = true;
-    private boolean isFirstInvisible = true;
-    LoadingProssbar dialog;// 加载进度条
+    protected LoadingProssbar dialog;// 加载进度条
     OkHttpException okHttpException = new OkHttpException(this);// okHttp的异常
 
     @Override
@@ -61,72 +51,15 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View mMainView = inflater.inflate(setLayout(inflater), container, false);
-        return mMainView;
-    }
-
-    protected abstract int setLayout(LayoutInflater inflater);
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        initprepare();
-    }
-
-    public synchronized void initprepare() {
-        if (isPrepared) {
-            onFirstUserVisible();
-        } else
-            isPrepared = true;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         MobclickAgent.onPageStart("MainScreen");
-        if (isFirstResume) {
-            isFirstResume = false;
-            return;
-        }
-        if (getUserVisibleHint()) {
-            onUserVisble();
-        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd("MainScreen");
-        if (getUserVisibleHint()) {
-            onUserInvisible();
-        }
-    }
-
-    protected abstract void onFirstUserVisible();// 界面首次展现，可初始化UI控件
-
-    protected abstract void onUserVisble();// 用户再次可见，非第一次
-
-    protected abstract void onFirstUserInvisble();// 用户首次不可见界面
-
-    protected abstract void onUserInvisible();// 用户再次不可见界面
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            if (isFirstVisible) {
-                isFirstVisible = false;
-                initprepare();
-            } else
-                onUserVisble();
-        } else {
-            if (isFirstInvisible) {
-                isFirstInvisible = false;
-                onFirstUserInvisble();
-            } else
-                onUserInvisible();
-        }
     }
 
     @Override
@@ -164,7 +97,6 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
             dialog.dismiss();
         }
     }
-
 
     // 异步登录任务，防止用户掉线
     public class LoginTask extends AsyncTask<Void, Void, LoginBean> {

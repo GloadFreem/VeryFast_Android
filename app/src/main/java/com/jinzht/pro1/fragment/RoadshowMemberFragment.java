@@ -1,7 +1,9 @@
 package com.jinzht.pro1.fragment;
 
-
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseFragment;
@@ -11,30 +13,10 @@ import com.jinzht.pro1.base.BaseFragment;
  */
 public class RoadshowMemberFragment extends BaseFragment {
 
-
     @Override
-    protected int setLayout(LayoutInflater inflater) {
-        return R.layout.fragment_roadshow_member;
-    }
-
-    @Override
-    protected void onFirstUserVisible() {
-
-    }
-
-    @Override
-    protected void onUserVisble() {
-
-    }
-
-    @Override
-    protected void onFirstUserInvisble() {
-
-    }
-
-    @Override
-    protected void onUserInvisible() {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_roadshow_member, container, false);
+        return view;
     }
 
     @Override

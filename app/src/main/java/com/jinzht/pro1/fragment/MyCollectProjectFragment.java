@@ -1,5 +1,6 @@
 package com.jinzht.pro1.fragment;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,15 @@ public class MyCollectProjectFragment extends BaseFragment {
     private ListView listView;// 我关注的项目列表
 
     @Override
-    protected int setLayout(LayoutInflater inflater) {
-        return R.layout.fragment_my_collect_project;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_my_collect_project,container,false);
+        listView = (ListView) view.findViewById(R.id.mycollect_project_list);// 我关注的项目列表
+        return view;
     }
 
     @Override
-    protected void onFirstUserVisible() {
-        listView = (ListView) mActivity.findViewById(R.id.mycollect_project_list);// 我关注的项目列表
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         listView.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null), null, false);
         listView.setAdapter(new BaseAdapter() {
             @Override
@@ -53,21 +56,6 @@ public class MyCollectProjectFragment extends BaseFragment {
                 return view;
             }
         });
-    }
-
-    @Override
-    protected void onUserVisble() {
-
-    }
-
-    @Override
-    protected void onFirstUserInvisble() {
-
-    }
-
-    @Override
-    protected void onUserInvisible() {
-
     }
 
     @Override

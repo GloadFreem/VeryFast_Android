@@ -1,8 +1,10 @@
 package com.jinzht.pro1.fragment;
 
 import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -23,6 +25,9 @@ import com.jinzht.pro1.view.BannerRoundProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 项目界面
@@ -46,23 +51,43 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     private String[] bannerTitles;// banner图片的标题
     private String[] bannerDescs; // banner图片的描述
     private int prePointIndex = 0;// 记录当前指示点的位置
-    private boolean isAutoPlay = true;// banner是否自动轮播
-    private Runnable bannerRunnable;// banner自动轮播任务
+    private ScheduledExecutorService scheduledExecutorService;// 定时任务
+    private BannerRun bannerRun;// banner自动轮播任务
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            projectVpBanner.setCurrentItem(projectVpBanner.getCurrentItem() + 1);
+        }
+    };
 
     private int proTotal = 80;// 要显示的全部进度
     private int progress = 0;// 当前进度
-    private boolean isGoing = false;// 正在滑动的标识
+    private boolean progressStop = false;// 正在滑动的标识
     private ProThread thread;// banner的进度条的线程
 
+    @Nullable
     @Override
-    protected int setLayout(LayoutInflater inflater) {
-        return R.layout.fragment_project;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_project, container, false);
+        titleBtnLeft = (LinearLayout) view.findViewById(R.id.title_btn_left);// title的左侧按钮
+        titleBtnLeft.setOnClickListener(this);
+        titleIvLeft = (ImageView) view.findViewById(R.id.title_iv_left);// title左侧图标，站内信
+        projectVpBanner = (ViewPager) view.findViewById(R.id.project_vp_banner);// banner轮播条
+        projectBannerBottombg = (LinearLayout) view.findViewById(R.id.project_banner_bottombg);// banner底部的阴影
+        projectBannerTitle = (TextView) view.findViewById(R.id.project_banner_title);// banner标题
+        projectBannerDesc = (TextView) view.findViewById(R.id.project_banner_desc);// banner描述
+        projectBannerPoints = (LinearLayout) view.findViewById(R.id.project_banner_points);// banner指示点
+        projectRgTab = (RadioGroup) view.findViewById(R.id.project_rg_tab);// 项目页签的RadioGroup
+        projectRbtnRoadshow = (RadioButton) view.findViewById(R.id.project_rbtn_roadshow);// 路演项目按钮
+        projectRbtnPreselection = (RadioButton) view.findViewById(R.id.project_rbtn_preselection);// 预选项目按钮
+        projectVpType = (ViewPager) view.findViewById(R.id.project_vp_type);// 路演项目和预选项目
+        bannerProgress = (BannerRoundProgressBar) view.findViewById(R.id.project_banner_project);// banner上的圆形进度条
+        return view;
     }
 
     @Override
-    protected void onFirstUserVisible() {
-        findView();
-
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         // 处理banner
         bannerPrepare();
 
@@ -89,23 +114,6 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         });
-    }
-
-
-    private void findView() {
-        titleBtnLeft = (LinearLayout) mActivity.findViewById(R.id.title_btn_left);// title的左侧按钮
-        titleBtnLeft.setOnClickListener(this);
-        titleIvLeft = (ImageView) mActivity.findViewById(R.id.title_iv_left);// title左侧图标，站内信
-        projectVpBanner = (ViewPager) mActivity.findViewById(R.id.project_vp_banner);// banner轮播条
-        projectBannerBottombg = (LinearLayout) mActivity.findViewById(R.id.project_banner_bottombg);// banner底部的阴影
-        projectBannerTitle = (TextView) mActivity.findViewById(R.id.project_banner_title);// banner标题
-        projectBannerDesc = (TextView) mActivity.findViewById(R.id.project_banner_desc);// banner描述
-        projectBannerPoints = (LinearLayout) mActivity.findViewById(R.id.project_banner_points);// banner指示点
-        projectRgTab = (RadioGroup) mActivity.findViewById(R.id.project_rg_tab);// 项目页签的RadioGroup
-        projectRbtnRoadshow = (RadioButton) mActivity.findViewById(R.id.project_rbtn_roadshow);// 路演项目按钮
-        projectRbtnPreselection = (RadioButton) mActivity.findViewById(R.id.project_rbtn_preselection);// 预选项目按钮
-        projectVpType = (ViewPager) mActivity.findViewById(R.id.project_vp_type);// 路演项目和预选项目
-        bannerProgress = (BannerRoundProgressBar) mActivity.findViewById(R.id.project_banner_project);// banner上的圆形进度条
     }
 
     // 处理banner
@@ -143,11 +151,15 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 int newPosition = position % imageViews.size();
                 // 把前一个点变成normal
                 projectBannerPoints.getChildAt(prePointIndex).setEnabled(false);
+                // 把相应位置的点变成selected
+                projectBannerPoints.getChildAt(newPosition).setEnabled(true);
                 // 当滑到某一页时，改变文字
                 projectBannerTitle.setText(bannerTitles[newPosition]);
                 projectBannerDesc.setText(bannerDescs[newPosition]);
-                // 把相应位置的点变成selected
-                projectBannerPoints.getChildAt(newPosition).setEnabled(true);
+                // 改变圆形进度条
+                if (progressStop) {
+                    bannerProgress.setProgress(proTotal);
+                }
                 prePointIndex = newPosition;
             }
         });
@@ -162,23 +174,24 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         projectVpBanner.setCurrentItem(center);
         // 自动轮播
         autoPlay();
-        UiUtils.getHandler().postDelayed(bannerRunnable, 4000);
     }
 
     // banner自动轮播
     private void autoPlay() {
-        bannerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // 切换到下一页
-                    UiUtils.getHandler().postDelayed(this, 4000);
-                    projectVpBanner.setCurrentItem(projectVpBanner.getCurrentItem() + 1);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        if (bannerRun == null) {
+            bannerRun = new BannerRun();
+        }
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(bannerRun, 1, 4, TimeUnit.SECONDS);
+    }
+
+    private class BannerRun implements Runnable {
+        @Override
+        public void run() {
+            synchronized (projectVpBanner) {
+                handler.obtainMessage().sendToTarget();
             }
-        };
+        }
     }
 
     private void startBannerProgress() {
@@ -213,20 +226,6 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     }
 
     @Override
-    protected void onUserVisble() {
-    }
-
-    @Override
-    protected void onFirstUserInvisble() {
-
-    }
-
-    @Override
-    protected void onUserInvisible() {
-
-    }
-
-    @Override
     public void errorPage() {
 
     }
@@ -237,11 +236,30 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        isAutoPlay = false;// 销毁时停止自动轮播
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (scheduledExecutorService != null) {
+            scheduledExecutorService.shutdown();// banner停止自动轮播
+        }
         if (thread != null) {// 停止进度条
             thread.stopThread();
+        }
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (scheduledExecutorService != null) {
+            scheduledExecutorService.shutdown();// banner停止自动轮播
+        }
+        if (thread != null) {// 停止进度条
+            thread.stopThread();
+        }
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
         }
     }
 
@@ -270,6 +288,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     SuperToastUtils.showSuperToast(mContext, 2, "点击了第" + position + "张图片");
                 }
             });
+
             return imageView;
         }
 
@@ -299,7 +318,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     private class ProThread extends Thread {
         @Override
         public void run() {
-            while (!isGoing) {
+            while (!progressStop) {
                 try {
                     progress += 1;
                     Message msg = new Message();
@@ -313,7 +332,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         }
 
         public void stopThread() {
-            isGoing = true;
+            progressStop = true;
         }
     }
 

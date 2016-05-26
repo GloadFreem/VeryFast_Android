@@ -151,9 +151,8 @@ public class RoundProgressBar extends View {
         paint.setColor(numColor);
         paint.setTextSize(textSize);
         paint.setTypeface(Typeface.DEFAULT); // 设置字体
-        float signWidth = paint.measureText("%"); // 测量字体宽度，我们需要根据字体的宽度设置在圆环中间
         if (textIsDisplayable && style == STROKE) {
-            canvas.drawText("%", centre - textWidth / 2 + numWidth, centre + numSize / 1.5f, paint); // 画出进度百分比
+            canvas.drawText("%", centre - textWidth / 2 + numWidth, centre + textSize / 1.5f, paint); // 画出进度百分比
         }
 
         /**

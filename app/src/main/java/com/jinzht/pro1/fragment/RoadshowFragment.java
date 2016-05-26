@@ -1,6 +1,6 @@
 package com.jinzht.pro1.fragment;
 
-
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +18,15 @@ public class RoadshowFragment extends BaseFragment {
     private ListView lvProjectRaodshow;// 项目列表
 
     @Override
-    protected int setLayout(LayoutInflater inflater) {
-        return R.layout.fragment_roadshow;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_roadshow, container, false);
+        lvProjectRaodshow = (ListView) view.findViewById(R.id.lv_project_roadshow);// 项目列表
+        return view;
     }
 
     @Override
-    protected void onFirstUserVisible() {
-        lvProjectRaodshow = (ListView) mActivity.findViewById(R.id.lv_project_roadshow);// 项目列表
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         lvProjectRaodshow.addHeaderView(View.inflate(mContext, R.layout.layout_empty_view_9dp, null));
         lvProjectRaodshow.setAdapter(new BaseAdapter() {
             @Override
@@ -48,21 +50,6 @@ public class RoadshowFragment extends BaseFragment {
                 return view;
             }
         });
-    }
-
-    @Override
-    protected void onUserVisble() {
-
-    }
-
-    @Override
-    protected void onFirstUserInvisble() {
-
-    }
-
-    @Override
-    protected void onUserInvisible() {
-
     }
 
     @Override

@@ -1,11 +1,15 @@
 package com.jinzht.pro1.utils;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -89,6 +93,36 @@ public class DialogUtils {
             @Override
             public void onClick(View v) {
                 SuperToastUtils.showSuperToast(activity, 2, "看一下");
+            }
+        });
+    }
+
+    // 弹出金条下落动画
+    public static void goldAnim(final Activity activity) {
+        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
+        window.setContentView(R.layout.activity_gold_anim);
+        ImageView gold = (ImageView) window.findViewById(R.id.iv_goad);
+        Button btnConfirm = (Button) window.findViewById(R.id.btn_confirm);
+        ObjectAnimator anim1 = ObjectAnimator.ofFloat(gold, "y", 0, 850f);
+        ObjectAnimator anim2 = ObjectAnimator.ofFloat(gold, "scaleX", 0, 1.0f);
+        ObjectAnimator anim3 = ObjectAnimator.ofFloat(gold, "scaleY", 0, 1.0f);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.setDuration(2000);
+        animSet.setInterpolator(new LinearInterpolator());
+        animSet.playTogether(anim1, anim2, anim3);
+        animSet.start();
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
     }
