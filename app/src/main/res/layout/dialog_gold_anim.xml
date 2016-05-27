@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#50000000">
+
+
+    <ImageView
+        android:id="@+id/iv_gold_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-50dp"
+        android:background="@mipmap/icon_gold_1" />
+
+    <ImageView
+        android:id="@+id/iv_gold_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-50dp"
+        android:layout_marginLeft="-20dp"
+        android:layout_toRightOf="@id/iv_gold_1"
+        android:background="@mipmap/icon_gold_2" />
+
+    <ImageView
+        android:id="@+id/iv_gold_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_gold_1"
+        android:layout_toLeftOf="@id/iv_gold_2"
+        android:background="@mipmap/icon_gold_3" />
+
+    <ImageView
+        android:id="@+id/iv_gold_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_gold_1"
+        android:layout_alignRight="@id/iv_gold_2"
+        android:background="@mipmap/icon_gold_4" />
+
+    <ImageView
+        android:id="@+id/iv_gold_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-50dp"
+        android:layout_alignRight="@id/iv_gold_1"
+        android:background="@mipmap/icon_gold_5" />
+
+    <ImageView
+        android:id="@+id/iv_gold_6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_gold_1"
+        android:layout_alignLeft="@id/iv_gold_1"
+        android:background="@mipmap/icon_gold_6" />
+
+    <ImageView
+        android:id="@+id/iv_gold_7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_gold_1"
+        android:layout_alignRight="@id/iv_gold_5"
+        android:layout_marginBottom="10dp"
+        android:background="@mipmap/icon_gold_7" />
+
+    <ImageView
+        android:id="@+id/iv_gold_8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-50dp"
+        android:layout_toRightOf="@id/iv_gold_1"
+        android:background="@mipmap/icon_gold_8" />
+
+    <ImageView
+        android:id="@+id/iv_gold_9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="-50dp"
+        android:layout_toLeftOf="@id/iv_gold_8"
+        android:background="@mipmap/icon_gold_9" />
+
+    <TextView
+        android:id="@+id/tv_second"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/bg_circle"
+        android:gravity="center"
+        android:text="3s"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/btn_confirm"
+        android:layout_width="157dp"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="66dp"
+        android:background="@drawable/bg_btn_transparent_goldline"
+        android:gravity="center"
+        android:text="@string/confirm"
+        android:textColor="#ffc200"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:id="@+id/ll_tomorrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btn_confirm"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="54dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="25"
+            android:text="明天登录即可获得"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_tomorrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="25"
+            android:text="6"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="25"
+            android:text="根金条"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_today"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ll_tomorrow"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="25"
+            android:text="恭喜获得"
+            android:textColor="#ffc200"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/tv_today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="25"
+            android:text=" 5"
+            android:textColor="#ffc200"
+            android:textSize="60sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="25"
+            android:text="根金条"
+            android:textColor="#ffc200"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_golds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ll_today"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-30dp"
+        android:background="@mipmap/icon_gold" />
+</RelativeLayout>

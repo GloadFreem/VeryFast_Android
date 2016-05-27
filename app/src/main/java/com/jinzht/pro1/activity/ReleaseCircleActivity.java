@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * 在圈子发布话题界面
  */
-public class ReleaseTopicActivity extends BaseActivity implements View.OnClickListener {
+public class ReleaseCircleActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout btnBack;// 返回
     private LinearLayout btnRelease;// 发布
@@ -32,7 +32,7 @@ public class ReleaseTopicActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     protected int getResourcesId() {
-        return R.layout.activity_release_topic;
+        return R.layout.activity_release_circle;
     }
 
     @Override

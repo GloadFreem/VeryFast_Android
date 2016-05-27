@@ -201,7 +201,9 @@
         <activity android:name=".activity.UserTypeActivity" />
         <activity android:name=".activity.ChangeCompActivity" />
         <activity android:name=".activity.MyActivitysActivity" />
-        <activity android:name=".activity.ReleaseTopicActivity"></activity>
+        <activity android:name=".activity.ReleaseCircleActivity" />
+        <activity android:name=".activity.TranspondCircleActivity" />
+        <activity android:name=".activity.CircleDetailActivity"></activity>
     </application>
 
 </manifest>

@@ -9,7 +9,7 @@ import android.widget.RadioGroup;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.adapter.MainFragmentAdapter;
 import com.jinzht.pro1.base.BaseFragmentActivity;
-import com.jinzht.pro1.utils.SuperToastUtils;
+import com.jinzht.pro1.utils.DialogUtils;
 import com.jinzht.pro1.utils.UiHelp;
 import com.jinzht.pro1.view.NoScrollViewPager;
 
@@ -81,7 +81,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_btn_me:// 跳转到个人中心界面
-                SuperToastUtils.showSuperToast(this, 2, "个人中心");
+                DialogUtils.goldAnim(this, 8, 9);
                 break;
         }
     }

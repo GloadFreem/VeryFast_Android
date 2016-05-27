@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/title_back" />
+
+    <LinearLayout
+        android:id="@+id/ll_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:minHeight="38.5dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/ed_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="576"
+            android:background="@drawable/bg_ed_transparent_blackline"
+            android:maxHeight="90dp"
+            android:minHeight="30dp" />
+
+        <TextView
+            android:id="@+id/btn_comment"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="144"
+            android:background="@drawable/bg_btn_blue"
+            android:gravity="center"
+            android:text="发送"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <com.jinzht.pro1.view.PullToRefreshLayout
+        android:id="@+id/refresh_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_comment"
+        android:layout_below="@id/title">
+
+        <include layout="@layout/refresh_head" />
+
+        <com.jinzht.pro1.view.PullableListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:scrollbars="none" />
+
+        <include layout="@layout/load_more" />
+    </com.jinzht.pro1.view.PullToRefreshLayout>
+</RelativeLayout>

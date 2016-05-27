@@ -8,7 +8,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 /**
- * 自适应高度的ViewPager，有bug，暂时结局不了，但能出效果
+ * 自适应高度的ViewPager，有bug，暂时解决不了，但能出效果
  */
 public class WrapContentHeightViewPager extends ViewPager {
 
