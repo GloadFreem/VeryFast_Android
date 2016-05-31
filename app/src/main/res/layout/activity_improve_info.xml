@@ -59,6 +59,7 @@
         android:layout_height="99dp"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
+        android:src="@mipmap/favicon_test"
         app:civ_border_color="#50ffffff"
         app:civ_border_width="5dp" />
 
@@ -66,17 +67,70 @@
         android:id="@+id/improve_info_tv_select_usertype"
         android:layout_width="325dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
         android:layout_marginTop="80dp"
         android:text="@string/select_user_type"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:visibility="visible" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <TextView
+            android:id="@+id/tv_desc_xiangmufang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/bg_tv_desc_xiangmufang"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_desc_touziren"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/bg_tv_desc_touziren"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_desc_touzijigou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/bg_tv_desc_touzijigou"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_desc_zhinangtuan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/bg_tv_desc_zhinangtuan"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
     <RadioGroup
         android:id="@+id/improve_info_rg_select_usertype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <RadioButton

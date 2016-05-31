@@ -41,12 +41,22 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/activity_lv"
+    <com.jinzht.pro1.view.PullToRefreshLayout
+        android:id="@+id/refresh_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bg_main"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="19dp"
-        android:scrollbars="none" />
+        android:layout_height="match_parent">
+
+        <include layout="@layout/refresh_head" />
+
+        <com.jinzht.pro1.view.PullableListView
+            android:id="@+id/activity_lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_main"
+            android:divider="@null"
+            android:dividerHeight="19dp"
+            android:scrollbars="none" />
+
+        <include layout="@layout/load_more" />
+    </com.jinzht.pro1.view.PullToRefreshLayout>
 </LinearLayout>

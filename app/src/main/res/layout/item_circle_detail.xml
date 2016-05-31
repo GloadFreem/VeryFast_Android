@@ -8,6 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
         android:background="@android:color/white"
         android:padding="7.5dp">
 
@@ -85,7 +86,41 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp">
+        android:layout_marginTop="9dp"
+        android:background="@android:color/white"
+        android:padding="10dp">
 
+        <ImageView
+            android:id="@+id/btn_good"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_good_checked" />
+
+        <TextView
+            android:id="@+id/tv_good"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/btn_good"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁"
+            android:textColor="#474747"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/btn_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_good"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/btn_good"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:text="全部"
+            android:textColor="@color/custom_orange"
+            android:textSize="12sp" />
     </RelativeLayout>
+
+    <include layout="@layout/layout_empty_view_9dp" />
 </LinearLayout>

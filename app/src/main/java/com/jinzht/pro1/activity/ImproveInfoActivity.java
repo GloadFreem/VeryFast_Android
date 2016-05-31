@@ -23,6 +23,10 @@ public class ImproveInfoActivity extends BaseActivity implements View.OnClickLis
     private ImageButton improveInfoBtContactService;// 联系客服
     private CircleImageView improveInfoIvUserimage;// 选择头像
     private TextView improveInfoTvSelectUsertype;// 选择用户类型提示，选择后消失
+    private TextView tvDescXiangmufang;// 项目方描述
+    private TextView tvDescTouziren;// 投资人描述
+    private TextView tvDescTouzijigou;// 投资机构描述
+    private TextView tvDescZhinangtuan;// 智囊团描述
     private RadioGroup improveInfoRgSelectUsertype;// 选择用户类型的RadioGroup
     private RadioButton improveInfoRbXiangmufang;// 项目方选项
     private RadioButton improveInfoRbTouziren;// 投资人选项
@@ -46,6 +50,10 @@ public class ImproveInfoActivity extends BaseActivity implements View.OnClickLis
         improveInfoIvUserimage = (CircleImageView) findViewById(R.id.improve_info_iv_userimage);// 选择头像
         improveInfoIvUserimage.setOnClickListener(this);
         improveInfoTvSelectUsertype = (TextView) findViewById(R.id.improve_info_tv_select_usertype);// 选择用户类型提示，选择后消失
+        tvDescXiangmufang = (TextView) findViewById(R.id.tv_desc_xiangmufang);// 项目方描述
+        tvDescTouziren = (TextView) findViewById(R.id.tv_desc_touziren);// 投资人描述
+        tvDescTouzijigou = (TextView) findViewById(R.id.tv_desc_touzijigou);// 投资机构描述
+        tvDescZhinangtuan = (TextView) findViewById(R.id.tv_desc_zhinangtuan);// 智囊团描述
         improveInfoRgSelectUsertype = (RadioGroup) findViewById(R.id.improve_info_rg_select_usertype);// 选择用户类型的RadioGroup
         improveInfoRgSelectUsertype.setOnCheckedChangeListener(this);
         improveInfoRbXiangmufang = (RadioButton) findViewById(R.id.improve_info_rb_xiangmufang);// 项目方选项
@@ -82,12 +90,28 @@ public class ImproveInfoActivity extends BaseActivity implements View.OnClickLis
         improveInfoTvSelectUsertype.setVisibility(View.GONE);
         switch (checkedId) {
             case R.id.improve_info_rb_xiangmufang:// 选择了项目方
+                tvDescXiangmufang.setVisibility(View.VISIBLE);
+                tvDescTouziren.setVisibility(View.GONE);
+                tvDescTouzijigou.setVisibility(View.GONE);
+                tvDescZhinangtuan.setVisibility(View.GONE);
                 break;
             case R.id.improve_info_rb_touziren:// 选择了投资人
+                tvDescXiangmufang.setVisibility(View.GONE);
+                tvDescTouziren.setVisibility(View.VISIBLE);
+                tvDescTouzijigou.setVisibility(View.GONE);
+                tvDescZhinangtuan.setVisibility(View.GONE);
                 break;
             case R.id.improve_info_rb_touzijigou:// 选择了投资机构
+                tvDescXiangmufang.setVisibility(View.GONE);
+                tvDescTouziren.setVisibility(View.GONE);
+                tvDescTouzijigou.setVisibility(View.VISIBLE);
+                tvDescZhinangtuan.setVisibility(View.GONE);
                 break;
             case R.id.improve_info_rb_zhinangtuan:// 选择了智囊团
+                tvDescXiangmufang.setVisibility(View.GONE);
+                tvDescTouziren.setVisibility(View.GONE);
+                tvDescTouzijigou.setVisibility(View.GONE);
+                tvDescZhinangtuan.setVisibility(View.VISIBLE);
                 break;
         }
     }

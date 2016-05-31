@@ -41,7 +41,7 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_roadshow_live,container,false);
+        View view = inflater.inflate(R.layout.fragment_roadshow_live, container, false);
         roadshowBtnPlay = (LinearLayout) view.findViewById(R.id.roadshow_btn_play);// 播放暂停按钮
         roadshowBtnPlay.setOnClickListener(this);
         roadshowIvPlay = (ImageView) view.findViewById(R.id.roadshow_iv_play);// 播放暂停按钮图标
@@ -90,7 +90,7 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
                 "你要是你不听话，我当场让你不能毕业！",
                 "老师，我知错了(- -我错在哪了...)"};
         String[] dataArray = new String[]{"周一 18:00", "周二 18:10",
-                "周二 18:11","","","","",""};
+                "周二 18:11", "", "", "", "", ""};
         int count = 8;
         for (int i = 0; i < count; i++) {
             ChatMsgBean msgBean = new ChatMsgBean();
@@ -106,6 +106,7 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
             mDataArrays.add(msgBean);
         }
         msgAdapter = new ChatMsgAdapter(mContext, mDataArrays);
+//        roadshowLvChat.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null), null, false);
         roadshowLvChat.setAdapter(msgAdapter);
     }
 
