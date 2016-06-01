@@ -30,6 +30,7 @@ import com.jinzht.pro1.view.LoadingProssbar;
 import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.sharesdk.framework.ShareSDK;
 
 /**
  * 普通Activity的基类
@@ -48,7 +49,7 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        ShareSDK.initSDK(this);// 分享
+        ShareSDK.initSDK(this);// 分享
         requestWindowFeature(Window.FEATURE_NO_TITLE);// 取消应用标题
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);// 竖屏
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);// 转场动画
@@ -110,11 +111,11 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
             String body = "";
             if (!NetWorkUtils.getNetWorkType(mContext).equals(NetWorkUtils.NETWORK_TYPE_DISCONNECT)) {
                 try {
-                    body = OkHttpUtils.LoginPost("tel", SharePreferencesUtils.getTelephone(mContext),
+                    body = OkHttpUtils.loginPost("tel", SharePreferencesUtils.getTelephone(mContext),
                             "passwd", SharePreferencesUtils.getPassword(mContext),
                             "regid", JPushInterface.getRegistrationID(mContext),
                             "version", getResources().getString(R.string.verson_name),
-                            Constant.BASE_URL + Constant.PHONE + Constant.LOGIN, mContext);
+                            Constant.BASE_URL + Constant.LOGIN, mContext);
                     Log.i("登录接口返回值", body);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -170,7 +171,7 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
-//        ShareSDK.stopSDK(this);
+        ShareSDK.stopSDK(this);
     }
 
     // 显示加载中的进度条

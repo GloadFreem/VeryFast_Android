@@ -26,6 +26,7 @@ import com.jinzht.pro1.view.LoadingProssbar;
 import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.sharesdk.framework.ShareSDK;
 
 /**
  * Fragment的基类
@@ -48,6 +49,7 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
         mContext = activity.getApplicationContext();
         aCache = ACache.get(mContext);
         mActivity = getActivity();
+        ShareSDK.initSDK(mContext);// 分享
     }
 
     @Override
@@ -76,6 +78,7 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        ShareSDK.stopSDK(mContext);
     }
 
     // 显示加载中的进度条
@@ -105,11 +108,11 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
             String body = "";
             if (!NetWorkUtils.getNetWorkType(mContext).equals(NetWorkUtils.NETWORK_TYPE_DISCONNECT)) {
                 try {
-                    body = OkHttpUtils.LoginPost("tel", SharePreferencesUtils.getTelephone(mContext),
+                    body = OkHttpUtils.loginPost("tel", SharePreferencesUtils.getTelephone(mContext),
                             "passwd", SharePreferencesUtils.getPassword(mContext),
                             "regid", JPushInterface.getRegistrationID(mContext),
                             "version", getResources().getString(R.string.verson_name),
-                            Constant.BASE_URL + Constant.PHONE + Constant.LOGIN, mContext);
+                            Constant.BASE_URL + Constant.LOGIN, mContext);
                     Log.i("登录接口返回值", body);
                 } catch (Exception e) {
                     e.printStackTrace();

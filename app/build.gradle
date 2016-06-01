@@ -33,4 +33,15 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile files('libs/okhttp-2.5.0.jar')
     compile files('libs/okio-1.6.0.jar')
+    compile files('libs/libammsdk.jar')
+    compile files('libs/ShareSDK-QQ-2.7.2.jar')
+    compile files('libs/MobTools-2016.0426.1819.jar')
+    compile files('libs/ShareSDK-Wechat-Moments-2.7.2.jar')
+    compile files('libs/ShareSDK-Core-2.7.2.jar')
+    compile files('libs/ShareSDK-Wechat-Core-2.7.2.jar')
+    compile files('libs/ShareSDK-Wechat-Favorite-2.7.2.jar')
+    compile files('libs/MobCommons-2016.0426.1819.jar')
+    compile files('libs/ShareSDK-ShortMessage-2.7.2.jar')
+    compile files('libs/ShareSDK-Wechat-2.7.2.jar')
+    compile files('libs/ShareSDK-Email-2.7.2.jar')
 }
