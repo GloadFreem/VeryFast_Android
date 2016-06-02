@@ -1,23 +1,24 @@
 package com.jinzht.pro1.bean;
 
 /**
- * 微信登录返回结果
+ * 注册接口返回信息
  */
-public class WechatLoginBean {
+public class RegisterBean {
+
     /**
-     * telePhone :
+     * telePhone : 18729342354
      * platform : 1
-     * userId : 3
+     * userId : 2
      */
 
     private DataBean data;
     /**
-     * data : {"telePhone":"","platform":1,"userId":3}
-     * msg : 微信登录成功！
+     * data : {"telePhone":"18729342354","platform":1,"userId":2}
+     * message : 恭喜您,注册成功！
      * status : 200
      */
 
-    private String msg;
+    private String message;
     private int status;
 
     public DataBean getData() {
@@ -28,12 +29,12 @@ public class WechatLoginBean {
         this.data = data;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public int getStatus() {
@@ -45,15 +46,15 @@ public class WechatLoginBean {
     }
 
     public static class DataBean {
-        private int telePhone;
+        private String telePhone;
         private int platform;
-        private int userId;
+        private long userId;
 
-        public int getTelePhone() {
+        public String getTelePhone() {
             return telePhone;
         }
 
-        public void setTelePhone(int telePhone) {
+        public void setTelePhone(String telePhone) {
             this.telePhone = telePhone;
         }
 
@@ -65,30 +66,21 @@ public class WechatLoginBean {
             this.platform = platform;
         }
 
-        public int getUserId() {
+        public long getUserId() {
             return userId;
         }
 
-        public void setUserId(int userId) {
+        public void setUserId(long userId) {
             this.userId = userId;
         }
 
         @Override
         public String toString() {
             return "DataBean{" +
-                    "telePhone=" + telePhone +
+                    "telePhone='" + telePhone + '\'' +
                     ", platform=" + platform +
                     ", userId=" + userId +
                     '}';
         }
-    }
-
-    @Override
-    public String toString() {
-        return "WechatLoginBean{" +
-                "data=" + data +
-                ", msg='" + msg + '\'' +
-                ", status=" + status +
-                '}';
     }
 }

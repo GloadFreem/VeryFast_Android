@@ -14,15 +14,18 @@ import android.widget.Toast;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
-import com.jinzht.pro1.bean.WechatLoginBean;
+import com.jinzht.pro1.bean.LoginBean;
 import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
 import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
+import com.jinzht.pro1.utils.UiUtils;
 import com.jinzht.pro1.view.CircleImageView;
 import com.mob.tools.utils.UIHandler;
 
@@ -52,7 +55,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private static final int MSG_AUTH_COMPLETE = 5;
 
     private Intent intent;
-    private LoginTask loginTask;
 
     @Override
     protected int getResourcesId() {
@@ -86,9 +88,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 startActivity(intent);
                 break;
             case R.id.login_rl_login:// 点击登录，进入主页
-//                intent = new Intent(this,MainActivity.class);
-//                startActivity(intent);
-                SuperToastUtils.showSuperToast(this, 2, "点击了登录");
+                if (StringUtils.isBlank(loginEdTel.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的手机号码");
+                } else if (!StringUtils.isTel(loginEdTel.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的手机号码");
+                } else if (StringUtils.isBlank(loginEdPassword.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入符合规范的密码");
+                } else if (StringUtils.length(loginEdPassword.getText().toString()) < 6 || StringUtils.length(loginEdPassword.getText().toString()) > 20) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入符合规范的密码");
+                } else {
+                    LoginTask loginTask = new LoginTask();
+                    loginTask.execute();
+                }
                 break;
             case R.id.login_rl_register:// 点击没有账号，进入注册页面
                 intent = new Intent(this, Register1Activity.class);
@@ -183,7 +194,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     // 应用微信授权登录
-    private class WechatLoginTask extends AsyncTask<Void, Void, WechatLoginBean> {
+    private class WechatLoginTask extends AsyncTask<Void, Void, LoginBean> {
         private Platform platform;
 
         public WechatLoginTask(Platform platform) {
@@ -191,37 +202,90 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
 
         @Override
-        protected WechatLoginBean doInBackground(Void... params) {
+        protected LoginBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.wechatLoginPost(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, "wechatLoginUser.action")),
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.WECHATLOGIN)),
                             "wechatID", platform.getDb().getUserId(),
-                            0,
                             Constant.BASE_URL + Constant.WECHATLOGIN,
                             mContext);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 Log.i("微信登录返回信息", body);
-                return FastJsonTools.getBean(body, WechatLoginBean.class);
+                return FastJsonTools.getBean(body, LoginBean.class);
             } else {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(WechatLoginBean wechatLoginBean) {
-            super.onPostExecute(wechatLoginBean);
-            if (wechatLoginBean == null) {
+        protected void onPostExecute(LoginBean loginBean) {
+            super.onPostExecute(loginBean);
+            if (loginBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 return;
             } else {
-                if (wechatLoginBean.getStatus() == 200) {
-
+                if (loginBean.getStatus() == 200) {
+                    intent = new Intent(mContext, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, wechatLoginBean.getMsg());
+                    SuperToastUtils.showSuperToast(mContext, 2, loginBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 普通登录接口
+    private class LoginTask extends AsyncTask<Void, Void, LoginBean> {
+        @Override
+        protected LoginBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    String pwd = MD5Utils.encode(loginEdPassword.getText().toString() + loginEdTel.getText().toString() + "lindyang");
+                    body = OkHttpUtils.loginPost(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.LOGIN)),
+                            "telephone", loginEdTel.getText().toString(),
+                            "password", pwd,
+                            Constant.BASE_URL + Constant.LOGIN,
+                            mContext);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("登录返回信息", body);
+                return FastJsonTools.getBean(body, LoginBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(LoginBean loginBean) {
+            super.onPostExecute(loginBean);
+            if (loginBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (loginBean.getStatus() == 200) {
+                    String pwd = null;
+                    try {
+                        pwd = MD5Utils.encode(loginEdPassword.getText().toString() + loginEdTel.getText().toString().trim() + "lindyang");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    SharePreferencesUtils.saveInformation(mContext, loginEdTel.getText().toString(), pwd);
+                    SharePreferencesUtils.setIsLogin(mContext, true);
+//                    SharePreferencesUtils.setPerfectInformation(mContext, false);
+//                    SharePreferencesUtils.setAuth(mContext, false);
+                    intent = new Intent(mContext, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, loginBean.getMessage());
                 }
             }
         }

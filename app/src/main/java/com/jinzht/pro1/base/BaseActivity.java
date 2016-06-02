@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 
-import com.jinzht.pro1.R;
 import com.jinzht.pro1.activity.LoginActivity;
 import com.jinzht.pro1.application.MyApplication;
 import com.jinzht.pro1.bean.LoginBean;
@@ -19,13 +18,14 @@ import com.jinzht.pro1.callback.ErrorException;
 import com.jinzht.pro1.callback.LoginAgainCallBack;
 import com.jinzht.pro1.callback.ProgressBarCallBack;
 import com.jinzht.pro1.utils.ACache;
+import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
 import com.jinzht.pro1.utils.FastJsonTools;
+import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpException;
 import com.jinzht.pro1.utils.OkHttpUtils;
 import com.jinzht.pro1.utils.SharePreferencesUtils;
-import com.jinzht.pro1.utils.UiHelp;
 import com.jinzht.pro1.view.LoadingProssbar;
 import com.umeng.analytics.MobclickAgent;
 
@@ -111,11 +111,12 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
             String body = "";
             if (!NetWorkUtils.getNetWorkType(mContext).equals(NetWorkUtils.NETWORK_TYPE_DISCONNECT)) {
                 try {
-                    body = OkHttpUtils.loginPost("tel", SharePreferencesUtils.getTelephone(mContext),
-                            "passwd", SharePreferencesUtils.getPassword(mContext),
-                            "regid", JPushInterface.getRegistrationID(mContext),
-                            "version", getResources().getString(R.string.verson_name),
-                            Constant.BASE_URL + Constant.LOGIN, mContext);
+                    body = OkHttpUtils.loginPost(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.LOGIN)),
+                            "telePhone", SharePreferencesUtils.getTelephone(mContext),
+                            "passWord", SharePreferencesUtils.getPassword(mContext),
+                            Constant.BASE_URL + Constant.LOGIN,
+                            mContext);
                     Log.i("登录接口返回值", body);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -130,24 +131,24 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
         @Override
         protected void onPostExecute(LoginBean loginBean) {
             super.onPostExecute(loginBean);
-            if (loginBean == null) {
-                return;
-            } else {
-                if (loginBean.getCode() == 0) {// 登录成功
-                    UiHelp.printMsg(loginBean.getCode(), loginBean.getMsg(), mContext);// 根据返回码弹出对应toast
-                    SharePreferencesUtils.setIsLogin(mContext, true);// 保存登录状态
-//                    SharePreferencesUtils.setPerfectInformation(mContext, loginBean.getData().getInfo());// 保存是否完善信息的状态
-                    SharePreferencesUtils.setAuth(mContext, String.valueOf(loginBean.getData().getAuth()));// 保存是否实名认证的状态
-                    successRefresh();
-                } else if (loginBean.getCode() == -1) {// 登录失败，跳转至登录页面
-                    SharePreferencesUtils.setIsLogin(mContext, false);
-                    loginAgain();
-                } else {
-                    SharePreferencesUtils.setIsLogin(mContext, false);
-                    loginAgain();
-                    UiHelp.printMsg(loginBean.getCode(), loginBean.getMsg(), mContext);
-                }
-            }
+//            if (loginBean == null) {
+//                return;
+//            } else {
+//                if (loginBean.getCode() == 0) {// 登录成功
+//                    UiHelp.printMsg(loginBean.getCode(), loginBean.getMessage(), mContext);// 根据返回码弹出对应toast
+//                    SharePreferencesUtils.setIsLogin(mContext, true);// 保存登录状态
+////                    SharePreferencesUtils.setPerfectInformation(mContext, loginBean.getData().getInfo());// 保存是否完善信息的状态
+//                    SharePreferencesUtils.setAuth(mContext, String.valueOf(loginBean.getData().getAuth()));// 保存是否实名认证的状态
+//                    successRefresh();
+//                } else if (loginBean.getCode() == -1) {// 登录失败，跳转至登录页面
+//                    SharePreferencesUtils.setIsLogin(mContext, false);
+//                    loginAgain();
+//                } else {
+//                    SharePreferencesUtils.setIsLogin(mContext, false);
+//                    loginAgain();
+//                    UiHelp.printMsg(loginBean.getCode(), loginBean.getMessage(), mContext);
+//                }
+//            }
         }
     }
 

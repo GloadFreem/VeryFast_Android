@@ -1,5 +1,8 @@
 package com.jinzht.pro1.activity;
 
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -7,6 +10,16 @@ import android.widget.ImageButton;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
+import com.jinzht.pro1.bean.CommonBean;
+import com.jinzht.pro1.bean.RegisterBean;
+import com.jinzht.pro1.utils.AESUtils;
+import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.FastJsonTools;
+import com.jinzht.pro1.utils.MD5Utils;
+import com.jinzht.pro1.utils.NetWorkUtils;
+import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
 
@@ -44,8 +57,73 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.set_password_confirm:// 确认密码，进入首页
-                SuperToastUtils.showSuperToast(this, 2, "点击了确认按钮");
+                if (StringUtils.isBlank(setEdPassword1.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入符合规范的密码");
+                } else if (StringUtils.length(setEdPassword1.getText().toString()) < 6 || StringUtils.length(setEdPassword1.getText().toString()) > 20) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入符合规范的密码");
+                } else if (StringUtils.isBlank(setEdPassword2.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "确认密码不能为空");
+                } else if (!setEdPassword1.getText().toString().equals(setEdPassword2.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "密码不一致");
+                } else {
+                    ResetPwdTask resetPwdTask = new ResetPwdTask();
+                    resetPwdTask.execute();
+                }
                 break;
+        }
+    }
+
+    // 注册接口
+    private class ResetPwdTask extends AsyncTask<Void, Void, CommonBean> {
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    String pwd = MD5Utils.encode(setEdPassword1.getText().toString() + getIntent().getStringExtra("telephone").trim() + "lindyang");
+                    body = OkHttpUtils.resetPwdPost(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.RESETPASSWORD)),
+                            "telephone", getIntent().getStringExtra("telephone"),
+                            "verifyCode", getIntent().getStringExtra("verifyCode"),
+                            "password", pwd,
+                            Constant.BASE_URL + Constant.RESETPASSWORD,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("注册信息", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            if (commonBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (commonBean.getStatus() == 200) {
+                    String pwd = null;
+                    try {
+                        pwd = MD5Utils.encode(setEdPassword1.getText().toString() + getIntent().getStringExtra("telephone").trim() + "lindyang");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    SharePreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
+                    SharePreferencesUtils.setIsLogin(mContext, true);
+//                    SharePreferencesUtils.setPerfectInformation(mContext, false);
+//                    SharePreferencesUtils.setAuth(mContext, false);
+                    Intent intent = new Intent(mContext, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
+                }
+            }
         }
     }
 

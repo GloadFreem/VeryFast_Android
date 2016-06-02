@@ -17,13 +17,14 @@ import java.io.IOException;
 public class OkHttpUtils {
 
     // 登录
-    public static String loginPost(String str1, String str2, String str3, String str4, String str5, String str6, String str7, String str8, String url, Context context) throws IOException {
+    public static String loginPost(String partner, String key1, String value1, String key2, String value2, String url, Context context) throws IOException {
         String body = "";
         RequestBody formBody = new FormEncodingBuilder()
-                .add(str1, str2)
-                .add(str3, str4)
-                .add(str5, str6)
-                .add(str7, str8)
+                .add("key", "jinzht_server_security")
+                .add("partner", partner)
+                .add(key1, value1)
+                .add(key2, value2)
+                .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
                 .url(url)
@@ -34,9 +35,9 @@ public class OkHttpUtils {
             body = response.body().string();
             try {
                 if (StringUtils.isBlank(response.header("Set-Cookie").toString())) {
-                    SuperToastUtils.showSuperToast(context, 2, "session不存在");
+                    Log.i("session", "session不存在");
                 } else {
-                    Log.e("session", response.header("Set-Cookie").toString());
+                    Log.i("session", response.header("Set-Cookie").toString());
                     SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
@@ -49,13 +50,13 @@ public class OkHttpUtils {
     }
 
     // 微信登录
-    public static String wechatLoginPost(String partner, String key, String value, int platform, String url, Context context) throws IOException {
+    public static String wechatLoginPost(String partner, String key, String value, String url, Context context) throws IOException {
         String body = "";
         RequestBody formBody = new FormEncodingBuilder()
-                .add("Key", "jinzht_server_security")
+                .add("key", "jinzht_server_security")
                 .add("partner", partner)
                 .add(key, value)
-                .add("platform", String.valueOf(platform))
+                .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
                 .url(url)
@@ -66,9 +67,160 @@ public class OkHttpUtils {
             body = response.body().string();
             try {
                 if (StringUtils.isBlank(response.header("Set-Cookie").toString())) {
-                    SuperToastUtils.showSuperToast(context, 2, "session不存在");
+                    Log.i("session", "session不存在");
                 } else {
-                    Log.e("session", response.header("Set-Cookie").toString());
+                    Log.i("session", response.header("Set-Cookie").toString());
+                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        return body;
+    }
+
+    // 注册
+    public static String registerPost(String partner, String key1, String value1, String key2, String value2, String key3, String value3, String key4, String value4, String url, Context context) throws IOException {
+        String body = "";
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("key", "jinzht_server_security")
+                .add("partner", partner)
+                .add(key1, value1)
+                .add(key2, value2)
+                .add(key3, value3)
+                .add(key4, value4)
+                .add("platform", String.valueOf(0))
+                .build();
+        Request request = new Request.Builder()
+                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .url(url)
+                .post(formBody)
+                .build();
+        Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            body = response.body().string();
+            try {
+                if (StringUtils.isBlank(response.header("Set-Cookie").toString())) {
+                    Log.i("session", "session不存在");
+                } else {
+                    Log.i("session", response.header("Set-Cookie").toString());
+                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        return body;
+    }
+
+    // 两个参数的请求
+    public static String post(String partner, String key1, String value1, String key2, String value2, String url, Context context) throws IOException {
+        String body = "";
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("key", "jinzht_server_security")
+                .add("partner", partner)
+                .add(key1, value1)
+                .add(key2, value2)
+                .add("platform", String.valueOf(0))
+                .build();
+        Request request = new Request.Builder()
+                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Content-Type", "multipart/form-data;boundary=---------------------------7d33a816d302b6")
+                .url(url)
+                .post(formBody)
+                .build();
+        Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            body = response.body().string();
+            try {
+                if (StringUtils.isBlank(response.header("Set-Cookie").toString())) {
+                    Log.i("session", "session不存在");
+                } else {
+                    Log.i("session", response.header("Set-Cookie").toString());
+                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        return body;
+    }
+
+    // 只传入partner的请求
+    public static String post(String partner, String url, Context context) throws IOException {
+        String body = "";
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("key", "jinzht_server_security")
+                .add("partner", partner)
+                .add("platform", String.valueOf(0))
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            body = response.body().string();
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        return body;
+    }
+
+    // 一个参数的请求
+    public static String post(String partner, String key1, String value1, String url, Context context) throws IOException {
+        String body = "";
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("key", "jinzht_server_security")
+                .add("partner", partner)
+                .add(key1, value1)
+                .add("platform", String.valueOf(0))
+                .build();
+        Request request = new Request.Builder()
+                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+//                .addHeader("Content-Type", "application/json")
+                .url(url)
+                .post(formBody)
+                .build();
+        Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            body = response.body().string();
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        return body;
+    }
+
+    // 重置密码
+    public static String resetPwdPost(String partner, String key1, String value1, String key2, String value2, String key3, String value3, String url, Context context) throws IOException {
+        String body = "";
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("key", "jinzht_server_security")
+                .add("partner", partner)
+                .add(key1, value1)
+                .add(key2, value2)
+                .add(key3, value3)
+                .add("platform", String.valueOf(0))
+                .build();
+        Request request = new Request.Builder()
+                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .url(url)
+                .post(formBody)
+                .build();
+        Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            body = response.body().string();
+            try {
+                if (StringUtils.isBlank(response.header("Set-Cookie").toString())) {
+                    Log.i("session", "session不存在");
+                } else {
+                    Log.i("session", response.header("Set-Cookie").toString());
                     SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {

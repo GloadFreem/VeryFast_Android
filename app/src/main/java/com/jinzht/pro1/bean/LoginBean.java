@@ -5,53 +5,69 @@ package com.jinzht.pro1.bean;
  */
 public class LoginBean {
 
-    private String msg;
-    private DataEntity data;
-    private int code;
+    /**
+     * userId : 1
+     */
 
-    public String getMsg() {
-        return msg;
-    }
+    private DataBean data;
+    /**
+     * data : {"userId":1}
+     * message : 登录成功！
+     * status : 200
+     */
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
+    private String message;
+    private int status;
 
-    public DataEntity getData() {
+    public DataBean getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(DataBean data) {
         this.data = data;
     }
 
-    public int getCode() {
-        return code;
+    public String getMessage() {
+        return message;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public static class DataEntity {
+    public int getStatus() {
+        return status;
+    }
 
-        private boolean info;
-        private Object auth;
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-        public boolean getInfo() {
-            return info;
+    public static class DataBean {
+        private long userId;
+
+        public long getUserId() {
+            return userId;
         }
 
-        public void setInfo(boolean info) {
-            this.info = info;
+        public void setUserId(long userId) {
+            this.userId = userId;
         }
 
-        public Object getAuth() {
-            return auth;
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "userId=" + userId +
+                    '}';
         }
+    }
 
-        public void setAuth(Object auth) {
-            this.auth = auth;
-        }
+    @Override
+    public String toString() {
+        return "LoginBean{" +
+                "data=" + data +
+                ", message='" + message + '\'' +
+                ", status=" + status +
+                '}';
     }
 }

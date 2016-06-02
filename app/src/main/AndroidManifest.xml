@@ -192,7 +192,7 @@
         <activity android:name=".activity.SetPasswordActivity" />
         <activity android:name=".activity.Register1Activity" />
         <activity android:name=".activity.Register2Activity" />
-        <activity android:name=".activity.ImproveInfoActivity" />
+        <activity android:name=".activity.SetUserTypeActivity" />
         <activity android:name=".activity.CompleteRegisterActivity" />
         <activity android:name=".activity.CertificationIDCardActivity" />
         <activity android:name=".activity.CertificationCompActivity" />

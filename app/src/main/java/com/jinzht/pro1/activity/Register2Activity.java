@@ -1,6 +1,9 @@
 package com.jinzht.pro1.activity;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -8,6 +11,16 @@ import android.widget.ImageButton;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
+import com.jinzht.pro1.bean.CustomerServiceBean;
+import com.jinzht.pro1.bean.RegisterBean;
+import com.jinzht.pro1.utils.AESUtils;
+import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.FastJsonTools;
+import com.jinzht.pro1.utils.MD5Utils;
+import com.jinzht.pro1.utils.NetWorkUtils;
+import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
 
@@ -49,12 +62,115 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.register2_bt_contact_service:// 点击了联系客服
-                SuperToastUtils.showSuperToast(this, 2, "点击了联系客服");
+                CustomerServiceTask customerServiceTask = new CustomerServiceTask();
+                customerServiceTask.execute();
                 break;
             case R.id.register2_bt_confirm:// 点击下一步按钮，进入完善信息页面
-                Intent intent = new Intent(this, ImproveInfoActivity.class);
-                startActivity(intent);
+                if (StringUtils.isBlank(register2EdPassword1.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入符合规范的密码");
+                } else if (StringUtils.length(register2EdPassword1.getText().toString()) < 6 || StringUtils.length(register2EdPassword1.getText().toString()) > 20) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入符合规范的密码");
+                } else if (StringUtils.isBlank(register2EdPassword2.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "确认密码不能为空");
+                } else if (!register2EdPassword1.getText().toString().equals(register2EdPassword2.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "密码不一致");
+                } else {
+                    RegisterTask registerTask = new RegisterTask();
+                    registerTask.execute();
+                }
+//                Intent intent = new Intent(this, SetUserTypeActivity.class);
+//                startActivity(intent);
                 break;
+        }
+    }
+
+    // 注册接口
+    private class RegisterTask extends AsyncTask<Void, Void, RegisterBean> {
+        @Override
+        protected RegisterBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    String pwd = MD5Utils.encode(register2EdPassword1.getText().toString() + getIntent().getStringExtra("telephone").trim() + "lindyang");
+                    body = OkHttpUtils.registerPost(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.REGISTER)),
+                            "telephone", getIntent().getStringExtra("telephone"),
+                            "verifyCode", getIntent().getStringExtra("verifyCode"),
+                            "inviteCode", getIntent().getStringExtra("inviteCode"),
+                            "password", pwd,
+                            Constant.BASE_URL + Constant.REGISTER,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("注册信息", body);
+                return FastJsonTools.getBean(body, RegisterBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(RegisterBean registerBean) {
+            super.onPostExecute(registerBean);
+            if (registerBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (registerBean.getStatus() == 200) {
+                    String pwd = null;
+                    try {
+                        pwd = MD5Utils.encode(register2EdPassword1.getText().toString() + getIntent().getStringExtra("telephone").trim() + "lindyang");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    SharePreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
+                    SharePreferencesUtils.setIsLogin(mContext, true);
+                    SharePreferencesUtils.setPerfectInformation(mContext, false);
+                    SharePreferencesUtils.setAuth(mContext, false);
+                    Intent intent = new Intent(mContext, SetUserTypeActivity.class);
+                    startActivity(intent);
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, registerBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 客服接口
+    private class CustomerServiceTask extends AsyncTask<Void, Void, CustomerServiceBean> {
+        @Override
+        protected CustomerServiceBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.CUSTOMERSERVICE)),
+                            Constant.BASE_URL + Constant.CUSTOMERSERVICE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("客服信息", body);
+                return FastJsonTools.getBean(body, CustomerServiceBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CustomerServiceBean customerServiceBean) {
+            super.onPostExecute(customerServiceBean);
+            if (customerServiceBean.getStatus() == 200) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                Uri data = Uri.parse("tel:" + customerServiceBean.getData().getTel());
+                intent.setData(data);
+                startActivity(intent);
+            } else {
+                SuperToastUtils.showSuperToast(mContext, 2, customerServiceBean.getMessage());
+            }
         }
     }
 

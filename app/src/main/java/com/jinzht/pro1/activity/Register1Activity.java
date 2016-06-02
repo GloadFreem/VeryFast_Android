@@ -1,6 +1,10 @@
 package com.jinzht.pro1.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -10,8 +14,18 @@ import android.widget.TextView;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
+import com.jinzht.pro1.bean.CommonBean;
+import com.jinzht.pro1.bean.CustomerServiceBean;
+import com.jinzht.pro1.utils.AESUtils;
+import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.FastJsonTools;
+import com.jinzht.pro1.utils.MD5Utils;
+import com.jinzht.pro1.utils.NetWorkUtils;
+import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
+import com.jinzht.pro1.utils.UiUtils;
 
 /**
  * 注册的第一个页面
@@ -28,6 +42,8 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
     private Button register1BtRegister;// 注册按钮
     private CheckBox register1_cb_agreement;// 是否同意用户协议按钮
     private TextView register1TvUserAgreement;// 查看用户协议按钮
+
+    private int timer = 60;// 60s倒计时，用于验证码
 
     @Override
     protected int getResourcesId() {
@@ -72,24 +88,143 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.register1_bt_contact_service:// 打电话给客服
-                SuperToastUtils.showSuperToast(this, 2, "点击了客服按钮");
+                CustomerServiceTask customerServiceTask = new CustomerServiceTask();
+                customerServiceTask.execute();
                 break;
             case R.id.register1_tv_getcode:// 点击获取验证码
-                SuperToastUtils.showSuperToast(this, 2, "获取验证码");
-                register1TvGetcode.setBackgroundResource(R.drawable.bg_code_gray);
-                register1TvGetcode.setTextColor(getResources().getColor(R.color.custom_orange));
+                if (StringUtils.isBlank(register1EdTel.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的手机号码");
+                } else if (!StringUtils.isTel(register1EdTel.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的手机号码");
+                } else {
+                    UiUtils.getHandler().postDelayed(runnable, 1000);
+                    register1TvGetcode.setText(timer + "秒后重新发送");
+                    register1TvGetcode.setBackgroundResource(R.drawable.bg_code_gray);
+                    register1TvGetcode.setTextColor(getResources().getColor(R.color.custom_orange));
+                    GetCodeTask getCodeTask = new GetCodeTask();
+                    getCodeTask.execute();
+                }
                 break;
             case R.id.register1_bt_register:// 点击注册，跳转到注册的第二个页面
                 if (register1_cb_agreement.isChecked()) {
-                    Intent intent = new Intent(this, Register2Activity.class);
-                    startActivity(intent);
+                    if (StringUtils.isBlank(register1EdTel.getText().toString())) {
+                        SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的手机号码");
+                    } else if (!StringUtils.isTel(register1EdTel.getText().toString())) {
+                        SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的手机号码");
+                    } else if (StringUtils.isBlank(register1EdCode.getText().toString())) {
+                        SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的验证码");
+                    } else {
+                        Intent intent = new Intent(this, Register2Activity.class);
+                        intent.putExtra("telephone", register1EdTel.getText().toString());
+                        intent.putExtra("verifyCode", register1EdCode.getText().toString());
+                        intent.putExtra("inviteCode", register1EdInviteCode.getText().toString());
+                        startActivity(intent);
+                    }
                 } else {
-                    SuperToastUtils.showSuperToast(this, 2, "同意《金指投用户协议》才能注册");
+                    SuperToastUtils.showSuperToast(this, 2, "您必须同意《金指投用户协议》才可以注册");
                 }
+//                Intent intent = new Intent(this, Register2Activity.class);
+//                startActivity(intent);
                 break;
             case R.id.register1_tv_user_agreement:// 点击查看用户协议，跳转到用户协议界面
                 SuperToastUtils.showSuperToast(this, 2, "点击了用户协议");
+                // TODO: 2016/6/2 查看用户协议
                 break;
+        }
+    }
+
+    // 获取验证码
+    private class GetCodeTask extends AsyncTask<Void, Void, CommonBean> {
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.VERIFYCODE)),
+                            "telephone", register1EdTel.getText().toString(),
+                            "type", "0",
+                            Constant.BASE_URL + Constant.VERIFYCODE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("验证码信息", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            if (commonBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (commonBean.getStatus() == 200) {
+                    SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 倒计时
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            register1TvGetcode.setClickable(false);
+            timer--;
+            register1TvGetcode.setText(timer + "秒后重新发送");
+            UiUtils.getHandler().postDelayed(this, 1000);
+            if (timer == 0) {
+                timer = 60;
+                register1TvGetcode.setText("获取验证码");
+                register1TvGetcode.setBackgroundResource(R.drawable.bg_code_orange);
+                register1TvGetcode.setTextColor(Color.WHITE);
+                register1TvGetcode.setClickable(true);
+                UiUtils.getHandler().removeCallbacks(this);
+            }
+        }
+    };
+
+    // 客服接口
+    private class CustomerServiceTask extends AsyncTask<Void, Void, CustomerServiceBean> {
+        @Override
+        protected CustomerServiceBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.CUSTOMERSERVICE)),
+                            Constant.BASE_URL + Constant.CUSTOMERSERVICE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("客服信息", body);
+                return FastJsonTools.getBean(body, CustomerServiceBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CustomerServiceBean customerServiceBean) {
+            super.onPostExecute(customerServiceBean);
+            if (customerServiceBean.getStatus() == 200) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                Uri data = Uri.parse("tel:" + customerServiceBean.getData().getTel());
+                intent.setData(data);
+                startActivity(intent);
+            } else {
+                SuperToastUtils.showSuperToast(mContext, 2, customerServiceBean.getMessage());
+            }
         }
     }
 
