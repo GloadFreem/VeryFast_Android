@@ -26,6 +26,7 @@ import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpException;
 import com.jinzht.pro1.utils.OkHttpUtils;
 import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.view.LoadingProssbar;
 import com.umeng.analytics.MobclickAgent;
 
@@ -113,14 +114,16 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
                 try {
                     body = OkHttpUtils.loginPost(
                             MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.LOGIN)),
-                            "telePhone", SharePreferencesUtils.getTelephone(mContext),
-                            "passWord", SharePreferencesUtils.getPassword(mContext),
+                            "telephone", SharePreferencesUtils.getTelephone(mContext),
+                            "password", SharePreferencesUtils.getPassword(mContext),
+//                            "telephone", "18729342354",
+//                            "password", "111111",
                             Constant.BASE_URL + Constant.LOGIN,
                             mContext);
-                    Log.i("登录接口返回值", body);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                Log.i("登录接口返回值", body);
                 return FastJsonTools.getBean(body, LoginBean.class);
             } else {
                 return null;
@@ -131,24 +134,19 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
         @Override
         protected void onPostExecute(LoginBean loginBean) {
             super.onPostExecute(loginBean);
-//            if (loginBean == null) {
-//                return;
-//            } else {
-//                if (loginBean.getCode() == 0) {// 登录成功
-//                    UiHelp.printMsg(loginBean.getCode(), loginBean.getMessage(), mContext);// 根据返回码弹出对应toast
-//                    SharePreferencesUtils.setIsLogin(mContext, true);// 保存登录状态
-////                    SharePreferencesUtils.setPerfectInformation(mContext, loginBean.getData().getInfo());// 保存是否完善信息的状态
-//                    SharePreferencesUtils.setAuth(mContext, String.valueOf(loginBean.getData().getAuth()));// 保存是否实名认证的状态
-//                    successRefresh();
-//                } else if (loginBean.getCode() == -1) {// 登录失败，跳转至登录页面
-//                    SharePreferencesUtils.setIsLogin(mContext, false);
-//                    loginAgain();
-//                } else {
-//                    SharePreferencesUtils.setIsLogin(mContext, false);
-//                    loginAgain();
-//                    UiHelp.printMsg(loginBean.getCode(), loginBean.getMessage(), mContext);
-//                }
-//            }
+            if (loginBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (loginBean.getStatus() == 200) {// 登录成功
+                    SharePreferencesUtils.setIsLogin(mContext, true);// 保存登录状态
+                    successRefresh();
+                } else {
+                    SharePreferencesUtils.setIsLogin(mContext, false);
+                    SuperToastUtils.showSuperToast(mContext, 2, loginBean.getMessage());
+                    loginAgain();
+                }
+            }
         }
     }
 

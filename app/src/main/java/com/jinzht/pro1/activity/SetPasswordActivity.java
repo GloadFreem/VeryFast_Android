@@ -115,7 +115,7 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
                     }
                     SharePreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
                     SharePreferencesUtils.setIsLogin(mContext, true);
-//                    SharePreferencesUtils.setPerfectInformation(mContext, false);
+//                    SharePreferencesUtils.setChoseUserType(mContext, false);
 //                    SharePreferencesUtils.setAuth(mContext, false);
                     Intent intent = new Intent(mContext, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

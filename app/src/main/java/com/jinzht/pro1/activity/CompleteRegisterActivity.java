@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
-import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
 
 /**
@@ -43,10 +42,12 @@ public class CompleteRegisterActivity extends BaseActivity implements View.OnCli
         switch (v.getId()) {
             case R.id.complete_register_btn_goto_identification:// 去认证
                 intent = new Intent(this, CertificationIDCardActivity.class);
+                intent.putExtra("usertype", getIntent().getIntExtra("usertype", 0));
                 startActivity(intent);
                 break;
             case R.id.complete_register_btn_goto_try:// 试用模式，进入主页
-                SuperToastUtils.showSuperToast(this, 2, "试用模式，进入主页");
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
         }
     }

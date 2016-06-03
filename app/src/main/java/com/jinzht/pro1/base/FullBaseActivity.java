@@ -120,7 +120,7 @@ public abstract class FullBaseActivity extends Activity implements ProgressBarCa
 //                if (loginBean.getCode() == 0) {// 登录成功
 //                    UiHelp.printMsg(loginBean.getCode(), loginBean.getMessage(), mContext);// 根据返回码弹出对应toast
 //                    SharePreferencesUtils.setIsLogin(mContext, true);// 保存登录状态
-////                    SharePreferencesUtils.setPerfectInformation(mContext, loginBean.getData().getInfo());// 保存是否完善信息的状态
+////                    SharePreferencesUtils.setChoseUserType(mContext, loginBean.getData().getInfo());// 保存是否完善信息的状态
 //                    SharePreferencesUtils.setAuth(mContext, String.valueOf(loginBean.getData().getAuth()));// 保存是否实名认证的状态
 //                    successRefresh();
 //                } else if (loginBean.getCode() == -1) {// 登录失败，跳转至登录页面

@@ -217,13 +217,18 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(CustomerServiceBean customerServiceBean) {
             super.onPostExecute(customerServiceBean);
-            if (customerServiceBean.getStatus() == 200) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                Uri data = Uri.parse("tel:" + customerServiceBean.getData().getTel());
-                intent.setData(data);
-                startActivity(intent);
+            if (customerServiceBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
             } else {
-                SuperToastUtils.showSuperToast(mContext, 2, customerServiceBean.getMessage());
+                if (customerServiceBean.getStatus() == 200) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    Uri data = Uri.parse("tel:" + customerServiceBean.getData().getTel());
+                    intent.setData(data);
+                    startActivity(intent);
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, customerServiceBean.getMessage());
+                }
             }
         }
     }

@@ -3,7 +3,6 @@ package com.jinzht.pro1.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -28,11 +27,14 @@ import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
+import com.jinzht.pro1.utils.UiUtils;
 import com.jinzht.pro1.view.CircleImageView;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileOutputStream;
 
 /**
@@ -55,9 +57,11 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
     private RadioButton improveInfoRbZhinangtuan;// 智囊团选项
     private Button improveInfoCompleteRegister;// 完成注册按钮
 
-    private String photoPath = "";// 选择的头像地址
-    private Bitmap bitmap = null;// 选择的头像
-    private final String FILE_PATH = Environment.getExternalStorageDirectory() + "/" + "favicon.jpg";// 照相保存地址
+    private int usertype = 0;// 1:项目方,2:投资人,3:机构投资人,4:智囊团
+    private Bitmap bitmap = null;// 从相册选择的头像
+    private File photoFile = null; // 拍照得到的头像
+    private String FILE_PATH;// 头像保存地址
+
 
     @Override
     protected int getResourcesId() {
@@ -87,6 +91,7 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
         improveInfoRbZhinangtuan = (RadioButton) findViewById(R.id.improve_info_rb_zhinangtuan);// 智囊团选项
         improveInfoCompleteRegister = (Button) findViewById(R.id.improve_info_complete_register);// 完成注册按钮
         improveInfoCompleteRegister.setOnClickListener(this);
+        FILE_PATH = getCacheDir() + "/" + "favicon.jpg";// 头像保存地址
 
         improveInfoIvUserimage.setImageResource(R.drawable.ic_launcher);
     }
@@ -105,8 +110,12 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                 choosePhoto();
                 break;
             case R.id.improve_info_complete_register:// 点击完成注册，跳转至获得邀请码界面
-                SetUserTypeTask setUserTypeTask = new SetUserTypeTask();
-                setUserTypeTask.execute();
+                if (usertype == 0) {
+                    SuperToastUtils.showSuperToast(this, 2, "请选择您的身份");
+                } else {
+                    SetUserTypeTask setUserTypeTask = new SetUserTypeTask();
+                    setUserTypeTask.execute();
+                }
                 break;
         }
     }
@@ -128,7 +137,10 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {// 打开照相机
-
+                            photoFile = new File(Environment.getExternalStorageDirectory() + "/" + "favicon.jpg");
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                            startActivityForResult(intent, Constant.TAKE_PHOTO);
                         } else {// 从相册选择
                             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                             intent.setType("image/*");
@@ -144,33 +156,37 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == Constant.CHOOSE_PHOTO && data != null) {// 从相册选择照片
+            UiUtils.crop(data.getData(), 1, 1, 1000, 1000, this);
+        } else if (resultCode == RESULT_OK && requestCode == Constant.TAKE_PHOTO) {// 拍照选择
+            UiUtils.crop(Uri.fromFile(photoFile), 1, 1, 1000, 1000, this);
+        } else if (resultCode == RESULT_OK && requestCode == Constant.CUT_PHOTO && data != null) {// 剪裁过的照片
             try {
-                Uri chosePhoto = data.getData();
-                String[] filePathColumns = {MediaStore.Images.Media.DATA};
-                Cursor c = getContentResolver().query(chosePhoto, filePathColumns, null, null, null);
-                c.moveToFirst();
-                int columnIndex = c.getColumnIndex(filePathColumns[0]);
-                photoPath = c.getString(columnIndex);
-                c.close();
-                Log.i("照片地址", photoPath);
-                // 压缩图片
-                bitmap = createThumbnail(photoPath, 1);
-                // 保存图片
+                bitmap = data.getParcelableExtra("data");
+
+                int byteCount0 = bitmap.getByteCount();
+                String size0 = StringUtils.bytes2kb(byteCount0);
+                Log.i("大小", size0);
+                int width0 = bitmap.getWidth();
+                int height0 = bitmap.getHeight();
+                Log.i("分辨率", String.valueOf(width0) + "*" + String.valueOf(height0));
+
+                Bitmap tempBitmap = UiUtils.resizeBitmap(bitmap, 300, 300);// 重置分辨率
                 FileOutputStream fos = new FileOutputStream(FILE_PATH);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                Bitmap bitmap1 = BitmapFactory.decodeFile(FILE_PATH);
-                improveInfoIvUserimage.setImageBitmap(bitmap1);
-            } catch (FileNotFoundException e) {
+                tempBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);// 压缩另存，100表示不压缩
+                tempBitmap = BitmapFactory.decodeFile(FILE_PATH);
+                improveInfoIvUserimage.setImageBitmap(tempBitmap);
+                fos.close();
+
+                int byteCount = tempBitmap.getByteCount();
+                String size = StringUtils.bytes2kb(byteCount);
+                Log.i("大小", size);
+                int width = tempBitmap.getWidth();
+                int height = tempBitmap.getHeight();
+                Log.i("分辨率", String.valueOf(width) + "*" + String.valueOf(height));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    // 压缩图片
-    private Bitmap createThumbnail(String photoPath, int i) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = i;
-        return BitmapFactory.decodeFile(photoPath, options);
     }
 
     @Override
@@ -182,24 +198,28 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                 tvDescTouziren.setVisibility(View.GONE);
                 tvDescTouzijigou.setVisibility(View.GONE);
                 tvDescZhinangtuan.setVisibility(View.GONE);
+                usertype = 1;
                 break;
             case R.id.improve_info_rb_touziren:// 选择了投资人
                 tvDescXiangmufang.setVisibility(View.GONE);
                 tvDescTouziren.setVisibility(View.VISIBLE);
                 tvDescTouzijigou.setVisibility(View.GONE);
                 tvDescZhinangtuan.setVisibility(View.GONE);
+                usertype = 2;
                 break;
             case R.id.improve_info_rb_touzijigou:// 选择了投资机构
                 tvDescXiangmufang.setVisibility(View.GONE);
                 tvDescTouziren.setVisibility(View.GONE);
                 tvDescTouzijigou.setVisibility(View.VISIBLE);
                 tvDescZhinangtuan.setVisibility(View.GONE);
+                usertype = 3;
                 break;
             case R.id.improve_info_rb_zhinangtuan:// 选择了智囊团
                 tvDescXiangmufang.setVisibility(View.GONE);
                 tvDescTouziren.setVisibility(View.GONE);
                 tvDescTouzijigou.setVisibility(View.GONE);
                 tvDescZhinangtuan.setVisibility(View.VISIBLE);
+                usertype = 4;
                 break;
         }
     }
@@ -211,13 +231,24 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
-                    body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SETUSERTYPE)),
-                            "ideniyType", "2",
-//                            "file", "",
-                            Constant.BASE_URL + Constant.SETUSERTYPE,
-                            mContext
-                    );
+                    File file = new File(FILE_PATH);
+                    if (file.exists()) {
+                        body = OkHttpUtils.usertypePost(
+                                MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SETUSERTYPE)),
+                                "ideniyType", String.valueOf(usertype),
+                                "file", FILE_PATH,
+                                Constant.BASE_URL + Constant.SETUSERTYPE,
+                                mContext
+                        );
+                    } else {
+                        Log.i("没有选择头像", "没有选择头像");
+                        body = OkHttpUtils.usertypePost(
+                                MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SETUSERTYPE)),
+                                "ideniyType", String.valueOf(usertype),
+                                Constant.BASE_URL + Constant.SETUSERTYPE,
+                                mContext
+                        );
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -236,7 +267,10 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                 return;
             } else {
                 if (commonBean.getStatus() == 200) {
-                    Intent intent = new Intent(mContext, CompleteRegisterActivity.class);
+                    SharePreferencesUtils.setChoseUserType(mContext, true);
+                    SharePreferencesUtils.saveUserType(mContext, usertype);
+                    Intent intent = new Intent(mContext, CompleteRegisterActivity.class);// 跳转至完成完成注册送指环码界面
+                    intent.putExtra("usertype", usertype);
                     startActivity(intent);
                     finish();
                 } else {
@@ -271,13 +305,18 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(CustomerServiceBean customerServiceBean) {
             super.onPostExecute(customerServiceBean);
-            if (customerServiceBean.getStatus() == 200) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                Uri data = Uri.parse("tel:" + customerServiceBean.getData().getTel());
-                intent.setData(data);
-                startActivity(intent);
+            if (customerServiceBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
             } else {
-                SuperToastUtils.showSuperToast(mContext, 2, customerServiceBean.getMessage());
+                if (customerServiceBean.getStatus() == 200) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    Uri data = Uri.parse("tel:" + customerServiceBean.getData().getTel());
+                    intent.setData(data);
+                    startActivity(intent);
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, customerServiceBean.getMessage());
+                }
             }
         }
     }

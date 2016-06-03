@@ -72,15 +72,31 @@ public class SharePreferencesUtils {
         return sp.getBoolean("isAuth", false);
     }
 
-    public static void setPerfectInformation(Context context, boolean isAuto) {
+    // 保存是否选择身份
+    public static void setChoseUserType(Context context, boolean isAuto) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("isPerfect", isAuto);
+        editor.putBoolean("choseUsertype", isAuto);
         editor.commit();
     }
 
-    public static boolean getPerfectInformation(Context context) {
+    // 获取是否选择身份
+    public static boolean getChoseUserType(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
-        return sp.getBoolean("isPerfect", false);
+        return sp.getBoolean("choseUsertype", false);
+    }
+
+    // 保存用户身份类型
+    public static void saveUserType(Context context, int usertype) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("usertype", usertype);
+        editor.commit();
+    }
+
+    // 获取用户身份类型
+    public static int getUserType(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        return sp.getInt("usertype", 0);
     }
 }

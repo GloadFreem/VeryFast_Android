@@ -279,7 +279,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     }
                     SharePreferencesUtils.saveInformation(mContext, loginEdTel.getText().toString(), pwd);
                     SharePreferencesUtils.setIsLogin(mContext, true);
-//                    SharePreferencesUtils.setPerfectInformation(mContext, false);
+//                    SharePreferencesUtils.setChoseUserType(mContext, false);
 //                    SharePreferencesUtils.setAuth(mContext, false);
                     intent = new Intent(mContext, MainActivity.class);
                     startActivity(intent);

@@ -5,10 +5,12 @@ import android.util.Log;
 
 import com.jinzht.pro1.application.MyApplication;
 import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -129,7 +131,6 @@ public class OkHttpUtils {
                 .build();
         Request request = new Request.Builder()
                 .addHeader("Cookie", SharePreferencesUtils.getSession(context))
-                .addHeader("Content-Type", "multipart/form-data;boundary=---------------------------7d33a816d302b6")
                 .url(url)
                 .post(formBody)
                 .build();
@@ -184,7 +185,6 @@ public class OkHttpUtils {
                 .build();
         Request request = new Request.Builder()
                 .addHeader("Cookie", SharePreferencesUtils.getSession(context))
-//                .addHeader("Content-Type", "application/json")
                 .url(url)
                 .post(formBody)
                 .build();
@@ -226,6 +226,51 @@ public class OkHttpUtils {
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        return body;
+    }
+
+    // 选择投资人类型
+    public static String usertypePost(String partner, String key1, String value1, String key2, String value2, String url, Context context) throws IOException {
+        String body = "";
+        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
+        builder.addFormDataPart("key", "jinzht_server_security");
+        builder.addFormDataPart("partner", partner);
+        builder.addFormDataPart(key1, value1);
+        builder.addFormDataPart(key2, key2 + ".jpg", RequestBody.create(MultipartBuilder.FORM, new File(value2)));
+        RequestBody requestBody = builder.build();
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .post(requestBody)
+                .build();
+        Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            body = response.body().string();
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        return body;
+    }
+
+    // 选择投资人类型，不上传头像
+    public static String usertypePost(String partner, String key1, String value1, String url, Context context) throws IOException {
+        String body = "";
+        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
+        builder.addFormDataPart("key", "jinzht_server_security");
+        builder.addFormDataPart("partner", partner);
+        builder.addFormDataPart(key1, value1);
+        RequestBody requestBody = builder.build();
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .post(requestBody)
+                .build();
+        Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            body = response.body().string();
         } else {
             throw new IOException("Unexpected code " + response);
         }

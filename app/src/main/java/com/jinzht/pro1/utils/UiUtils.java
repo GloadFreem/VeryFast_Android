@@ -1,10 +1,15 @@
 package com.jinzht.pro1.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.view.View;
 
@@ -107,4 +112,33 @@ public class UiUtils {
         return stateListDrawable;
     }
 
+    // 重置图片尺寸
+    public static Bitmap resizeBitmap(Bitmap bitmap, int w, int h) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        float scaleWidth = ((float) w) / width;
+        float scaleheight = ((float) h) / height;
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleheight);
+        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+    }
+
+    // 剪裁图片
+    public static void crop(Uri uri, int scaleX, int scaleY, int sizeX, int sizeY, Activity activity) {
+        // 裁剪图片意图
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // 裁剪框的比例，1：1
+        intent.putExtra("aspectX", scaleX);
+        intent.putExtra("aspectY", scaleY);
+        // 裁剪后输出图片的尺寸大小
+        intent.putExtra("outputX", sizeX);
+        intent.putExtra("outputY", sizeY);
+
+        intent.putExtra("outputFormat", "JPEG");// 图片格式
+        intent.putExtra("return-data", true);
+        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CUT
+        activity.startActivityForResult(intent, Constant.CUT_PHOTO);
+    }
 }

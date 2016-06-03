@@ -7,6 +7,8 @@ public class Constant {
 
 //    public static final String BASE_URL = "http://www.jinzht.com/jinzht/";
 
+//    public static final String BASE_URL = "http://192.168.5.126:8080/jinzht/";
+
     public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 私钥
@@ -20,6 +22,26 @@ public class Constant {
      * 从相册选择照片
      */
     public static final int CHOOSE_PHOTO = 1;
+    /**
+     * 剪裁图片
+     */
+    public static final int CUT_PHOTO = 3;
+    /**
+     * 身份类型——项目方
+     */
+    public static final int USERTYPE_XMF = 1;
+    /**
+     * 身份类型——投资人
+     */
+    public static final int USERTYPE_TZR = 2;
+    /**
+     * 身份类型——投资机构
+     */
+    public static final int USERTYPE_TZJG = 3;
+    /**
+     * 身份类型——智囊团
+     */
+    public static final int USERTYPE_ZNT = 4;
     /**
      * 登录接口
      */
