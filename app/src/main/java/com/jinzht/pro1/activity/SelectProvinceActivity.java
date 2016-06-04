@@ -1,7 +1,12 @@
 package com.jinzht.pro1.activity;
 
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -9,7 +14,18 @@ import android.widget.TextView;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
+import com.jinzht.pro1.bean.ProvinceListBean;
+import com.jinzht.pro1.utils.AESUtils;
+import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.FastJsonTools;
+import com.jinzht.pro1.utils.MD5Utils;
+import com.jinzht.pro1.utils.NetWorkUtils;
+import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 选择省界面
@@ -20,6 +36,7 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
     private TextView tvTitle;// 标题
     private ListView lvInvestField;// 省份列表
 
+    private List<ProvinceListBean.DataBean> provinces = new ArrayList<>();// 省份列表
 
     @Override
     protected int getResourcesId() {
@@ -33,10 +50,22 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
+        tvTitle.setText("公司所在地");
         lvInvestField = (ListView) findViewById(R.id.lv_invest_field);// 省份列表
 
-        tvTitle.setText("公司所在地");
-        lvInvestField.setAdapter(new ProvinceAdapt());
+        GetProvinceListTask getProvinceListTask = new GetProvinceListTask();
+        getProvinceListTask.execute();
+
+        lvInvestField.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("选择了", provinces.get(position).getName());
+                Intent intent = new Intent(mContext, SelectCityActivity.class);
+                intent.putExtra("provinceId", String.valueOf(provinces.get(position).getProvinceId()));
+                intent.putExtra("provinceName", provinces.get(position).getName());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -48,27 +77,79 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
         }
     }
 
-    private class ProvinceAdapt extends BaseAdapter {
+    private class ProvinceAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return 34;
+            return provinces.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return provinces.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = View.inflate(mContext, R.layout.item_select_province, null);
-            return view;
+            ViewHolder holder = null;
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_select_province, null);
+                holder.provice = (TextView) convertView.findViewById(R.id.item_tv_province);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.provice.setText(provinces.get(position).getName());
+            return convertView;
+        }
+
+        public class ViewHolder {
+            public TextView provice;
+        }
+    }
+
+    // 获取省份列表
+    private class GetProvinceListTask extends AsyncTask<Void, Void, ProvinceListBean> {
+        @Override
+        protected ProvinceListBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETPROVINCELIST)),
+                            Constant.BASE_URL + Constant.GETPROVINCELIST,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("省份列表", body);
+                return FastJsonTools.getBean(body, ProvinceListBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ProvinceListBean provinceListBean) {
+            super.onPostExecute(provinceListBean);
+            if (provinceListBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (provinceListBean.getStatus() == 200) {
+                    provinces = provinceListBean.getData();
+                    lvInvestField.setAdapter(new ProvinceAdapter());
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, provinceListBean.getMessage());
+                }
+            }
         }
     }
 

@@ -70,4 +70,16 @@ public class Constant {
      * 选择身份类型接口
      */
     public static final String SETUSERTYPE = "updateIdentiyTypeUser.action";
+    /**
+     * 获得省份列表接口
+     */
+    public static final String GETPROVINCELIST = "getProvinceListAuthentic.action";
+    /**
+     * 根据省份id获取市列表接口
+     */
+    public static final String GETCITYLIST = "getCityListByProvinceIdAuthentic.action";
+    /**
+     * 获取投资领域列表接口
+     */
+    public static final String GETFIELDLIST = "getIndustoryAreaListAuthentic.action";
 }

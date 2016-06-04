@@ -18,7 +18,7 @@ public class WelcomeActivity extends FullBaseActivity {
     @Override
     protected void init() {
 
-        Intent intent = new Intent(this, SetUserTypeActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }

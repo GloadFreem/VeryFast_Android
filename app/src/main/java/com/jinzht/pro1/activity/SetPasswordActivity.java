@@ -73,7 +73,7 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    // 注册接口
+    // 重置密码
     private class ResetPwdTask extends AsyncTask<Void, Void, CommonBean> {
         @Override
         protected CommonBean doInBackground(Void... params) {

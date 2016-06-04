@@ -1,24 +1,47 @@
 package com.jinzht.pro1.activity;
 
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
+import com.jinzht.pro1.bean.FieldListBean;
+import com.jinzht.pro1.utils.AESUtils;
+import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.FastJsonTools;
+import com.jinzht.pro1.utils.MD5Utils;
+import com.jinzht.pro1.utils.NetWorkUtils;
+import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 选择投资领域界面
  */
 public class SelectInvestFieldActivity extends BaseActivity implements View.OnClickListener {
 
-    private LinearLayout btnBack;
-    private TextView tvTitle;
-    private ListView lvInvestField;
+    private LinearLayout btnBack;// 返回
+    private TextView tvTitle;// 标题
+    private LinearLayout btnConfirm; // 确定
+    private ListView lvInvestField;// ListView
+
+    private List<FieldListBean.DataBean> fields = new ArrayList<>();// 领域列表
+    private List<String> checkeds = new ArrayList<>();// 已选择的领域
+    private List<String> checkedNames = new ArrayList<>();// 已选择的领域名称
 
     @Override
     protected int getResourcesId() {
@@ -32,10 +55,21 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
+        btnConfirm = (LinearLayout) findViewById(R.id.btn_confirm);// 确定按钮
+        btnConfirm.setOnClickListener(this);
         lvInvestField = (ListView) findViewById(R.id.lv_invest_field);// 投资领域列表
 
-        tvTitle.setText("投资领域");
-        lvInvestField.setAdapter(new InvestFieldAdapt());
+        switch (getIntent().getIntExtra("usertype", 0)) {
+            case Constant.USERTYPE_TZR:// 投资人，显示投资领域
+                tvTitle.setText("投资领域");
+                break;
+            case Constant.USERTYPE_ZNT:// 智囊团，显示服务领域
+                tvTitle.setText("服务领域");
+                break;
+        }
+
+        GetFieldListTask getFieldListTask = new GetFieldListTask();
+        getFieldListTask.execute();
     }
 
     @Override
@@ -44,6 +78,22 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
             case R.id.btn_back:// 返回上一页
                 finish();
                 break;
+            case R.id.btn_confirm:// 确定
+                System.out.println(checkeds);
+                System.out.println(checkedNames);
+                if (checkeds.size() > 3) {
+                    SuperToastUtils.showSuperToast(this, 2, "最多可选3项");
+                } else if (checkeds.size() == 0) {
+                    finish();
+                } else {
+                    Intent intent = new Intent(mContext, CertificationIDCardActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent.putExtra("areaId", (Serializable) checkeds);
+                    intent.putExtra("areaName", (Serializable) checkedNames);
+                    startActivity(intent);
+                }
+                break;
         }
     }
 
@@ -51,23 +101,87 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
 
         @Override
         public int getCount() {
-            return 11;
+            return fields.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return fields.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = View.inflate(mContext, R.layout.item_invest_field, null);
-            return view;
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_invest_field, null);
+                holder.field = (CheckBox) convertView.findViewById(R.id.item_field);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.field.setText(fields.get(position).getName());
+            holder.field.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        checkeds.add(String.valueOf(fields.get(position).getAreaId()));
+                        checkedNames.add(fields.get(position).getName());
+                    } else {
+                        checkeds.remove(String.valueOf(fields.get(position).getAreaId()));
+                        checkedNames.remove(fields.get(position).getName());
+                    }
+                }
+            });
+            return convertView;
+        }
+
+        public class ViewHolder {
+            public CheckBox field;
+        }
+    }
+
+    // 获取领域列表
+    private class GetFieldListTask extends AsyncTask<Void, Void, FieldListBean> {
+        @Override
+        protected FieldListBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETFIELDLIST)),
+                            Constant.BASE_URL + Constant.GETFIELDLIST,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("领域列表", body);
+                return FastJsonTools.getBean(body, FieldListBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(FieldListBean fieldListBean) {
+            super.onPostExecute(fieldListBean);
+            if (fieldListBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (fieldListBean.getStatus() == 200) {
+                    fields = fieldListBean.getData();
+                    lvInvestField.setAdapter(new InvestFieldAdapt());
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, fieldListBean.getMessage());
+                }
+            }
         }
     }
 

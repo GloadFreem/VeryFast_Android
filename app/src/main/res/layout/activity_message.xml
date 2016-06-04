@@ -30,7 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:drawablePadding="5dp"
-            android:drawableRight="@mipmap/icon_pulldown"
             android:text="站内信"
             android:textColor="@android:color/white"
             android:textSize="20sp" />

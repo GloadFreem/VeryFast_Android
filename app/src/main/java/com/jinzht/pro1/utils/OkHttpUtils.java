@@ -96,7 +96,6 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();
@@ -162,6 +161,7 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
+                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();
@@ -209,7 +209,6 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();

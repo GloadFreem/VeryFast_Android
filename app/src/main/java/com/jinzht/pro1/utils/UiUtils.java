@@ -11,6 +11,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.View;
 
 import com.jinzht.pro1.application.MyApplication;
@@ -124,7 +125,7 @@ public class UiUtils {
     }
 
     // 剪裁图片
-    public static void crop(Uri uri, int scaleX, int scaleY, int sizeX, int sizeY, Activity activity) {
+    public static void crop(Uri uri, int scaleX, int scaleY, int sizeX, int sizeY, Activity activity, int requestCode) {
         // 裁剪图片意图
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
@@ -135,10 +136,11 @@ public class UiUtils {
         // 裁剪后输出图片的尺寸大小
         intent.putExtra("outputX", sizeX);
         intent.putExtra("outputY", sizeY);
-
-        intent.putExtra("outputFormat", "JPEG");// 图片格式
-        intent.putExtra("return-data", true);
+        intent.putExtra("scale", true);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());// 图片格式
+        intent.putExtra("return-data", false);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CUT
-        activity.startActivityForResult(intent, Constant.CUT_PHOTO);
+        activity.startActivityForResult(intent, requestCode);
     }
 }

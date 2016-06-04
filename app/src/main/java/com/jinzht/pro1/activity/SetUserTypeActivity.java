@@ -92,6 +92,7 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
         improveInfoCompleteRegister = (Button) findViewById(R.id.improve_info_complete_register);// 完成注册按钮
         improveInfoCompleteRegister.setOnClickListener(this);
         FILE_PATH = getCacheDir() + "/" + "favicon.jpg";// 头像保存地址
+        photoFile = new File(Environment.getExternalStorageDirectory() + "/" + "favicon.jpg");
 
         improveInfoIvUserimage.setImageResource(R.drawable.ic_launcher);
     }
@@ -124,7 +125,7 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
     }
@@ -137,14 +138,24 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {// 打开照相机
-                            photoFile = new File(Environment.getExternalStorageDirectory() + "/" + "favicon.jpg");
+//                            photoFile = new File(Environment.getExternalStorageDirectory() + "/" + "favicon.jpg");
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                             startActivityForResult(intent, Constant.TAKE_PHOTO);
                         } else {// 从相册选择
                             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                             intent.setType("image/*");
-                            startActivityForResult(intent, Constant.CHOOSE_PHOTO);
+                            intent.putExtra("crop", "true");
+                            intent.putExtra("aspectX", 1);
+                            intent.putExtra("aspectY", 1);
+                            intent.putExtra("outputX", 300);
+                            intent.putExtra("outputY", 300);
+                            intent.putExtra("scale", true);
+                            intent.putExtra("return-data", false);
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+                            intent.putExtra("noFaceDetection", true);
+                            startActivityForResult(intent, Constant.CUT_PHOTO);
                         }
                     }
                 });
@@ -155,13 +166,11 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == Constant.CHOOSE_PHOTO && data != null) {// 从相册选择照片
-            UiUtils.crop(data.getData(), 1, 1, 1000, 1000, this);
-        } else if (resultCode == RESULT_OK && requestCode == Constant.TAKE_PHOTO) {// 拍照选择
-            UiUtils.crop(Uri.fromFile(photoFile), 1, 1, 1000, 1000, this);
-        } else if (resultCode == RESULT_OK && requestCode == Constant.CUT_PHOTO && data != null) {// 剪裁过的照片
+        if (resultCode == RESULT_OK && requestCode == Constant.TAKE_PHOTO) {// 拍照选择
+            UiUtils.crop(Uri.fromFile(photoFile), 1, 1, 300, 300, this, Constant.CUT_PHOTO);
+        } else if (resultCode == RESULT_OK && requestCode == Constant.CUT_PHOTO) {// 剪裁过的照片
             try {
-                bitmap = data.getParcelableExtra("data");
+                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Uri.fromFile(photoFile)));
 
                 int byteCount0 = bitmap.getByteCount();
                 String size0 = StringUtils.bytes2kb(byteCount0);
@@ -170,18 +179,17 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                 int height0 = bitmap.getHeight();
                 Log.i("分辨率", String.valueOf(width0) + "*" + String.valueOf(height0));
 
-                Bitmap tempBitmap = UiUtils.resizeBitmap(bitmap, 300, 300);// 重置分辨率
                 FileOutputStream fos = new FileOutputStream(FILE_PATH);
-                tempBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);// 压缩另存，100表示不压缩
-                tempBitmap = BitmapFactory.decodeFile(FILE_PATH);
-                improveInfoIvUserimage.setImageBitmap(tempBitmap);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);// 压缩另存，100表示不压缩
+                bitmap = BitmapFactory.decodeFile(FILE_PATH);
+                improveInfoIvUserimage.setImageBitmap(bitmap);
                 fos.close();
 
-                int byteCount = tempBitmap.getByteCount();
+                int byteCount = bitmap.getByteCount();
                 String size = StringUtils.bytes2kb(byteCount);
                 Log.i("大小", size);
-                int width = tempBitmap.getWidth();
-                int height = tempBitmap.getHeight();
+                int width = bitmap.getWidth();
+                int height = bitmap.getHeight();
                 Log.i("分辨率", String.valueOf(width) + "*" + String.valueOf(height));
             } catch (Exception e) {
                 e.printStackTrace();

@@ -61,6 +61,7 @@
                         android:background="@color/bg_add_photo">
 
                         <TextView
+                            android:id="@+id/tv_idcard_zheng"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
@@ -81,6 +82,7 @@
                         android:background="@color/bg_add_photo">
 
                         <TextView
+                            android:id="@+id/tv_idcard_fan"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
