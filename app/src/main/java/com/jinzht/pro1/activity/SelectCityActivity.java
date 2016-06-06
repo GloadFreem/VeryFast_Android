@@ -34,6 +34,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
 
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
+    private LinearLayout btnConfirm; // 确定
     private ListView lvInvestField;// 市列表
 
     private List<CityListBean.DataBean> citys = new ArrayList<>();// 市
@@ -51,6 +52,8 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
         tvTitle.setText("公司所在地");
+        btnConfirm = (LinearLayout) findViewById(R.id.btn_confirm);// 确定按钮
+        btnConfirm.setVisibility(View.GONE);
         lvInvestField = (ListView) findViewById(R.id.lv_invest_field);// 省份列表
 
         GetCityListTask getCityListTask = new GetCityListTask();
@@ -63,6 +66,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
                 Intent intent = new Intent(mContext, CertificationIDCardActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("TAG", "城市");
                 intent.putExtra("cityId", String.valueOf(citys.get(position).getCityId()));
                 intent.putExtra("provinceName", getIntent().getStringExtra("provinceName"));
                 intent.putExtra("cityName", citys.get(position).getName());

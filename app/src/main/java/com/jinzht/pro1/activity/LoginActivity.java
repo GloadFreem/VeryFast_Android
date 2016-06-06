@@ -282,7 +282,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 //                    SharePreferencesUtils.setChoseUserType(mContext, false);
 //                    SharePreferencesUtils.setAuth(mContext, false);
                     // TODO: 2016/6/4 在这里写要调试的跳转界面
-                    intent = new Intent(mContext, CertificationIDCardActivity.class);
+                    intent = new Intent(mContext, SetUserTypeActivity.class);
                     startActivity(intent);
                     finish();
                 } else {

@@ -54,9 +54,9 @@
     <string name="select_business_field">请选择投资领域</string>
     <string name="position">担任职务</string>
     <string name="input_position">请输入担任职务</string>
-    <string name="desc_company">公司介绍  (可选)</string>
+    <string name="desc_company">公司介绍  (选填)</string>
     <string name="input_desc_company">写一写公司介绍</string>
-    <string name="desc_name">个人介绍  (可选)</string>
+    <string name="desc_name">个人介绍  (选填)</string>
     <string name="input_desc_name">写一写个人介绍</string>
     <string name="complete">完成</string>
     <string name="could_multiple_choice">可多选</string>

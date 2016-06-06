@@ -34,6 +34,7 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
 
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
+    private LinearLayout btnConfirm; // 确定
     private ListView lvInvestField;// 省份列表
 
     private List<ProvinceListBean.DataBean> provinces = new ArrayList<>();// 省份列表
@@ -51,6 +52,8 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
         tvTitle.setText("公司所在地");
+        btnConfirm = (LinearLayout) findViewById(R.id.btn_confirm);// 确定按钮
+        btnConfirm.setVisibility(View.GONE);
         lvInvestField = (ListView) findViewById(R.id.lv_invest_field);// 省份列表
 
         GetProvinceListTask getProvinceListTask = new GetProvinceListTask();

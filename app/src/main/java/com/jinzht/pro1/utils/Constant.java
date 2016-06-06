@@ -82,4 +82,16 @@ public class Constant {
      * 获取投资领域列表接口
      */
     public static final String GETFIELDLIST = "getIndustoryAreaListAuthentic.action";
+    /**
+     * 认证接口
+     */
+    public static final String AUTHENTICATE = "requestAuthentic.action";
+    /**
+     * 获取投资人能力列表
+     */
+    public static final String GETCAPACITYLIST = "getProtocolAuthentic.action";
+    /**
+     * 获取圈子
+     */
+    public static final String GETCIRCLELIST = "requestFeelingList.action";
 }

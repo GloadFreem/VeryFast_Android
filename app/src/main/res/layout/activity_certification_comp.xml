@@ -12,13 +12,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="268dp"
+        android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/certification_tv_comp_name"
+            android:id="@+id/tv_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -35,13 +35,15 @@
             android:textSize="12sp" />
 
         <RelativeLayout
-            android:id="@+id/certification_rl_comp_photo"
+            android:id="@+id/rl_comp_photo"
             android:layout_width="312dp"
-            android:layout_height="188dp"
+            android:layout_height="221dp"
+            android:layout_marginBottom="9dp"
             android:layout_marginTop="11dp"
             android:background="@color/bg_add_photo">
 
             <TextView
+                android:id="@+id/tv_comp_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -55,7 +57,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="96dp"
+        android:layout_height="48dp"
         android:layout_marginTop="10dp"
         android:background="@android:color/white"
         android:gravity="center_horizontal"
@@ -67,46 +69,20 @@
             android:layout_height="48dp">
 
             <TextView
-                android:id="@+id/certification_tv_compcard"
+                android:id="@+id/tv_compcard"
                 style="@style/TV_Certification"
                 android:text="@string/business_license_num" />
 
             <EditText
-                android:id="@+id/certification_ed_compnum"
+                android:id="@+id/ed_compnum"
                 style="@style/ED_Certification"
-                android:layout_toRightOf="@id/certification_tv_compcard"
+                android:layout_toRightOf="@id/tv_compcard"
                 android:hint="@string/input_business_license_num" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/line_certification" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp">
-
-            <TextView
-                android:id="@+id/certification_tv_field"
-                style="@style/TV_Certification"
-                android:text="@string/business_field" />
-
-            <TextView
-                android:id="@+id/certification_tv_field1"
-                style="@style/ED_Certification"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="13dp"
-                android:layout_toRightOf="@id/certification_tv_field"
-                android:drawableRight="@mipmap/iconfont_right_arrow"
-                android:hint="@string/select_business_field"
-                android:textSize="16sp" />
         </RelativeLayout>
     </LinearLayout>
 
     <Button
-        android:id="@+id/certification_btn_next"
+        android:id="@+id/btn_next"
         android:layout_width="312dp"
         android:layout_height="39dp"
         android:layout_marginTop="28dp"

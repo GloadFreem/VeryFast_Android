@@ -1,5 +1,6 @@
 package com.jinzht.pro1.fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +15,7 @@ import com.jinzht.pro1.R;
 import com.jinzht.pro1.adapter.CirclePhotosAdapter;
 import com.jinzht.pro1.adapter.RecyclerViewData;
 import com.jinzht.pro1.base.BaseFragment;
+import com.jinzht.pro1.bean.CircleListBean;
 import com.jinzht.pro1.view.PullToRefreshLayout;
 import com.jinzht.pro1.view.PullableListView;
 
@@ -88,8 +90,16 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         });
     }
 
-    private class PullListener implements PullToRefreshLayout.OnRefreshListener {
+    // 获取圈子列表
+    private class GetCircleList extends AsyncTask<Void, Void, CircleListBean> {
+        @Override
+        protected CircleListBean doInBackground(Void... params) {
+            String body = "";
+            return null;
+        }
+    }
 
+    private class PullListener implements PullToRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh(final PullToRefreshLayout pullToRefreshLayout) {
             // 下拉刷新

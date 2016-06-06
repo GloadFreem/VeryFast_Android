@@ -23,10 +23,8 @@
             android:layout_height="363.5dp"
             android:layout_marginLeft="21dp"
             android:layout_marginRight="11dp"
-            android:fadeScrollbars="false"
-            android:divider="@null">
-
-        </ListView>
+            android:divider="@null"
+            android:fadeScrollbars="false" />
 
         <TextView
             android:layout_width="wrap_content"

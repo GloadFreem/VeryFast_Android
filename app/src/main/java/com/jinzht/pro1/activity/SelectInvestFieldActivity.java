@@ -89,6 +89,7 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
                     Intent intent = new Intent(mContext, CertificationIDCardActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent.putExtra("TAG", "领域");
                     intent.putExtra("areaId", (Serializable) checkeds);
                     intent.putExtra("areaName", (Serializable) checkedNames);
                     startActivity(intent);

@@ -57,10 +57,10 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
     private RadioButton improveInfoRbZhinangtuan;// 智囊团选项
     private Button improveInfoCompleteRegister;// 完成注册按钮
 
-    private int usertype = 0;// 1:项目方,2:投资人,3:机构投资人,4:智囊团
+    private int usertype;// 1:项目方,2:投资人,3:机构投资人,4:智囊团
     private Bitmap bitmap = null;// 从相册选择的头像
     private File photoFile = null; // 拍照得到的头像
-    private String FILE_PATH;// 头像保存地址
+    private String photo_path;// 头像保存地址
 
 
     @Override
@@ -91,7 +91,8 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
         improveInfoRbZhinangtuan = (RadioButton) findViewById(R.id.improve_info_rb_zhinangtuan);// 智囊团选项
         improveInfoCompleteRegister = (Button) findViewById(R.id.improve_info_complete_register);// 完成注册按钮
         improveInfoCompleteRegister.setOnClickListener(this);
-        FILE_PATH = getCacheDir() + "/" + "favicon.jpg";// 头像保存地址
+
+        photo_path = getCacheDir() + "/" + "favicon.jpg";// 头像保存地址
         photoFile = new File(Environment.getExternalStorageDirectory() + "/" + "favicon.jpg");
 
         improveInfoIvUserimage.setImageResource(R.drawable.ic_launcher);
@@ -138,7 +139,6 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {// 打开照相机
-//                            photoFile = new File(Environment.getExternalStorageDirectory() + "/" + "favicon.jpg");
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                             startActivityForResult(intent, Constant.TAKE_PHOTO);
@@ -179,9 +179,9 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                 int height0 = bitmap.getHeight();
                 Log.i("分辨率", String.valueOf(width0) + "*" + String.valueOf(height0));
 
-                FileOutputStream fos = new FileOutputStream(FILE_PATH);
+                FileOutputStream fos = new FileOutputStream(photo_path);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);// 压缩另存，100表示不压缩
-                bitmap = BitmapFactory.decodeFile(FILE_PATH);
+                bitmap = BitmapFactory.decodeFile(photo_path);
                 improveInfoIvUserimage.setImageBitmap(bitmap);
                 fos.close();
 
@@ -239,12 +239,12 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
-                    File file = new File(FILE_PATH);
+                    File file = new File(photo_path);
                     if (file.exists()) {
                         body = OkHttpUtils.usertypePost(
                                 MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SETUSERTYPE)),
                                 "ideniyType", String.valueOf(usertype),
-                                "file", FILE_PATH,
+                                "file", photo_path,
                                 Constant.BASE_URL + Constant.SETUSERTYPE,
                                 mContext
                         );

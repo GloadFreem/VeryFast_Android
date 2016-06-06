@@ -11,14 +11,15 @@
     <include layout="@layout/title_back" />
 
     <LinearLayout
+        android:id="@+id/ll_desc_comp"
         android:layout_width="match_parent"
         android:layout_height="147.5dp"
+        android:layout_marginBottom="9dp"
         android:background="@android:color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/certification_tv_desc_comp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
@@ -27,33 +28,32 @@
             android:textSize="18sp" />
 
         <LinearLayout
-            android:padding="8dp"
             android:layout_width="345dp"
             android:layout_height="96.5dp"
             android:layout_marginTop="9dp"
-            android:background="@color/bg_add_photo">
+            android:background="@color/bg_add_photo"
+            android:padding="8dp">
 
             <EditText
-                android:textColorHint="#474747"
-                android:textSize="15sp"
-                android:id="@+id/certification_ed_desc_comp"
+                android:id="@+id/ed_desc_comp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@null"
-                android:hint="@string/input_desc_company" />
+                android:gravity="top"
+                android:hint="@string/input_desc_company"
+                android:textColorHint="#474747"
+                android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="147.5dp"
-        android:layout_marginTop="9dp"
         android:background="@android:color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/certification_tv_desc_person"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
@@ -62,25 +62,26 @@
             android:textSize="18sp" />
 
         <LinearLayout
-            android:padding="8dp"
             android:layout_width="345dp"
             android:layout_height="96.5dp"
             android:layout_marginTop="9dp"
-            android:background="@color/bg_add_photo">
+            android:background="@color/bg_add_photo"
+            android:padding="8dp">
 
             <EditText
-                android:textColorHint="#474747"
-                android:textSize="15sp"
-                android:id="@+id/certification_ed_desc_person"
+                android:id="@+id/ed_desc_person"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@null"
-                android:hint="@string/input_desc_name" />
+                android:gravity="top"
+                android:hint="@string/input_desc_name"
+                android:textColorHint="#474747"
+                android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
 
     <Button
-        android:id="@+id/certification_btn_next"
+        android:id="@+id/btn_next"
         android:layout_width="312dp"
         android:layout_height="39dp"
         android:layout_marginTop="28dp"

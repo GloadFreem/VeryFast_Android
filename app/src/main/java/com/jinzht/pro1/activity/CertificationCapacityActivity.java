@@ -1,17 +1,37 @@
 package com.jinzht.pro1.activity;
 
+import android.os.AsyncTask;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
+import com.jinzht.pro1.bean.AuthenticateBean;
+import com.jinzht.pro1.bean.CapacityListBean;
+import com.jinzht.pro1.utils.AESUtils;
+import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.FastJsonTools;
+import com.jinzht.pro1.utils.MD5Utils;
+import com.jinzht.pro1.utils.NetWorkUtils;
+import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.SharePreferencesUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 选择投资能力界面
@@ -22,6 +42,13 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
     private TextView tvTitle;// 标题
     private ListView certificationLvCapacity;// 投资能力列表
     private Button certificationBtnComplete;// 完成按钮
+
+    private String str;// 转换字体的临时字符串
+    private SpannableString span;// 设置TextView不同字体
+    private int usertype;// 1:项目方,2:投资人,3:机构投资人,4:智囊团
+
+    private List<String> capacitys = new ArrayList<String>();// 投资能力
+    private List<String> checkeds = new ArrayList<>();// 已选择的能力
 
     @Override
     protected int getResourcesId() {
@@ -39,7 +66,28 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
         certificationBtnComplete = (Button) findViewById(R.id.certification_btn_complete);// 完成按钮
         certificationBtnComplete.setOnClickListener(this);
 
-        certificationLvCapacity.setAdapter(new InvestCapacityAdapt());
+        usertype = getIntent().getIntExtra("usertype", 0);
+        setMytitle();
+
+        GetCapacityListTask getCapacityListTask = new GetCapacityListTask();
+        getCapacityListTask.execute();
+    }
+
+    // 根据身份类型不同而加载不同标题
+    private void setMytitle() {
+        // 投资人是3个步骤
+        if (Constant.USERTYPE_TZR == usertype) {
+            str = "实名认证(3/3)";
+            span = new SpannableString(str);
+            span.setSpan(new AbsoluteSizeSpan(13, true), 4, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tvTitle.setText(span);
+            // 投资机构4个步骤
+        } else if (Constant.USERTYPE_TZJG == usertype) {
+            str = "实名认证(4/4)";
+            span = new SpannableString(str);
+            span.setSpan(new AbsoluteSizeSpan(13, true), 4, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tvTitle.setText(span);
+        }
     }
 
     @Override
@@ -49,7 +97,14 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
                 finish();
                 break;
             case R.id.certification_btn_complete:// 完成实名认证，跳转至主页
-                SuperToastUtils.showSuperToast(this, 2, "完成");
+                if (checkeds == null) {
+                    SuperToastUtils.showSuperToast(this, 2, "请选择投资能力");
+                } else if (checkeds.size() == 0) {
+                    SuperToastUtils.showSuperToast(this, 2, "请选择投资能力");
+                } else {
+                    AuthenticateTask authenticateTask = new AuthenticateTask();
+                    authenticateTask.execute();
+                }
                 break;
         }
     }
@@ -58,24 +113,169 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
 
         @Override
         public int getCount() {
-            return 6;
+            return capacitys.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return capacitys.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = View.inflate(mContext, R.layout.item_invest_capacity, null);
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_invest_capacity, null);
+                holder.capacity = (CheckBox) convertView.findViewById(R.id.item_capacity);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.capacity.setText(capacitys.get(position));
+            holder.capacity.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        checkeds.add(String.valueOf(position));
+                    } else {
+                        checkeds.remove(String.valueOf(position));
+                    }
+                }
+            });
+            return convertView;
+        }
 
-            return view;
+        public class ViewHolder {
+            public CheckBox capacity;
+        }
+    }
+
+    // 获取投资能力列表
+    private class GetCapacityListTask extends AsyncTask<Void, Void, CapacityListBean> {
+        @Override
+        protected CapacityListBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETCAPACITYLIST)),
+                            Constant.BASE_URL + Constant.GETCAPACITYLIST,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("领域列表", body);
+                return FastJsonTools.getBean(body, CapacityListBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CapacityListBean capacityListBean) {
+            super.onPostExecute(capacityListBean);
+            if (capacityListBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (capacityListBean.getStatus() == 200) {
+                    capacitys = capacityListBean.getData();
+                    certificationLvCapacity.setAdapter(new InvestCapacityAdapt());
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, capacityListBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 上传认证信息
+    private class AuthenticateTask extends AsyncTask<Void, Void, AuthenticateBean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog("");
+        }
+
+        @Override
+        protected AuthenticateBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    String optional = checkeds.toString();
+                    optional = optional.substring(1, optional.length() - 1);
+                    if (usertype == Constant.USERTYPE_TZR) {// 投资人不上传营业执照
+                        body = OkHttpUtils.authenticate(
+                                MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.AUTHENTICATE)),
+                                "identiyTypeId", String.valueOf(usertype),
+                                "identiyCarA", getIntent().getStringExtra("identiyCarA"),
+                                "identiyCarB", getIntent().getStringExtra("identiyCarB"),
+                                "identiyCarNo", getIntent().getStringExtra("identiyCarNo"),
+                                "name", getIntent().getStringExtra("name"),
+                                "companyName", getIntent().getStringExtra("companyName"),
+                                "cityId", getIntent().getStringExtra("cityId"),
+                                "position", getIntent().getStringExtra("position"),
+                                "areaId", getIntent().getStringExtra("areaId"),
+                                "introduce", getIntent().getStringExtra("introduce"),
+                                "companyIntroduce", getIntent().getStringExtra("companyIntroduce"),
+                                "optional", optional,
+                                Constant.BASE_URL + Constant.AUTHENTICATE,
+                                mContext
+                        );
+                    } else {
+                        body = OkHttpUtils.authenticate(
+                                MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.AUTHENTICATE)),
+                                "identiyTypeId", String.valueOf(usertype),
+                                "identiyCarA", getIntent().getStringExtra("identiyCarA"),
+                                "identiyCarB", getIntent().getStringExtra("identiyCarB"),
+                                "identiyCarNo", getIntent().getStringExtra("identiyCarNo"),
+                                "name", getIntent().getStringExtra("name"),
+                                "companyName", getIntent().getStringExtra("companyName"),
+                                "cityId", getIntent().getStringExtra("cityId"),
+                                "position", getIntent().getStringExtra("position"),
+                                "areaId", getIntent().getStringExtra("areaId"),
+                                "buinessLicence", getIntent().getStringExtra("buinessLicence"),
+                                "buinessLicenceNo", getIntent().getStringExtra("buinessLicenceNo"),
+                                "introduce", getIntent().getStringExtra("introduce"),
+                                "companyIntroduce", getIntent().getStringExtra("companyIntroduce"),
+                                "optional", optional,
+                                Constant.BASE_URL + Constant.AUTHENTICATE,
+                                mContext
+                        );
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("认证信息", body);
+                return FastJsonTools.getBean(body, AuthenticateBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(AuthenticateBean authenticateBean) {
+            super.onPostExecute(authenticateBean);
+            dismissProgressDialog();
+            if (authenticateBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (authenticateBean.getStatus() == 200) {
+                    SharePreferencesUtils.setAuth(mContext, true);
+                    // TODO: 2016/6/6 弹出认证成功提示
+                    SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
+                }
+            }
+
         }
     }
 

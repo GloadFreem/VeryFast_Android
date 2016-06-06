@@ -143,7 +143,8 @@
                         android:id="@+id/certification_ed_idnum"
                         style="@style/ED_Certification"
                         android:layout_toRightOf="@id/certification_tv_idcard"
-                        android:hint="@string/input_id_card_num" />
+                        android:hint="@string/input_id_card_num"
+                        android:singleLine="true" />
 
                     <View
                         android:layout_width="match_parent"
@@ -165,7 +166,8 @@
                         android:id="@+id/certification_ed_name"
                         style="@style/ED_Certification"
                         android:layout_toRightOf="@id/certification_tv_name"
-                        android:hint="@string/input_real_name" />
+                        android:hint="@string/input_real_name"
+                        android:singleLine="true" />
 
                     <View
                         android:layout_width="match_parent"
@@ -214,9 +216,7 @@
                         android:layout_marginRight="13dp"
                         android:layout_toRightOf="@id/certification_tv_company_addr"
                         android:drawableRight="@mipmap/iconfont_right_arrow"
-                        android:text="@string/select_company_addr"
-                        android:textColor="#bdbdbd"
-                        android:textSize="16sp" />
+                        android:hint="@string/select_company_addr" />
 
                     <View
                         android:layout_width="match_parent"
@@ -239,7 +239,8 @@
                         android:id="@+id/certification_ed_position"
                         style="@style/ED_Certification"
                         android:layout_toRightOf="@id/certification_tv_position"
-                        android:hint="@string/input_position" />
+                        android:hint="@string/input_position"
+                        android:singleLine="true" />
 
                     <View
                         android:id="@+id/line"
@@ -266,9 +267,7 @@
                         android:layout_marginRight="13dp"
                         android:layout_toRightOf="@id/tv_field"
                         android:drawableRight="@mipmap/iconfont_right_arrow"
-                        android:text="请选择投资领域"
-                        android:textColor="#bdbdbd"
-                        android:textSize="16sp" />
+                        android:hint="请选择投资领域" />
                 </RelativeLayout>
             </LinearLayout>
 

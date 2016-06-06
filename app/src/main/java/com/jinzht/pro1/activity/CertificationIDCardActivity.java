@@ -30,7 +30,6 @@ import com.jinzht.pro1.utils.UiUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +62,7 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
     private SpannableString span;// 设置TextView不同字体
     private Intent intent;
 
-    private int usertype = 0;// 1:项目方,2:投资人,3:机构投资人,4:智囊团
+    private int usertype;// 1:项目方,2:投资人,3:机构投资人,4:智囊团
     private Bitmap bitmap1 = null;// 正面
     private File file1 = null; // 拍照得到的身份证正面
     private String photopath1;// 身份证正面保存地址
@@ -71,8 +70,9 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
     private File file2 = null; // 拍照得到的身份证反面
     private String photopath2;// 身份证反面保存地址
 
-    private String cityId;// 城市id
+    private String cityId = "";// 城市id
     private List<String> areaId = new ArrayList<>();// 领域id列表
+    private String areaIds = "";// 领域id
 
     @Override
     protected int getResourcesId() {
@@ -109,6 +109,7 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
         btnNext = (Button) findViewById(R.id.certification_btn_next);// 下一步按钮
         btnNext.setOnClickListener(this);
 
+        usertype = getIntent().getIntExtra("usertype", 0);
         setMytitle();
         initDifferent();
         initData();
@@ -116,16 +117,20 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
 
     // 根据身份类型不同而加载不同标题
     private void setMytitle() {
-        // 项目方、投资人、智囊团都是3个步骤
-        if (Constant.USERTYPE_XMF == getIntent().getIntExtra("usertype", 0)
-                || Constant.USERTYPE_TZR == getIntent().getIntExtra("usertype", 0)
-                || Constant.USERTYPE_ZNT == getIntent().getIntExtra("usertype", 0)) {
+        // 项目方是2个步骤
+        if (Constant.USERTYPE_XMF == usertype) {
+            str = "实名认证(1/2)";
+            span = new SpannableString(str);
+            span.setSpan(new AbsoluteSizeSpan(13, true), 4, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tvTitle.setText(span);
+            // 投资人和智囊团都是3个步骤
+        } else if (Constant.USERTYPE_TZR == usertype || Constant.USERTYPE_ZNT == usertype) {
             str = "实名认证(1/3)";
             span = new SpannableString(str);
             span.setSpan(new AbsoluteSizeSpan(13, true), 4, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             tvTitle.setText(span);
             // 投资机构是4个步骤
-        } else if (Constant.USERTYPE_TZJG == getIntent().getIntExtra("usertype", 0)) {
+        } else if (Constant.USERTYPE_TZJG == usertype) {
             str = "实名认证(1/4)";
             span = new SpannableString(str);
             span.setSpan(new AbsoluteSizeSpan(13, true), 4, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -135,7 +140,7 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
 
     // 根据身份类型不同而加载不同控件
     private void initDifferent() {
-        switch (getIntent().getIntExtra("usertype", 0)) {
+        switch (usertype) {
             case Constant.USERTYPE_XMF:// 项目方，无领域选择
                 rlField.setVisibility(View.GONE);
                 line.setVisibility(View.GONE);
@@ -144,27 +149,22 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
                 rlCompanyName.setVisibility(View.GONE);
                 rlPosition.setVisibility(View.GONE);
                 tvCompanyAddr.setText("所在地");
-                btnCompanyAddr1.setText("请选择所在地");
-                break;
-            case Constant.USERTYPE_TZJG:// 投资机构，无领域选择
-                rlField.setVisibility(View.GONE);
-                line.setVisibility(View.GONE);
+                btnCompanyAddr1.setHint("请选择所在地");
                 break;
             case Constant.USERTYPE_ZNT:// 智囊团，公司名和职务选填，投资领域改为服务领域
                 edCompanyName.setHint("请输入公司名称(选填)");
                 edPosition.setHint("请输入担任职务(选填)");
                 tvField.setText("服务领域");
-                tvSelectField.setText("请选择服务领域");
+                tvSelectField.setHint("请选择服务领域");
                 break;
         }
     }
 
     private void initData() {
-        usertype = getIntent().getIntExtra("usertype", 0);
-        photopath1 = getCacheDir() + "/" + "idcard_zheng.jpg";
-        photopath2 = getCacheDir() + "/" + "idcard_fan.jpg";
-        file1 = new File(Environment.getExternalStorageDirectory() + "/" + "idcard_zheng.jpg");
-        file2 = new File(Environment.getExternalStorageDirectory() + "/" + "idcard_fan.jpg");
+        photopath1 = getCacheDir() + "/" + "identiyCarA.jpg";
+        photopath2 = getCacheDir() + "/" + "identiyCarB.jpg";
+        file1 = new File(Environment.getExternalStorageDirectory() + "/" + "identiyCarA.jpg");
+        file2 = new File(Environment.getExternalStorageDirectory() + "/" + "identiyCarB.jpg");
     }
 
     @Override
@@ -189,35 +189,80 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
                 startActivity(intent);
                 break;
             case R.id.certification_btn_next:// 跳转到下一步界面
+                Log.i("所在地", "所在地" + cityId);
+                Log.i("投资领域", "投资领域" + areaId);
                 File file1 = new File(photopath1);
                 File file2 = new File(photopath2);
                 if (!file1.exists()) {
                     SuperToastUtils.showSuperToast(this, 2, "请上传身份证正面照片");
-                } else if (!file2.exists()) {
+                    return;
+                }
+                if (!file2.exists()) {
                     SuperToastUtils.showSuperToast(this, 2, "请上传身份证反面照片");
-                } else if (StringUtils.isBlank(edIdnum.getText().toString())) {
+                    return;
+                }
+                if (StringUtils.isBlank(edIdnum.getText().toString())) {
                     SuperToastUtils.showSuperToast(this, 2, "请填写身份证号码");
-                } else if (StringUtils.isBlank(edName.getText().toString())) {
+                    return;
+                }
+                if (StringUtils.length(edIdnum.getText().toString()) != 18) {
+                    SuperToastUtils.showSuperToast(this, 2, "请填写正确的身份证号码");
+                    return;
+                }
+                if (StringUtils.isBlank(edName.getText().toString())) {
                     SuperToastUtils.showSuperToast(this, 2, "请填写真实姓名");
-                } else if (StringUtils.isBlank(cityId)) {
+                    return;
+                }
+                if (StringUtils.isBlank(cityId)) {
                     SuperToastUtils.showSuperToast(this, 2, "请选择所在地");
-                } else if (usertype == Constant.USERTYPE_XMF || usertype == Constant.USERTYPE_TZJG) {
-                    if (StringUtils.isBlank(edCompanyName.getText().toString())) {
+                    return;
+                }
+                if (StringUtils.isBlank(edCompanyName.getText().toString())) {
+                    if (usertype == Constant.USERTYPE_XMF || usertype == Constant.USERTYPE_TZJG) {
                         SuperToastUtils.showSuperToast(this, 2, "请填写公司名称");
+                        return;
                     }
-                    if (StringUtils.isBlank(edPosition.getText().toString())) {
+                }
+                if (StringUtils.isBlank(edPosition.getText().toString())) {
+                    if (usertype == Constant.USERTYPE_XMF || usertype == Constant.USERTYPE_TZJG) {
                         SuperToastUtils.showSuperToast(this, 2, "请填写职务");
+                        return;
                     }
-                } else if (usertype == Constant.USERTYPE_TZR || usertype == Constant.USERTYPE_ZNT) {
-                    if (areaId == null) {
-                        SuperToastUtils.showSuperToast(this, 2, "请选择领域");
-                    } else {
-                        if (areaId.size() == 0) {
-                            SuperToastUtils.showSuperToast(this, 2, "请选择领域");
-                        }
+                }
+                if (areaId == null) {
+                    if (usertype == Constant.USERTYPE_TZR || usertype == Constant.USERTYPE_TZJG) {
+                        SuperToastUtils.showSuperToast(this, 2, "请选择投资领域");
+                        return;
+                    } else if (usertype == Constant.USERTYPE_ZNT) {
+                        SuperToastUtils.showSuperToast(this, 2, "请选择服务领域");
+                        return;
+                    }
+                }
+                if (areaId.size() == 0) {
+                    if (usertype == Constant.USERTYPE_TZR || usertype == Constant.USERTYPE_TZJG) {
+                        SuperToastUtils.showSuperToast(this, 2, "请选择投资领域");
+                        return;
+                    } else if (usertype == Constant.USERTYPE_ZNT) {
+                        SuperToastUtils.showSuperToast(this, 2, "请选择服务领域");
+                        return;
                     }
                 } else {
+                    areaIds = areaId.toString();
+                    areaIds = areaIds.substring(1, areaIds.length() - 1);
+                }
+                if (usertype == Constant.USERTYPE_TZR) {// 投资人跳转到个人介绍页
+                    intent = new Intent(this, CertificationDescActivity.class);
+                    intent.putExtra("usertype", usertype);
+                    intent.putExtra("identiyCarA", photopath1);
+                    intent.putExtra("identiyCarB", photopath2);
+                    intent.putExtra("identiyCarNo", edIdnum.getText().toString());
+                    intent.putExtra("name", edName.getText().toString());
+                    intent.putExtra("cityId", cityId);
+                    intent.putExtra("areaId", areaIds);// 投资人、投资机构和智囊团必填
+                    startActivity(intent);
+                } else {// 项目方、投资机构、智囊团跳转到上传营业执照
                     intent = new Intent(this, CertificationCompActivity.class);
+                    intent.putExtra("usertype", usertype);
                     intent.putExtra("identiyCarA", photopath1);
                     intent.putExtra("identiyCarB", photopath2);
                     intent.putExtra("identiyCarNo", edIdnum.getText().toString());
@@ -225,7 +270,7 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
                     intent.putExtra("companyName", edCompanyName.getText().toString());// 项目方和投资机构必填
                     intent.putExtra("cityId", cityId);
                     intent.putExtra("position", edPosition.getText().toString());// 项目方和投资机构必填
-                    intent.putExtra("areaId", (Serializable) areaId);// 投资人和智囊团必填
+                    intent.putExtra("areaId", areaIds);// 投资人、投资机构和智囊团必填
                     startActivity(intent);
                 }
                 break;
@@ -342,19 +387,22 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        cityId = intent.getStringExtra("cityId");
-        String province = intent.getStringExtra("provinceName");
-        String city = intent.getStringExtra("cityName");
-        if (!StringUtils.isBlank(province) && !StringUtils.isBlank(city)) {
-            btnCompanyAddr1.setText(province + " | " + city);
-        }
-        Log.i("选择的城市id", cityId + "");
-        areaId = (List<String>) intent.getSerializableExtra("areaId");
-        if (areaId != null) {
-            String files = intent.getSerializableExtra("areaName").toString();
-            files = files.substring(1, files.length() - 1).replaceAll(",", " | ");
-            tvSelectField.setText(files);
-            Log.i("选择的领域id", areaId.toString());
+        if ("城市".equals(intent.getStringExtra("TAG"))) {
+            cityId = intent.getStringExtra("cityId");
+            String province = intent.getStringExtra("provinceName");
+            String city = intent.getStringExtra("cityName");
+            if (!StringUtils.isBlank(province) && !StringUtils.isBlank(city)) {
+                btnCompanyAddr1.setText(province + " | " + city);
+            }
+            Log.i("选择的城市id", cityId + "");
+        } else if ("领域".equals(intent.getStringExtra("TAG"))) {
+            areaId = (List<String>) intent.getSerializableExtra("areaId");
+            if (areaId != null) {
+                String files = intent.getSerializableExtra("areaName").toString();
+                files = files.substring(1, files.length() - 1).replaceAll(",", " | ");
+                tvSelectField.setText(files);
+                Log.i("选择的领域id", areaId.toString());
+            }
         }
     }
 
