@@ -244,6 +244,7 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                         body = OkHttpUtils.usertypePost(
                                 MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SETUSERTYPE)),
                                 "ideniyType", String.valueOf(usertype),
+                                "isWebchatLogin","false",
                                 "file", photo_path,
                                 Constant.BASE_URL + Constant.SETUSERTYPE,
                                 mContext
@@ -253,6 +254,7 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                         body = OkHttpUtils.usertypePost(
                                 MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SETUSERTYPE)),
                                 "ideniyType", String.valueOf(usertype),
+                                "isWebchatLogin","false",
                                 Constant.BASE_URL + Constant.SETUSERTYPE,
                                 mContext
                         );

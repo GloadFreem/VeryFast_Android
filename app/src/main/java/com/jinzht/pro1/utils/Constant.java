@@ -7,9 +7,9 @@ public class Constant {
 
 //    public static final String BASE_URL = "http://www.jinzht.com/jinzht/";
 
-//    public static final String BASE_URL = "http://192.168.5.126:8080/jinzht/";
+    public static final String BASE_URL = "http://192.168.5.102:8080/jinzht/";
 
-    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
+//    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 私钥
      */
@@ -91,7 +91,11 @@ public class Constant {
      */
     public static final String GETCAPACITYLIST = "getProtocolAuthentic.action";
     /**
-     * 获取圈子
+     * 获取圈子列表
      */
     public static final String GETCIRCLELIST = "requestFeelingList.action";
+    /**
+     * 圈子点赞
+     */
+    public static final String PRISECIRCLE = "requestPriseFeeling.action";
 }

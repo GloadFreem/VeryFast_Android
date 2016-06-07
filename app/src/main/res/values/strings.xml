@@ -77,6 +77,7 @@
     <string name="release_to_load">释放立即加载</string>
     <string name="loading">正在加载...</string>
     <string name="load_succeed">加载成功</string>
+    <string name="load_last">已到最后一页</string>
     <string name="load_fail">加载失败</string>
 
     <string name="userid_found">用户信息已存在，正在跳转登录操作…</string>
@@ -89,5 +90,7 @@
         <item>打开照相机</item>
         <item>从相册选择</item>
     </string-array>
+
+    <string name="viewpager_indicator">%1$d/%2$d</string>
 
 </resources>

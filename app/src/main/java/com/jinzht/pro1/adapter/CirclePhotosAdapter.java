@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
+import com.jinzht.pro1.bean.CircleListBean;
 import com.jinzht.pro1.callback.ItemClickListener;
 
 import java.util.List;
@@ -18,10 +20,12 @@ import java.util.List;
 public class CirclePhotosAdapter extends RecyclerView.Adapter<CirclePhotosAdapter.MViewHolder> {
 
     private LayoutInflater mInflater;
-    private List<Integer> photos;
+    private List<CircleListBean.DataBean.ContentimagesesBean> photos;
     private ItemClickListener mItemClickListener;
+    private Context context;
 
-    public CirclePhotosAdapter(Context context, List<Integer> photos) {
+    public CirclePhotosAdapter(Context context, List<CircleListBean.DataBean.ContentimagesesBean> photos) {
+        this.context = context;
         this.mInflater = LayoutInflater.from(context);
         this.photos = photos;
     }
@@ -35,7 +39,7 @@ public class CirclePhotosAdapter extends RecyclerView.Adapter<CirclePhotosAdapte
 
     @Override
     public void onBindViewHolder(MViewHolder holder, int position) {
-        holder.img.setImageResource(photos.get(position));
+        Glide.with(context).load(photos.get(position).getUrl()).into(holder.img);
     }
 
     @Override

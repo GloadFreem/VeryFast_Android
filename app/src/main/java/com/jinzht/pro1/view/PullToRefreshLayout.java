@@ -44,6 +44,8 @@ public class PullToRefreshLayout extends RelativeLayout {
     public static final int SUCCEED = 0;
     // 刷新失败
     public static final int FAIL = 1;
+    // 已到最后一页
+    public static final int LAST = 3;
     // 按下Y坐标，上一个事件点Y坐标
     private float downY, lastY;
 
@@ -219,7 +221,7 @@ public class PullToRefreshLayout extends RelativeLayout {
                 changeState(DONE);
                 hide();
             }
-        }.sendEmptyMessageDelayed(0, 1000);
+        }.sendEmptyMessageDelayed(0, 500);
     }
 
     /**
@@ -237,8 +239,13 @@ public class PullToRefreshLayout extends RelativeLayout {
                 loadStateTextView.setText(R.string.load_succeed);
                 loadStateImageView.setBackgroundResource(R.mipmap.load_succeed);
                 break;
+            case LAST:
+                // 最后一页
+                loadStateImageView.setVisibility(View.VISIBLE);
+                loadStateTextView.setText(R.string.load_last);
+                loadStateImageView.setBackgroundResource(R.mipmap.load_succeed);
+                break;
             case FAIL:
-            default:
                 // 加载失败
                 loadStateImageView.setVisibility(View.VISIBLE);
                 loadStateTextView.setText(R.string.load_fail);
@@ -252,7 +259,7 @@ public class PullToRefreshLayout extends RelativeLayout {
                 changeState(DONE);
                 hide();
             }
-        }.sendEmptyMessageDelayed(0, 1000);
+        }.sendEmptyMessageDelayed(0, 500);
     }
 
     private void changeState(int to) {

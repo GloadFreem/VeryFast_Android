@@ -67,15 +67,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_favicon"
             android:layout_marginTop="10dp"
-            android:ellipsize="end"
+
             android:lineSpacingExtra="4dp"
-            android:maxLines="3"
+
             android:text="世界上现在除了中国文字的象形文字，其他都是拼音文字，拼音文字是语言的记录，但象形文字不是语言的记录，而是事件的记录。世界上现在除了中国文字的象形文字，其他都是拼"
             android:textColor="#474747"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tv_more"
+            android:id="@+id/btn_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_content"
@@ -91,7 +91,7 @@
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_more"
+            android:layout_below="@id/btn_more"
             android:layout_marginTop="10dp" />
 
         <View

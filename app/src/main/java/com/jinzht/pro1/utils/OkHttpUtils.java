@@ -252,13 +252,14 @@ public class OkHttpUtils {
     }
 
     // 选择投资人类型
-    public static String usertypePost(String partner, String key1, String value1, String key2, String value2, String url, Context context) throws IOException {
+    public static String usertypePost(String partner, String key1, String value1, String key2, String value2, String key3, String value3, String url, Context context) throws IOException {
         String body = "";
         MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
         builder.addFormDataPart("key", "jinzht_server_security");
         builder.addFormDataPart("partner", partner);
         builder.addFormDataPart(key1, value1);
-        builder.addFormDataPart(key2, key2 + ".jpg", RequestBody.create(MultipartBuilder.FORM, new File(value2)));
+        builder.addFormDataPart(key2, value2);
+        builder.addFormDataPart(key3, key3 + ".jpg", RequestBody.create(MultipartBuilder.FORM, new File(value3)));
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
                 .addHeader("Cookie", SharePreferencesUtils.getSession(context))
@@ -285,12 +286,13 @@ public class OkHttpUtils {
     }
 
     // 选择投资人类型，不上传头像
-    public static String usertypePost(String partner, String key1, String value1, String url, Context context) throws IOException {
+    public static String usertypePost(String partner, String key1, String value1, String key2, String value2, String url, Context context) throws IOException {
         String body = "";
         MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
         builder.addFormDataPart("key", "jinzht_server_security");
         builder.addFormDataPart("partner", partner);
         builder.addFormDataPart(key1, value1);
+        builder.addFormDataPart(key2, value2);
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
                 .addHeader("Cookie", SharePreferencesUtils.getSession(context))
