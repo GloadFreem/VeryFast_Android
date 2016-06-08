@@ -51,7 +51,9 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
     private int pages = 0;
     private List<CircleListBean.DataBean> datas = new ArrayList<>();// 数据集合
     private MyAdapter myAdapter;
-    int flag = 1;// 1是点赞，2是取消点赞
+
+    private final static int REQUEST_CODE = 1;
+    private int POSITION = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         myAdapter = new MyAdapter();
         listview.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null));
         listview.setAdapter(myAdapter);
-        GetCircleListTask getCircleList = new GetCircleListTask(pages);
+        GetCircleListTask getCircleList = new GetCircleListTask(0);
         getCircleList.execute();
     }
 
@@ -163,13 +165,13 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                 }
             });
 
-            // 加载图片
-            CirclePhotosAdapter photosAdapter = new CirclePhotosAdapter(mContext, datas.get(position).getContentimageses());
-            RecyclerViewData.setGrid(holder.recyclerview, mContext, photosAdapter, 3);
+            // 图片
             final ArrayList<String> urls = new ArrayList<>();
             for (CircleListBean.DataBean.ContentimagesesBean bean : datas.get(position).getContentimageses()) {
                 urls.add(bean.getUrl());
             }
+            CirclePhotosAdapter photosAdapter = new CirclePhotosAdapter(mContext, urls);
+            RecyclerViewData.setGrid(holder.recyclerview, mContext, photosAdapter, 3);
             photosAdapter.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
@@ -200,17 +202,21 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             holder.btnComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    POSITION = position;
                     Intent intent = new Intent(mContext, CircleDetailActivity.class);
                     intent.putExtra("id", datas.get(position).getPublicContentId());
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE);
                 }
             });
+
+            // 详情
             convertView.setOnClickListener(new View.OnClickListener() {// 点击条目
                 @Override
                 public void onClick(View v) {
+                    POSITION = position;
                     Intent intent = new Intent(mContext, CircleDetailActivity.class);
-                    intent.putExtra("id", datas.get(position).getPublicContentId());
-                    startActivity(intent);
+                    intent.putExtra("id", String.valueOf(datas.get(position).getPublicContentId()));
+                    startActivityForResult(intent, REQUEST_CODE);
                 }
             });
             holder.tvComment.setText(String.valueOf(datas.get(position).getCommentCount()));
@@ -395,6 +401,23 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                 return null;
             }
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == CircleDetailActivity.RESULT_CODE) {
+                if (data.getIntExtra("FLAG", 0) == 1) {
+                    datas.get(POSITION).setFlag(true);
+                    datas.get(POSITION).setPriseCount(datas.get(POSITION).getPriseCount() + 1);
+                } else {
+                    datas.get(POSITION).setFlag(false);
+                    datas.get(POSITION).setPriseCount(datas.get(POSITION).getPriseCount() - 1);
+                }
+            }
+        }
+        myAdapter.notifyDataSetChanged();
     }
 
     @Override

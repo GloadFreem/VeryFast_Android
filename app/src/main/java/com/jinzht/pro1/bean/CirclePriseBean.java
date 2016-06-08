@@ -45,6 +45,7 @@ public class CirclePriseBean {
 
     public static class DataBean {
         private int flag;
+        private String name;
 
         public int getFlag() {
             return flag;
@@ -52,6 +53,14 @@ public class CirclePriseBean {
 
         public void setFlag(int flag) {
             this.flag = flag;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
 }

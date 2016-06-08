@@ -94,7 +94,7 @@
             android:id="@+id/btn_good"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_good_checked" />
+            android:src="@mipmap/icon_good" />
 
         <TextView
             android:id="@+id/tv_good"
@@ -102,8 +102,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/btn_good"
-            android:ellipsize="end"
-            android:maxLines="3"
             android:text="胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁"
             android:textColor="#474747"
             android:textSize="12sp" />

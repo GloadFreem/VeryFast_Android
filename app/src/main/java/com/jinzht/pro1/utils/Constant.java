@@ -98,4 +98,12 @@ public class Constant {
      * 圈子点赞
      */
     public static final String PRISECIRCLE = "requestPriseFeeling.action";
+    /**
+     * 圈子详情
+     */
+    public static final String GETCIRCLEDETAIL = "requestFeelingDetail.action";
+    /**
+     * 圈子评论
+     */
+    public static final String CIRCLECOMMENT = "requestCommentFeeling.action";
 }
