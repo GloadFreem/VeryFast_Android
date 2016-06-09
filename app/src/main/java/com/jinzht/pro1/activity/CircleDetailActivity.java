@@ -1,5 +1,6 @@
 package com.jinzht.pro1.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -62,6 +65,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
 
     private int FLAG = 0;// 点赞或取消点赞的标识
     public final static int RESULT_CODE = 1;
+    private InputMethodManager imm;// 键盘控制
 
     @Override
 
@@ -88,6 +92,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         btnComment.setOnClickListener(this);
         refreshView = (PullToRefreshLayout) findViewById(R.id.refresh_view);// 刷新布局
         listview = (PullableListView) findViewById(R.id.listview);// 列表
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);// 键盘控制
     }
 
     @Override
@@ -103,8 +108,13 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 if (StringUtils.isBlank(edComment.getText().toString())) {
                     SuperToastUtils.showSuperToast(this, 2, "请输入评论内容");
                 } else {
-                    CircleCommentTask circleCommentTask = new CircleCommentTask("");
-                    circleCommentTask.execute();
+                    if ("评论本条状态".equals(edComment.getHint())) {
+                        CircleCommentTask circleCommentTask = new CircleCommentTask("");
+                        circleCommentTask.execute();
+                    } else {
+                        CircleCommentTask circleCommentTask = new CircleCommentTask(String.valueOf(comments.get((Integer) edComment.getTag() - 1).getUsersByUserId().getUserId()));
+                        circleCommentTask.execute();
+                    }
                 }
                 break;
         }
@@ -123,7 +133,21 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position);
+                imm.showSoftInput(edComment, 0);
+                edComment.setHint("回复 " + comments.get(position - 1).getUsersByUserId().getName());
+                edComment.setTag(position);
+            }
+        });
+        listview.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                imm.hideSoftInputFromWindow(edComment.getWindowToken(), 0);
+                edComment.setHint("评论本条状态");
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
             }
         });
         GetCircleDetailTask getCircleDetailTask = new GetCircleDetailTask();
@@ -296,10 +320,9 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
 
                 // 处理评论
             } else {
-                if (comments.get(position - 1).getUsersByAtUserId() != null) {
-                    Log.i("holder为空吗", holder.toString());
-                    Glide.with(mContext).load(comments.get(position - 1).getUsersByAtUserId().getHeadSculpture()).into(holder.ivFavicon);
-                    holder.tvName.setText(comments.get(position - 1).getUsersByAtUserId().getName() + " 回复 " + comments.get(position - 1).getUsersByUserId().getName());
+                if (comments.get(position - 1).getUsersByAtUserId() != null) {// 有回复
+                    Glide.with(mContext).load(comments.get(position - 1).getUsersByUserId().getHeadSculpture()).into(holder.ivFavicon);
+                    holder.tvName.setText(comments.get(position - 1).getUsersByUserId().getName() + " 回复 " + comments.get(position - 1).getUsersByAtUserId().getName());
                 } else {
                     Glide.with(mContext).load(comments.get(position - 1).getUsersByUserId().getHeadSculpture()).into(holder.ivFavicon);
                     holder.tvName.setText(comments.get(position - 1).getUsersByUserId().getName());
@@ -623,8 +646,11 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 return;
             } else {
                 if (circleCommentBean.getStatus() == 200) {
+                    imm.hideSoftInputFromWindow(edComment.getWindowToken(), 0);
+                    edComment.setText("");
                     GetCircleDetailTask getCircleDetailTask = new GetCircleDetailTask();
                     getCircleDetailTask.execute();
+                    listview.smoothScrollToPosition(1);
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, circleCommentBean.getMessage());
                 }

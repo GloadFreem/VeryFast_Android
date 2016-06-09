@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class DateUtils {
 
-    private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 日期逻辑
@@ -25,7 +25,7 @@ public class DateUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.get(Calendar.DAY_OF_MONTH);
         long now = calendar.getTimeInMillis();
-        Date date = strToDate(dateStr, "yyyy-MM-dd HH:mm:ss");
+        Date date = strToDate(dateStr);
         calendar.setTime(date);
         long past = calendar.getTimeInMillis();
 
@@ -44,24 +44,22 @@ public class DateUtils {
         } else if (time >= 3600 * 48 && time < 3600 * 72) {
             return sb.append("前天").toString();
         } else if (time >= 3600 * 72) {
-            return dateToString(dateStr, DATE_FORMAT.toString());
+            return dateToString(dateStr);
         }
-        return dateToString(dateStr, DATE_FORMAT.toString());
+        return dateToString(dateStr);
     }
 
     /**
      * 日期字符串转换为Date
      *
      * @param dateStr
-     * @param format
      * @return
      */
-    public static Date strToDate(String dateStr, String format) {
+    public static Date strToDate(String dateStr) {
         Date date = null;
         if (!TextUtils.isEmpty(dateStr)) {
-            DateFormat df = new SimpleDateFormat(format);
             try {
-                date = df.parse(dateStr);
+                date = DATE_FORMAT.parse(dateStr);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -73,12 +71,11 @@ public class DateUtils {
      * 日期转换为字符串
      *
      * @param timeStr
-     * @param format
      * @return
      */
-    public static String dateToString(String timeStr, String format) {
+    public static String dateToString(String timeStr) {
         // 判断是否是今年
-        Date date = strToDate(timeStr, format);
+        Date date = strToDate(timeStr);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         // 如果是今年的话，才去“xx月xx日”日期格式

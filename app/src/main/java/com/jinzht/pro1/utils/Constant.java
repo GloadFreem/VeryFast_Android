@@ -106,4 +106,8 @@ public class Constant {
      * 圈子评论
      */
     public static final String CIRCLECOMMENT = "requestCommentFeeling.action";
+    /**
+     * 发表圈子动态
+     */
+    public static final String RELEASECIRCLE = "requestPublicFeeling.action";
 }

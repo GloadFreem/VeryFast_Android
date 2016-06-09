@@ -75,6 +75,21 @@ public class CircleListBean {
 
         private List<ContentimagesesBean> contentimageses;
 
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "publicContentId=" + publicContentId +
+                    ", flag=" + flag +
+                    ", users=" + users +
+                    ", content='" + content + '\'' +
+                    ", publicDate='" + publicDate + '\'' +
+                    ", shareCount=" + shareCount +
+                    ", commentCount=" + commentCount +
+                    ", priseCount=" + priseCount +
+                    ", contentimageses=" + contentimageses +
+                    '}';
+        }
+
         public int getPublicContentId() {
             return publicContentId;
         }

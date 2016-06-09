@@ -27,8 +27,10 @@
             android:layout_margin="5dp"
             android:layout_weight="576"
             android:background="@drawable/bg_ed_transparent_blackline"
+            android:hint="评论本条状态"
             android:maxHeight="90dp"
-            android:minHeight="30dp" />
+            android:minHeight="30dp"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/btn_comment"

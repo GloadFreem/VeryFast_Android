@@ -12,6 +12,7 @@ import com.squareup.okhttp.Response;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * OkHttp访问网络工具类
@@ -421,6 +422,43 @@ public class OkHttpUtils {
         builder.addFormDataPart(key12, value12);
         builder.addFormDataPart(key13, value13);
         builder.addFormDataPart(key14, value14);
+        RequestBody requestBody = builder.build();
+        Request request = new Request.Builder()
+                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .url(url)
+                .post(requestBody)
+                .build();
+        Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            body = response.body().string();
+            try {
+                if (StringUtils.isBlank(response.header("Set-Cookie").toString())) {
+                    Log.i("session", "session不存在");
+                } else {
+                    Log.i("session", response.header("Set-Cookie").toString());
+                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        return body;
+    }
+
+    // 圈子发表动态
+    public static String releaseCirclePost(String partner, String key1, String value1, String key2, List<String> photos, String url, Context context) throws IOException {
+        String body = "";
+        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
+        builder.addFormDataPart("key", "jinzht_server_security");
+        builder.addFormDataPart("partner", partner);
+        builder.addFormDataPart(key1, value1);
+        if (photos != null && photos.size() != 0) {
+            for (int i = 0; i < photos.size(); i++) {
+                builder.addFormDataPart(key2,  ".jpg", RequestBody.create(MultipartBuilder.FORM, new File(photos.get(i))));
+            }
+        }
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
                 .addHeader("Cookie", SharePreferencesUtils.getSession(context))

@@ -1,6 +1,6 @@
 package com.jinzht.pro1.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.jinzht.pro1.R;
+import com.jinzht.pro1.application.MyApplication;
 import com.jinzht.pro1.callback.ItemClickListener;
 
 import java.util.List;
@@ -19,7 +20,8 @@ public class ReleasePhotosAdapter extends RecyclerView.Adapter<ReleasePhotosAdap
 
     private LayoutInflater mInflater;
     private ItemClickListener mItemClickListener;
-    private List<Integer> photos;
+    private List<String> photos;
+    private Activity activity;
 
     public static final int TYPE_ADD = 0;
     public static final int TYPE_IMG = 1;
@@ -28,9 +30,10 @@ public class ReleasePhotosAdapter extends RecyclerView.Adapter<ReleasePhotosAdap
     private MViewHolder addHold;
     private MViewHolder imgHold;
 
-    public ReleasePhotosAdapter(Context context, List<Integer> photos) {
-        this.mInflater = LayoutInflater.from(context);
+    public ReleasePhotosAdapter(Activity activity, List<String> photos) {
+        this.mInflater = LayoutInflater.from(activity);
         this.photos = photos;
+        this.activity = activity;
     }
 
     @Override
@@ -74,7 +77,7 @@ public class ReleasePhotosAdapter extends RecyclerView.Adapter<ReleasePhotosAdap
     public void onBindViewHolder(MViewHolder holder, int position) {
         if (holder == imgHold) {
             holder.img = (ImageView) imgView.findViewById(R.id.img);
-            holder.img.setImageResource(photos.get(position));
+            MyApplication.getInstance().imagePicker.getImageLoader().displayImage(activity, photos.get(position), holder.img, holder.img.getWidth(), holder.img.getHeight());
         }
     }
 

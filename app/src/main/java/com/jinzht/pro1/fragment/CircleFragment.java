@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.activity.CircleDetailActivity;
 import com.jinzht.pro1.activity.ImagePagerActivity;
+import com.jinzht.pro1.activity.ReleaseCircleActivity;
 import com.jinzht.pro1.adapter.CirclePhotosAdapter;
 import com.jinzht.pro1.adapter.RecyclerViewData;
 import com.jinzht.pro1.base.BaseFragment;
@@ -30,6 +31,7 @@ import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiUtils;
 import com.jinzht.pro1.view.CircleImageView;
@@ -71,7 +73,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
         myAdapter = new MyAdapter();
         listview.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null));
-        listview.setAdapter(myAdapter);
+
         GetCircleListTask getCircleList = new GetCircleListTask(0);
         getCircleList.execute();
     }
@@ -80,6 +82,8 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.title_btn_right:// 点击发表内容
+                Intent intent = new Intent(mContext, ReleaseCircleActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
         }
     }
@@ -137,11 +141,17 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
 
             // 内容
             holder.tvContent.setText(datas.get(position).getContent());
-            int contentLength = datas.get(position).getContent().length();
-            if (contentLength > 66) {
-                holder.tvContent.setEllipsize(TextUtils.TruncateAt.END);
-                holder.tvContent.setMaxLines(3);
-                holder.btnMore.setVisibility(View.VISIBLE);
+            if (!StringUtils.isBlank(datas.get(position).getContent())) {
+                int contentLength = datas.get(position).getContent().length();
+                if (contentLength > 66) {
+                    holder.tvContent.setEllipsize(TextUtils.TruncateAt.END);
+                    holder.tvContent.setMaxLines(3);
+                    holder.btnMore.setVisibility(View.VISIBLE);
+                } else {
+                    holder.tvContent.setEllipsize(null);
+                    holder.tvContent.setMaxLines(Integer.MAX_VALUE);
+                    holder.btnMore.setVisibility(View.GONE);
+                }
             } else {
                 holder.tvContent.setEllipsize(null);
                 holder.tvContent.setMaxLines(Integer.MAX_VALUE);
@@ -331,13 +341,14 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                         for (CircleListBean.DataBean dataBean : datas) {
                             Log.i("内容", dataBean.toString());
                         }
+                        listview.setAdapter(myAdapter);
                     } else {
                         for (CircleListBean.DataBean dataBean : circleListBean.getData()) {
                             Log.i("内容", dataBean.toString());
                             datas.add(dataBean);
                         }
+                        myAdapter.notifyDataSetChanged();
                     }
-                    myAdapter.notifyDataSetChanged();
                 } else if (circleListBean.getStatus() == 201) {
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
@@ -408,16 +419,20 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE) {
             if (resultCode == CircleDetailActivity.RESULT_CODE) {
-                if (data.getIntExtra("FLAG", 0) == 1) {
+                if (data.getIntExtra("FLAG", 0) == 1) {// 在详情中点了赞
                     datas.get(POSITION).setFlag(true);
                     datas.get(POSITION).setPriseCount(datas.get(POSITION).getPriseCount() + 1);
-                } else {
+                } else {// 在详情中取消了点赞
                     datas.get(POSITION).setFlag(false);
                     datas.get(POSITION).setPriseCount(datas.get(POSITION).getPriseCount() - 1);
                 }
+                myAdapter.notifyDataSetChanged();
+            }
+            if (resultCode == ReleaseCircleActivity.RESULT_CODE) {// 发表了状态
+                GetCircleListTask getCircleList = new GetCircleListTask(0);
+                getCircleList.execute();
             }
         }
-        myAdapter.notifyDataSetChanged();
     }
 
     @Override

@@ -5,6 +5,9 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.loader.GlideImageLoader;
+import com.lzy.imagepicker.view.CropImageView;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.ArrayList;
@@ -28,6 +31,8 @@ public class MyApplication extends Application {
     private static Context context;
     private static Handler handler;
     private static int mainThreadId;
+
+    public ImagePicker imagePicker;// 图片选择器
 
     public List<Activity> activityList = new ArrayList<Activity>();// 退出时清除所有Activity，避免内存溢出
 
@@ -74,6 +79,15 @@ public class MyApplication extends Application {
 //                .tasksProcessingOrder(QueueProcessingType.LIFO)// 设置图片下载和显示的工作队列排序，LIFO后进先出，FIFO先进先出
 //                .build();
 //        ImageLoader.getInstance().init(config);
+
+        // 配置图片选择器
+        imagePicker = ImagePicker.getInstance();
+        imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
+        imagePicker.setShowCamera(true);  //显示拍照按钮
+        imagePicker.setCrop(false);        //允许裁剪（单选才有效）
+        imagePicker.setSaveRectangle(true); //是否按矩形区域保存
+        imagePicker.setSelectLimit(9);    //选中数量限制
+        imagePicker.setStyle(CropImageView.Style.RECTANGLE);  //裁剪框的形状
     }
 
     public void addActivity(Activity activity) {
