@@ -6,7 +6,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,6 +18,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -283,4 +288,59 @@ public class DialogUtils {
             }
         });
     }
+
+    // 弹出分享
+    public static void shareDialog(Activity activity, final View parent, final ShareUtils shareUtils, final String title, final String content, final String imgurl, final String url) {
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_share, null);
+        final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        TextView btnQq = (TextView) view.findViewById(R.id.btn_qq);
+        TextView btnWechat = (TextView) view.findViewById(R.id.btn_wechat);
+        TextView btnWechatCircle = (TextView) view.findViewById(R.id.btn_wechat_circle);
+        TextView btnMsg = (TextView) view.findViewById(R.id.btn_msg);
+        ImageView btnExit = (ImageView) view.findViewById(R.id.btn_exit);
+        // QQ
+        btnQq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareUtils.qq(title, content, imgurl, url);
+                popupWindow.dismiss();
+            }
+        });
+        // 微信
+        btnWechat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareUtils.wechat(title, content, imgurl, url);
+                popupWindow.dismiss();
+            }
+        });
+        // 朋友圈
+        btnWechatCircle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareUtils.wechatcircle(title, content, imgurl, url);
+                popupWindow.dismiss();
+            }
+        });
+        // 短信
+        btnMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareUtils.msg(title, content, imgurl, url);
+                popupWindow.dismiss();
+            }
+        });
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+    }
+
 }

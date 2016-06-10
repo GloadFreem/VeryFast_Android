@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.adapter.RecyclerViewData;
@@ -25,13 +24,12 @@ import com.jinzht.pro1.utils.OkHttpUtils;
 import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.ui.ImageGridActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import cn.finalteam.galleryfinal.GalleryFinal;
+import cn.finalteam.galleryfinal.model.PhotoInfo;
 
 /**
  * 在圈子发布话题界面
@@ -47,7 +45,7 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
     List<String> photos = new ArrayList<>();// 要发布的图片地址
 
     public final static int RESULT_CODE = 1;// 返回到圈子列表
-    public final static int IMAGE_PICKER = 2;// 跳转到图片选择器
+    public static final int REQUEST_CODE_GALLERY = 2;// 跳转到图片选择器
 
     @Override
     protected int getResourcesId() {
@@ -76,8 +74,7 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.title_btn_right:// 发布
-                photos.add(Environment.getExternalStorageDirectory() + "/" + "identiyCarA.jpg");
-                photos.add(Environment.getExternalStorageDirectory() + "/" + "identiyCarB.jpg");
+                Log.i("选择的图片路径", photos.toString());
                 if (!StringUtils.isBlank(edContent.getText().toString()) || photos.size() != 0) {
                     ReleaseCircleTask releaseCircleTask = new ReleaseCircleTask();
                     releaseCircleTask.execute();
@@ -98,18 +95,14 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onItemClick(View view, int position) {
                 if (photos.size() == 9) {
-                    SuperToastUtils.showSuperToast(mContext, 2, "点击了照片" + position);
+//                    SuperToastUtils.showSuperToast(mContext, 2, "点击了照片" + position);
                 } else if (photos.size() == 0) {
-                    SuperToastUtils.showSuperToast(mContext, 2, "添加照片");
-                    Intent intent = new Intent(mContext, ImageGridActivity.class);
-                    startActivityForResult(intent, IMAGE_PICKER);
+                    GalleryFinal.openGalleryMuti(REQUEST_CODE_GALLERY, 9 - photos.size(), mOnHanlderResultCallback);
                 } else if (photos.size() > 0 && photos.size() < 9) {
                     if (position == photos.size()) {
-                        SuperToastUtils.showSuperToast(mContext, 2, "添加照片");
-                        Intent intent = new Intent(mContext, ImageGridActivity.class);
-                        startActivityForResult(intent, IMAGE_PICKER);
+                        GalleryFinal.openGalleryMuti(REQUEST_CODE_GALLERY, 9 - photos.size(), mOnHanlderResultCallback);
                     } else {
-                        SuperToastUtils.showSuperToast(mContext, 2, "点击了照片" + position);
+//                        SuperToastUtils.showSuperToast(mContext, 2, "点击了照片" + position);
                     }
                 }
             }
@@ -126,22 +119,23 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
-            if (data != null && requestCode == IMAGE_PICKER) {
-                ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                for (ImageItem item : images) {
-                    photos.add(item.path);
+    // 返回选择的图片
+    private GalleryFinal.OnHanlderResultCallback mOnHanlderResultCallback = new GalleryFinal.OnHanlderResultCallback() {
+        @Override
+        public void onHanlderSuccess(int reqeustCode, List<PhotoInfo> resultList) {
+            if (resultList != null) {
+                for (PhotoInfo item : resultList) {
+                    photos.add(item.getPhotoPath());
                 }
-                adapter = new ReleasePhotosAdapter(this, photos);
                 adapter.notifyDataSetChanged();
-            } else {
-                Log.i("选择图片", "没有数据");
             }
         }
-    }
+
+        @Override
+        public void onHanlderFailure(int requestCode, String errorMsg) {
+
+        }
+    };
 
     // 发表动态
     private class ReleaseCircleTask extends AsyncTask<Void, Void, ReleaseCircleBean> {

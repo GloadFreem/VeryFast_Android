@@ -85,6 +85,21 @@ public class DateUtils {
         return DATE_FORMAT.format(date);
     }
 
+    public static final int WEEKDAYS = 7;
+
+    public static String[] WEEK = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+
+    public static String getWeek(String timeStr) {
+        Date date = strToDate(timeStr);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int dayIndex = calendar.get(Calendar.DAY_OF_WEEK);
+        if (dayIndex < 1 || dayIndex > WEEKDAYS) {
+            return timeStr;
+        }
+        return WEEK[dayIndex - 1];
+    }
+
     public static int getYear() {
         return Calendar.getInstance().get(Calendar.YEAR);
     }

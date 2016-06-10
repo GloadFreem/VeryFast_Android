@@ -5,22 +5,18 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.loader.GlideImageLoader;
-import com.lzy.imagepicker.view.CropImageView;
+import com.jinzht.pro1.view.GlideImageLoader;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import cn.finalteam.galleryfinal.CoreConfig;
+import cn.finalteam.galleryfinal.FunctionConfig;
+import cn.finalteam.galleryfinal.GalleryFinal;
+import cn.finalteam.galleryfinal.ThemeConfig;
 import cn.jpush.android.api.JPushInterface;
-
-//import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-//import com.nostra13.universalimageloader.core.DisplayImageOptions;
-//import com.nostra13.universalimageloader.core.ImageLoader;
-//import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-//import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 /**
  * 自定义MyApplication，初始化一些东西
@@ -31,8 +27,6 @@ public class MyApplication extends Application {
     private static Context context;
     private static Handler handler;
     private static int mainThreadId;
-
-    public ImagePicker imagePicker;// 图片选择器
 
     public List<Activity> activityList = new ArrayList<Activity>();// 退出时清除所有Activity，避免内存溢出
 
@@ -64,30 +58,22 @@ public class MyApplication extends Application {
         okHttpClient.setWriteTimeout(5, TimeUnit.SECONDS);
         okHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
 
-//        DisplayImageOptions options = new DisplayImageOptions.Builder()
-//                .showImageOnLoading(R.mipmap.user_loading)
-//                .showImageOnFail(R.mipmap.user_loadingfail)
-//                .cacheInMemory(true)
-//                .cacheOnDisk(true)
-//                .bitmapConfig(Bitmap.Config.RGB_565)// 设置图片解码类型，默认是ARGB_8888，使用RGB_565会比使用ARGB_8888少消耗2倍的内
-//                .build();
-//        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
-//                .defaultDisplayImageOptions(options)
-//                .threadPriority(Thread.NORM_PRIORITY - 2)// 线程优先级
-//                .denyCacheImageMultipleSizesInMemory()// 强制UIL在内存中不能存储内容相同但大小不同的图像。
-//                .diskCacheFileNameGenerator(new Md5FileNameGenerator())// 使用MD5加密命名
-//                .tasksProcessingOrder(QueueProcessingType.LIFO)// 设置图片下载和显示的工作队列排序，LIFO后进先出，FIFO先进先出
-//                .build();
-//        ImageLoader.getInstance().init(config);
-
         // 配置图片选择器
-        imagePicker = ImagePicker.getInstance();
-        imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
-        imagePicker.setShowCamera(true);  //显示拍照按钮
-        imagePicker.setCrop(false);        //允许裁剪（单选才有效）
-        imagePicker.setSaveRectangle(true); //是否按矩形区域保存
-        imagePicker.setSelectLimit(9);    //选中数量限制
-        imagePicker.setStyle(CropImageView.Style.RECTANGLE);  //裁剪框的形状
+        ThemeConfig theme = ThemeConfig.DARK;
+        FunctionConfig functionConfig = new FunctionConfig.Builder()
+                .setEnableCamera(true)// 开启相机
+                .setEnableEdit(false)// 关闭编辑
+                .setEnableCrop(false)// 关闭剪裁
+                .setEnableRotate(false)// 关闭旋转
+                .setCropSquare(false)// 剪裁正方形
+                .setEnablePreview(true)// 开启预览
+                .setMutiSelectMaxSize(9)// 最多9张
+                .build();
+        CoreConfig coreConfig = new CoreConfig.Builder(this, new GlideImageLoader(), theme)
+                .setFunctionConfig(functionConfig)
+                .build();
+        GalleryFinal.init(coreConfig);
+
     }
 
     public void addActivity(Activity activity) {

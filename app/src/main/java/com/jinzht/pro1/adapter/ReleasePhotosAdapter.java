@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
-import com.jinzht.pro1.application.MyApplication;
 import com.jinzht.pro1.callback.ItemClickListener;
 
 import java.util.List;
@@ -77,7 +77,7 @@ public class ReleasePhotosAdapter extends RecyclerView.Adapter<ReleasePhotosAdap
     public void onBindViewHolder(MViewHolder holder, int position) {
         if (holder == imgHold) {
             holder.img = (ImageView) imgView.findViewById(R.id.img);
-            MyApplication.getInstance().imagePicker.getImageLoader().displayImage(activity, photos.get(position), holder.img, holder.img.getWidth(), holder.img.getHeight());
+            Glide.with(activity).load(photos.get(position)).into(holder.img);
         }
     }
 

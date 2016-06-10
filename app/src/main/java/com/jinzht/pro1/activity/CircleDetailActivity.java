@@ -64,7 +64,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
     private int pages = 0;
 
     private int FLAG = 0;// 点赞或取消点赞的标识
-    public final static int RESULT_CODE = 1;
+    public final static int RESULT_CODE = 0;
     private InputMethodManager imm;// 键盘控制
 
     @Override
@@ -99,10 +99,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_back:// 返回上一页
-                Intent intent = new Intent();
-                intent.putExtra("FLAG", FLAG);
-                setResult(RESULT_CODE, intent);
-                finish();
+                onBackPressed();
                 break;
             case R.id.btn_comment:// 发表评论
                 if (StringUtils.isBlank(edComment.getText().toString())) {
@@ -122,9 +119,11 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra("FLAG", FLAG);
-        setResult(RESULT_CODE, intent);
+        if (FLAG == 1 || FLAG == 2) {
+            Intent intent = new Intent();
+            intent.putExtra("FLAG", FLAG);
+            setResult(RESULT_CODE, intent);
+        }
         finish();
     }
 

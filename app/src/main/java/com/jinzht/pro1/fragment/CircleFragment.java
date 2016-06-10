@@ -24,13 +24,16 @@ import com.jinzht.pro1.adapter.RecyclerViewData;
 import com.jinzht.pro1.base.BaseFragment;
 import com.jinzht.pro1.bean.CircleListBean;
 import com.jinzht.pro1.bean.CirclePriseBean;
+import com.jinzht.pro1.bean.CircleShareBean;
 import com.jinzht.pro1.callback.ItemClickListener;
 import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.DialogUtils;
 import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.ShareUtils;
 import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiUtils;
@@ -185,6 +188,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             photosAdapter.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
+                    Log.i("获取的图片地址", urls.toString());
                     imageBrower(position, urls);
                 }
 
@@ -203,7 +207,9 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             holder.btnTranspond.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SuperToastUtils.showSuperToast(mContext, 2, "转发");
+                    POSITION = position;
+                    ShareTask shareTask = new ShareTask();
+                    shareTask.execute();
                 }
             });
             holder.tvTranspond.setText(String.valueOf(datas.get(position).getShareCount()));
@@ -263,7 +269,6 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
 
         private void imageBrower(int position, ArrayList<String> urls) {
             Intent intent = new Intent(mContext, ImagePagerActivity.class);
-            // 图片url,为了演示这里使用常量，一般从数据库中或网络中获取
             intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, urls);
             intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -414,15 +419,56 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         }
     }
 
+    // 分享
+    private class ShareTask extends AsyncTask<Void, Void, CircleShareBean> {
+        @Override
+        protected CircleShareBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.CIRCLESHARE)),
+                            "type", "2",
+                            "contentId", String.valueOf(datas.get(POSITION).getPublicContentId()),
+                            Constant.BASE_URL + Constant.CIRCLESHARE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("分享返回信息", body);
+                return FastJsonTools.getBean(body, CircleShareBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CircleShareBean circleShareBean) {
+            super.onPostExecute(circleShareBean);
+            if (circleShareBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (circleShareBean.getStatus() == 200) {
+                    ShareUtils shareUtils = new ShareUtils(getActivity());
+                    DialogUtils.shareDialog(getActivity(), refreshView, shareUtils, "金指投圈子", datas.get(POSITION).getContent(), datas.get(POSITION).getUsers().getHeadSculpture(), circleShareBean.getData().getUrl());
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, circleShareBean.getMessage());
+                }
+            }
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CODE && data != null) {
             if (resultCode == CircleDetailActivity.RESULT_CODE) {
                 if (data.getIntExtra("FLAG", 0) == 1) {// 在详情中点了赞
                     datas.get(POSITION).setFlag(true);
                     datas.get(POSITION).setPriseCount(datas.get(POSITION).getPriseCount() + 1);
-                } else {// 在详情中取消了点赞
+                } else if (data.getIntExtra("FLAG", 0) == 2) {// 在详情中取消了点赞
                     datas.get(POSITION).setFlag(false);
                     datas.get(POSITION).setPriseCount(datas.get(POSITION).getPriseCount() - 1);
                 }

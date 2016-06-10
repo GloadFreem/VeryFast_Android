@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#00a0e9"
@@ -22,7 +23,7 @@
         android:background="@android:color/white">
 
         <TextView
-            android:id="@+id/item_activity_time"
+            android:id="@+id/item_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
@@ -34,10 +35,10 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/item_activity_num"
+            android:id="@+id/item_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_activity_time"
+            android:layout_below="@id/item_time"
             android:layout_marginLeft="14dp"
             android:layout_marginTop="9dp"
             android:drawableLeft="@mipmap/icon_num"
@@ -50,10 +51,10 @@
             android:id="@+id/item_activity_free"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_activity_time"
+            android:layout_below="@id/item_time"
             android:layout_marginLeft="9dp"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/item_activity_num"
+            android:layout_toRightOf="@id/item_num"
             android:background="@drawable/bg_btn_blue"
             android:padding="2dp"
             android:text="免费"
@@ -61,10 +62,10 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/item_activity_addr"
+            android:id="@+id/item_addr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_activity_num"
+            android:layout_below="@id/item_num"
             android:layout_marginBottom="13dp"
             android:layout_marginLeft="14dp"
             android:layout_marginTop="9dp"
@@ -75,7 +76,7 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/item_activity_btn_apply"
+            android:id="@+id/btn_apply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -88,11 +89,11 @@
             android:textSize="17sp" />
 
         <TextView
-            android:id="@+id/item_activity_distance"
+            android:id="@+id/item_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/item_activity_num"
+            android:layout_below="@id/item_num"
             android:layout_marginRight="9dp"
             android:layout_marginTop="9dp"
             android:text="1.2km"

@@ -7,7 +7,7 @@ public class Constant {
 
 //    public static final String BASE_URL = "http://www.jinzht.com/jinzht/";
 
-    public static final String BASE_URL = "http://192.168.5.102:8080/jinzht/";
+    public static final String BASE_URL = "http://192.168.5.106:8080/jinzht/";
 
 //    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
@@ -110,4 +110,12 @@ public class Constant {
      * 发表圈子动态
      */
     public static final String RELEASECIRCLE = "requestPublicFeeling.action";
+    /**
+     * 分享圈子
+     */
+    public static final String CIRCLESHARE = "requestShareFeeling.action";
+    /**
+     * 获取活动列表
+     */
+    public static final String GETACTIVITYLIST = "requestActionList.action";
 }
