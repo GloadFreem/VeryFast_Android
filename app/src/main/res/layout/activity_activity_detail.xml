@@ -255,6 +255,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_apply1"
                     android:layout_width="match_parent"
                     android:layout_height="67dp">
 
@@ -306,6 +307,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_apply2"
                     android:layout_width="match_parent"
                     android:layout_height="67dp">
 
@@ -357,6 +359,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_apply3"
                     android:layout_width="match_parent"
                     android:layout_height="67dp">
 
@@ -408,6 +411,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_apply4"
                     android:layout_width="match_parent"
                     android:layout_height="67dp">
 
@@ -459,6 +463,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_apply5"
                     android:layout_width="match_parent"
                     android:layout_height="67dp">
 
@@ -606,7 +611,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
                             android:ellipsize="end"
-                            android:maxLines="2"
                             android:text="陈生珠：好，点个赞！"
                             android:textColor="@color/bg_text"
                             android:textSize="12sp" />
@@ -617,7 +621,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:ellipsize="end"
-                            android:maxLines="2"
                             android:text="刘延杰 回复 陈生珠：棒棒哒"
                             android:textColor="@color/bg_text"
                             android:textSize="12sp" />
@@ -628,7 +631,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:ellipsize="end"
-                            android:maxLines="2"
                             android:text="胡丫郁：萌萌哒"
                             android:textColor="@color/bg_text"
                             android:textSize="12sp" />
@@ -639,7 +641,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:ellipsize="end"
-                            android:maxLines="2"
                             android:text="胡丫郁：萌萌哒"
                             android:textColor="@color/bg_text"
                             android:textSize="12sp" />
@@ -650,7 +651,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:ellipsize="end"
-                            android:maxLines="2"
                             android:text="胡丫郁：萌萌哒"
                             android:textColor="@color/bg_text"
                             android:textSize="12sp" />

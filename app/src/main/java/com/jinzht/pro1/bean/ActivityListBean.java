@@ -51,6 +51,7 @@ public class ActivityListBean {
          * startTime : 2016-06-06 00:00:00
          * endTime : 2016-06-06 00:00:00
          * type : 1
+         * "flag": 1
          */
         private int actionId;
         private String name;
@@ -60,6 +61,7 @@ public class ActivityListBean {
         private String startTime;
         private String endTime;
         private int type;
+        private int flag;
 
         public int getActionId() {
             return actionId;
@@ -123,6 +125,14 @@ public class ActivityListBean {
 
         public void setType(int type) {
             this.type = type;
+        }
+
+        public int getFlag() {
+            return flag;
+        }
+
+        public void setFlag(int flag) {
+            this.flag = flag;
         }
     }
 }

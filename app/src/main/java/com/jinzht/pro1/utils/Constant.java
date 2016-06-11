@@ -7,7 +7,7 @@ public class Constant {
 
 //    public static final String BASE_URL = "http://www.jinzht.com/jinzht/";
 
-    public static final String BASE_URL = "http://192.168.5.106:8080/jinzht/";
+    public static final String BASE_URL = "http://192.168.5.107:8080/jinzht/";
 
 //    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
@@ -118,4 +118,20 @@ public class Constant {
      * 获取活动列表
      */
     public static final String GETACTIVITYLIST = "requestActionList.action";
+    /**
+     * 活动报名
+     */
+    public static final String ACTIVITYAPPLY = "requestAttendAction.action";
+    /**
+     * 活动详情
+     */
+    public static final String GETACTIVITYDETAIL = "requestDetailAction.action";
+    /**
+     * 获取全部活动报名人
+     */
+    public static final String GETALLACTIVITYAPPLYS = "requestAttendListAction.action";
+    /**
+     * 获取全部评论人
+     */
+    public static final String GETALLACTIVITYCOMMENTS = "requestPriseListAction.action";
 }

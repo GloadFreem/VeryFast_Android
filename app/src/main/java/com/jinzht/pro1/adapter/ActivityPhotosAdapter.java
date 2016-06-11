@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
+import com.jinzht.pro1.bean.ActivityDetailBean;
 import com.jinzht.pro1.callback.ItemClickListener;
 
 import java.util.List;
@@ -18,12 +20,14 @@ import java.util.List;
 public class ActivityPhotosAdapter extends RecyclerView.Adapter<ActivityPhotosAdapter.MViewHolder> {
 
     private LayoutInflater mInflater;
-    private List<Integer> photos;
+    private List<ActivityDetailBean.DataBean.ActionimagesBean> photos;
     private ItemClickListener mItemClickListener;
+    private Context context;
 
-    public ActivityPhotosAdapter(Context context, List<Integer> photos) {
+    public ActivityPhotosAdapter(Context context, List<ActivityDetailBean.DataBean.ActionimagesBean> photos) {
         this.mInflater = LayoutInflater.from(context);
         this.photos = photos;
+        this.context = context;
     }
 
     @Override
@@ -36,7 +40,7 @@ public class ActivityPhotosAdapter extends RecyclerView.Adapter<ActivityPhotosAd
 
     @Override
     public void onBindViewHolder(MViewHolder holder, int position) {
-        holder.img.setBackgroundResource(photos.get(position));
+        Glide.with(context).load(photos.get(position).getUrl()).into(holder.img);
     }
 
     @Override

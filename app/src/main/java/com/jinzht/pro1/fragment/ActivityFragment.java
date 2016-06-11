@@ -1,23 +1,32 @@
 package com.jinzht.pro1.fragment;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jinzht.pro1.R;
+import com.jinzht.pro1.activity.ActivityDetailActivity;
 import com.jinzht.pro1.base.BaseFragment;
+import com.jinzht.pro1.bean.ActivityApplyBean;
 import com.jinzht.pro1.bean.ActivityListBean;
 import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
 import com.jinzht.pro1.utils.DateUtils;
-import com.jinzht.pro1.utils.DialogUtils;
 import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
@@ -28,6 +37,8 @@ import com.jinzht.pro1.view.PullableListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 活动界面
@@ -42,6 +53,8 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
     private MyAdapter myAdapter;
     private int pages = 0;
     private List<ActivityListBean.DataBean> datas = new ArrayList<>();// 数据集合
+    private int POSITION = 0;
+    private final static int REQUEST_CODE = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,6 +72,14 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         super.onActivityCreated(savedInstanceState);
         refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
         myAdapter = new MyAdapter();
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(mContext, ActivityDetailActivity.class);
+                intent.putExtra("id", datas.get(position).getActionId());
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
 
         GetActivityListTask getActivityListTask = new GetActivityListTask(0);
         getActivityListTask.execute();
@@ -90,7 +111,7 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder = null;
             if (convertView == null) {
                 holder = new ViewHolder();
@@ -118,12 +139,22 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
             holder.itemAddr.setText(datas.get(position).getAddress());
             holder.itemDistance.setText("");// 距离
             // 报名
-            holder.btnApply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DialogUtils.activityApplyDialog(getActivity());
-                }
-            });
+            if (datas.get(position).getFlag() == 1) {
+                holder.btnApply.setText("已报名");
+                holder.btnApply.setBackgroundResource(R.drawable.bg_tv_investor_gray);
+                holder.btnApply.setClickable(false);
+            } else {
+                holder.btnApply.setText("立即报名");
+                holder.btnApply.setBackgroundResource(R.drawable.bg_tv_investor_orange);
+                holder.btnApply.setClickable(true);
+                holder.btnApply.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        applyDialog(datas.get(position).getActionId());
+                        POSITION = position;
+                    }
+                });
+            }
             return convertView;
         }
 
@@ -229,6 +260,104 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
             Log.i("页码", String.valueOf(pages));
             GetActivityListTask getActivityListTask = new GetActivityListTask(pages);
             getActivityListTask.execute();
+        }
+    }
+
+    // 报名弹框
+    private void applyDialog(final int contentId) {
+        final AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setView(new EditText(getActivity()));
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_activity_apply);
+        RelativeLayout bgEdt = (RelativeLayout) window.findViewById(R.id.dialog_activity_bg_edt);
+        final EditText edt = (EditText) window.findViewById(R.id.dialog_activity_edt);
+        Button btnCancel = (Button) window.findViewById(R.id.dialog_activity_btn_cancel);
+        Button btnConfirm = (Button) window.findViewById(R.id.dialog_activity_btn_confirm);
+        // dialog弹出后自动弹出键盘
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+                           public void run() {
+                               imm.showSoftInput(edt, 0);
+                           }
+                       },
+                100);
+        bgEdt.setOnClickListener(new View.OnClickListener() {// 点击输入框背景弹出键盘
+            @Override
+            public void onClick(View v) {
+                imm.showSoftInput(edt, 0);
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {// 取消
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        btnConfirm.setOnClickListener(new View.OnClickListener() {// 确认报名
+            @Override
+            public void onClick(View v) {
+                ApplyTask applyTask = new ApplyTask(contentId, edt.getText().toString());
+                applyTask.execute();
+                dialog.dismiss();
+            }
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                imm.hideSoftInputFromWindow(edt.getWindowToken(), 0);
+            }
+        });
+    }
+
+    // 报名接口
+    private class ApplyTask extends AsyncTask<Void, Void, ActivityApplyBean> {
+        private int contentId;
+        private String content;
+
+        public ApplyTask(int contentId, String content) {
+            this.contentId = contentId;
+            this.content = content;
+        }
+
+        @Override
+        protected ActivityApplyBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.ACTIVITYAPPLY)),
+                            "contentId", String.valueOf(contentId),
+                            "content", content,
+                            Constant.BASE_URL + Constant.ACTIVITYAPPLY,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("报名返回信息", body);
+                return FastJsonTools.getBean(body, ActivityApplyBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ActivityApplyBean activityApplyBean) {
+            super.onPostExecute(activityApplyBean);
+            if (activityApplyBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (activityApplyBean.getStatus() == 200) {
+                    SuperToastUtils.showSuperToast(mContext, 2, activityApplyBean.getMessage());
+                    datas.get(POSITION).setFlag(1);
+                    myAdapter.notifyDataSetChanged();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, activityApplyBean.getMessage());
+                }
+            }
         }
     }
 

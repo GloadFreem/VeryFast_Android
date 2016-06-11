@@ -456,7 +456,7 @@ public class OkHttpUtils {
         builder.addFormDataPart(key1, value1);
         if (photos != null && photos.size() != 0) {
             for (int i = 0; i < photos.size(); i++) {
-                builder.addFormDataPart(key2,  ".jpg", RequestBody.create(MultipartBuilder.FORM, new File(photos.get(i))));
+                builder.addFormDataPart(key2, key2 + ".jpg", RequestBody.create(MultipartBuilder.FORM, new File(photos.get(i))));
             }
         }
         RequestBody requestBody = builder.build();
