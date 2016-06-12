@@ -231,7 +231,9 @@
         <activity android:name=".activity.ReleaseCircleActivity" />
         <activity android:name=".activity.TranspondCircleActivity" />
         <activity android:name=".activity.CircleDetailActivity" />
-        <activity android:name=".activity.ImagePagerActivity"></activity>
+        <activity android:name=".activity.ImagePagerActivity" />
+        <activity android:name=".activity.ActivityAllApplys" />
+        <activity android:name=".activity.ActivityAllComments"></activity>
     </application>
 
 </manifest>

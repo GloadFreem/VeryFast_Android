@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line_partition" />
+
+    <LinearLayout
+        android:id="@+id/ll_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/ed_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="576"
+            android:background="@drawable/bg_ed_transparent_blackline"
+            android:gravity="center_vertical"
+            android:hint="评论本活动"
+            android:maxHeight="90dp"
+            android:minHeight="30dp"
+            android:textColor="@color/bg_text"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/btn_comment"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="2dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="144"
+            android:background="@drawable/bg_btn_blue"
+            android:gravity="center"
+            android:text="发送"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
+</LinearLayout>

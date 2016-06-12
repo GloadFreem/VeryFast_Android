@@ -60,8 +60,8 @@ public class ActivityListBean {
         private int memberLimit;
         private String startTime;
         private String endTime;
-        private int type;
-        private int flag;
+        private int type;// 1免费，0付费
+        private boolean attended;// true已报名，false未报名
 
         public int getActionId() {
             return actionId;
@@ -127,12 +127,12 @@ public class ActivityListBean {
             this.type = type;
         }
 
-        public int getFlag() {
-            return flag;
+        public boolean isAttended() {
+            return attended;
         }
 
-        public void setFlag(int flag) {
-            this.flag = flag;
+        public void setAttended(boolean attended) {
+            this.attended = attended;
         }
     }
 }

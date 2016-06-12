@@ -10,7 +10,7 @@ public class ActivityAllCommentsBean {
     /**
      * message :
      * status : 200
-     * data : {"prises":["陈生珠"],"comments":[{"commentId":2,"content":"活动真实有效","userName":"陈生珠"},{"commentId":1,"content":"说的不错","userName":"陈生珠"},{"commentId":4,"content":"活动真实有效","userName":"陈生珠","atUserName":"陈生珠"},{"commentId":3,"content":"还可以","userName":"陈生珠","atUserName":"陈生珠"}]}
+     * data : {"prises":["段辉","QQ群"],"comments":[{"commentId":13,"usersByUserId":{"userId":7},"content":"啊","userName":"段辉"},{"commentId":2,"usersByUserId":{"userId":1},"content":"活动真实有效","userName":"QQ群"},{"commentId":4,"usersByUserId":{"userId":1},"content":"活动真实有效","userName":"QQ群","atUserName":"段辉"},{"commentId":3,"usersByUserId":{"userId":1},"content":"还可以","userName":"QQ群","atUserName":"段辉"},{"commentId":1,"usersByUserId":{"userId":1},"content":"说的不错","userName":"QQ群"}]}
      */
 
     private String message;
@@ -63,13 +63,16 @@ public class ActivityAllCommentsBean {
 
         public static class CommentsBean {
             /**
-             * commentId : 2
-             * content : 活动真实有效
-             * userName : 陈生珠
+             * commentId : 13
+             * usersByUserId : {"userId":7}
+             * content : 啊
+             * userName : 段辉
              */
             private int commentId;
+            private UsersByUserIdBean usersByUserId;
             private String content;
             private String userName;
+            private String atUserName;
 
             public int getCommentId() {
                 return commentId;
@@ -77,6 +80,14 @@ public class ActivityAllCommentsBean {
 
             public void setCommentId(int commentId) {
                 this.commentId = commentId;
+            }
+
+            public UsersByUserIdBean getUsersByUserId() {
+                return usersByUserId;
+            }
+
+            public void setUsersByUserId(UsersByUserIdBean usersByUserId) {
+                this.usersByUserId = usersByUserId;
             }
 
             public String getContent() {
@@ -93,6 +104,29 @@ public class ActivityAllCommentsBean {
 
             public void setUserName(String userName) {
                 this.userName = userName;
+            }
+
+            public String getAtUserName() {
+                return atUserName;
+            }
+
+            public void setAtUserName(String atUserName) {
+                this.atUserName = atUserName;
+            }
+
+            public static class UsersByUserIdBean {
+                /**
+                 * userId : 7
+                 */
+                private int userId;
+
+                public int getUserId() {
+                    return userId;
+                }
+
+                public void setUserId(int userId) {
+                    this.userId = userId;
+                }
             }
         }
     }

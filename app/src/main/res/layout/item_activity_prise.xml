@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="20dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="18dp"
+    android:paddingTop="25dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:src="@mipmap/icon_praise" />
+
+    <TextView
+        android:id="@+id/tv_praise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="3dp"
+        android:maxLines="2"
+        android:text="胡丫郁，陈生珠，段辉，刘延杰，王瑞，刘路，邓毅，王丹，胡丫郁，陈生珠，段辉，刘延杰，王瑞，刘路，邓毅，王丹"
+        android:textColor="@color/custom_orange"
+        android:textSize="14sp" />
+</LinearLayout>

@@ -78,6 +78,7 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                 Intent intent = new Intent(mContext, ActivityDetailActivity.class);
                 intent.putExtra("id", datas.get(position).getActionId());
                 startActivityForResult(intent, REQUEST_CODE);
+                POSITION = position;
             }
         });
 
@@ -139,7 +140,7 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
             holder.itemAddr.setText(datas.get(position).getAddress());
             holder.itemDistance.setText("");// 距离
             // 报名
-            if (datas.get(position).getFlag() == 1) {
+            if (datas.get(position).isAttended()) {
                 holder.btnApply.setText("已报名");
                 holder.btnApply.setBackgroundResource(R.drawable.bg_tv_investor_gray);
                 holder.btnApply.setClickable(false);
@@ -352,10 +353,23 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
             } else {
                 if (activityApplyBean.getStatus() == 200) {
                     SuperToastUtils.showSuperToast(mContext, 2, activityApplyBean.getMessage());
-                    datas.get(POSITION).setFlag(1);
+                    datas.get(POSITION).setAttended(true);
                     myAdapter.notifyDataSetChanged();
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, activityApplyBean.getMessage());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && data != null) {
+            if (resultCode == ActivityDetailActivity.RESULT_CODE) {
+                if (data.getBooleanExtra("ISATTENDED", false)) {// 在详情中报了名
+                    datas.get(POSITION).setAttended(true);
+                    myAdapter.notifyDataSetChanged();
                 }
             }
         }

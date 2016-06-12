@@ -7,9 +7,9 @@ public class Constant {
 
 //    public static final String BASE_URL = "http://www.jinzht.com/jinzht/";
 
-    public static final String BASE_URL = "http://192.168.5.107:8080/jinzht/";
+//    public static final String BASE_URL = "http://192.168.5.108:8080/jinzht/";
 
-//    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
+    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 私钥
      */
@@ -134,4 +134,16 @@ public class Constant {
      * 获取全部评论人
      */
     public static final String GETALLACTIVITYCOMMENTS = "requestPriseListAction.action";
+    /**
+     * 活动点赞
+     */
+    public static final String PRISEACTIVITY = "requestPriseAction.action";
+    /**
+     * 活动评论
+     */
+    public static final String ACTIVITYCOMMENT = "requestCommentAction.action";
+    /**
+     * 活动分享
+     */
+    public static final String ACTIVITYSHARE = "requestShareAction.action";
 }

@@ -579,7 +579,7 @@
                         android:maxLines="2"
                         android:text="胡丫郁，陈生珠，段辉，刘延杰，王瑞，刘路，邓毅，王丹，胡丫郁，陈生珠，段辉，刘延杰，王瑞，刘路，邓毅，王丹"
                         android:textColor="@color/custom_orange"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -613,7 +613,7 @@
                             android:ellipsize="end"
                             android:text="陈生珠：好，点个赞！"
                             android:textColor="@color/bg_text"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/activity_tv_comment2"
@@ -623,7 +623,7 @@
                             android:ellipsize="end"
                             android:text="刘延杰 回复 陈生珠：棒棒哒"
                             android:textColor="@color/bg_text"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/activity_tv_comment3"
@@ -633,7 +633,7 @@
                             android:ellipsize="end"
                             android:text="胡丫郁：萌萌哒"
                             android:textColor="@color/bg_text"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/activity_tv_comment4"
@@ -643,7 +643,7 @@
                             android:ellipsize="end"
                             android:text="胡丫郁：萌萌哒"
                             android:textColor="@color/bg_text"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/activity_tv_comment5"
@@ -653,7 +653,7 @@
                             android:ellipsize="end"
                             android:text="胡丫郁：萌萌哒"
                             android:textColor="@color/bg_text"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/activity_tv_comment6"
@@ -662,7 +662,7 @@
                             android:layout_marginTop="3dp"
                             android:text="……"
                             android:textColor="@color/bg_text"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>
 

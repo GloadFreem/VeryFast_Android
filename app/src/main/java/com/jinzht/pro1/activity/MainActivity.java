@@ -82,6 +82,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.main_btn_me:// 跳转到个人中心界面
                 DialogUtils.goldAnim(this, 8, 9);
+//                Intent intent = new Intent(this, PersonalCenterActivity.class);
+//                startActivity(intent);
                 break;
         }
     }

@@ -15,20 +15,6 @@ public class CircleDetailBean {
 
     private String message;
     private int status;
-    /**
-     * publicContentId : 27
-     * flag : false
-     * users : {"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg","authentics":[{"city":{"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true},"name":"陈生珠","companyName":"北京金指投","companyAddress":"北京市","position":"职员"}]}
-     * content : 金融[1]  指货币的发行、流通和回笼，贷款的发放和收回，存款的存入和提取，汇兑的往来等经济活动。
-     * publicDate : 2016-06-07 00:00:00
-     * contentimageses : [{"url":"http://imgsrc.baidu.com/forum/pic/item/a8ec8a13632762d01ae1ae27a0ec08fa503dc64f.jpg"},{"url":"http://image.tianjimedia.com/uploadImages/2012/258/J10FD4QC0T5A.jpg"},{"url":"http://www.meiwai.net/uploads/allimg/c150822/1440244203H130-15524.png"},{"url":"http://media.chunyuyisheng.com/media/images/2013/05/15/9173ce6d26d9.jpg"},{"url":"http://www.shifenkafei.com/data/upload/553deb1621af2.jpg"}]
-     * comments : [{"commentId":4,"usersByUserId":{"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"usersByAtUserId":{"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"content":"金融领域奇特现象！","publicDate":1465228800000},{"commentId":3,"usersByUserId":{"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"usersByAtUserId":null,"content":"话说资本大时代！","publicDate":1465228800000},{"commentId":2,"usersByUserId":{"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"usersByAtUserId":{"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"content":"说的不错","publicDate":1465228800000},{"commentId":1,"usersByUserId":{"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"usersByAtUserId":{"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"content":"很不错，很受益","publicDate":1465228800000},{"commentId":5,"usersByUserId":{"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"usersByAtUserId":{"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"content":"说的不错","publicDate":1465228800000}]
-     * contentprises : [{"priseId":2,"users":{"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"}}]
-     * shareCount : 6
-     * commentCount : 5
-     * priseCount : 1
-     */
-
     private DataBean data;
 
     public String getMessage() {
@@ -56,40 +42,29 @@ public class CircleDetailBean {
     }
 
     public static class DataBean {
+        /**
+         * publicContentId : 27
+         * flag : false
+         * users : {"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg","authentics":[{"city":{"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true},"name":"陈生珠","companyName":"北京金指投","companyAddress":"北京市","position":"职员"}]}
+         * content : 金融[1]  指货币的发行、流通和回笼，贷款的发放和收回，存款的存入和提取，汇兑的往来等经济活动。
+         * publicDate : 2016-06-07 00:00:00
+         * contentimageses : [{"url":"http://imgsrc.baidu.com/forum/pic/item/a8ec8a13632762d01ae1ae27a0ec08fa503dc64f.jpg"},{"url":"http://image.tianjimedia.com/uploadImages/2012/258/J10FD4QC0T5A.jpg"},{"url":"http://www.meiwai.net/uploads/allimg/c150822/1440244203H130-15524.png"},{"url":"http://media.chunyuyisheng.com/media/images/2013/05/15/9173ce6d26d9.jpg"},{"url":"http://www.shifenkafei.com/data/upload/553deb1621af2.jpg"}]
+         * comments : [{"commentId":4,"usersByUserId":{"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"usersByAtUserId":{"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"content":"金融领域奇特现象！","publicDate":1465228800000},{"commentId":3,"usersByUserId":{"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"usersByAtUserId":null,"content":"话说资本大时代！","publicDate":1465228800000},{"commentId":2,"usersByUserId":{"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"usersByAtUserId":{"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"content":"说的不错","publicDate":1465228800000},{"commentId":1,"usersByUserId":{"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"usersByAtUserId":{"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"content":"很不错，很受益","publicDate":1465228800000},{"commentId":5,"usersByUserId":{"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"usersByAtUserId":{"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"},"content":"说的不错","publicDate":1465228800000}]
+         * contentprises : [{"priseId":2,"users":{"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"}}]
+         * shareCount : 6
+         * commentCount : 5
+         * priseCount : 1
+         */
         private int publicContentId;
         private boolean flag;
-        /**
-         * name : 陈生珠
-         * userId : 1
-         * headSculpture : http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg
-         * authentics : [{"city":{"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true},"name":"陈生珠","companyName":"北京金指投","companyAddress":"北京市","position":"职员"}]
-         */
-
         private UsersBean users;
         private String content;
         private String publicDate;
         private int shareCount;
         private int commentCount;
         private int priseCount;
-        /**
-         * url : http://imgsrc.baidu.com/forum/pic/item/a8ec8a13632762d01ae1ae27a0ec08fa503dc64f.jpg
-         */
-
         private List<ContentimagesesBean> contentimageses;
-        /**
-         * commentId : 4
-         * usersByUserId : {"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"}
-         * usersByAtUserId : {"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"}
-         * content : 金融领域奇特现象！
-         * publicDate : 1465228800000
-         */
-
         private List<CommentsBean> comments;
-        /**
-         * priseId : 2
-         * users : {"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"}
-         */
-
         private List<ContentprisesBean> contentprises;
 
         public int getPublicContentId() {
@@ -181,17 +156,15 @@ public class CircleDetailBean {
         }
 
         public static class UsersBean {
+            /**
+             * name : 陈生珠
+             * userId : 1
+             * headSculpture : http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg
+             * authentics : [{"city":{"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true},"name":"陈生珠","companyName":"北京金指投","companyAddress":"北京市","position":"职员"}]
+             */
             private String name;
             private int userId;
             private String headSculpture;
-            /**
-             * city : {"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true}
-             * name : 陈生珠
-             * companyName : 北京金指投
-             * companyAddress : 北京市
-             * position : 职员
-             */
-
             private List<AuthenticsBean> authentics;
 
             public String getName() {
@@ -228,12 +201,12 @@ public class CircleDetailBean {
 
             public static class AuthenticsBean {
                 /**
-                 * cityId : 6
-                 * province : {"provinceId":2,"name":"山西省","isInvlid":true}
-                 * name : 柳林
-                 * isInvlid : true
+                 * city : {"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true}
+                 * name : 陈生珠
+                 * companyName : 北京金指投
+                 * companyAddress : 北京市
+                 * position : 职员
                  */
-
                 private CityBean city;
                 private String name;
                 private String companyName;
@@ -281,13 +254,13 @@ public class CircleDetailBean {
                 }
 
                 public static class CityBean {
-                    private int cityId;
                     /**
-                     * provinceId : 2
-                     * name : 山西省
+                     * cityId : 6
+                     * province : {"provinceId":2,"name":"山西省","isInvlid":true}
+                     * name : 柳林
                      * isInvlid : true
                      */
-
+                    private int cityId;
                     private ProvinceBean province;
                     private String name;
                     private boolean isInvlid;
@@ -325,6 +298,11 @@ public class CircleDetailBean {
                     }
 
                     public static class ProvinceBean {
+                        /**
+                         * provinceId : 2
+                         * name : 山西省
+                         * isInvlid : true
+                         */
                         private int provinceId;
                         private String name;
                         private boolean isInvlid;
@@ -358,6 +336,9 @@ public class CircleDetailBean {
         }
 
         public static class ContentimagesesBean {
+            /**
+             * url : http://imgsrc.baidu.com/forum/pic/item/a8ec8a13632762d01ae1ae27a0ec08fa503dc64f.jpg
+             */
             private String url;
 
             public String getUrl() {
@@ -370,20 +351,15 @@ public class CircleDetailBean {
         }
 
         public static class CommentsBean {
+            /**
+             * commentId : 4
+             * usersByUserId : {"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"}
+             * usersByAtUserId : {"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"}
+             * content : 金融领域奇特现象！
+             * publicDate : 1465228800000
+             */
             private int commentId;
-            /**
-             * name : 段辉
-             * userId : 4
-             * headSculpture : http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg
-             */
-
             private UsersByUserIdBean usersByUserId;
-            /**
-             * name : 陈生珠
-             * userId : 1
-             * headSculpture : http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg
-             */
-
             private UsersByAtUserIdBean usersByAtUserId;
             private String content;
             private String publicDate;
@@ -429,6 +405,11 @@ public class CircleDetailBean {
             }
 
             public static class UsersByUserIdBean {
+                /**
+                 * name : 段辉
+                 * userId : 4
+                 * headSculpture : http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg
+                 */
                 private String name;
                 private int userId;
                 private String headSculpture;
@@ -459,6 +440,11 @@ public class CircleDetailBean {
             }
 
             public static class UsersByAtUserIdBean {
+                /**
+                 * name : 陈生珠
+                 * userId : 1
+                 * headSculpture : http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg
+                 */
                 private String name;
                 private int userId;
                 private String headSculpture;
@@ -501,13 +487,11 @@ public class CircleDetailBean {
         }
 
         public static class ContentprisesBean {
-            private int priseId;
             /**
-             * name : 段辉
-             * userId : 4
-             * headSculpture : http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg
+             * priseId : 2
+             * users : {"name":"段辉","userId":4,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg"}
              */
-
+            private int priseId;
             private UsersBean users;
 
             public int getPriseId() {
@@ -527,6 +511,11 @@ public class CircleDetailBean {
             }
 
             public static class UsersBean {
+                /**
+                 * name : 段辉
+                 * userId : 4
+                 * headSculpture : http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg
+                 */
                 private String name;
                 private int userId;
                 private String headSculpture;

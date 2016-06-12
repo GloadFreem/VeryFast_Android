@@ -639,7 +639,6 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(CircleCommentBean circleCommentBean) {
             super.onPostExecute(circleCommentBean);
-            super.onPostExecute(circleCommentBean);
             if (circleCommentBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 return;
