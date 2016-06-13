@@ -1,23 +1,34 @@
 package com.jinzht.pro1.activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
 import com.jinzht.pro1.bean.ActivityAllCommentsBean;
+import com.jinzht.pro1.bean.ActivityCommentBean;
+import com.jinzht.pro1.bean.ActivityPriseBean;
 import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
 import com.jinzht.pro1.utils.FastJsonTools;
@@ -33,6 +44,8 @@ import com.jinzht.pro1.view.PullableListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 活动全部评论点赞人
@@ -54,6 +67,13 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
 
     private String str;// 转换字体的临时字符串
     private SpannableString span;// 设置TextView不同字体
+
+    private boolean FLAG = false;// 是否已点赞
+    private String comment = "";// 输入的评论内容
+    private PopupWindow popupWindow;// 评论输入弹框
+
+    public final static int RESULT_CODE = 0;
+    public boolean needRefresh = false;// 是否进行了交互，返回时是否刷新
 
     @Override
     protected int getResourcesId() {
@@ -95,7 +115,16 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
 
             }
         });
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position > 0) {
+                    CommentDialog(String.valueOf(comments.get(position - 1).getUsersByUserId().getUserId()), comments.get(position - 1).getUserName());
+                }
+            }
+        });
         myAdapter = new MyAdapter();
+        FLAG = getIntent().getBooleanExtra("flag", false);
         GetAllCommentsTask getAllCommentsTask = new GetAllCommentsTask(0);
         getAllCommentsTask.execute();
     }
@@ -104,15 +133,33 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_back:// 返回
-                finish();
+                onBackPressed();
                 break;
             case R.id.btn_praise:// 点赞
-
+                if (FLAG) {
+                    Log.i("FLAG", "取消点赞");
+                    ActivityPriseTask activityPriseTask = new ActivityPriseTask(2);
+                    activityPriseTask.execute();
+                } else {
+                    Log.i("FLAG", "点赞");
+                    ActivityPriseTask activityPriseTask = new ActivityPriseTask(1);
+                    activityPriseTask.execute();
+                }
                 break;
             case R.id.btn_comment:// 评论
-
+                CommentDialog("", "");
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (needRefresh) {
+            Intent intent = new Intent();
+            intent.putExtra("needRefresh", needRefresh);
+            setResult(RESULT_CODE, intent);
+        }
+        finish();
     }
 
     private class MyAdapter extends BaseAdapter {
@@ -279,6 +326,168 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
             GetAllCommentsTask getAllCommentsTask = new GetAllCommentsTask(pages);
             getAllCommentsTask.execute();
         }
+    }
+
+    // 点赞
+    private class ActivityPriseTask extends AsyncTask<Void, Void, ActivityPriseBean> {
+        private int flag;
+
+        public ActivityPriseTask(int flag) {
+            this.flag = flag;
+        }
+
+        @Override
+        protected ActivityPriseBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.PRISEACTIVITY)),
+                            "contentId", String.valueOf(getIntent().getIntExtra("id", 0)),
+                            "flag", String.valueOf(flag),
+                            Constant.BASE_URL + Constant.PRISEACTIVITY,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("点赞信息", body);
+                return FastJsonTools.getBean(body, ActivityPriseBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ActivityPriseBean activityPriseBean) {
+            super.onPostExecute(activityPriseBean);
+            if (activityPriseBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (activityPriseBean.getStatus() == 200) {
+                    if (flag == 1) {
+                        FLAG = true;
+                        prises.add(0,activityPriseBean.getData().getName());
+                    } else {
+                        FLAG = false;
+                        prises.remove(activityPriseBean.getData().getName());
+                    }
+                    myAdapter.notifyDataSetChanged();
+                    needRefresh = true;
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, activityPriseBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 评论
+    private class ActivityCommentTask extends AsyncTask<Void, Void, ActivityCommentBean> {
+        private String atUserId;
+        private String content;
+
+        public ActivityCommentTask(String atUserId, String content) {
+            this.atUserId = atUserId;
+            this.content = content;
+        }
+
+        @Override
+        protected ActivityCommentBean doInBackground(Void... params) {
+            String body = "";
+            int flag;
+            if (StringUtils.isBlank(atUserId)) {
+                flag = 1;// 评论
+            } else {
+                flag = 2;// 回复
+            }
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.COMMENTACTIVITY)),
+                            "contentId", String.valueOf(getIntent().getIntExtra("id", 0)),
+                            "content", content,
+                            "atUserId", atUserId,
+                            "flag", String.valueOf(flag),
+                            Constant.BASE_URL + Constant.COMMENTACTIVITY,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("评论返回信息", body);
+                return FastJsonTools.getBean(body, ActivityCommentBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ActivityCommentBean activityCommentBean) {
+            super.onPostExecute(activityCommentBean);
+            if (activityCommentBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (activityCommentBean.getStatus() == 200) {
+                    popupWindow.dismiss();
+                    comment = "";
+                    needRefresh = true;
+                    GetAllCommentsTask getAllCommentsTask = new GetAllCommentsTask(0);
+                    getAllCommentsTask.execute();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, activityCommentBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 弹出评论输入框
+    private void CommentDialog(final String atUserId, String atUserName) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_comment, null);
+        popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        final EditText edComment = (EditText) view.findViewById(R.id.ed_comment);
+        edComment.setText(comment);
+        if (!StringUtils.isBlank(atUserId)) {
+            edComment.setHint("回复" + atUserName);
+        }
+        edComment.setSelection(comment.length());
+        TextView btnComment = (TextView) view.findViewById(R.id.btn_comment);
+        btnComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!StringUtils.isBlank(edComment.getText().toString())) {
+                    ActivityCommentTask activityCommentTask = new ActivityCommentTask(atUserId, edComment.getText().toString());
+                    activityCommentTask.execute();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入评论内容");
+                }
+            }
+        });
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        popupWindow.showAtLocation(refreshView, Gravity.BOTTOM, 0, 0);
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+                           public void run() {
+                               imm.showSoftInput(edComment, 0);
+                           }
+                       },
+                100);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                if (!StringUtils.isBlank(edComment.getText().toString())) {
+                    comment = edComment.getText().toString();
+                } else {
+                    comment = "";
+                }
+                imm.hideSoftInputFromInputMethod(edComment.getWindowToken(), 0);
+            }
+        });
     }
 
     @Override

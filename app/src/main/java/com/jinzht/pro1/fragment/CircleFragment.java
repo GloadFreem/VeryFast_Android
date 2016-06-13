@@ -343,13 +343,13 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         datas = circleListBean.getData();
-                        for (CircleListBean.DataBean dataBean : datas) {
-                            Log.i("内容", dataBean.toString());
-                        }
+//                        for (CircleListBean.DataBean dataBean : datas) {
+//                            Log.i("内容", dataBean.toString());
+//                        }
                         listview.setAdapter(myAdapter);
                     } else {
                         for (CircleListBean.DataBean dataBean : circleListBean.getData()) {
-                            Log.i("内容", dataBean.toString());
+//                            Log.i("内容", dataBean.toString());
                             datas.add(dataBean);
                         }
                         myAdapter.notifyDataSetChanged();
@@ -427,10 +427,10 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.CIRCLESHARE)),
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SHARECIRCLE)),
                             "type", "2",
                             "contentId", String.valueOf(datas.get(POSITION).getPublicContentId()),
-                            Constant.BASE_URL + Constant.CIRCLESHARE,
+                            Constant.BASE_URL + Constant.SHARECIRCLE,
                             mContext
                     );
                 } catch (Exception e) {

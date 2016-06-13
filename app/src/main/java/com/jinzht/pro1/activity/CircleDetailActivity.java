@@ -618,12 +618,12 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.CIRCLECOMMENT)),
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.COMMENTCIRCLE)),
                             "contentId", String.valueOf(datas.getPublicContentId()),
                             "content", edComment.getText().toString(),
                             "atUserId", atUserId,
                             "flag", String.valueOf(flag),
-                            Constant.BASE_URL + Constant.CIRCLECOMMENT,
+                            Constant.BASE_URL + Constant.COMMENTCIRCLE,
                             mContext
                     );
                 } catch (Exception e) {

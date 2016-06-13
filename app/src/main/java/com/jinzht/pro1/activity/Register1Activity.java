@@ -141,10 +141,10 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.VERIFYCODE)),
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETVERIFYCODE)),
                             "telephone", register1EdTel.getText().toString(),
                             "type", "0",
-                            Constant.BASE_URL + Constant.VERIFYCODE,
+                            Constant.BASE_URL + Constant.GETVERIFYCODE,
                             mContext
                     );
                 } catch (Exception e) {

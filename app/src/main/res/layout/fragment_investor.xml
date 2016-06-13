@@ -21,29 +21,90 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
-    <RadioGroup
-        android:id="@+id/investor_rg_tab"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:background="@android:color/white"
         android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/investor_rbtn_investor"
-            style="@style/RadioBtn_Investor_Tab"
-            android:checked="true"
-            android:text="投资人" />
+        <RelativeLayout
+            android:id="@+id/btn_investor"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-        <RadioButton
-            android:id="@+id/investor_rbtn_investorg"
-            style="@style/RadioBtn_Investor_Tab"
-            android:text="投资机构" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableLeft="@mipmap/icon_investor"
+                android:drawablePadding="6dp"
+                android:gravity="center"
+                android:text="投资人"
+                android:textColor="@color/bg_text"
+                android:textSize="16sp" />
 
-        <RadioButton
-            android:id="@+id/investor_rbtn_brain"
-            style="@style/RadioBtn_Investor_Tab"
-            android:text="智囊团" />
-    </RadioGroup>
+            <View
+                android:id="@+id/line_investor"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/custom_orange"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/btn_investorg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableLeft="@mipmap/icon_investorg"
+                android:drawablePadding="6dp"
+                android:gravity="center"
+                android:text="投资机构"
+                android:textColor="@color/bg_text"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/line_investorg"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_alignParentBottom="true"
+                android:background="#2fa6d6"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/btn_brain"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableLeft="@mipmap/icon_brain"
+                android:drawablePadding="6dp"
+                android:gravity="center"
+                android:text="智囊团"
+                android:textColor="@color/bg_text"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/line_brain"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_alignParentBottom="true"
+                android:background="#52bea6"
+                android:visibility="invisible" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/investor_vp_type"

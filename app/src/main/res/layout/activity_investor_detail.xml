@@ -73,7 +73,6 @@
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
                     android:layout_marginTop="24dp"
-                    android:src="@mipmap/favicon_test"
                     app:civ_border_color="#20000000"
                     app:civ_border_width="4dp" />
 
@@ -84,7 +83,7 @@
                     android:layout_below="@id/investor_detail_favicon"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="15dp"
-                    android:text="胡丫郁"
+                    android:text=""
                     android:textColor="@color/bg_text"
                     android:textSize="18sp" />
 
@@ -96,7 +95,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="21dp"
                     android:layout_toRightOf="@id/investor_detail_name"
-                    android:text="总经理"
+                    android:text=""
                     android:textColor="#474747"
                     android:textSize="12sp" />
 
@@ -107,7 +106,7 @@
                     android:layout_below="@id/investor_detail_name"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
-                    android:text="逸景营地投资有限公司"
+                    android:text=""
                     android:textColor="#474747"
                     android:textSize="15sp" />
 
@@ -118,7 +117,7 @@
                     android:layout_below="@id/investor_detail_comp_name"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="河南 | 郑州"
+                    android:text=""
                     android:textColor="#474747"
                     android:textSize="12sp" />
 
@@ -151,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_tv_investor_green"
                         android:padding="5dp"
-                        android:text="体育"
+                        android:text=""
                         android:textColor="@android:color/white"
                         android:textSize="15sp" />
 
@@ -163,7 +162,7 @@
                         android:layout_marginRight="6dp"
                         android:background="@drawable/bg_btn_blue"
                         android:padding="5dp"
-                        android:text="房地产"
+                        android:text=""
                         android:textColor="@android:color/white"
                         android:textSize="15sp" />
 
@@ -173,7 +172,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_tv_investor_orange"
                         android:padding="5dp"
-                        android:text="电影"
+                        android:text=""
                         android:textColor="@android:color/white"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -209,7 +208,6 @@
                     android:layout_marginRight="17dp"
                     android:layout_marginTop="15dp"
                     android:lineSpacingExtra="5dp"
-                    android:text="完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人"
                     android:textColor="@android:color/white"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -224,11 +222,13 @@
                     android:id="@+id/investor_detail_btn_submit"
                     android:layout_width="125dp"
                     android:layout_height="39dp"
-                    android:layout_marginRight="21dp"
+                    android:layout_marginRight="42dp"
                     android:background="@drawable/bg_code_orange"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="visible">
 
                     <TextView
+                        android:id="@+id/investor_detail_tv_submit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@mipmap/icon_submit_project"
@@ -242,16 +242,16 @@
                     android:id="@+id/investor_detail_btn_collect"
                     android:layout_width="125dp"
                     android:layout_height="39dp"
-                    android:layout_marginLeft="21dp"
                     android:background="@drawable/bg_btn_green"
                     android:gravity="center">
 
                     <TextView
+                        android:id="@+id/investor_detail_tv_collect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@mipmap/icon_collect_investor"
                         android:drawablePadding="5dp"
-                        android:text="关注(269)"
+                        android:text="关注(0)"
                         android:textColor="@android:color/white"
                         android:textSize="15sp" />
                 </RelativeLayout>

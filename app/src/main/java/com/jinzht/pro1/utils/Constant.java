@@ -7,9 +7,9 @@ public class Constant {
 
 //    public static final String BASE_URL = "http://www.jinzht.com/jinzht/";
 
-//    public static final String BASE_URL = "http://192.168.5.108:8080/jinzht/";
+    public static final String BASE_URL = "http://192.168.5.108:8080/jinzht/";
 
-    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
+//    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 私钥
      */
@@ -57,7 +57,7 @@ public class Constant {
     /**
      * 获取验证码接口
      */
-    public static final String VERIFYCODE = "verifyCode.action";
+    public static final String GETVERIFYCODE = "verifyCode.action";
     /**
      * 客服接口
      */
@@ -105,7 +105,7 @@ public class Constant {
     /**
      * 圈子评论
      */
-    public static final String CIRCLECOMMENT = "requestCommentFeeling.action";
+    public static final String COMMENTCIRCLE = "requestCommentFeeling.action";
     /**
      * 发表圈子动态
      */
@@ -113,7 +113,7 @@ public class Constant {
     /**
      * 分享圈子
      */
-    public static final String CIRCLESHARE = "requestShareFeeling.action";
+    public static final String SHARECIRCLE = "requestShareFeeling.action";
     /**
      * 获取活动列表
      */
@@ -121,7 +121,7 @@ public class Constant {
     /**
      * 活动报名
      */
-    public static final String ACTIVITYAPPLY = "requestAttendAction.action";
+    public static final String APPLYACTIVITY = "requestAttendAction.action";
     /**
      * 活动详情
      */
@@ -141,9 +141,21 @@ public class Constant {
     /**
      * 活动评论
      */
-    public static final String ACTIVITYCOMMENT = "requestCommentAction.action";
+    public static final String COMMENTACTIVITY = "requestCommentAction.action";
     /**
      * 活动分享
      */
-    public static final String ACTIVITYSHARE = "requestShareAction.action";
+    public static final String SHAREACTIVITY = "requestShareAction.action";
+    /**
+     * 投资人列表
+     */
+    public static final String GETINVESOTORLIST = "requestInvestorList.action";
+    /**
+     * 提交项目
+     */
+    public static final String SUBMITPROJECT = "requestProjectCommit.action";
+    /**
+     * 关注投资人
+     */
+    public static final String COLLECTINVESTOR = "requestInvestorCollect.action";
 }

@@ -1,13 +1,25 @@
 package com.jinzht.pro1.activity;
 
+import android.content.Intent;
 import android.graphics.Paint;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.FullBaseActivity;
+import com.jinzht.pro1.bean.CommonBean;
+import com.jinzht.pro1.bean.InvestorListBean;
+import com.jinzht.pro1.utils.AESUtils;
+import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.FastJsonTools;
+import com.jinzht.pro1.utils.MD5Utils;
+import com.jinzht.pro1.utils.NetWorkUtils;
+import com.jinzht.pro1.utils.OkHttpUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.view.CircleImageView;
 
@@ -18,17 +30,24 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
 
     private LinearLayout btnBack;// 返回
     private LinearLayout btnShare;// 分享
-    private CircleImageView favicon;// 头像
-    private TextView name;// 姓名
-    private TextView position;// 职位
-    private TextView compName;// 公司名称
-    private TextView addr;// 所在地
-    private TextView field1;// 投资领域1
-    private TextView field2;// 投资领域2
-    private TextView field3;// 投资领域3
-    private TextView desc;// 个人简介
-    private RelativeLayout submit;// 提交项目
-    private RelativeLayout collect;// 关注
+    private CircleImageView ivFavicon;// 头像
+    private TextView tvName;// 姓名
+    private TextView tvPosition;// 职位
+    private TextView tvCompName;// 公司名称
+    private TextView tvAddr;// 所在地
+    private TextView tvField1;// 投资领域1
+    private TextView tvField2;// 投资领域2
+    private TextView tvField3;// 投资领域3
+    private TextView tvDesc;// 个人简介
+    private RelativeLayout btnSubmit;// 提交项目
+    private RelativeLayout btnCollect;// 关注
+    private TextView tvSubmit;// 提交
+    private TextView tvCollect;// 关注
+
+    private InvestorListBean.DataBean data;
+
+    public final static int RESULT_CODE = 0;
+    public boolean needRefresh = false;// 是否进行了交互，返回时是否刷新
 
     @Override
     protected int getResourcesId() {
@@ -38,32 +57,79 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
     @Override
     protected void init() {
 //        UiHelp.setFullScreenStatus(this);// 设置系统状态栏跟随应用背景
-
         btnBack = (LinearLayout) findViewById(R.id.title_btn_back);// 返回
         btnBack.setOnClickListener(this);
         btnShare = (LinearLayout) findViewById(R.id.title_btn_share);// 分享
         btnShare.setOnClickListener(this);
-        favicon = (CircleImageView) findViewById(R.id.investor_detail_favicon);// 头像
-        name = (TextView) findViewById(R.id.investor_detail_name);// 姓名
-        position = (TextView) findViewById(R.id.investor_detail_position);// 职位
-        compName = (TextView) findViewById(R.id.investor_detail_comp_name);// 公司名称
-        compName.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
-        addr = (TextView) findViewById(R.id.investor_detail_addr);// 所在地
-        field1 = (TextView) findViewById(R.id.investor_detail_field1);// 投资领域1
-        field2 = (TextView) findViewById(R.id.investor_detail_field2);// 投资领域2
-        field3 = (TextView) findViewById(R.id.investor_detail_field3);// 投资领域3
-        desc = (TextView) findViewById(R.id.investor_detail_desc);// 个人简介
-        submit = (RelativeLayout) findViewById(R.id.investor_detail_btn_submit);// 提交项目
-        submit.setOnClickListener(this);
-        collect = (RelativeLayout) findViewById(R.id.investor_detail_btn_collect);// 关注
-        collect.setOnClickListener(this);
+        ivFavicon = (CircleImageView) findViewById(R.id.investor_detail_favicon);// 头像
+        tvName = (TextView) findViewById(R.id.investor_detail_name);// 姓名
+        tvPosition = (TextView) findViewById(R.id.investor_detail_position);// 职位
+        tvCompName = (TextView) findViewById(R.id.investor_detail_comp_name);// 公司名称
+        tvCompName.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
+        tvAddr = (TextView) findViewById(R.id.investor_detail_addr);// 所在地
+        tvField1 = (TextView) findViewById(R.id.investor_detail_field1);// 投资领域1
+        tvField2 = (TextView) findViewById(R.id.investor_detail_field2);// 投资领域2
+        tvField3 = (TextView) findViewById(R.id.investor_detail_field3);// 投资领域3
+        tvDesc = (TextView) findViewById(R.id.investor_detail_desc);// 个人简介
+        btnSubmit = (RelativeLayout) findViewById(R.id.investor_detail_btn_submit);// 提交项目
+        btnSubmit.setOnClickListener(this);
+        btnCollect = (RelativeLayout) findViewById(R.id.investor_detail_btn_collect);// 关注
+        btnCollect.setOnClickListener(this);
+        tvSubmit = (TextView) findViewById(R.id.investor_detail_tv_submit);
+        tvCollect = (TextView) findViewById(R.id.investor_detail_tv_collect);
+
+        data = (InvestorListBean.DataBean) getIntent().getSerializableExtra("detail");
+        initData();
+    }
+
+    // 填充数据
+    private void initData() {
+        Glide.with(this).load(data.getUser().getHeadSculpture()).into(ivFavicon);
+        tvName.setText(data.getUser().getName());
+        tvPosition.setText(data.getUser().getAuthentics().get(0).getPosition());
+        tvCompName.setText(data.getUser().getAuthentics().get(0).getCompanyName());
+        tvAddr.setText(data.getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + data.getUser().getAuthentics().get(0).getCity().getName());
+        if (data.getAreas().size() == 1) {
+            tvField1.setText(data.getAreas().get(0));
+            tvField2.setVisibility(View.GONE);
+            tvField3.setVisibility(View.GONE);
+        } else if (data.getAreas().size() == 2) {
+            tvField1.setText(data.getAreas().get(0));
+            tvField2.setText(data.getAreas().get(1));
+            tvField3.setVisibility(View.GONE);
+        } else if (data.getAreas().size() == 3) {
+            tvField1.setText(data.getAreas().get(0));
+            tvField2.setText(data.getAreas().get(1));
+            tvField3.setText(data.getAreas().get(2));
+        }
+        tvDesc.setText(data.getUser().getAuthentics().get(0).getIntroduce());
+        if (data.isCollected()) {
+            btnCollect.setBackgroundResource(R.drawable.bg_code_gray);
+            tvCollect.setText("已关注");
+        } else {
+            btnCollect.setBackgroundResource(R.drawable.bg_btn_green);
+            if (data.getCollectCount() >= 1000) {
+                tvCollect.setText("关注(999...)");
+            } else {
+                tvCollect.setText("关注(" + data.getCollectCount() + ")");
+            }
+        }
+        if (data.isCommited()) {
+            btnSubmit.setBackgroundResource(R.drawable.bg_code_gray);
+            btnSubmit.setClickable(false);
+            tvSubmit.setText("已提交");
+        } else {
+            btnSubmit.setBackgroundResource(R.drawable.bg_code_orange);
+            btnSubmit.setClickable(true);
+            tvSubmit.setText("提交项目");
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.title_btn_back:// 返回上一页
-                finish();
+                onBackPressed();
                 break;
             case R.id.title_btn_share:// 分享
                 SuperToastUtils.showSuperToast(this, 2, "分享");
@@ -72,8 +138,77 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
                 SuperToastUtils.showSuperToast(this, 2, "提交");
                 break;
             case R.id.investor_detail_btn_collect:// 关注
-                SuperToastUtils.showSuperToast(this, 2, "关注");
+                if (data.isCollected()) {
+                    CollectInvestorTask collectInvestorTask = new CollectInvestorTask(2);
+                    collectInvestorTask.execute();
+                } else {
+                    CollectInvestorTask collectInvestorTask = new CollectInvestorTask(1);
+                    collectInvestorTask.execute();
+                }
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (needRefresh) {
+            Intent intent = new Intent();
+            intent.putExtra("needRefresh", needRefresh);
+            setResult(RESULT_CODE, intent);
+        }
+        finish();
+    }
+
+    // 关注投资人
+    private class CollectInvestorTask extends AsyncTask<Void, Void, CommonBean> {
+        int flag;
+
+        public CollectInvestorTask(int flag) {
+            this.flag = flag;
+        }
+
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.COLLECTINVESTOR)),
+                            "userId", String.valueOf(data.getUser().getUserId()),
+                            "flag", String.valueOf(flag),
+                            Constant.BASE_URL + Constant.COLLECTINVESTOR,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("关注投资人返回信息", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            if (commonBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (commonBean.getStatus() == 200) {
+                    if (flag == 1) {
+                        data.setCollected(true);
+                        data.setCollectCount(data.getCollectCount() + 1);
+                    } else if (flag == 2) {
+                        data.setCollected(false);
+                        data.setCollectCount(data.getCollectCount() - 1);
+                    }
+                    initData();
+                    needRefresh = true;
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
+                }
+            }
         }
     }
 

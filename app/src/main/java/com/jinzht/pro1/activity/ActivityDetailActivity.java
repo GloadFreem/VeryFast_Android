@@ -132,6 +132,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     private boolean ISATTENDED = false;// 是否在详情页点了报名
 
     public final static int RESULT_CODE = 0;
+    private final static int REQUEST_CODE = 1;
 
     @Override
     protected int getResourcesId() {
@@ -717,7 +718,8 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             case R.id.activity_btn_comment_totle:// 查看全部点赞和评论
                 Intent intent1 = new Intent(this, ActivityAllComments.class);
                 intent1.putExtra("id", data.getActionId());
-                startActivity(intent1);
+                intent1.putExtra("flag", data.isFlag());
+                startActivityForResult(intent1, REQUEST_CODE);
                 break;
             case R.id.activity_tv_comment1:// 回复评论1
                 CommentDialog(String.valueOf(comments.get(0).getUsersByUserId().getUserId()), comments.get(0).getUserName());
@@ -947,7 +949,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                 if (activityPriseBean.getStatus() == 200) {
                     if (flag == 1) {
                         data.setFlag(true);
-                        prises.add(activityPriseBean.getData().getName());
+                        prises.add(0,activityPriseBean.getData().getName());
                     } else {
                         data.setFlag(false);
                         prises.remove(activityPriseBean.getData().getName());
@@ -982,12 +984,12 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.ACTIVITYCOMMENT)),
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.COMMENTACTIVITY)),
                             "contentId", String.valueOf(data.getActionId()),
                             "content", content,
                             "atUserId", atUserId,
                             "flag", String.valueOf(flag),
-                            Constant.BASE_URL + Constant.ACTIVITYCOMMENT,
+                            Constant.BASE_URL + Constant.COMMENTACTIVITY,
                             mContext
                     );
                 } catch (Exception e) {
@@ -1129,10 +1131,10 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.ACTIVITYAPPLY)),
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.APPLYACTIVITY)),
                             "contentId", String.valueOf(data.getActionId()),
                             "content", content,
-                            Constant.BASE_URL + Constant.ACTIVITYAPPLY,
+                            Constant.BASE_URL + Constant.APPLYACTIVITY,
                             mContext
                     );
                 } catch (Exception e) {
@@ -1173,10 +1175,10 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.ACTIVITYSHARE)),
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SHAREACTIVITY)),
                             "type", "4",
                             "contentId", String.valueOf(data.getActionId()),
-                            Constant.BASE_URL + Constant.ACTIVITYSHARE,
+                            Constant.BASE_URL + Constant.SHAREACTIVITY,
                             mContext
                     );
                 } catch (Exception e) {
@@ -1201,6 +1203,19 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                     DialogUtils.shareDialog(ActivityDetailActivity.this, btnShare, shareUtils, data.getName(), data.getDescription(), "", circleShareBean.getData().getUrl());
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, circleShareBean.getMessage());
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && data != null) {
+            if (resultCode == ActivityAllComments.RESULT_CODE) {
+                if (data.getBooleanExtra("needRefresh", false)) {// 在详情中报了名
+                    GetAllCommentsTask getAllCommentsTask = new GetAllCommentsTask();
+                    getAllCommentsTask.execute();
                 }
             }
         }

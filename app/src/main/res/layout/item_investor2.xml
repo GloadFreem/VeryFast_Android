@@ -95,48 +95,6 @@
             android:text="电影"
             android:textColor="#00a0d9"
             android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/item_investorg_field4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4.5dp"
-            android:background="@drawable/bg_item_project_field"
-            android:paddingBottom="1.5dp"
-            android:paddingLeft="2.5dp"
-            android:paddingRight="2.5dp"
-            android:paddingTop="1.5dp"
-            android:text="旅游"
-            android:textColor="#00a0d9"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/item_investorg_field5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4.5dp"
-            android:background="@drawable/bg_item_project_field"
-            android:paddingBottom="1.5dp"
-            android:paddingLeft="2.5dp"
-            android:paddingRight="2.5dp"
-            android:paddingTop="1.5dp"
-            android:text="电影"
-            android:textColor="#00a0d9"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/item_investorg_field6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4.5dp"
-            android:background="@drawable/bg_item_project_field"
-            android:paddingBottom="1.5dp"
-            android:paddingLeft="2.5dp"
-            android:paddingRight="2.5dp"
-            android:paddingTop="1.5dp"
-            android:text="电影"
-            android:textColor="#00a0d9"
-            android:textSize="15sp" />
     </LinearLayout>
 
     <RelativeLayout

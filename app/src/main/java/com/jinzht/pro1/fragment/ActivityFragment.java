@@ -220,13 +220,13 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         datas = activityListBean.getData();
-                        for (ActivityListBean.DataBean dataBean : datas) {
-                            Log.i("内容", dataBean.toString());
-                        }
+//                        for (ActivityListBean.DataBean dataBean : datas) {
+//                            Log.i("内容", dataBean.toString());
+//                        }
                         listview.setAdapter(myAdapter);
                     } else {
                         for (ActivityListBean.DataBean dataBean : activityListBean.getData()) {
-                            Log.i("内容", dataBean.toString());
+//                            Log.i("内容", dataBean.toString());
                             datas.add(dataBean);
                         }
                         myAdapter.notifyDataSetChanged();
@@ -329,10 +329,10 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.ACTIVITYAPPLY)),
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.APPLYACTIVITY)),
                             "contentId", String.valueOf(contentId),
                             "content", content,
-                            Constant.BASE_URL + Constant.ACTIVITYAPPLY,
+                            Constant.BASE_URL + Constant.APPLYACTIVITY,
                             mContext
                     );
                 } catch (Exception e) {

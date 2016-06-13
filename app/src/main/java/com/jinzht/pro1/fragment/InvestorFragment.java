@@ -6,32 +6,37 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.adapter.InvestorFragmentAdapter;
 import com.jinzht.pro1.base.BaseFragment;
-import com.jinzht.pro1.utils.UiUtils;
 
 /**
  * 投资人界面
  */
-public class InvestorFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener {
+public class InvestorFragment extends BaseFragment implements View.OnClickListener {
 
-    private RadioGroup investorRgTab;// 选择投资人类型的RadioGroup
-    private RadioButton investorRbtnInvestor;// 投资人
-    private RadioButton investorRbtnInvestorg;// 投资机构
-    private RadioButton investorRbtnBrain;// 智囊团
+    private RelativeLayout btnInvestor;// 投资人按钮
+    private View lineInvestor;// 投资人底线
+    private RelativeLayout btnInvestorg;// 投资机构按钮
+    private View lineInvestorg;// 投资机构底线
+    private RelativeLayout btnBrain;// 智囊团按钮
+    private View lineBrain;// 智囊团底线
     private ViewPager investorVpType;// 投资人类型界面
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_investor, container, false);
-        investorRgTab = (RadioGroup) view.findViewById(R.id.investor_rg_tab);// 选择投资人类型的RadioGroup页签
-        investorRbtnInvestor = (RadioButton) view.findViewById(R.id.investor_rbtn_investor);// 投资人
-        investorRbtnInvestorg = (RadioButton) view.findViewById(R.id.investor_rbtn_investorg);// 投资机构
-        investorRbtnBrain = (RadioButton) view.findViewById(R.id.investor_rbtn_brain);// 智囊团
+        btnInvestor = (RelativeLayout) view.findViewById(R.id.btn_investor);// 投资人按钮
+        btnInvestor.setOnClickListener(this);
+        lineInvestor = view.findViewById(R.id.line_investor);// 投资人底线
+        btnInvestorg = (RelativeLayout) view.findViewById(R.id.btn_investorg);// 投资机构按钮
+        btnInvestorg.setOnClickListener(this);
+        lineInvestorg = view.findViewById(R.id.line_investorg);// 投资机构底线
+        btnBrain = (RelativeLayout) view.findViewById(R.id.btn_brain);// 智囊团按钮
+        btnBrain.setOnClickListener(this);
+        lineBrain = view.findViewById(R.id.line_brain);// 智囊团底线
         investorVpType = (ViewPager) view.findViewById(R.id.investor_vp_type);// 投资人类型界面
         return view;
     }
@@ -39,8 +44,6 @@ public class InvestorFragment extends BaseFragment implements RadioGroup.OnCheck
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // 设置RadioGroup页签的单选事件
-        investorRgTab.setOnCheckedChangeListener(this);
         // 给投资人类型填充数据
         investorVpType.setAdapter(new InvestorFragmentAdapter(getChildFragmentManager()));
         investorVpType.setCurrentItem(0);
@@ -51,40 +54,45 @@ public class InvestorFragment extends BaseFragment implements RadioGroup.OnCheck
                 super.onPageSelected(position);
                 switch (position) {
                     case 0:
-                        investorRgTab.check(R.id.investor_rbtn_investor);
+                        lineInvestor.setVisibility(View.VISIBLE);
+                        lineInvestorg.setVisibility(View.INVISIBLE);
+                        lineBrain.setVisibility(View.INVISIBLE);
                         break;
                     case 1:
-                        investorRgTab.check(R.id.investor_rbtn_investorg);
+                        lineInvestor.setVisibility(View.INVISIBLE);
+                        lineInvestorg.setVisibility(View.VISIBLE);
+                        lineBrain.setVisibility(View.INVISIBLE);
                         break;
                     case 2:
-                        investorRgTab.check(R.id.investor_rbtn_brain);
+                        lineInvestor.setVisibility(View.INVISIBLE);
+                        lineInvestorg.setVisibility(View.INVISIBLE);
+                        lineBrain.setVisibility(View.VISIBLE);
                         break;
                 }
             }
         });
     }
 
-    // 设置RadioGroup页签的单选事件
     @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.investor_rbtn_investor:// 选择了投资人
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_investor:// 点击了投资人
                 investorVpType.setCurrentItem(0);
-                investorRbtnInvestor.setTextColor(UiUtils.getColor(R.color.custom_orange));
-                investorRbtnInvestorg.setTextColor(UiUtils.getColor(R.color.bg_text));
-                investorRbtnBrain.setTextColor(UiUtils.getColor(R.color.bg_text));
+                lineInvestor.setVisibility(View.VISIBLE);
+                lineInvestorg.setVisibility(View.INVISIBLE);
+                lineBrain.setVisibility(View.INVISIBLE);
                 break;
-            case R.id.investor_rbtn_investorg:// 选择了投资机构
+            case R.id.btn_investorg:// 点击了投资机构
                 investorVpType.setCurrentItem(1);
-                investorRbtnInvestor.setTextColor(UiUtils.getColor(R.color.bg_text));
-                investorRbtnInvestorg.setTextColor(UiUtils.getColor(R.color.custom_orange));
-                investorRbtnBrain.setTextColor(UiUtils.getColor(R.color.bg_text));
+                lineInvestor.setVisibility(View.INVISIBLE);
+                lineInvestorg.setVisibility(View.VISIBLE);
+                lineBrain.setVisibility(View.INVISIBLE);
                 break;
-            case R.id.investor_rbtn_brain:// 选择了智囊团
+            case R.id.btn_brain:// 点击了智囊团
                 investorVpType.setCurrentItem(2);
-                investorRbtnInvestor.setTextColor(UiUtils.getColor(R.color.bg_text));
-                investorRbtnInvestorg.setTextColor(UiUtils.getColor(R.color.bg_text));
-                investorRbtnBrain.setTextColor(UiUtils.getColor(R.color.custom_orange));
+                lineInvestor.setVisibility(View.INVISIBLE);
+                lineInvestorg.setVisibility(View.INVISIBLE);
+                lineBrain.setVisibility(View.VISIBLE);
                 break;
         }
     }

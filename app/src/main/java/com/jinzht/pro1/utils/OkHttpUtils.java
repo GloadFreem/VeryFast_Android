@@ -257,6 +257,41 @@ public class OkHttpUtils {
         return body;
     }
 
+    // 3个参数的请求
+    public static String post(String partner, String key1, String value1, String key2, String value2, String key3, String value3, String url, Context context) throws IOException {
+        String body = "";
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("key", "jinzht_server_security")
+                .add("partner", partner)
+                .add(key1, value1)
+                .add(key2, value2)
+                .add(key3, value3)
+                .add("platform", String.valueOf(0))
+                .build();
+        Request request = new Request.Builder()
+                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .url(url)
+                .post(formBody)
+                .build();
+        Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            body = response.body().string();
+            try {
+                if (StringUtils.isBlank(response.header("Set-Cookie").toString())) {
+                    Log.i("session", "session不存在");
+                } else {
+                    Log.i("session", response.header("Set-Cookie").toString());
+                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        return body;
+    }
+
     // 重置密码
     public static String resetPwdPost(String partner, String key1, String value1, String key2, String value2, String key3, String value3, String url, Context context) throws IOException {
         String body = "";
