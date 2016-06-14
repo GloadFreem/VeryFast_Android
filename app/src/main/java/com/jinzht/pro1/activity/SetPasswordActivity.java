@@ -121,6 +121,7 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 } else {
+                    SharePreferencesUtils.setIsLogin(mContext, false);
                     SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
                 }
             }

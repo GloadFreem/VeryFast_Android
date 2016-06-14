@@ -48,14 +48,14 @@ public class SharePreferencesUtils {
     public static void setIsLogin(Context context, boolean isAuto) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("islogin", isAuto);
+        editor.putBoolean("isLogin", isAuto);
         editor.commit();
     }
 
     // 获取是否登录的状态
     public static boolean getIsLogin(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
-        return sp.getBoolean("islogin", false);
+        return sp.getBoolean("isLogin", false);
     }
 
     // 保存是否实名认证的状态
@@ -98,5 +98,17 @@ public class SharePreferencesUtils {
     public static int getUserType(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         return sp.getInt("usertype", 0);
+    }
+
+    public static void setIsNotFirst(Context context, boolean isAuto) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("isNotFirst", isAuto);
+        editor.commit();
+    }
+
+    public static boolean getIsNotFirst(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        return sp.getBoolean("isNotFirst", false);
     }
 }

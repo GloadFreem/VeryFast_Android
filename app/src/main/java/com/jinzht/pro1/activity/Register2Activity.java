@@ -132,6 +132,7 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
                     Intent intent = new Intent(mContext, SetUserTypeActivity.class);
                     startActivity(intent);
                 } else {
+                    SharePreferencesUtils.setIsLogin(mContext, false);
                     SuperToastUtils.showSuperToast(mContext, 2, registerBean.getMessage());
                 }
             }

@@ -11,6 +11,10 @@ public class Constant {
 
 //    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
+     * 微信APP_ID
+     */
+    public static final String APP_ID = "wx33aa0167f6a81dac";
+    /**
      * 私钥
      */
     public static final String PRIVATE_KEY = "jinzht_server_security";
