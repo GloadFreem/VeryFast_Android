@@ -1,6 +1,5 @@
 package com.jinzht.pro1.fragment;
 
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.activity.InvestorDetailActivity;
+import com.jinzht.pro1.activity.SubmitProjectActivity;
 import com.jinzht.pro1.base.BaseFragment;
 import com.jinzht.pro1.bean.CommonBean;
 import com.jinzht.pro1.bean.InvestorListBean;
@@ -127,7 +127,7 @@ public class Investor1Fragment extends BaseFragment {
                 holder.itemInvestorField1.setText(datas.get(position).getAreas().get(0));
                 holder.itemInvestorField2.setText(datas.get(position).getAreas().get(1));
                 holder.itemInvestorField3.setVisibility(View.INVISIBLE);
-            } else {
+            } else if (datas.get(position).getAreas().size() == 3) {
                 holder.itemInvestorField1.setText(datas.get(position).getAreas().get(0));
                 holder.itemInvestorField2.setText(datas.get(position).getAreas().get(1));
                 holder.itemInvestorField3.setText(datas.get(position).getAreas().get(2));
@@ -168,7 +168,14 @@ public class Investor1Fragment extends BaseFragment {
             holder.itemInvestorBtnSubmit.setOnClickListener(new View.OnClickListener() {// 提交项目
                 @Override
                 public void onClick(View v) {
-                    SuperToastUtils.showSuperToast(mContext, 2, "提交项目");
+                    Intent intent = new Intent(mContext, SubmitProjectActivity.class);
+                    intent.putExtra("id", String.valueOf(datas.get(position).getUser().getUserId()));
+                    intent.putExtra("favicon", datas.get(position).getUser().getHeadSculpture());
+                    intent.putExtra("name", datas.get(position).getUser().getName());
+                    intent.putExtra("position", datas.get(position).getUser().getAuthentics().get(0).getPosition());
+                    intent.putExtra("compName", datas.get(position).getUser().getAuthentics().get(0).getCompanyName());
+                    intent.putExtra("addr", datas.get(position).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position).getUser().getAuthentics().get(0).getCity().getName());
+                    startActivity(intent);
                 }
             });
             return convertView;

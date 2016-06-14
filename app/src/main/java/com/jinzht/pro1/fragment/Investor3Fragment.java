@@ -1,6 +1,7 @@
 package com.jinzht.pro1.fragment;
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
+import com.jinzht.pro1.activity.BrainDetailActivity;
 import com.jinzht.pro1.base.BaseFragment;
 import com.jinzht.pro1.bean.CommonBean;
 import com.jinzht.pro1.bean.InvestorListBean;
@@ -42,6 +44,8 @@ public class Investor3Fragment extends BaseFragment {
     private MyAdapter myAdapter;
     private int pages = 0;
     List<InvestorListBean.DataBean> datas = new ArrayList<>();// 数据集合
+    private int POSITION = 0;
+    private final static int REQUEST_CODE = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +64,11 @@ public class Investor3Fragment extends BaseFragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了条目" + position);
+                Intent intent = new Intent(mContext, BrainDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("detail", datas.get(position - 1));
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         GetInvestorListTask getInvestorListTask = new GetInvestorListTask(0);
@@ -85,7 +93,7 @@ public class Investor3Fragment extends BaseFragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder = null;
             if (convertView == null) {
                 holder = new ViewHolder();
@@ -107,7 +115,31 @@ public class Investor3Fragment extends BaseFragment {
             holder.itemBrainPosition.setText(datas.get(position).getUser().getAuthentics().get(0).getPosition());
             holder.itemBrainCompName.setText(datas.get(position).getUser().getAuthentics().get(0).getCompanyName());
             holder.itemBrainAddr.setText(datas.get(position).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position).getUser().getAuthentics().get(0).getCity().getName());
-
+            holder.itemBrainDesc.setText(datas.get(position).getUser().getAuthentics().get(0).getCompanyIntroduce());
+            if (datas.get(position).isCollected()) {
+                holder.itemBrainBtnCollect.setBackgroundResource(R.drawable.bg_code_gray);
+                holder.itemBrainTvCollect.setText("已关注");
+            } else {
+                holder.itemBrainBtnCollect.setBackgroundResource(R.drawable.bg_btn_green);
+                if (datas.get(position).getCollectCount() >= 1000) {
+                    holder.itemBrainTvCollect.setText("关注(999...)");
+                } else {
+                    holder.itemBrainTvCollect.setText("关注(" + datas.get(position).getCollectCount() + ")");
+                }
+            }
+            holder.itemBrainBtnCollect.setOnClickListener(new View.OnClickListener() {// 关注
+                @Override
+                public void onClick(View v) {
+                    POSITION = position;
+                    if (datas.get(position).isCollected()) {
+                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position).getUser().getUserId(), 2);
+                        collectInvestorTask.execute();
+                    } else {
+                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position).getUser().getUserId(), 1);
+                        collectInvestorTask.execute();
+                    }
+                }
+            });
             return convertView;
         }
 
@@ -123,7 +155,7 @@ public class Investor3Fragment extends BaseFragment {
         }
     }
 
-    // 获取投资机构列表
+    // 获取智囊团列表
     private class GetInvestorListTask extends AsyncTask<Void, Void, InvestorListBean> {
         private int page;
 
@@ -152,7 +184,7 @@ public class Investor3Fragment extends BaseFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.i("投资人列表信息", body);
+                Log.i("智囊团列表信息", body);
                 return FastJsonTools.getBean(body, InvestorListBean.class);
             } else {
                 return null;
@@ -180,7 +212,7 @@ public class Investor3Fragment extends BaseFragment {
                         listview.setAdapter(myAdapter);
                     } else {
                         for (InvestorListBean.DataBean dataBean : investorListBean.getData()) {
-                            Log.i("内容", dataBean.toString());
+//                            Log.i("内容", dataBean.toString());
                             datas.add(dataBean);
                         }
                         myAdapter.notifyDataSetChanged();
@@ -221,9 +253,11 @@ public class Investor3Fragment extends BaseFragment {
     // 关注智囊团
     private class CollectInvestorTask extends AsyncTask<Void, Void, CommonBean> {
         int userId;
+        int flag;
 
-        public CollectInvestorTask(int userId) {
+        public CollectInvestorTask(int userId, int flag) {
             this.userId = userId;
+            this.flag = flag;
         }
 
         @Override
@@ -233,15 +267,15 @@ public class Investor3Fragment extends BaseFragment {
                 try {
                     body = OkHttpUtils.post(
                             MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.COLLECTINVESTOR)),
-                            "type", "7",
                             "userId", String.valueOf(userId),
+                            "flag", String.valueOf(flag),
                             Constant.BASE_URL + Constant.COLLECTINVESTOR,
                             mContext
                     );
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.i("关注投资人返回信息", body);
+                Log.i("关注智囊团返回信息", body);
                 return FastJsonTools.getBean(body, CommonBean.class);
             } else {
                 return null;
@@ -255,9 +289,29 @@ public class Investor3Fragment extends BaseFragment {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (commonBean.getStatus() == 200) {
-
+                    if (flag == 1) {
+                        datas.get(POSITION).setCollected(true);
+                        datas.get(POSITION).setCollectCount(datas.get(POSITION).getCollectCount() + 1);
+                    } else if (flag == 2) {
+                        datas.get(POSITION).setCollected(false);
+                        datas.get(POSITION).setCollectCount(datas.get(POSITION).getCollectCount() - 1);
+                    }
+                    myAdapter.notifyDataSetChanged();
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && data != null) {
+            if (resultCode == BrainDetailActivity.RESULT_CODE) {
+                if (data.getBooleanExtra("needRefresh", false)) {// 在详情中进行了交互
+                    GetInvestorListTask getInvestorListTask = new GetInvestorListTask(0);
+                    getInvestorListTask.execute();
                 }
             }
         }

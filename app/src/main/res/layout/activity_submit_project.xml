@@ -35,7 +35,6 @@
                     android:layout_marginBottom="20dp"
                     android:layout_marginLeft="12dp"
                     android:layout_marginTop="20dp"
-                    android:src="@mipmap/favicon_test"
                     app:civ_border_color="#20000000"
                     app:civ_border_width="2dp" />
 
@@ -46,7 +45,7 @@
                     android:layout_marginLeft="11dp"
                     android:layout_marginTop="25dp"
                     android:layout_toRightOf="@id/submit_iv_favicon"
-                    android:text="王大锤"
+                    android:text=""
                     android:textColor="@color/bg_text"
                     android:textSize="18sp" />
 
@@ -57,7 +56,7 @@
                     android:layout_marginLeft="13dp"
                     android:layout_marginTop="30dp"
                     android:layout_toRightOf="@id/submit_tv_name"
-                    android:text="总经理"
+                    android:text=""
                     android:textColor="@color/bg_text"
                     android:textSize="13sp" />
 
@@ -69,7 +68,7 @@
                     android:layout_marginLeft="11dp"
                     android:layout_marginTop="7dp"
                     android:layout_toRightOf="@id/submit_iv_favicon"
-                    android:text="逸景营地投资有限公司"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="15sp" />
 
@@ -81,7 +80,7 @@
                     android:layout_below="@id/submit_tv_name"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="9dp"
-                    android:text="北京 | 海淀"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -153,7 +152,6 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="12dp"
                         android:layout_marginTop="13dp"
-                        android:src="@mipmap/favicon_test"
                         app:civ_border_color="#20000000"
                         app:civ_border_width="2dp" />
 
@@ -166,7 +164,7 @@
                         android:layout_toRightOf="@id/submit_iv_pro_img"
                         android:maxWidth="160dp"
                         android:singleLine="true"
-                        android:text="逸景营地"
+                        android:text=""
                         android:textColor="@color/bg_text"
                         android:textSize="18sp" />
 
@@ -176,7 +174,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="15dp"
-                        android:background="@mipmap/tag_rongzizhong" />
+                        android:src="@mipmap/tag_dailuyan"/>
 
                     <TextView
                         android:id="@+id/submit_tv_pro_name"
@@ -188,7 +186,7 @@
                         android:layout_toRightOf="@id/submit_iv_pro_img"
                         android:maxWidth="230dp"
                         android:singleLine="true"
-                        android:text="逸景营地投资有限公司"
+                        android:text=""
                         android:textColor="#747474"
                         android:textSize="15sp" />
 
@@ -211,7 +209,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_toRightOf="@id/submit_iv_pro_img"
                         android:singleLine="true"
-                        android:text="新三板VR企业也在2015年下半年新三板VR" />
+                        android:text="" />
 
                     <ImageView
                         android:id="@+id/submit_line"
@@ -226,6 +224,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_below="@id/submit_line"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -239,7 +238,7 @@
                                 android:id="@+id/submit_popularity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="1024"
+                                android:text=""
                                 android:textColor="@color/bg_text"
                                 android:textSize="16sp" />
 
@@ -250,6 +249,11 @@
                                 android:textColor="@color/bg_text"
                                 android:textSize="16sp" />
                         </LinearLayout>
+
+                        <View
+                            android:layout_width="0.5dp"
+                            android:layout_height="20dp"
+                            android:background="@color/line_partition" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -262,7 +266,7 @@
                                 android:id="@+id/submit_remaining_time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="16"
+                                android:text=""
                                 android:textColor="@color/bg_text"
                                 android:textSize="16sp" />
 
@@ -274,27 +278,53 @@
                                 android:textSize="16sp" />
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="0.5dp"
+                            android:layout_height="20dp"
+                            android:background="@color/line_partition" />
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="344"
                             android:gravity="center"
-                            android:orientation="vertical">
+                            android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/submit_financing_amount"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="1000万"
-                                android:textColor="@color/bg_text"
-                                android:textSize="16sp" />
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="7dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="融资额度"
-                                android:textColor="@color/bg_text"
-                                android:textSize="16sp" />
+                                <TextView
+                                    android:id="@+id/submit_financing_amount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textColor="@color/bg_text"
+                                    android:textSize="16sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="融资额度"
+                                    android:textColor="@color/bg_text"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <com.jinzht.pro1.view.RoundProgressBar
+                                android:id="@+id/submit_financing_progress"
+                                android:layout_width="52dp"
+                                android:layout_height="52dp"
+                                android:layout_marginLeft="7dp"
+                                app:numColor="@color/custom_orange"
+                                app:numSize="20sp"
+                                app:roundColor="#d2d2d2"
+                                app:roundProgressColor="@color/custom_orange"
+                                app:roundWidth="5dp"
+                                app:textColor="#747474"
+                                app:textSize="10sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>

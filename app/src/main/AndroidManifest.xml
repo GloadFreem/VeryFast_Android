@@ -233,7 +233,8 @@
         <activity android:name=".activity.CircleDetailActivity" />
         <activity android:name=".activity.ImagePagerActivity" />
         <activity android:name=".activity.ActivityAllApplys" />
-        <activity android:name=".activity.ActivityAllComments"></activity>
+        <activity android:name=".activity.ActivityAllComments" />
+        <activity android:name=".activity.InvestorgDetailActivity"></activity>
     </application>
 
 </manifest>

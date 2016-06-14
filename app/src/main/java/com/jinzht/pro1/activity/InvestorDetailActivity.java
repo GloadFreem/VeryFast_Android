@@ -12,14 +12,17 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.FullBaseActivity;
+import com.jinzht.pro1.bean.CircleShareBean;
 import com.jinzht.pro1.bean.CommonBean;
 import com.jinzht.pro1.bean.InvestorListBean;
 import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.DialogUtils;
 import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.ShareUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.view.CircleImageView;
 
@@ -75,8 +78,8 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
         btnSubmit.setOnClickListener(this);
         btnCollect = (RelativeLayout) findViewById(R.id.investor_detail_btn_collect);// 关注
         btnCollect.setOnClickListener(this);
-        tvSubmit = (TextView) findViewById(R.id.investor_detail_tv_submit);
-        tvCollect = (TextView) findViewById(R.id.investor_detail_tv_collect);
+        tvSubmit = (TextView) findViewById(R.id.investor_detail_tv_submit);// 提交
+        tvCollect = (TextView) findViewById(R.id.investor_detail_tv_collect);// 关注
 
         data = (InvestorListBean.DataBean) getIntent().getSerializableExtra("detail");
         initData();
@@ -132,10 +135,18 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
                 onBackPressed();
                 break;
             case R.id.title_btn_share:// 分享
-                SuperToastUtils.showSuperToast(this, 2, "分享");
+                ShareTask shareTask = new ShareTask();
+                shareTask.execute();
                 break;
             case R.id.investor_detail_btn_submit:// 提交项目
-                SuperToastUtils.showSuperToast(this, 2, "提交");
+                Intent intent = new Intent(mContext, SubmitProjectActivity.class);
+                intent.putExtra("id", String.valueOf(data.getUser().getUserId()));
+                intent.putExtra("favicon", data.getUser().getHeadSculpture());
+                intent.putExtra("name", data.getUser().getName());
+                intent.putExtra("position", data.getUser().getAuthentics().get(0).getPosition());
+                intent.putExtra("compName", data.getUser().getAuthentics().get(0).getCompanyName());
+                intent.putExtra("addr", data.getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + data.getUser().getAuthentics().get(0).getCity().getName());
+                startActivity(intent);
                 break;
             case R.id.investor_detail_btn_collect:// 关注
                 if (data.isCollected()) {
@@ -207,6 +218,47 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
                     needRefresh = true;
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 分享
+    private class ShareTask extends AsyncTask<Void, Void, CircleShareBean> {
+        @Override
+        protected CircleShareBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SHAREINVESTOR)),
+                            "type", "5",
+                            "investorId", String.valueOf(data.getUser().getUserId()),
+                            Constant.BASE_URL + Constant.SHAREINVESTOR,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("分享返回信息", body);
+                return FastJsonTools.getBean(body, CircleShareBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CircleShareBean circleShareBean) {
+            super.onPostExecute(circleShareBean);
+            if (circleShareBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (circleShareBean.getStatus() == 200) {
+                    ShareUtils shareUtils = new ShareUtils(InvestorDetailActivity.this);
+                    DialogUtils.shareDialog(InvestorDetailActivity.this, btnShare, shareUtils, data.getUser().getName(), data.getUser().getAuthentics().get(0).getIntroduce(), data.getUser().getHeadSculpture(), circleShareBean.getData().getUrl());
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, circleShareBean.getMessage());
                 }
             }
         }

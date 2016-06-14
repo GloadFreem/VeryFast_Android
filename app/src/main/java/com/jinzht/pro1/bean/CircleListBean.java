@@ -15,18 +15,6 @@ public class CircleListBean {
 
     private String message;
     private int status;
-    /**
-     * publicContentId : 27
-     * flag : false
-     * users : {"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg","authentics":[{"city":{"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true},"name":"陈生珠","companyName":"北京金指投","companyAddress":"北京市","position":"职员"}]}
-     * content : 金融[1]  指货币的发行、流通和回笼，贷款的发放和收回，存款的存入和提取，汇兑的往来等经济活动。
-     * publicDate : 2016-06-07 00:00:00
-     * contentimageses : [{"url":"http://imgsrc.baidu.com/forum/pic/item/a8ec8a13632762d01ae1ae27a0ec08fa503dc64f.jpg"},{"url":"http://image.tianjimedia.com/uploadImages/2012/258/J10FD4QC0T5A.jpg"},{"url":"http://www.meiwai.net/uploads/allimg/c150822/1440244203H130-15524.png"},{"url":"http://media.chunyuyisheng.com/media/images/2013/05/15/9173ce6d26d9.jpg"},{"url":"http://www.shifenkafei.com/data/upload/553deb1621af2.jpg"}]
-     * shareCount : 6
-     * commentCount : 2
-     * priseCount : 1
-     */
-
     private List<DataBean> data;
 
     public String getMessage() {
@@ -54,25 +42,25 @@ public class CircleListBean {
     }
 
     public static class DataBean {
+        /**
+         * publicContentId : 27
+         * flag : false
+         * users : {"name":"陈生珠","userId":1,"headSculpture":"http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg","authentics":[{"city":{"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true},"name":"陈生珠","companyName":"北京金指投","companyAddress":"北京市","position":"职员"}]}
+         * content : 金融[1]  指货币的发行、流通和回笼，贷款的发放和收回，存款的存入和提取，汇兑的往来等经济活动。
+         * publicDate : 2016-06-07 00:00:00
+         * contentimageses : [{"url":"http://imgsrc.baidu.com/forum/pic/item/a8ec8a13632762d01ae1ae27a0ec08fa503dc64f.jpg"},{"url":"http://image.tianjimedia.com/uploadImages/2012/258/J10FD4QC0T5A.jpg"},{"url":"http://www.meiwai.net/uploads/allimg/c150822/1440244203H130-15524.png"},{"url":"http://media.chunyuyisheng.com/media/images/2013/05/15/9173ce6d26d9.jpg"},{"url":"http://www.shifenkafei.com/data/upload/553deb1621af2.jpg"}]
+         * shareCount : 6
+         * commentCount : 2
+         * priseCount : 1
+         */
         private int publicContentId;
         private boolean flag;
-        /**
-         * name : 陈生珠
-         * userId : 1
-         * headSculpture : http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg
-         * authentics : [{"city":{"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true},"name":"陈生珠","companyName":"北京金指投","companyAddress":"北京市","position":"职员"}]
-         */
-
         private UsersBean users;
         private String content;
         private String publicDate;
         private int shareCount;
         private int commentCount;
         private int priseCount;
-        /**
-         * url : http://imgsrc.baidu.com/forum/pic/item/a8ec8a13632762d01ae1ae27a0ec08fa503dc64f.jpg
-         */
-
         private List<ContentimagesesBean> contentimageses;
 
         @Override
@@ -163,17 +151,15 @@ public class CircleListBean {
         }
 
         public static class UsersBean {
+            /**
+             * name : 陈生珠
+             * userId : 1
+             * headSculpture : http://www.jinzht.com:8080/jinzht/upload/jinzht_user_1.jpg
+             * authentics : [{"city":{"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true},"name":"陈生珠","companyName":"北京金指投","companyAddress":"北京市","position":"职员"}]
+             */
             private String name;
             private int userId;
             private String headSculpture;
-            /**
-             * city : {"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true}
-             * name : 陈生珠
-             * companyName : 北京金指投
-             * companyAddress : 北京市
-             * position : 职员
-             */
-
             private List<AuthenticsBean> authentics;
 
             public String getName() {
@@ -210,12 +196,12 @@ public class CircleListBean {
 
             public static class AuthenticsBean {
                 /**
-                 * cityId : 6
-                 * province : {"provinceId":2,"name":"山西省","isInvlid":true}
-                 * name : 柳林
-                 * isInvlid : true
+                 * city : {"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true}
+                 * name : 陈生珠
+                 * companyName : 北京金指投
+                 * companyAddress : 北京市
+                 * position : 职员
                  */
-
                 private CityBean city;
                 private String name;
                 private String companyName;
@@ -263,13 +249,13 @@ public class CircleListBean {
                 }
 
                 public static class CityBean {
-                    private int cityId;
                     /**
-                     * provinceId : 2
-                     * name : 山西省
+                     * cityId : 6
+                     * province : {"provinceId":2,"name":"山西省","isInvlid":true}
+                     * name : 柳林
                      * isInvlid : true
                      */
-
+                    private int cityId;
                     private ProvinceBean province;
                     private String name;
                     private boolean isInvlid;
@@ -307,6 +293,11 @@ public class CircleListBean {
                     }
 
                     public static class ProvinceBean {
+                        /**
+                         * provinceId : 2
+                         * name : 山西省
+                         * isInvlid : true
+                         */
                         private int provinceId;
                         private String name;
                         private boolean isInvlid;
@@ -340,6 +331,9 @@ public class CircleListBean {
         }
 
         public static class ContentimagesesBean {
+            /**
+             * url : http://imgsrc.baidu.com/forum/pic/item/a8ec8a13632762d01ae1ae27a0ec08fa503dc64f.jpg
+             */
             private String url;
 
             public String getUrl() {

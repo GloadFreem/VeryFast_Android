@@ -73,7 +73,6 @@
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
                     android:layout_marginTop="24dp"
-                    android:src="@mipmap/favicon_test"
                     app:civ_border_color="#20000000"
                     app:civ_border_width="4dp" />
 
@@ -84,7 +83,7 @@
                     android:layout_below="@id/brain_detail_favicon"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="15dp"
-                    android:text="胡丫郁"
+                    android:text=""
                     android:textColor="@color/bg_text"
                     android:textSize="18sp" />
 
@@ -96,7 +95,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="21dp"
                     android:layout_toRightOf="@id/brain_detail_name"
-                    android:text="总经理"
+                    android:text=""
                     android:textColor="#474747"
                     android:textSize="12sp" />
 
@@ -107,7 +106,7 @@
                     android:layout_below="@id/brain_detail_name"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
-                    android:text="逸景营地投资有限公司"
+                    android:text=""
                     android:textColor="#474747"
                     android:textSize="15sp" />
 
@@ -118,7 +117,7 @@
                     android:layout_below="@id/brain_detail_comp_name"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="河南 | 郑州"
+                    android:text=""
                     android:textColor="#474747"
                     android:textSize="12sp" />
             </RelativeLayout>
@@ -153,7 +152,6 @@
                     android:layout_marginRight="17dp"
                     android:layout_marginTop="15dp"
                     android:lineSpacingExtra="5dp"
-                    android:text="公司服务项目包括：企业项目考察评估、财务规划、企业股份制改革、推荐挂牌上市、定向增发、债券发行、融资担保、股份置换、股票交易、资产重组、转版上市、投融资对接、企业培训等"
                     android:textColor="@android:color/white"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -188,7 +186,6 @@
                     android:layout_marginRight="17dp"
                     android:layout_marginTop="15dp"
                     android:lineSpacingExtra="5dp"
-                    android:text="完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人类型界面需要弹出完善信息界面即选择投资人"
                     android:textColor="@android:color/white"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -203,11 +200,12 @@
                 android:gravity="center">
 
                 <TextView
+                    android:id="@+id/brain_tv_collect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/icon_collect_investor"
                     android:drawablePadding="5dp"
-                    android:text="关注(269)"
+                    android:text="关注(0)"
                     android:textColor="@android:color/white"
                     android:textSize="15sp" />
             </LinearLayout>
