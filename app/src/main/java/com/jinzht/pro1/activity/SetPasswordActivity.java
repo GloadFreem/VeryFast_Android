@@ -11,14 +11,13 @@ import android.widget.ImageButton;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
 import com.jinzht.pro1.bean.CommonBean;
-import com.jinzht.pro1.bean.RegisterBean;
 import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
 import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
-import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.SharedPreferencesUtils;
 import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
@@ -113,15 +112,15 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    SharePreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
-                    SharePreferencesUtils.setIsLogin(mContext, true);
-//                    SharePreferencesUtils.setChoseUserType(mContext, false);
-//                    SharePreferencesUtils.setAuth(mContext, false);
+                    SharedPreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
+//                    SharedPreferencesUtils.setIsLogin(mContext, true);
+//                    SharedPreferencesUtils.setChoseUserType(mContext, false);
+//                    SharedPreferencesUtils.setAuth(mContext, false);
                     Intent intent = new Intent(mContext, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 } else {
-                    SharePreferencesUtils.setIsLogin(mContext, false);
+//                    SharedPreferencesUtils.setIsLogin(mContext, false);
                     SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
                 }
             }

@@ -67,6 +67,9 @@
     <string name="project_roadshow">路演项目</string>
     <string name="project_preselection">预选项目</string>
     <string name="invest_alert">温馨提示:\n1、此处领投，跟投仅为用户意向，待项目达成后项目方会协同各方确定最为合适的领投方；\n2、特别注意：投资金额后面的单位为“万”</string>
+    <string name="weirenzheng">温馨提示：\n\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020实名认证用户可以获得更多的权限，只有实名认证用户才可以参与平台股权投融资</string>
+    <string name="renzhengzhong">温馨提示：\n\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u00201.实名认证用户可以获得更多的权限，只有实名认证用户才可以参与平台股权投融资\n\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u00202.将于两个工作日内进行审核</string>
+    <string name="renzhengshibai">系统提示：\n\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020您的实名认证信息未通过审核，具体原因请参看短信或系统通知</string>
 
     <string name="pull_to_refresh">下拉刷新</string>
     <string name="release_to_refresh">释放立即刷新</string>

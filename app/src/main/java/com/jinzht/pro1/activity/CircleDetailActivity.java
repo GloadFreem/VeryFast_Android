@@ -365,12 +365,6 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
     private class GetCircleDetailTask extends AsyncTask<Void, Void, CircleDetailBean> {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showProgressDialog("");
-        }
-
-        @Override
         protected CircleDetailBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -395,7 +389,6 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(CircleDetailBean circleDetailBean) {
             super.onPostExecute(circleDetailBean);
-            dismissProgressDialog();
             if (circleDetailBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
@@ -427,12 +420,6 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showProgressDialog("");
-        }
-
-        @Override
         protected CircleMoreCommentsBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -457,7 +444,6 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(CircleMoreCommentsBean circleMoreCommentsBean) {
             super.onPostExecute(circleMoreCommentsBean);
-            dismissProgressDialog();
             if (circleMoreCommentsBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败

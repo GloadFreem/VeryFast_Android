@@ -302,12 +302,6 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showProgressDialog("");
-        }
-
-        @Override
         protected CircleListBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -331,7 +325,6 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         @Override
         protected void onPostExecute(CircleListBean circleListBean) {
             super.onPostExecute(circleListBean);
-            dismissProgressDialog();
             if (circleListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败

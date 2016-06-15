@@ -25,7 +25,7 @@ import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpException;
 import com.jinzht.pro1.utils.OkHttpUtils;
-import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.SharedPreferencesUtils;
 import com.jinzht.pro1.view.LoadingProssbar;
 import com.umeng.analytics.MobclickAgent;
 
@@ -113,8 +113,8 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements P
                 try {
                     body = OkHttpUtils.loginPost(
                             MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.LOGIN)),
-                            "telePhone", SharePreferencesUtils.getTelephone(mContext),
-                            "passWord", SharePreferencesUtils.getPassword(mContext),
+                            "telePhone", SharedPreferencesUtils.getTelephone(mContext),
+                            "passWord", SharedPreferencesUtils.getPassword(mContext),
                             Constant.BASE_URL + Constant.LOGIN,
                             mContext);
                     Log.i("登录接口返回值", body);
@@ -136,15 +136,15 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements P
 //            } else {
 //                if (loginBean.getCode() == 0) {// 登录成功
 //                    UiHelp.printMsg(loginBean.getCode(), loginBean.getMessage(), mContext);// 根据返回码弹出对应toast
-//                    SharePreferencesUtils.setIsLogin(mContext, true);// 保存登录状态
-////                    SharePreferencesUtils.setChoseUserType(mContext, loginBean.getData().getInfo());// 保存是否完善信息的状态
-//                    SharePreferencesUtils.setAuth(mContext, String.valueOf(loginBean.getData().getAuth()));// 保存是否实名认证的状态
+//                    SharedPreferencesUtils.setIsLogin(mContext, true);// 保存登录状态
+////                    SharedPreferencesUtils.setChoseUserType(mContext, loginBean.getData().getInfo());// 保存是否完善信息的状态
+//                    SharedPreferencesUtils.setAuth(mContext, String.valueOf(loginBean.getData().getAuth()));// 保存是否实名认证的状态
 //                    successRefresh();
 //                } else if (loginBean.getCode() == -1) {// 登录失败，跳转至登录页面
-//                    SharePreferencesUtils.setIsLogin(mContext, false);
+//                    SharedPreferencesUtils.setIsLogin(mContext, false);
 //                    loginAgain();
 //                } else {
-//                    SharePreferencesUtils.setIsLogin(mContext, false);
+//                    SharedPreferencesUtils.setIsLogin(mContext, false);
 //                    loginAgain();
 //                    UiHelp.printMsg(loginBean.getCode(), loginBean.getMessage(), mContext);
 //                }

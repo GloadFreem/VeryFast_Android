@@ -1,5 +1,6 @@
 package com.jinzht.pro1.activity;
 
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageButton;
@@ -9,7 +10,6 @@ import android.widget.RadioGroup;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.adapter.MainFragmentAdapter;
 import com.jinzht.pro1.base.BaseFragmentActivity;
-import com.jinzht.pro1.utils.DialogUtils;
 import com.jinzht.pro1.utils.UiHelp;
 import com.jinzht.pro1.view.NoScrollViewPager;
 
@@ -53,6 +53,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     private void initData() {
         mainViewpager.setAdapter(new MainFragmentAdapter(getSupportFragmentManager()));
+        mainViewpager.setOffscreenPageLimit(4);
         mainViewpager.setCurrentItem(0);
         // 主页模块的ViewPager和RadioGroup联动
         mainViewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -81,9 +82,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_btn_me:// 跳转到个人中心界面
-                DialogUtils.goldAnim(this, 8, 9);
-//                Intent intent = new Intent(this, PersonalCenterActivity.class);
-//                startActivity(intent);
+//                DialogUtils.goldAnim(this, 8, 9);
+                Intent intent = new Intent(this, PersonalCenterActivity.class);
+                startActivity(intent);
                 break;
         }
     }

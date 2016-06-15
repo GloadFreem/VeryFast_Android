@@ -57,7 +57,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@id/myinfo_arrow_favicon"
-                    android:src="@mipmap/favicon_test"
                     app:civ_border_color="#50000000"
                     app:civ_border_width="1dp" />
             </RelativeLayout>
@@ -100,7 +99,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/myinfo_arrow_invite"
-                    android:text="20160405"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="17sp" />
             </RelativeLayout>
@@ -149,7 +148,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/myinfo_arrow_name"
-                    android:text="董存瑞"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="17sp" />
             </RelativeLayout>
@@ -192,7 +191,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/myinfo_arrow_type"
-                    android:text="投资人"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="17sp" />
             </RelativeLayout>
@@ -203,6 +202,7 @@
                 android:background="@color/line_partition" />
 
             <RelativeLayout
+                android:id="@+id/myinfo_rl_idcard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
@@ -225,6 +225,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:visibility="invisible"
                     android:background="@mipmap/iconfont_right_arrow" />
 
                 <TextView
@@ -234,7 +235,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/myinfo_arrow_idcard"
-                    android:text="***26319856231****"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="17sp" />
             </RelativeLayout>
@@ -273,7 +274,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/myinfo_arrow_comp"
-                    android:text="金指投"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="17sp" />
             </RelativeLayout>
@@ -284,6 +285,7 @@
                 android:background="@color/line_partition" />
 
             <RelativeLayout
+                android:id="@+id/myinfo_btn_position"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
@@ -307,7 +309,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@mipmap/iconfont_right_arrow"
-                    android:visibility="invisible" />
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/myinfo_tv_position"
@@ -316,7 +318,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/myinfo_arrow_position"
-                    android:text="工程师"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="17sp" />
             </RelativeLayout>
@@ -359,7 +361,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/myinfo_arrow_addr"
-                    android:text="陕西 | 西安"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="17sp" />
             </RelativeLayout>
@@ -372,7 +374,7 @@
                 android:lineSpacingExtra="5dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="温馨提示：\n        1.实名认证可以获得更多的权限信息\n        2.预计明天上午通过审核" />
+                android:text="温馨提示：\n1.实名认证可以获得更多的权限信息\n        2.预计明天上午通过审核" />
 
             <TextView
                 android:id="@+id/myinfo_btn_bottom"

@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 /**
  * 配置文件
  */
-public class SharePreferencesUtils {
+public class SharedPreferencesUtils {
 
     // 保存session
     public static void saveSession(Context context, String session) {
@@ -100,6 +100,7 @@ public class SharePreferencesUtils {
         return sp.getInt("usertype", 0);
     }
 
+    // 保存是否是首次使用应用
     public static void setIsNotFirst(Context context, boolean isAuto) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -107,8 +108,51 @@ public class SharePreferencesUtils {
         editor.commit();
     }
 
+    // 获取是否是首次使用应用
     public static boolean getIsNotFirst(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         return sp.getBoolean("isNotFirst", false);
+    }
+
+    // 保存userId
+    public static void saveUserId(Context context, String userId) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("userId", userId);
+        editor.commit();
+    }
+
+    // 获取userId
+    public static String getUserId(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        return sp.getString("userId", "");
+    }
+
+    // 保存用户头像
+    public static void saveLocalFavicon(Context context, String favicon) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("localFavicon", favicon);
+        editor.commit();
+    }
+
+    // 获取用户头像
+    public static String getLocalFavicon(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        return sp.getString("localFavicon", "");
+    }
+
+    // 保存用户头像
+    public static void saveOnlineFavicon(Context context, String favicon) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("onlineFavicon", favicon);
+        editor.commit();
+    }
+
+    // 获取用户头像
+    public static String getOnlineFavicon(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        return sp.getString("onlineFavicon", "");
     }
 }

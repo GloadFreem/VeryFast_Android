@@ -46,6 +46,7 @@ public class InvestorFragment extends BaseFragment implements View.OnClickListen
         super.onActivityCreated(savedInstanceState);
         // 给投资人类型填充数据
         investorVpType.setAdapter(new InvestorFragmentAdapter(getChildFragmentManager()));
+        investorVpType.setOffscreenPageLimit(3);
         investorVpType.setCurrentItem(0);
         // 设置RadioGroup页签和项目ViewPager联动
         investorVpType.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {

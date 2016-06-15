@@ -24,7 +24,6 @@
                 android:layout_width="77.5dp"
                 android:layout_height="77.5dp"
                 android:layout_gravity="center"
-                android:src="@mipmap/favicon_test"
                 app:civ_border_color="@android:color/white"
                 app:civ_border_width="3dp" />
 
@@ -34,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/personal_center_iv_favicon"
                 android:layout_alignRight="@id/personal_center_iv_favicon"
-                android:background="@mipmap/icon_v" />
+                android:src="@mipmap/icon_v" />
         </RelativeLayout>
 
         <TextView
@@ -42,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="王大锤"
+            android:text=""
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
@@ -52,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
             android:layout_marginTop="9dp"
-            android:text="绿地集团 | CEO"
+            android:text=""
             android:textColor="@android:color/white"
             android:textSize="14sp" />
     </LinearLayout>

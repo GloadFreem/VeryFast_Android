@@ -237,12 +237,6 @@ public class Investor2Fragment extends BaseFragment {
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showProgressDialog("");
-        }
-
-        @Override
         protected InvestorgListBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -267,7 +261,6 @@ public class Investor2Fragment extends BaseFragment {
         @Override
         protected void onPostExecute(InvestorgListBean investorgListBean) {
             super.onPostExecute(investorgListBean);
-            dismissProgressDialog();
             if (investorgListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败

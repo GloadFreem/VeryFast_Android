@@ -17,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
 import com.jinzht.pro1.bean.CommonBean;
@@ -27,7 +28,7 @@ import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
-import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.SharedPreferencesUtils;
 import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
@@ -95,7 +96,13 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
         photo_path = getCacheDir() + "/" + "favicon.jpg";// 头像保存地址
         photoFile = new File(Environment.getExternalStorageDirectory() + "/" + "favicon.jpg");
 
-        improveInfoIvUserimage.setImageResource(R.drawable.ic_launcher);
+        if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
+            Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).into(improveInfoIvUserimage);
+        } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
+            Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).into(improveInfoIvUserimage);
+        } else {
+            Glide.with(mContext).load(R.drawable.ic_launcher).into(improveInfoIvUserimage);
+        }
     }
 
     @Override
@@ -244,7 +251,7 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                         body = OkHttpUtils.usertypePost(
                                 MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SETUSERTYPE)),
                                 "ideniyType", String.valueOf(usertype),
-                                "isWebchatLogin","false",
+                                "isWebchatLogin", "false",
                                 "file", photo_path,
                                 Constant.BASE_URL + Constant.SETUSERTYPE,
                                 mContext
@@ -254,7 +261,7 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                         body = OkHttpUtils.usertypePost(
                                 MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SETUSERTYPE)),
                                 "ideniyType", String.valueOf(usertype),
-                                "isWebchatLogin","false",
+                                "isWebchatLogin", "false",
                                 Constant.BASE_URL + Constant.SETUSERTYPE,
                                 mContext
                         );
@@ -277,8 +284,9 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                 return;
             } else {
                 if (commonBean.getStatus() == 200) {
-                    SharePreferencesUtils.setChoseUserType(mContext, true);
-                    SharePreferencesUtils.saveUserType(mContext, usertype);
+                    SharedPreferencesUtils.setChoseUserType(mContext, true);
+                    SharedPreferencesUtils.saveUserType(mContext, usertype);
+                    SharedPreferencesUtils.saveLocalFavicon(mContext, photo_path);
                     Intent intent = new Intent(mContext, CompleteRegisterActivity.class);// 跳转至完成完成注册送指环码界面
                     intent.putExtra("usertype", usertype);
                     startActivity(intent);

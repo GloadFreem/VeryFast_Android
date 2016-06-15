@@ -30,7 +30,7 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();
@@ -42,7 +42,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -63,7 +63,7 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();
@@ -75,7 +75,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -99,7 +99,7 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();
@@ -111,7 +111,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -133,7 +133,7 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();
@@ -145,7 +145,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -165,7 +165,7 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();
@@ -177,7 +177,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -198,7 +198,7 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();
@@ -210,7 +210,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -234,7 +234,7 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();
@@ -246,7 +246,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -269,7 +269,7 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();
@@ -281,7 +281,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -304,7 +304,7 @@ public class OkHttpUtils {
                 .add("platform", String.valueOf(0))
                 .build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(formBody)
                 .build();
@@ -316,7 +316,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -338,7 +338,7 @@ public class OkHttpUtils {
         builder.addFormDataPart(key3, key3 + ".jpg", RequestBody.create(MultipartBuilder.FORM, new File(value3)));
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(requestBody)
                 .build();
@@ -350,7 +350,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -371,7 +371,7 @@ public class OkHttpUtils {
         builder.addFormDataPart(key2, value2);
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(requestBody)
                 .build();
@@ -383,7 +383,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -416,7 +416,7 @@ public class OkHttpUtils {
         builder.addFormDataPart(key14, value14);
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(requestBody)
                 .build();
@@ -428,7 +428,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -459,7 +459,7 @@ public class OkHttpUtils {
         builder.addFormDataPart(key14, value14);
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(requestBody)
                 .build();
@@ -471,7 +471,7 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -496,7 +496,7 @@ public class OkHttpUtils {
         }
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
-                .addHeader("Cookie", SharePreferencesUtils.getSession(context))
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
                 .url(url)
                 .post(requestBody)
                 .build();
@@ -508,7 +508,39 @@ public class OkHttpUtils {
                     Log.i("session", "session不存在");
                 } else {
                     Log.i("session", response.header("Set-Cookie").toString());
-                    SharePreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        return body;
+    }
+
+    // 更改头像
+    public static String changeFavicon(String partner, String key1, String value1, String url, Context context) throws IOException {
+        String body = "";
+        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
+        builder.addFormDataPart("key", "jinzht_server_security");
+        builder.addFormDataPart("partner", partner);
+        builder.addFormDataPart(key1, key1 + ".jpg", RequestBody.create(MultipartBuilder.FORM, new File(value1)));
+        RequestBody requestBody = builder.build();
+        Request request = new Request.Builder()
+                .addHeader("Cookie", SharedPreferencesUtils.getSession(context))
+                .url(url)
+                .post(requestBody)
+                .build();
+        Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            body = response.body().string();
+            try {
+                if (StringUtils.isBlank(response.header("Set-Cookie").toString())) {
+                    Log.i("session", "session不存在");
+                } else {
+                    Log.i("session", response.header("Set-Cookie").toString());
+                    SharedPreferencesUtils.saveSession(context, response.header("Set-Cookie").toString().split(";")[0]);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();

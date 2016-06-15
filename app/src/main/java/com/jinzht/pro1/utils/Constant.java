@@ -170,4 +170,20 @@ public class Constant {
      * 分享投资人
      */
     public static final String SHAREINVESTOR = "requestShareInvestor.action";
+    /**
+     * 检查用户是否已经登录
+     */
+    public static final String ISLOGIN = "isLoginUser.action";
+    /**
+     * 用户信息
+     */
+    public static final String GETUSERINFO = "authenticInfoUser.action";
+    /**
+     * 获取邀请码
+     */
+    public static final String GETINVITECODE = "requestInviteCode.action";
+    /**
+     * 更换头像
+     */
+    public static final String CHANGEFAVICON = "requestChangeHeaderPicture.action";
 }

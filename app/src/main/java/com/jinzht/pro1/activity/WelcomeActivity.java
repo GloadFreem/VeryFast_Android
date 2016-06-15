@@ -4,12 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.FullBaseActivity;
+import com.jinzht.pro1.bean.CommonBean;
+import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.FastJsonTools;
+import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
-import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.OkHttpUtils;
 import com.jinzht.pro1.utils.StringUtils;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -44,26 +50,56 @@ public class WelcomeActivity extends FullBaseActivity {
             @Override
             public void run() {
 //                SystemClock.sleep(2500);// 延迟2.5秒
-//                if (!SharePreferencesUtils.getIsNotFirst(mContext)) {
+//                if (!SharedPreferencesUtils.getIsNotFirst(mContext)) {
 //                    第一次打开应用，进入引导页
 //                            intent = new Intent(mContext, GuideActivity.class);
 //                    startActivity(intent);
 //                    finish();
 //                } else {
-                    if (SharePreferencesUtils.getIsLogin(mContext) && !NetWorkUtils.getNetWorkType(WelcomeActivity.this).equals(NetWorkUtils.NETWORK_TYPE_DISCONNECT)) {
-                        // 非第一次，已登录，进入主页MainActivity
-                        intent = new Intent(mContext, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        // 非第一次，没有登录，进入登录页
-                        intent = new Intent(mContext, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
+                IsLoginTask isLoginTask = new IsLoginTask();
+                isLoginTask.execute();
 //                }
             }
         }).start();
+    }
+
+    // 检查用户是否已登录
+    private class IsLoginTask extends AsyncTask<Void, Void, CommonBean> {
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.ISLOGIN)),
+                            Constant.BASE_URL + Constant.ISLOGIN,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("登录状态", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            if (commonBean != null && commonBean.getStatus() == 200) {
+                // 已登录，进入主页
+                intent = new Intent(mContext, MainActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                // 未登录，进入登录页
+                intent = new Intent(mContext, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
     }
 
     // 自定义信息广播接收者，用于极光推送

@@ -25,7 +25,7 @@ import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpException;
 import com.jinzht.pro1.utils.OkHttpUtils;
-import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.SharedPreferencesUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.view.LoadingProssbar;
 import com.umeng.analytics.MobclickAgent;
@@ -114,8 +114,8 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
                 try {
                     body = OkHttpUtils.loginPost(
                             MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.LOGIN)),
-                            "telephone", SharePreferencesUtils.getTelephone(mContext),
-                            "password", SharePreferencesUtils.getPassword(mContext),
+                            "telephone", SharedPreferencesUtils.getTelephone(mContext),
+                            "password", SharedPreferencesUtils.getPassword(mContext),
 //                            "telephone", "18729342354",
 //                            "password", "111111",
                             Constant.BASE_URL + Constant.LOGIN,
@@ -139,10 +139,10 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
                 return;
             } else {
                 if (loginBean.getStatus() == 200) {// 登录成功
-                    SharePreferencesUtils.setIsLogin(mContext, true);// 保存登录状态
+//                    SharedPreferencesUtils.setIsLogin(mContext, true);// 保存登录状态
                     successRefresh();
                 } else {
-                    SharePreferencesUtils.setIsLogin(mContext, false);
+//                    SharedPreferencesUtils.setIsLogin(mContext, false);
                     SuperToastUtils.showSuperToast(mContext, 2, loginBean.getMessage());
                     loginAgain();
                 }

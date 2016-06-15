@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseActivity;
 import com.jinzht.pro1.bean.LoginBean;
@@ -21,11 +22,10 @@ import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
-import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.SharedPreferencesUtils;
 import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
-import com.jinzht.pro1.utils.UiUtils;
 import com.jinzht.pro1.view.CircleImageView;
 import com.mob.tools.utils.UIHandler;
 
@@ -77,7 +77,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         loginTvWechat = (TextView) findViewById(R.id.login_tv_wechat);// 微信登录按钮
         loginTvWechat.setOnClickListener(this);
 
-        loginIvUserimage.setImageResource(R.drawable.ic_launcher);
+        if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
+            Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).into(loginIvUserimage);
+        } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
+            Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).into(loginIvUserimage);
+        } else {
+            Glide.with(mContext).load(R.drawable.ic_launcher).into(loginIvUserimage);
+        }
     }
 
     @Override
@@ -277,15 +283,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    SharePreferencesUtils.saveInformation(mContext, loginEdTel.getText().toString(), pwd);
-                    SharePreferencesUtils.setIsLogin(mContext, true);
-//                    SharePreferencesUtils.setChoseUserType(mContext, false);
-//                    SharePreferencesUtils.setAuth(mContext, false);
+                    SharedPreferencesUtils.saveInformation(mContext, loginEdTel.getText().toString(), pwd);
+                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
+//                    SharedPreferencesUtils.setIsLogin(mContext, true);
+//                    SharedPreferencesUtils.setChoseUserType(mContext, false);
+//                    SharedPreferencesUtils.setAuth(mContext, false);
                     intent = new Intent(mContext, MainActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    SharePreferencesUtils.setIsLogin(mContext, false);
+//                    SharedPreferencesUtils.setIsLogin(mContext, false);
                     SuperToastUtils.showSuperToast(mContext, 2, loginBean.getMessage());
                 }
             }

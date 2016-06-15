@@ -21,7 +21,7 @@ import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
-import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.SharedPreferencesUtils;
 import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
@@ -193,7 +193,7 @@ public class CertificationDescActivity extends BaseActivity implements View.OnCl
                 return;
             } else {
                 if (authenticateBean.getStatus() == 200) {
-                    SharePreferencesUtils.setAuth(mContext, true);
+                    SharedPreferencesUtils.setAuth(mContext, true);
                     // TODO: 2016/6/6 弹出认证成功提示
                     SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
                 } else {

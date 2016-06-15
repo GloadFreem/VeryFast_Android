@@ -19,7 +19,7 @@ import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
-import com.jinzht.pro1.utils.SharePreferencesUtils;
+import com.jinzht.pro1.utils.SharedPreferencesUtils;
 import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
@@ -125,14 +125,14 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    SharePreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
-                    SharePreferencesUtils.setIsLogin(mContext, true);
-                    SharePreferencesUtils.setChoseUserType(mContext, false);
-                    SharePreferencesUtils.setAuth(mContext, false);
+                    SharedPreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
+//                    SharedPreferencesUtils.setIsLogin(mContext, true);
+                    SharedPreferencesUtils.setChoseUserType(mContext, false);
+                    SharedPreferencesUtils.setAuth(mContext, false);
                     Intent intent = new Intent(mContext, SetUserTypeActivity.class);
                     startActivity(intent);
                 } else {
-                    SharePreferencesUtils.setIsLogin(mContext, false);
+//                    SharedPreferencesUtils.setIsLogin(mContext, false);
                     SuperToastUtils.showSuperToast(mContext, 2, registerBean.getMessage());
                 }
             }
