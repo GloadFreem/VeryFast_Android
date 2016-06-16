@@ -67,7 +67,7 @@
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="79dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="0dp"
                 android:singleLine="true"
                 android:text="新三板VR企业也在新三板VR企业也在新三板VR企业也在新三板VR企业也在"
                 android:textColor="#d9d9d9"
@@ -75,6 +75,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/project_banner_rl_progress"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="left|bottom"
@@ -88,7 +89,7 @@
                 android:src="@mipmap/icon_bg_progress" />
 
             <com.jinzht.pro1.view.BannerRoundProgressBar
-                android:id="@+id/project_banner_project"
+                android:id="@+id/project_banner_progress"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:roundColorB="@android:color/transparent"

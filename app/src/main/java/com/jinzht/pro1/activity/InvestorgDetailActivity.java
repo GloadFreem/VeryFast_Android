@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.FullBaseActivity;
-import com.jinzht.pro1.bean.CircleShareBean;
+import com.jinzht.pro1.bean.ShareBean;
 import com.jinzht.pro1.bean.CommonBean;
 import com.jinzht.pro1.bean.InvestorgListBean;
 import com.jinzht.pro1.utils.AESUtils;
@@ -227,9 +227,9 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
     }
 
     // 分享
-    private class ShareTask extends AsyncTask<Void, Void, CircleShareBean> {
+    private class ShareTask extends AsyncTask<Void, Void, ShareBean> {
         @Override
-        protected CircleShareBean doInBackground(Void... params) {
+        protected ShareBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
@@ -244,24 +244,24 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
                     e.printStackTrace();
                 }
                 Log.i("分享返回信息", body);
-                return FastJsonTools.getBean(body, CircleShareBean.class);
+                return FastJsonTools.getBean(body, ShareBean.class);
             } else {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(CircleShareBean circleShareBean) {
-            super.onPostExecute(circleShareBean);
-            if (circleShareBean == null) {
+        protected void onPostExecute(ShareBean shareBean) {
+            super.onPostExecute(shareBean);
+            if (shareBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 return;
             } else {
-                if (circleShareBean.getStatus() == 200) {
+                if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(InvestorgDetailActivity.this);
-                    DialogUtils.shareDialog(InvestorgDetailActivity.this, btnShare, shareUtils, data.getUser().getName(), data.getUser().getAuthentics().get(0).getCompanyIntroduce(), data.getUser().getHeadSculpture(), circleShareBean.getData().getUrl());
+                    DialogUtils.shareDialog(InvestorgDetailActivity.this, btnShare, shareUtils, data.getUser().getName(), data.getUser().getAuthentics().get(0).getCompanyIntroduce(), data.getUser().getHeadSculpture(), shareBean.getData().getUrl());
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, circleShareBean.getMessage());
+                    SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
                 }
             }
         }

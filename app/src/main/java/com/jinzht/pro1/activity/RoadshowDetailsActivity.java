@@ -42,6 +42,9 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
     private WrapContentHeightViewPager detailsVpModule;// 详情页的ViewPager
     private ScrollView detailsSl;// ScrollView
 
+    public final static int RESULT_CODE = 0;
+    public boolean needRefresh = false;// 是否进行了交互，返回时是否刷新
+
     @Override
     protected int getResourcesId() {
         return R.layout.activity_details_roadshow;

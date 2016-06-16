@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
-        android:background="@mipmap/tag_dailuyan" />
+        android:src="@mipmap/tag_dailuyan" />
 
     <TextView
         android:id="@+id/item_project_compname"

@@ -3,7 +3,7 @@ package com.jinzht.pro1.bean;
 /**
  * 分享圈子返回值
  */
-public class CircleShareBean{
+public class ShareBean {
 
     /**
      * message :

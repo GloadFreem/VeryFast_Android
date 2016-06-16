@@ -127,7 +127,7 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
         Glide.with(this).load(proData.getStartPageImage()).into(ivProLogo);
         tvProTitle.setText(proData.getAbbrevName());
         switch (proData.getFinancestatus().getName()) {
-            case "路演中":
+            case "融资中":
                 Glide.with(this).load(R.mipmap.tag_rongzizhong).into(tvProTag);
                 break;
             case "待路演":
@@ -135,9 +135,6 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
                 break;
             case "预选":
                 Glide.with(this).load(R.mipmap.tag_yuxuan).into(tvProTag);
-                break;
-            case "路演完成":
-                Glide.with(this).load(R.mipmap.tag_yirongzi).into(tvProTag);
                 break;
         }
         tvProName.setText(proData.getFullName());

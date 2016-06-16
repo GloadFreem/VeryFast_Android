@@ -51,7 +51,7 @@ public class ActivityListBean {
          * startTime : 2016-06-06 00:00:00
          * endTime : 2016-06-06 00:00:00
          * type : 1
-         * "flag": 1
+         * attended: true
          */
         private int actionId;
         private String name;

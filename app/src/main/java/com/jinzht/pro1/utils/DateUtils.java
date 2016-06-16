@@ -50,6 +50,17 @@ public class DateUtils {
     }
 
     /**
+     * 时间差，天
+     */
+    public static String timeDiff(String start, String end) {
+        Date startDate = strToDate(start);
+        Date endDate = strToDate(end);
+        long diff = endDate.getTime() - startDate.getTime();
+        diff = diff / (1000 * 60 * 60 * 24);
+        return String.valueOf(diff);
+    }
+
+    /**
      * 日期字符串转换为Date
      *
      * @param dateStr

@@ -7,7 +7,7 @@ public class Constant {
 
 //    public static final String BASE_URL = "http://www.jinzht.com/jinzht/";
 
-    public static final String BASE_URL = "http://192.168.5.111:8080/jinzht/";
+    public static final String BASE_URL = "http://192.168.5.122:8080/jinzht/";
 
 //    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
@@ -186,4 +186,24 @@ public class Constant {
      * 更换头像
      */
     public static final String CHANGEFAVICON = "requestChangeHeaderPicture.action";
+    /**
+     * 获取项目列表
+     */
+    public static final String GETPROJECTLIST = "requestProjectList.action";
+    /**
+     * 获取banner信息
+     */
+    public static final String GETBANNERINFO = "bannerSystem.action";
+    /**
+     * 获取项目详情
+     */
+    public static final String GETPROJECTDETAIL = "requestProjectDetail.action";
+    /**
+     * 关注项目
+     */
+    public static final String COLLECTPROJECT = "requestProjectCollect.action";
+    /**
+     * 分享项目
+     */
+    public static final String SHAREPROJECT = "requestProjectShare.action";
 }

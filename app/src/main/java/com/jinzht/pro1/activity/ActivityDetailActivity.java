@@ -38,7 +38,7 @@ import com.jinzht.pro1.bean.ActivityApplyBean;
 import com.jinzht.pro1.bean.ActivityCommentBean;
 import com.jinzht.pro1.bean.ActivityDetailBean;
 import com.jinzht.pro1.bean.ActivityPriseBean;
-import com.jinzht.pro1.bean.CircleShareBean;
+import com.jinzht.pro1.bean.ShareBean;
 import com.jinzht.pro1.callback.ItemClickListener;
 import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
@@ -253,9 +253,18 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     // 活动照片处理
     private void initPhotos() {
         // 准备数据
-        photos.add(data.getActionimages().get(0));
-        photos.add(data.getActionimages().get(1));
-        photos.add(data.getActionimages().get(2));
+        if (data.getActionimages().size() == 0) {
+            return;
+        } else if (data.getActionimages().size() == 1) {
+            photos.add(data.getActionimages().get(0));
+        } else if (data.getActionimages().size() == 2) {
+            photos.add(data.getActionimages().get(0));
+            photos.add(data.getActionimages().get(1));
+        } else if (data.getActionimages().size() >= 3) {
+            photos.add(data.getActionimages().get(0));
+            photos.add(data.getActionimages().get(1));
+            photos.add(data.getActionimages().get(2));
+        }
         photosAdapter = new ActivityPhotosAdapter(mContext, photos);
         // 填充数据
         RecyclerViewData.setGrid(activityPhotos, mContext, photosAdapter, 3);
@@ -768,9 +777,18 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         imgMore.setBackgroundResource(R.mipmap.icon_activity_more);
         // 项目照片
         photos.clear();
-        photos.add(data.getActionimages().get(0));
-        photos.add(data.getActionimages().get(1));
-        photos.add(data.getActionimages().get(2));
+        if (data.getActionimages().size() == 0) {
+            return;
+        } else if (data.getActionimages().size() == 1) {
+            photos.add(data.getActionimages().get(0));
+        } else if (data.getActionimages().size() == 2) {
+            photos.add(data.getActionimages().get(0));
+            photos.add(data.getActionimages().get(1));
+        } else if (data.getActionimages().size() >= 3) {
+            photos.add(data.getActionimages().get(0));
+            photos.add(data.getActionimages().get(1));
+            photos.add(data.getActionimages().get(2));
+        }
         photosAdapter.notifyDataSetChanged();
     }
 
@@ -781,6 +799,9 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         imgMore.setBackgroundResource(R.mipmap.icon_activity_less);
         // 项目照片
         photos.clear();
+        if (data.getActionimages().size() == 0) {
+            return;
+        }
         for (ActivityDetailBean.DataBean.ActionimagesBean bean : data.getActionimages()) {
             photos.add(bean);
         }
@@ -949,7 +970,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                 if (activityPriseBean.getStatus() == 200) {
                     if (flag == 1) {
                         data.setFlag(true);
-                        prises.add(0,activityPriseBean.getData().getName());
+                        prises.add(0, activityPriseBean.getData().getName());
                     } else {
                         data.setFlag(false);
                         prises.remove(activityPriseBean.getData().getName());
@@ -1168,9 +1189,9 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     }
 
     // 分享
-    private class ShareTask extends AsyncTask<Void, Void, CircleShareBean> {
+    private class ShareTask extends AsyncTask<Void, Void, ShareBean> {
         @Override
-        protected CircleShareBean doInBackground(Void... params) {
+        protected ShareBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
@@ -1185,24 +1206,24 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                     e.printStackTrace();
                 }
                 Log.i("分享返回信息", body);
-                return FastJsonTools.getBean(body, CircleShareBean.class);
+                return FastJsonTools.getBean(body, ShareBean.class);
             } else {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(CircleShareBean circleShareBean) {
-            super.onPostExecute(circleShareBean);
-            if (circleShareBean == null) {
+        protected void onPostExecute(ShareBean shareBean) {
+            super.onPostExecute(shareBean);
+            if (shareBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 return;
             } else {
-                if (circleShareBean.getStatus() == 200) {
+                if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(ActivityDetailActivity.this);
-                    DialogUtils.shareDialog(ActivityDetailActivity.this, btnShare, shareUtils, data.getName(), data.getDescription(), "", circleShareBean.getData().getUrl());
+                    DialogUtils.shareDialog(ActivityDetailActivity.this, btnShare, shareUtils, data.getName(), data.getDescription(), "", shareBean.getData().getUrl());
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, circleShareBean.getMessage());
+                    SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
                 }
             }
         }

@@ -1,7 +1,9 @@
 package com.jinzht.pro1.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -10,8 +12,21 @@ import android.widget.RadioGroup;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.adapter.MainFragmentAdapter;
 import com.jinzht.pro1.base.BaseFragmentActivity;
+import com.jinzht.pro1.bean.BannerInfoBean;
+import com.jinzht.pro1.utils.AESUtils;
+import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.FastJsonTools;
+import com.jinzht.pro1.utils.MD5Utils;
+import com.jinzht.pro1.utils.NetWorkUtils;
+import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
 import com.jinzht.pro1.view.NoScrollViewPager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * 主页
@@ -26,6 +41,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private RadioButton mainBtnCircle;// 圈子按钮
     private RadioButton mainBtnActivity;// 活动按钮
 
+    private List<BannerInfoBean.DataBean> data = new ArrayList<>();
+
     @Override
     protected int getResourcesId() {
         return R.layout.activity_main;
@@ -35,7 +52,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     protected void init() {
         UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
         initView();
-        initData();
+        GetBannerInfo getBannerInfo = new GetBannerInfo();
+        getBannerInfo.execute();
     }
 
     private void initView() {
@@ -105,6 +123,45 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             case R.id.main_btn_activity:// 选择了活动
                 mainViewpager.setCurrentItem(3, false);
                 break;
+        }
+    }
+
+    // 获取banner数据
+    private class GetBannerInfo extends AsyncTask<Void, Void, BannerInfoBean> {
+        @Override
+        protected BannerInfoBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETBANNERINFO)),
+                            Constant.BASE_URL + Constant.GETBANNERINFO,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("banner数据", body);
+                return FastJsonTools.getBean(body, BannerInfoBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(BannerInfoBean bannerInfoBean) {
+            super.onPostExecute(bannerInfoBean);
+            if (bannerInfoBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (bannerInfoBean.getStatus() == 200) {
+                    data = bannerInfoBean.getData();
+                    EventBus.getDefault().postSticky(data);
+                    initData();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, bannerInfoBean.getMessage());
+                }
+            }
         }
     }
 

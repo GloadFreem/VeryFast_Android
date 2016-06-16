@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.callback.ItemClickListener;
 
@@ -18,12 +19,14 @@ import java.util.List;
 public class ProjectPhotosAdapter extends RecyclerView.Adapter<ProjectPhotosAdapter.MViewHolder> {
 
     private LayoutInflater inflater;
-    private List<Integer> imageViews;
+    private List<String> images;
     private ItemClickListener mItemClickListener;
+    private Context context;
 
-    public ProjectPhotosAdapter(Context context, List<Integer> imageViews) {
+    public ProjectPhotosAdapter(Context context, List<String> images) {
         this.inflater = LayoutInflater.from(context);
-        this.imageViews = imageViews;
+        this.images = images;
+        this.context = context;
     }
 
     public class MViewHolder extends RecyclerView.ViewHolder {
@@ -54,12 +57,12 @@ public class ProjectPhotosAdapter extends RecyclerView.Adapter<ProjectPhotosAdap
 
     @Override
     public void onBindViewHolder(MViewHolder holder, int position) {
-        holder.image.setBackgroundResource(imageViews.get(position));
+        Glide.with(context).load(images.get(position)).into(holder.image);
     }
 
     @Override
     public int getItemCount() {
-        return imageViews.size();
+        return images.size();
     }
 
     public void setItemClickListener(ItemClickListener mItemClickListener) {
