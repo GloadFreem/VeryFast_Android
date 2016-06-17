@@ -64,6 +64,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
     private int pages = 0;
 
     private int FLAG = 0;// 点赞或取消点赞的标识
+    private int needRefresh = 0;// 是否需要在圈子列表中刷新
     public final static int RESULT_CODE = 0;
     private InputMethodManager imm;// 键盘控制
 
@@ -119,7 +120,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-        if (FLAG == 1 || FLAG == 2) {
+        if (needRefresh % 2 != 0 && FLAG != 0) {
             Intent intent = new Intent();
             intent.putExtra("FLAG", FLAG);
             setResult(RESULT_CODE, intent);
@@ -576,6 +577,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                         }
                         FLAG = 2;
                     }
+                    needRefresh++;
                     listAdapter.notifyDataSetChanged();
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, circlePriseBean.getMessage());

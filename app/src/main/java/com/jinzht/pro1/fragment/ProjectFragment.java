@@ -138,7 +138,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             ImageView imageView = new ImageView(mContext);
             // 设置图片缩放类型
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            Glide.with(mContext).load(data.get(i).getBody().getImage());
+            Glide.with(mContext).load(data.get(i).getBody().getImage()).into(imageView);
             imageViews.add(imageView);
             // 创建圆点指示器
             ImageView point = new ImageView(mContext);

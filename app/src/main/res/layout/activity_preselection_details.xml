@@ -50,7 +50,6 @@
                     android:layout_marginLeft="11dp"
                     android:layout_marginRight="7.5dp"
                     android:layout_weight="517"
-                    android:background="@mipmap/icon_bg_invest"
                     android:gravity="center">
 
                     <TextView
@@ -60,7 +59,7 @@
                         android:drawableLeft="@mipmap/icon_collect"
                         android:drawablePadding="10dp"
                         android:gravity="center"
-                        android:text="关注(320)"
+                        android:text=""
                         android:textColor="@android:color/white"
                         android:textSize="19sp" />
                 </RelativeLayout>
@@ -91,7 +90,6 @@
                         android:layout_height="83dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="20dp"
-                        android:src="@mipmap/ic_launcher"
                         app:civ_border_color="#50ffffff"
                         app:civ_border_width="4dp" />
 
@@ -100,7 +98,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:text="逸景营地"
+                        android:text=""
                         android:textColor="@android:color/white"
                         android:textSize="17sp" />
 
@@ -109,7 +107,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="9dp"
-                        android:text="逸景营地投资有限公司"
+                        android:text=""
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -120,7 +118,7 @@
                         android:layout_marginBottom="16dp"
                         android:layout_marginTop="9dp"
                         android:gravity="center"
-                        android:text="北京"
+                        android:text=""
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -145,7 +143,7 @@
                             android:layout_marginLeft="13dp"
                             android:drawableLeft="@mipmap/icon_details_title"
                             android:drawablePadding="6dp"
-                            android:text="逸景营地"
+                            android:text=""
                             android:textColor="@color/bg_text"
                             android:textSize="18sp" />
 
@@ -172,7 +170,6 @@
                             android:ellipsize="end"
                             android:lineSpacingExtra="3dp"
                             android:maxLines="3"
-                            android:text="据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元"
                             android:textColor="#747474"
                             android:textSize="14sp" />
 
@@ -238,7 +235,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@id/pre_tv_comment"
-                            android:text="(108)"
+                            android:text="(0)"
                             android:textColor="#474747"
                             android:textSize="14sp" />
 
@@ -273,8 +270,7 @@
                             android:id="@+id/item_comment_favicon1"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:layout_marginTop="15dp"
-                            android:src="@mipmap/favicon_test" />
+                            android:layout_marginTop="15dp" />
 
                         <TextView
                             android:id="@+id/item_comment_name1"
@@ -283,7 +279,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="15dp"
                             android:layout_toRightOf="@id/item_comment_favicon1"
-                            android:text="王二小"
+                            android:text=""
                             android:textColor="@color/bg_text"
                             android:textSize="14sp" />
 
@@ -295,7 +291,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="2dp"
                             android:layout_toRightOf="@id/item_comment_favicon1"
-                            android:text="2016.2.26"
+                            android:text=""
                             android:textColor="#939393"
                             android:textSize="10sp" />
 
@@ -310,7 +306,6 @@
                             android:layout_toRightOf="@id/item_comment_favicon1"
                             android:ellipsize="end"
                             android:maxLines="3"
-                            android:text="大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山"
                             android:textColor="#474747"
                             android:textSize="14sp" />
                     </RelativeLayout>
@@ -332,8 +327,7 @@
                             android:id="@+id/item_comment_favicon2"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:layout_marginTop="15dp"
-                            android:src="@mipmap/favicon_test" />
+                            android:layout_marginTop="15dp" />
 
                         <TextView
                             android:id="@+id/item_comment_name2"
@@ -342,7 +336,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="15dp"
                             android:layout_toRightOf="@id/item_comment_favicon2"
-                            android:text="王二小"
+                            android:text=""
                             android:textColor="@color/bg_text"
                             android:textSize="14sp" />
 
@@ -354,7 +348,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="2dp"
                             android:layout_toRightOf="@id/item_comment_favicon2"
-                            android:text="2016.2.26"
+                            android:text=""
                             android:textColor="#939393"
                             android:textSize="10sp" />
 
@@ -369,7 +363,7 @@
                             android:layout_toRightOf="@id/item_comment_favicon2"
                             android:ellipsize="end"
                             android:maxLines="3"
-                            android:text="大王叫我来巡山"
+                            android:text=""
                             android:textColor="#474747"
                             android:textSize="14sp" />
                     </RelativeLayout>

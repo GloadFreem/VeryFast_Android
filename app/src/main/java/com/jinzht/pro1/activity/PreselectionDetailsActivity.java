@@ -1,13 +1,23 @@
 package com.jinzht.pro1.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,22 +29,31 @@ import com.jinzht.pro1.adapter.ProjectTeamsAdapter;
 import com.jinzht.pro1.adapter.RecyclerViewData;
 import com.jinzht.pro1.base.BaseActivity;
 import com.jinzht.pro1.bean.CommonBean;
+import com.jinzht.pro1.bean.CustomerServiceBean;
+import com.jinzht.pro1.bean.ProjectCollectBean;
+import com.jinzht.pro1.bean.ProjectCommentBean;
 import com.jinzht.pro1.bean.ProjectDetailBean;
 import com.jinzht.pro1.bean.ShareBean;
 import com.jinzht.pro1.callback.ItemClickListener;
 import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
+import com.jinzht.pro1.utils.DateUtils;
+import com.jinzht.pro1.utils.DialogUtils;
 import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.ShareUtils;
+import com.jinzht.pro1.utils.StringUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
+import com.jinzht.pro1.utils.UiUtils;
 import com.jinzht.pro1.view.CircleImageView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 预选项目详情
@@ -44,6 +63,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
     private LinearLayout btnBack;// 返回键
     private TextView tvTitle;// 本页面标题，空
     private LinearLayout btnCollect;// 收藏按钮
+    private ImageView ivCollect;// 收藏图标
     private LinearLayout btnShare;// 分享按钮
     private ImageButton btnService;// 客服按钮
     private RelativeLayout btnBottomCollect;// 底部关注按钮
@@ -76,7 +96,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
 
     private boolean isOpen = false;// 项目描述的开关状态
 
-    private List<String> photos = new ArrayList<>();// 项目照片资源
+    private ArrayList<String> photos = new ArrayList<>();// 项目照片资源
     private ProjectPhotosAdapter photosAdapter;// 项目照片的适配器
 
     private List<String> favicons = new ArrayList<>();// 团队成员图片资源
@@ -84,13 +104,20 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
     private List<String> positions = new ArrayList<>();// 团队成员职位集合
     private ProjectTeamsAdapter teamsAdapter;// 团队成员数据适配器
 
-    private List<Integer> reportImgs = new ArrayList<>();// 报表图标
+    private List<String> reportImgs = new ArrayList<>();// 报表图标
     private List<String> reportNames = new ArrayList<>();// 报表名
     private ProjectReportsAdapter reportsAdapter;// 各类报表数据适配器
 
-    private ProjectDetailBean.DataBean data;
+    private ProjectDetailBean.DataBean.ProjectBean data;// 项目数据
+    private List<ProjectDetailBean.DataBean.ExtrBean> reportDatas = new ArrayList<>();// 报表数据
+    private List<ProjectCommentBean.DataBean> commentsData = new ArrayList<>();// 评论列表
+    private int FLAG = 0;// 关注或取消关注的标识
+    private int needRefresh = 0;// 是否需要在项目列表中刷新
     public final static int RESULT_CODE = 0;
-    public boolean needRefresh = false;// 是否进行了交互，返回时是否刷新
+    private final static int REQUEST_CODE = 1;
+
+    private String comment = "";// 输入的评论内容
+    private PopupWindow popupWindow;// 评论输入弹框
 
     @Override
     protected int getResourcesId() {
@@ -103,6 +130,8 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         findView();
         GetDetailTask getDetailTask = new GetDetailTask();
         getDetailTask.execute();
+        GetCommentsTask getCommentsTask = new GetCommentsTask();
+        getCommentsTask.execute();
     }
 
     private void findView() {
@@ -112,6 +141,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         tvTitle.setVisibility(View.GONE);
         btnCollect = (LinearLayout) findViewById(R.id.title_btn_right2);// 收藏按钮
         btnCollect.setOnClickListener(this);
+        ivCollect = (ImageView) findViewById(R.id.title_iv_right2);// 收藏图标
         btnShare = (LinearLayout) findViewById(R.id.title_btn_right);// 分享按钮
         btnShare.setOnClickListener(this);
         btnService = (ImageButton) findViewById(R.id.pre_btn_service);// 客服按钮
@@ -156,16 +186,30 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
                 onBackPressed();
                 break;
             case R.id.title_btn_right2:// 点击关注
-                SuperToastUtils.showSuperToast(this, 2, "关注");
+                if (data.isCollected()) {
+                    CollectTask collectTask = new CollectTask(2);
+                    collectTask.execute();
+                } else {
+                    CollectTask collectTask = new CollectTask(1);
+                    collectTask.execute();
+                }
                 break;
             case R.id.title_btn_right:// 点击分享
-                SuperToastUtils.showSuperToast(this, 2, "分享");
+                ShareTask shareTask = new ShareTask();
+                shareTask.execute();
                 break;
             case R.id.pre_btn_service:// 打电话给客服
-                SuperToastUtils.showSuperToast(this, 2, "客服");
+                CustomerServiceTask customerServiceTask = new CustomerServiceTask();
+                customerServiceTask.execute();
                 break;
             case R.id.pre_btn_collect:// 点击关注
-                SuperToastUtils.showSuperToast(this, 2, "关注");
+                if (data.isCollected()) {
+                    CollectTask collectTask = new CollectTask(2);
+                    collectTask.execute();
+                } else {
+                    CollectTask collectTask = new CollectTask(1);
+                    collectTask.execute();
+                }
                 break;
             case R.id.pre_btn_more:// 点击查看更多描述和照片
                 if (isOpen) {// 打开状态，点击关闭
@@ -177,18 +221,20 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
                 }
                 break;
             case R.id.pre_btn_more_comment:// 点击查看跟多评论.
-                SuperToastUtils.showSuperToast(this, 2, "更多评论");
+                Intent intent = new Intent(this, PreselectionAllCommentsActivity.class);
+                intent.putExtra("id", String.valueOf(data.getProjectId()));
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.pre_btn_comment:// 点击发表评论
-                SuperToastUtils.showSuperToast(this, 2, "发表评论");
+                CommentDialog();
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (needRefresh) {
+        if (needRefresh % 2 != 0 && FLAG != 0) {
             Intent intent = new Intent();
-            intent.putExtra("needRefresh", needRefresh);
+            intent.putExtra("FLAG", FLAG);
             setResult(RESULT_CODE, intent);
         }
         finish();
@@ -226,7 +272,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         if (data.getProjectimageses().size() == 0) {
             return;
         }
-        for (ProjectDetailBean.DataBean.ProjectimagesesBean bean : data.getProjectimageses()) {
+        for (ProjectDetailBean.DataBean.ProjectBean.ProjectimagesesBean bean : data.getProjectimageses()) {
             photos.add(bean.getImageUrl());
         }
         photosAdapter.notifyDataSetChanged();
@@ -234,8 +280,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
 
     // 加载数据
     private void initData() {
-//        preBtnCollect关注按钮
-//        preTvCollect关注文字
+        initCollect();
         Glide.with(mContext).load(data.getStartPageImage()).into(ivImg);
         tvProTitle.setText(data.getAbbrevName());
         tvCompanyName.setText(data.getFullName());
@@ -248,8 +293,21 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         initTeam();
         // 报表处理
         initReport();
-        // 评论列表处理
-        initComment();
+    }
+
+    // 关注处理
+    private void initCollect() {
+        if (data.isCollected()) {
+            ivCollect.setBackgroundResource(R.mipmap.icon_collected);
+            btnBottomCollect.setBackgroundResource(R.mipmap.icon_bg_invest_gray);
+            tvCollect.setCompoundDrawablesWithIntrinsicBounds(UiUtils.getDrawable(R.mipmap.icon_collected), null, null, null);
+            tvCollect.setText("已关注(" + data.getCollectionCount() + ")");
+        } else {
+            ivCollect.setBackgroundResource(R.mipmap.icon_collect);
+            btnBottomCollect.setBackgroundResource(R.mipmap.icon_bg_invest);
+            tvCollect.setCompoundDrawablesWithIntrinsicBounds(UiUtils.getDrawable(R.mipmap.icon_collect), null, null, null);
+            tvCollect.setText("关注(" + data.getCollectionCount() + ")");
+        }
     }
 
     // 项目照片处理
@@ -274,7 +332,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         photosAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张照片");
+                imageBrower(position, photos);
             }
 
             @Override
@@ -289,11 +347,23 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         });
     }
 
+    // 查看大图
+    private void imageBrower(int position, ArrayList<String> urls) {
+        Intent intent = new Intent(mContext, ImagePagerActivity.class);
+        intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, urls);
+        intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
+    }
+
     // 团队成员处理
     private void initTeam() {
         // 准备数据
-        for (ProjectDetailBean.DataBean.MembersBean bean : data.getMembers()) {
-//            favicons.add(bean.get);
+        if (data.getTeams() == null) {
+            return;
+        }
+        for (ProjectDetailBean.DataBean.ProjectBean.TeamsBean bean : data.getTeams()) {
+            favicons.add(bean.getIcon());
             names.add(bean.getName());
             positions.add(bean.getPosition());
         }
@@ -321,9 +391,14 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
 
     // 报表处理
     private void initReport() {
+        if (reportDatas == null) {
+            return;
+        }
         // 准备数据
-        reportImgs = new ArrayList<Integer>(Arrays.asList(R.mipmap.icon_report1, R.mipmap.icon_report2, R.mipmap.icon_report3, R.mipmap.icon_report4));
-        reportNames = new ArrayList<>(Arrays.asList("财务\n状况", "融资\n方案", "退出\n渠道", "商业\n计划书"));
+        for (ProjectDetailBean.DataBean.ExtrBean bean : reportDatas) {
+            reportImgs.add(bean.getIcon());
+            reportNames.add(bean.getContent());
+        }
         reportsAdapter = new ProjectReportsAdapter(mContext, reportImgs, reportNames);
         // 填充数据
         RecyclerViewData.setHorizontal(rvReports, mContext, reportsAdapter);
@@ -348,7 +423,30 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
 
     // 评论列表处理
     private void initComment() {
-
+        tvCommentsQuantity.setText("(" + commentsData.size() + ")");
+        if (commentsData.size() == 0) {
+            rlComment1.setVisibility(View.GONE);
+            ivLineComments.setVisibility(View.GONE);
+            rlComment2.setVisibility(View.GONE);
+        } else if (commentsData.size() == 1) {
+            rlComment1.setVisibility(View.VISIBLE);
+            Glide.with(mContext).load(commentsData.get(0).getUsers().getHeadSculpture()).into(ivCommentFavicon1);
+            tvCommentName1.setText(commentsData.get(0).getUsers().getName());
+            tvCommentTime1.setText(DateUtils.timeLogic(commentsData.get(0).getCommentDate()));
+            tvCommentContent1.setText(commentsData.get(0).getContent());
+            rlComment2.setVisibility(View.GONE);
+        } else if (commentsData.size() >= 2) {
+            rlComment1.setVisibility(View.VISIBLE);
+            Glide.with(mContext).load(commentsData.get(0).getUsers().getHeadSculpture()).into(ivCommentFavicon1);
+            tvCommentName1.setText(commentsData.get(0).getUsers().getName());
+            tvCommentTime1.setText(DateUtils.timeLogic(commentsData.get(0).getCommentDate()));
+            tvCommentContent1.setText(commentsData.get(0).getContent());
+            rlComment2.setVisibility(View.VISIBLE);
+            Glide.with(mContext).load(commentsData.get(1).getUsers().getHeadSculpture()).into(ivCommentFavicon2);
+            tvCommentName2.setText(commentsData.get(1).getUsers().getName());
+            tvCommentTime2.setText(DateUtils.timeLogic(commentsData.get(1).getCommentDate()));
+            tvCommentContent2.setText(commentsData.get(1).getContent());
+        }
     }
 
     // 获取详情
@@ -381,7 +479,8 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (projectDetailBean.getStatus() == 200) {
-                    data = projectDetailBean.getData();
+                    data = projectDetailBean.getData().getProject();
+                    reportDatas = projectDetailBean.getData().getExtr();
                     if (data != null) {
                         initData();
                     }
@@ -392,8 +491,46 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         }
     }
 
+    // 获取评论列表
+    private class GetCommentsTask extends AsyncTask<Void, Void, ProjectCommentBean> {
+        @Override
+        protected ProjectCommentBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETPROJECTCOMMENTS)),
+                            "projectId", getIntent().getStringExtra("id"),
+                            "page", "0",
+                            Constant.BASE_URL + Constant.GETPROJECTCOMMENTS,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("评论列表返回信息", body);
+                return FastJsonTools.getBean(body, ProjectCommentBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ProjectCommentBean projectCommentBean) {
+            super.onPostExecute(projectCommentBean);
+            if (projectCommentBean != null) {
+                if (projectCommentBean.getStatus() == 200) {
+                    commentsData = projectCommentBean.getData();
+                    if (commentsData != null) {
+                        initComment();
+                    }
+                }
+            }
+        }
+    }
+
     // 关注
-    private class CollectTask extends AsyncTask<Void, Void, CommonBean> {
+    private class CollectTask extends AsyncTask<Void, Void, ProjectCollectBean> {
         int flag;
 
         public CollectTask(int flag) {
@@ -401,7 +538,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         }
 
         @Override
-        protected CommonBean doInBackground(Void... params) {
+        protected ProjectCollectBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
@@ -416,6 +553,102 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
                     e.printStackTrace();
                 }
                 Log.i("关注项目返回信息", body);
+                return FastJsonTools.getBean(body, ProjectCollectBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ProjectCollectBean projectCollectBean) {
+            super.onPostExecute(projectCollectBean);
+            if (projectCollectBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (projectCollectBean.getStatus() == 200) {
+                    if (flag == 1) {
+                        data.setCollected(true);
+                        data.setCollectionCount(data.getCollectionCount() + 1);
+                        FLAG = 1;
+                    } else if (flag == 2) {
+                        data.setCollected(false);
+                        data.setCollectionCount(data.getCollectionCount() - 1);
+                        FLAG = 2;
+                    }
+                    needRefresh++;
+                    initCollect();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, projectCollectBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 分享
+    private class ShareTask extends AsyncTask<Void, Void, ShareBean> {
+        @Override
+        protected ShareBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SHAREPROJECT)),
+                            "type", "1",
+                            "projectId", String.valueOf(data.getProjectId()),
+                            Constant.BASE_URL + Constant.SHAREPROJECT,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("分享返回信息", body);
+                return FastJsonTools.getBean(body, ShareBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ShareBean shareBean) {
+            super.onPostExecute(shareBean);
+            if (shareBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (shareBean.getStatus() == 200) {
+                    ShareUtils shareUtils = new ShareUtils(PreselectionDetailsActivity.this);
+                    DialogUtils.shareDialog(PreselectionDetailsActivity.this, btnBottomCollect, shareUtils, data.getAbbrevName(), data.getDescription(), data.getStartPageImage(), shareBean.getData().getUrl());
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 评论
+    private class CommentTask extends AsyncTask<Void, Void, CommonBean> {
+        private String content;
+
+        public CommentTask(String content) {
+            this.content = content;
+        }
+
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.COMMENTPROJECT)),
+                            "projectId", String.valueOf(data.getProjectId()),
+                            "content", content,
+                            Constant.BASE_URL + Constant.COMMENTPROJECT,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("评论返回信息", body);
                 return FastJsonTools.getBean(body, CommonBean.class);
             } else {
                 return null;
@@ -429,15 +662,10 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (commonBean.getStatus() == 200) {
-                    if (flag == 1) {
-//                        data.setCollected(true);
-//                        data.setCollectCount(data.getCollectCount() + 1);
-                    } else if (flag == 2) {
-//                        data.setCollected(false);
-//                        data.setCollectCount(data.getCollectCount() - 1);
-                    }
-//                    initData();
-                    needRefresh = true;
+                    popupWindow.dismiss();
+                    comment = "";
+                    GetCommentsTask getCommentsTask = new GetCommentsTask();
+                    getCommentsTask.execute();
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
                 }
@@ -445,23 +673,101 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         }
     }
 
-    // 分享
-    private class ShareTask extends AsyncTask<Void, Void, ShareBean> {
+    // 弹出评论输入框
+    private void CommentDialog() {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_comment, null);
+        popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        final EditText edComment = (EditText) view.findViewById(R.id.ed_comment);
+        edComment.setText(comment);
+        edComment.setSelection(comment.length());
+        TextView btn = (TextView) view.findViewById(R.id.btn_comment);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!StringUtils.isBlank(edComment.getText().toString())) {
+                    CommentTask commentTask = new CommentTask(edComment.getText().toString());
+                    commentTask.execute();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入评论内容");
+                }
+            }
+        });
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        popupWindow.showAtLocation(btnComment, Gravity.BOTTOM, 0, 0);
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+                           public void run() {
+                               imm.showSoftInput(edComment, 0);
+                           }
+                       },
+                100);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                if (!StringUtils.isBlank(edComment.getText().toString())) {
+                    comment = edComment.getText().toString();
+                } else {
+                    comment = "";
+                }
+                imm.hideSoftInputFromInputMethod(edComment.getWindowToken(), 0);
+            }
+        });
+    }
+
+    // 客服接口
+    private class CustomerServiceTask extends AsyncTask<Void, Void, CustomerServiceBean> {
         @Override
-        protected ShareBean doInBackground(Void... params) {
+        protected CustomerServiceBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
-//                    body = OkHttpUtils.post(
-//                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY,Constant.SHAREPROJECT)),
-//                    );
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.CUSTOMERSERVICE)),
+                            Constant.BASE_URL + Constant.CUSTOMERSERVICE,
+                            mContext
+                    );
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.i("分享项目返回信息", body);
-                return FastJsonTools.getBean(body, ShareBean.class);
+                Log.i("客服信息", body);
+                return FastJsonTools.getBean(body, CustomerServiceBean.class);
             } else {
                 return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CustomerServiceBean customerServiceBean) {
+            super.onPostExecute(customerServiceBean);
+            if (customerServiceBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (customerServiceBean.getStatus() == 200) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    Uri data = Uri.parse("tel:" + customerServiceBean.getData().getTel());
+                    intent.setData(data);
+                    startActivity(intent);
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, customerServiceBean.getMessage());
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && data != null) {
+            if (resultCode == PreselectionAllCommentsActivity.RESULT_CODE) {
+                if (data.getBooleanExtra("needRefresh", false)) {// 在全部评论里进行了交互
+                    GetCommentsTask getCommentsTask = new GetCommentsTask();
+                    getCommentsTask.execute();
+                }
             }
         }
     }

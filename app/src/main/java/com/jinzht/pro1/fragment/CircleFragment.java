@@ -24,6 +24,7 @@ import com.jinzht.pro1.adapter.RecyclerViewData;
 import com.jinzht.pro1.base.BaseFragment;
 import com.jinzht.pro1.bean.CircleListBean;
 import com.jinzht.pro1.bean.CirclePriseBean;
+import com.jinzht.pro1.bean.EventMsg;
 import com.jinzht.pro1.bean.ShareBean;
 import com.jinzht.pro1.callback.ItemClickListener;
 import com.jinzht.pro1.utils.AESUtils;
@@ -44,6 +45,10 @@ import com.jinzht.pro1.view.PullableListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
+
 /**
  * 圈子界面
  */
@@ -59,6 +64,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
 
     private final static int REQUEST_CODE = 1;
     private int POSITION = 0;
+    private boolean isShared = false;// 是否分享
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +82,8 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
         myAdapter = new MyAdapter();
         listview.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null));
+
+        EventBus.getDefault().register(this);
 
         GetCircleListTask getCircleList = new GetCircleListTask(0);
         getCircleList.execute();
@@ -446,10 +454,20 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(getActivity());
                     DialogUtils.shareDialog(getActivity(), refreshView, shareUtils, "金指投圈子", datas.get(POSITION).getContent(), datas.get(POSITION).getUsers().getHeadSculpture(), shareBean.getData().getUrl());
+                    isShared = true;
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
                 }
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void getSharedStatus(EventMsg msg) {
+        if (isShared && "分享成功".equals(msg.getMsg())) {
+            datas.get(POSITION).setShareCount(datas.get(POSITION).getShareCount() + 1);
+            myAdapter.notifyDataSetChanged();
+            isShared = false;
         }
     }
 
@@ -482,5 +500,17 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void blankPage() {
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -188,7 +188,7 @@ public class BrainDetailActivity extends FullBaseActivity implements View.OnClic
                 try {
                     body = OkHttpUtils.post(
                             MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SHAREINVESTOR)),
-                            "type", "6",
+                            "type", "7",
                             "investorId", String.valueOf(data.getUser().getUserId()),
                             Constant.BASE_URL + Constant.SHAREINVESTOR,
                             mContext

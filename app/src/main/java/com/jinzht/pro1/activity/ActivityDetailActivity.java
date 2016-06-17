@@ -1234,7 +1234,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && data != null) {
             if (resultCode == ActivityAllComments.RESULT_CODE) {
-                if (data.getBooleanExtra("needRefresh", false)) {// 在详情中报了名
+                if (data.getBooleanExtra("needRefresh", false)) {// 在全部评论里进行了交互
                     GetAllCommentsTask getAllCommentsTask = new GetAllCommentsTask();
                     getAllCommentsTask.execute();
                 }

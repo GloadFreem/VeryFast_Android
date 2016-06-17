@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jinzht.pro1.bean.EventMsg;
 import com.mob.tools.utils.UIHandler;
 
 import java.util.HashMap;
@@ -15,13 +16,16 @@ import cn.sharesdk.system.text.ShortMessage;
 import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
+import de.greenrobot.event.EventBus;
 
 /**
  * 分享工具类
  */
 public class ShareUtils implements PlatformActionListener, Handler.Callback {
 
-    private static final int MSG_ACTION_CCALLBACK = 1;
+    private static final int COMPLETE = 0;
+    private static final int ERROR = 1;
+    private static final int CANCEL = 2;
 
     private Activity activity;
 
@@ -68,8 +72,9 @@ public class ShareUtils implements PlatformActionListener, Handler.Callback {
     public void msg(String title, String content, String imgurl, String url) {
         ShortMessage.ShareParams msg = new ShortMessage.ShareParams();
         msg.setAddress("");
-        msg.setText("专注中国成长型企业股权投融资" + url);
-        msg.setShareType(Platform.SHARE_TEXT);
+        msg.setText("金指投：专注中国成长型企业股权投融资" + url);
+//        msg.setShareType(Platform.SHARE_TEXT);
+        msg.setShareType(Platform.SHARE_WEBPAGE);
         Platform platform = ShareSDK.getPlatform(activity, ShortMessage.NAME);
         platform.setPlatformActionListener(this);
         platform.share(msg);
@@ -78,9 +83,7 @@ public class ShareUtils implements PlatformActionListener, Handler.Callback {
     @Override
     public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
         Message msg = Message.obtain();
-        msg.what = MSG_ACTION_CCALLBACK;
-        msg.arg1 = 1;
-        msg.arg2 = i;
+        msg.what = COMPLETE;
         msg.obj = platform;
         UIHandler.sendMessage(msg, this);
     }
@@ -90,34 +93,31 @@ public class ShareUtils implements PlatformActionListener, Handler.Callback {
         throwable.printStackTrace();
 
         Message msg = Message.obtain();
-        msg.what = MSG_ACTION_CCALLBACK;
-        msg.arg1 = 2;
-        msg.arg2 = i;
-        msg.obj = throwable;
+        msg.what = ERROR;
+        msg.obj = platform;
         UIHandler.sendMessage(msg, this);
     }
 
     @Override
     public void onCancel(Platform platform, int i) {
         Message msg = Message.obtain();
-        msg.what = MSG_ACTION_CCALLBACK;
-        msg.arg1 = 3;
-        msg.arg2 = i;
+        msg.what = CANCEL;
         msg.obj = platform;
         UIHandler.sendMessage(msg, this);
     }
 
     @Override
     public boolean handleMessage(Message msg) {
-        switch (msg.arg1) {
-            case 1:
-//                SuperToastUtils.showSuperToast(activity, 2, "分享成功");
+        switch (msg.what) {
+            case COMPLETE:
+                SuperToastUtils.showSuperToast(activity, 2, "分享成功");
+                EventBus.getDefault().post(new EventMsg("分享成功"));
                 break;
-            case 2:
+            case ERROR:
                 SuperToastUtils.showSuperToast(activity, 2, "分享失败");
                 break;
-            case 3:
-//                SuperToastUtils.showSuperToast(activity, 3, "取消分享");
+            case CANCEL:
+                SuperToastUtils.showSuperToast(activity, 3, "取消分享");
                 break;
         }
         return false;

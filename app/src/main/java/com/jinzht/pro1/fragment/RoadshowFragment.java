@@ -63,11 +63,10 @@ public class RoadshowFragment extends BaseFragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(mContext, InvestorDetailActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("detail", datas.get(position - 1));
-//                intent.putExtras(bundle);
-//                startActivityForResult(intent, REQUEST_CODE);
+                POSITION = position - 1;
+                Intent intent = new Intent(mContext, RoadshowDetailsActivity.class);
+                intent.putExtra("id", String.valueOf(datas.get(position - 1).getProjectId()));
+                startActivityForResult(intent, REQUEST_CODE);
                 SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position);
             }
         });
@@ -260,10 +259,12 @@ public class RoadshowFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && data != null) {
             if (resultCode == RoadshowDetailsActivity.RESULT_CODE) {
-                if (data.getBooleanExtra("needRefresh", false)) {// 在详情中进行了交互
-                    GetProjectListTask getInvestorListTask = new GetProjectListTask(0);
-                    getInvestorListTask.execute();
+                if (data.getIntExtra("FLAG", 0) == 1) {// 在详情中关注了项目
+                    datas.get(POSITION).setCollectionCount(datas.get(POSITION).getCollectionCount() + 1);
+                } else if (data.getIntExtra("FLAG", 0) == 2) {// 在详情中取消了关注
+                    datas.get(POSITION).setCollectionCount(datas.get(POSITION).getCollectionCount() - 1);
                 }
+                myAdapter.notifyDataSetChanged();
             }
         }
     }

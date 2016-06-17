@@ -26,7 +26,7 @@
             android:layout_weight="576"
             android:background="@drawable/bg_ed_transparent_blackline"
             android:gravity="center_vertical"
-            android:hint="评论本活动"
+            android:hint="请输入内容..."
             android:maxHeight="90dp"
             android:minHeight="30dp"
             android:textColor="@color/bg_text"

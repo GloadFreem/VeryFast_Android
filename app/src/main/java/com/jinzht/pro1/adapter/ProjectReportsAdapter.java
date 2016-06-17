@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.callback.ItemClickListener;
 
@@ -19,14 +20,16 @@ import java.util.List;
 public class ProjectReportsAdapter extends RecyclerView.Adapter<ProjectReportsAdapter.ViewHolder> {
 
     private LayoutInflater inflater;
-    private List<Integer> imageViews;
+    private List<String> imageViews;
     private List<String> names;
     private ItemClickListener mItemClickListener;
+    private Context context;
 
-    public ProjectReportsAdapter(Context context, List<Integer> imageViews, List<String> names) {
+    public ProjectReportsAdapter(Context context, List<String> imageViews, List<String> names) {
         this.inflater = LayoutInflater.from(context);
         this.imageViews = imageViews;
         this.names = names;
+        this.context = context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -59,8 +62,10 @@ public class ProjectReportsAdapter extends RecyclerView.Adapter<ProjectReportsAd
 
     @Override
     public void onBindViewHolder(ProjectReportsAdapter.ViewHolder holder, int position) {
-        holder.reportImg.setBackgroundResource(imageViews.get(position));
-        holder.rportName.setText(names.get(position));
+        Glide.with(context).load(imageViews.get(position)).into(holder.reportImg);
+        StringBuilder sb = new StringBuilder(names.get(position));
+        sb.insert(2, "\n");
+        holder.rportName.setText(sb.toString());
     }
 
     @Override

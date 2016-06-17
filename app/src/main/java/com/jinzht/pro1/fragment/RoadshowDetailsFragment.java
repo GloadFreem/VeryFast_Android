@@ -16,12 +16,12 @@ import com.jinzht.pro1.adapter.ProjectReportsAdapter;
 import com.jinzht.pro1.adapter.ProjectTeamsAdapter;
 import com.jinzht.pro1.adapter.RecyclerViewData;
 import com.jinzht.pro1.base.BaseFragment;
+import com.jinzht.pro1.bean.ProjectCommentBean;
 import com.jinzht.pro1.bean.ProjectDetailBean;
 import com.jinzht.pro1.callback.ItemClickListener;
 import com.jinzht.pro1.utils.SuperToastUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -53,11 +53,13 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
     private List<String> positions = new ArrayList<>();// 团队成员职位集合
     private ProjectTeamsAdapter teamsAdapter;// 团队成员数据适配器
 
-    private List<Integer> reportImgs = new ArrayList<>();// 报表图标
+    private List<String> reportImgs = new ArrayList<>();// 报表图标
     private List<String> reportNames = new ArrayList<>();// 报表名
     private ProjectReportsAdapter reportsAdapter;// 各类报表数据适配器
 
-    private ProjectDetailBean.DataBean data;
+    private ProjectDetailBean.DataBean.ProjectBean data;// 项目数据
+    private List<ProjectDetailBean.DataBean.ExtrBean> reportDatas = new ArrayList<>();// 报表数据
+    private List<ProjectCommentBean.DataBean> commentsData = new ArrayList<>();// 评论列表
     public final static int RESULT_CODE = 0;
     public boolean needRefresh = false;// 是否进行了交互，返回时是否刷新
 
@@ -142,7 +144,7 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         if (data.getProjectimageses().size() == 0) {
             return;
         }
-        for (ProjectDetailBean.DataBean.ProjectimagesesBean bean : data.getProjectimageses()) {
+        for (ProjectDetailBean.DataBean.ProjectBean.ProjectimagesesBean bean : data.getProjectimageses()) {
             photos.add(bean.getImageUrl());
         }
         photosAdapter.notifyDataSetChanged();
@@ -188,8 +190,11 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
     // 团队成员处理
     private void initTeam() {
         // 准备数据
-        for (ProjectDetailBean.DataBean.MembersBean bean : data.getMembers()) {
-//            favicons.add(bean.get);
+        if (data.getTeams() == null) {
+            return;
+        }
+        for (ProjectDetailBean.DataBean.ProjectBean.TeamsBean bean : data.getTeams()) {
+            favicons.add(bean.getIcon());
             names.add(bean.getName());
             positions.add(bean.getPosition());
         }
@@ -217,9 +222,14 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
 
     // 报表处理
     private void initReport() {
+        if (reportDatas == null) {
+            return;
+        }
         // 准备数据
-        reportImgs = new ArrayList<Integer>(Arrays.asList(R.mipmap.icon_report1, R.mipmap.icon_report2, R.mipmap.icon_report3, R.mipmap.icon_report4));
-        reportNames = new ArrayList<>(Arrays.asList("财务\n状况", "融资\n方案", "退出\n渠道", "商业\n计划书"));
+        for (ProjectDetailBean.DataBean.ExtrBean bean : reportDatas) {
+            reportImgs.add(bean.getIcon());
+            reportNames.add(bean.getContent());
+        }
         reportsAdapter = new ProjectReportsAdapter(mContext, reportImgs, reportNames);
         // 填充数据
         RecyclerViewData.setHorizontal(projectRvReports, mContext, reportsAdapter);

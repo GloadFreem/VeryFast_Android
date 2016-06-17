@@ -50,6 +50,7 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -161,6 +162,12 @@
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="556d1f4b67e58ef0d7002f56" />
+        <meta-data
+            android:name="TENCTENT"
+            android:value="1104722649" />
+        <meta-data
+            android:name="BAIDU"
+            android:value="6661225" />
 
         <!-- shareSDK -->
         <activity
@@ -170,7 +177,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
-                <data android:scheme="tencent100371282" />
+                <data android:scheme="tencent1104722649" />
 
                 <action android:name="android.intent.action.VIEW" />
 
@@ -233,7 +240,8 @@
         <activity android:name=".activity.ImagePagerActivity" />
         <activity android:name=".activity.ActivityAllApplys" />
         <activity android:name=".activity.ActivityAllComments" />
-        <activity android:name=".activity.InvestorgDetailActivity"></activity>
+        <activity android:name=".activity.InvestorgDetailActivity" />
+        <activity android:name=".activity.PreselectionAllCommentsActivity"></activity>
     </application>
 
 </manifest>

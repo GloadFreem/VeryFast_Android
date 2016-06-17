@@ -23,7 +23,6 @@ import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
 import com.jinzht.pro1.view.NoScrollViewPager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -40,8 +39,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private ImageButton mainBtnMe;// 个人中心按钮
     private RadioButton mainBtnCircle;// 圈子按钮
     private RadioButton mainBtnActivity;// 活动按钮
-
-    private List<BannerInfoBean.DataBean> data = new ArrayList<>();
 
     @Override
     protected int getResourcesId() {
@@ -155,7 +152,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (bannerInfoBean.getStatus() == 200) {
-                    data = bannerInfoBean.getData();
+                    List<BannerInfoBean.DataBean> data = bannerInfoBean.getData();
                     EventBus.getDefault().postSticky(data);
                     initData();
                 } else {

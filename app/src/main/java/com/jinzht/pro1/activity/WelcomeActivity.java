@@ -10,13 +10,16 @@ import android.util.Log;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.FullBaseActivity;
 import com.jinzht.pro1.bean.CommonBean;
+import com.jinzht.pro1.bean.LoginBean;
 import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
 import com.jinzht.pro1.utils.FastJsonTools;
 import com.jinzht.pro1.utils.MD5Utils;
 import com.jinzht.pro1.utils.NetWorkUtils;
 import com.jinzht.pro1.utils.OkHttpUtils;
+import com.jinzht.pro1.utils.SharedPreferencesUtils;
 import com.jinzht.pro1.utils.StringUtils;
+import com.jinzht.pro1.utils.SuperToastUtils;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
@@ -94,10 +97,53 @@ public class WelcomeActivity extends FullBaseActivity {
                 startActivity(intent);
                 finish();
             } else {
-                // 未登录，进入登录页
-                intent = new Intent(mContext, LoginActivity.class);
-                startActivity(intent);
-                finish();
+                // 自动登录
+                AutoLoginTask autoLoginTask = new AutoLoginTask();
+                autoLoginTask.execute();
+            }
+        }
+    }
+
+    // 自动登录
+    private class AutoLoginTask extends AsyncTask<Void, Void, LoginBean> {
+        @Override
+        protected LoginBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.loginPost(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.LOGIN)),
+                            "telephone", SharedPreferencesUtils.getTelephone(mContext),
+                            "password", SharedPreferencesUtils.getPassword(mContext),
+                            Constant.BASE_URL + Constant.LOGIN,
+                            mContext);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("登录返回信息", body);
+                return FastJsonTools.getBean(body, LoginBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(LoginBean loginBean) {
+            super.onPostExecute(loginBean);
+            if (loginBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (loginBean.getStatus() == 200) {
+                    intent = new Intent(mContext, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    // 自动登录未成功，进入登录页
+                    intent = new Intent(mContext, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         }
     }

@@ -61,6 +61,7 @@ public class PreselectionFragment extends BaseFragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                POSITION = position - 1;
                 Intent intent = new Intent(mContext, PreselectionDetailsActivity.class);
                 intent.putExtra("id", String.valueOf(datas.get(position - 1).getProjectId()));
                 startActivityForResult(intent, REQUEST_CODE);
@@ -232,10 +233,12 @@ public class PreselectionFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && data != null) {
             if (resultCode == PreselectionDetailsActivity.RESULT_CODE) {
-                if (data.getBooleanExtra("needRefresh", false)) {// 在详情中进行了交互
-                    GetProjectListTask getInvestorListTask = new GetProjectListTask(0);
-                    getInvestorListTask.execute();
+                if (data.getIntExtra("FLAG", 0) == 1) {// 在详情中关注了项目
+                    datas.get(POSITION).setCollectionCount(datas.get(POSITION).getCollectionCount() + 1);
+                } else if (data.getIntExtra("FLAG", 0) == 2) {// 在详情中取消了关注
+                    datas.get(POSITION).setCollectionCount(datas.get(POSITION).getCollectionCount() - 1);
                 }
+                myAdapter.notifyDataSetChanged();
             }
         }
     }
