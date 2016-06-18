@@ -142,8 +142,8 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
         tvPopularity.setText(String.valueOf(proData.getCollectionCount()));
         tvRemainingTime.setText(String.valueOf(proData.getTimeLeft()));
         tvFinancingAmount.setText(proData.getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
-        proTotal = (int) ((double) (proData.getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (proData.getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
 
+        proTotal = (int) ((double) (proData.getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (proData.getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
         progressThread = new ProThread();
         progressThread.start();
     }

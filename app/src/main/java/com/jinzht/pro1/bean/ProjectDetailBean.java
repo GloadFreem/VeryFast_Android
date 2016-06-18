@@ -103,6 +103,25 @@ public class ProjectDetailBean {
             private List<RoadshowsBean> roadshows;
             private List<ProjectimagesesBean> projectimageses;
 
+            @Override
+            public String toString() {
+                return "ProjectBean{" +
+                        "projectId=" + projectId +
+                        ", userId=" + userId +
+                        ", abbrevName='" + abbrevName + '\'' +
+                        ", fullName='" + fullName + '\'' +
+                        ", description='" + description + '\'' +
+                        ", projectType=" + projectType +
+                        ", address='" + address + '\'' +
+                        ", startPageImage='" + startPageImage + '\'' +
+                        ", collectionCount=" + collectionCount +
+                        ", commentCount=" + commentCount +
+                        ", timeLeft=" + timeLeft +
+                        ", industoryType='" + industoryType + '\'' +
+                        ", collected=" + collected +
+                        '}';
+            }
+
             public int getProjectId() {
                 return projectId;
             }

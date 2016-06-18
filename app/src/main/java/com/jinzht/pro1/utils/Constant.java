@@ -214,4 +214,8 @@ public class Constant {
      * 获取项目评论列表
      */
     public static final String GETPROJECTCOMMENTS = "requestProjectCommentList.action";
+    /**
+     * 获取路演音频
+     */
+    public static final String GETROADSHOWVOICE = "requestScene.action";
 }

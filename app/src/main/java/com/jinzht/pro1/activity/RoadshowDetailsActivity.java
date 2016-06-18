@@ -3,9 +3,13 @@ package com.jinzht.pro1.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,12 +20,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.jinzht.pro1.R;
-import com.jinzht.pro1.adapter.RoadshowFragmentAdaper;
 import com.jinzht.pro1.base.BaseFragmentActivity;
 import com.jinzht.pro1.bean.CustomerServiceBean;
 import com.jinzht.pro1.bean.ProjectCollectBean;
 import com.jinzht.pro1.bean.ProjectDetailBean;
 import com.jinzht.pro1.bean.ShareBean;
+import com.jinzht.pro1.fragment.RoadshowDetailsFragment;
+import com.jinzht.pro1.fragment.RoadshowLiveFragment;
+import com.jinzht.pro1.fragment.RoadshowMemberFragment;
 import com.jinzht.pro1.utils.AESUtils;
 import com.jinzht.pro1.utils.Constant;
 import com.jinzht.pro1.utils.DialogUtils;
@@ -33,10 +39,11 @@ import com.jinzht.pro1.utils.ShareUtils;
 import com.jinzht.pro1.utils.SuperToastUtils;
 import com.jinzht.pro1.utils.UiHelp;
 import com.jinzht.pro1.utils.UiUtils;
-import com.jinzht.pro1.view.WrapContentHeightViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * 路演项目详情
@@ -56,9 +63,10 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
     private LinearLayout llInvest;// 客服和投资按钮布局
     private ImageButton btnService;// 客服按钮
     private RelativeLayout btnInvest;// 认投按钮
-    private WrapContentHeightViewPager vpModule;// 详情页的ViewPager
+    private FrameLayout flModule;// 加载Fragment的布局
     private ScrollView sv;// ScrollView
 
+    private ArrayList<Fragment> fragments = new ArrayList<>();
     private ProjectDetailBean.DataBean.ProjectBean data;// 项目数据
     private List<ProjectDetailBean.DataBean.ExtrBean> reportDatas = new ArrayList<>();// 报表数据
 
@@ -76,33 +84,12 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
     protected void init() {
         UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
         findView();
+        fragments.add(new RoadshowDetailsFragment());
+        fragments.add(new RoadshowMemberFragment());
+        fragments.add(new RoadshowLiveFragment(getIntent().getStringExtra("id")));
         // 设置tab的单选事件
         rgTab.setOnCheckedChangeListener(this);
-        // 给详情ViewPager填充数据
-        vpModule.setAdapter(new RoadshowFragmentAdaper(getSupportFragmentManager()));
-        vpModule.setCurrentItem(0);
-        // 设置tab和ViewPager联动
-        vpModule.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                switch (position) {
-                    case 0:
-                        rgTab.check(R.id.details_rbtn_detail);
-                        llInvest.setVisibility(View.VISIBLE);
-                        break;
-                    case 1:
-                        rgTab.check(R.id.details_rbtn_member);
-                        llInvest.setVisibility(View.GONE);
-                        break;
-                    case 2:
-                        rgTab.check(R.id.details_rbtn_live);
-                        llInvest.setVisibility(View.GONE);
-                        break;
-                }
-            }
-        });
-
+        setSelect(fragments.get(0));
         GetDetailTask getDetailTask = new GetDetailTask();
         getDetailTask.execute();
     }
@@ -127,7 +114,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         btnService.setOnClickListener(this);
         btnInvest = (RelativeLayout) findViewById(R.id.details_btn_invest);// 认投按钮
         btnInvest.setOnClickListener(this);
-        vpModule = (WrapContentHeightViewPager) findViewById(R.id.details_vp_module);// 详情页的ViewPager
+        flModule = (FrameLayout) findViewById(R.id.fl_module);// 加载Fragment的布局
         sv = (ScrollView) findViewById(R.id.details_sl);
     }
 
@@ -175,27 +162,35 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.details_rbtn_detail:// 选择了详情
-                vpModule.setCurrentItem(0);
+                setSelect(fragments.get(0));
                 rbtnDetail.setTextColor(UiUtils.getColor(R.color.custom_orange));
                 rbtnMember.setTextColor(UiUtils.getColor(R.color.bg_text));
                 rbtnLive.setTextColor(UiUtils.getColor(R.color.bg_text));
                 llInvest.setVisibility(View.VISIBLE);
                 break;
             case R.id.details_rbtn_member:// 选择了成员
-                vpModule.setCurrentItem(1);
+                setSelect(fragments.get(1));
                 rbtnDetail.setTextColor(UiUtils.getColor(R.color.bg_text));
                 rbtnMember.setTextColor(UiUtils.getColor(R.color.custom_orange));
                 rbtnLive.setTextColor(UiUtils.getColor(R.color.bg_text));
                 llInvest.setVisibility(View.GONE);
                 break;
             case R.id.details_rbtn_live:// 选择了现场
-                vpModule.setCurrentItem(2);
+                setSelect(fragments.get(2));
                 rbtnDetail.setTextColor(UiUtils.getColor(R.color.bg_text));
                 rbtnMember.setTextColor(UiUtils.getColor(R.color.bg_text));
                 rbtnLive.setTextColor(UiUtils.getColor(R.color.custom_orange));
                 llInvest.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    // 选择Fragment
+    private void setSelect(Fragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.fl_module, fragment);
+        transaction.commit();
     }
 
     // 关注处理
@@ -223,7 +218,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.i("预选项目详情", body);
+                Log.i("路演项目详情", body);
                 return FastJsonTools.getBean(body, ProjectDetailBean.class);
             } else {
                 return null;
@@ -237,6 +232,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (projectDetailBean.getStatus() == 200) {
+                    EventBus.getDefault().postSticky(projectDetailBean.getData());
                     data = projectDetailBean.getData().getProject();
                     reportDatas = projectDetailBean.getData().getExtr();
                     if (data != null) {

@@ -311,7 +311,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     progress += 1;
                     Message msg = new Message();
                     msg.obj = progress;
-                    Thread.sleep(50);
+                    Thread.sleep(30);
                     mHandler.sendMessage(msg);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

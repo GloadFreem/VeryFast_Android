@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="226dp"
+    android:layout_height="260dp"
     android:background="@color/bg_main">
 
     <LinearLayout
@@ -14,8 +14,9 @@
 
         <LinearLayout
             android:id="@+id/roadshow_btn_play"
-            android:layout_width="60dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="60"
             android:gravity="center">
 
             <ImageView
@@ -27,8 +28,9 @@
 
         <SeekBar
             android:id="@+id/roadshow_sb_voice"
-            android:layout_width="222dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="222"
             android:maxHeight="38.5dp"
             android:minHeight="38.5dp"
             android:paddingLeft="10dp"
@@ -38,8 +40,9 @@
 
         <TextView
             android:id="@+id/roadshow_tv_voice_time"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="78"
             android:gravity="center"
             android:text="01:25:34"
             android:textColor="#474747"

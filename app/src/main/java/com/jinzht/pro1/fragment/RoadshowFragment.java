@@ -67,7 +67,6 @@ public class RoadshowFragment extends BaseFragment {
                 Intent intent = new Intent(mContext, RoadshowDetailsActivity.class);
                 intent.putExtra("id", String.valueOf(datas.get(position - 1).getProjectId()));
                 startActivityForResult(intent, REQUEST_CODE);
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position);
             }
         });
 

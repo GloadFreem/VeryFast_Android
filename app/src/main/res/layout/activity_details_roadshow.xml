@@ -107,11 +107,10 @@
                         android:text="现场" />
                 </RadioGroup>
 
-                <com.jinzht.pro1.view.WrapContentHeightViewPager
-                    android:id="@+id/details_vp_module"
+                <FrameLayout
+                    android:id="@+id/fl_module"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/bg_main" />
+                    android:layout_height="match_parent" />
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

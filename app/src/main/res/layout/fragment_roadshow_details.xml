@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -33,7 +34,7 @@
                     android:layout_marginLeft="13dp"
                     android:drawableLeft="@mipmap/icon_details_title"
                     android:drawablePadding="6dp"
-                    android:text="逸景营地"
+                    android:text=""
                     android:textColor="@color/bg_text"
                     android:textSize="18sp" />
 
@@ -56,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/iconfont_rong"
                     android:drawablePadding="3.5dp"
-                    android:text="融资额度"
+                    android:text="融资总额"
                     android:textColor="#747474"
                     android:textSize="14sp" />
 
@@ -65,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12.5dp"
-                    android:text="1000万"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -91,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12.5dp"
-                    android:text="800万"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -117,7 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12.5dp"
-                    android:text="2016.2.26—2.16.3.2"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -143,7 +144,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12.5dp"
-                    android:text="陕西 | 西安"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -164,7 +165,6 @@
                     android:ellipsize="end"
                     android:lineSpacingExtra="3dp"
                     android:maxLines="3"
-                    android:text="据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元据Wind资讯数据，截止3月1日，沪深两市融资融券余额报8504.84亿元"
                     android:textColor="#747474"
                     android:textSize="14sp" />
 
@@ -174,6 +174,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/white" />
             </LinearLayout>
+
             <RelativeLayout
                 android:id="@+id/roadshow_btn_more"
                 android:layout_width="match_parent"
@@ -192,18 +193,29 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/roadshow_tag"
+        <ImageView
+            android:id="@+id/iv_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
             android:layout_marginTop="3.5dp"
-            android:background="@mipmap/tag_detail_project"
-            android:gravity="center"
-            android:text="路\n演\n中"
-            android:textColor="@android:color/white"
-            android:textSize="17sp" />
+            android:background="@mipmap/tag_detail_rongzizhong" />
+
+        <com.jinzht.pro1.view.RoundProgressBar
+            android:id="@+id/roadshow_progress"
+            android:layout_width="67dp"
+            android:layout_height="67dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="81dp"
+            android:layout_marginTop="62dp"
+            app:numColor="@color/custom_orange"
+            app:numSize="25sp"
+            app:roundColor="#d2d2d2"
+            app:roundProgressColor="@color/custom_orange"
+            app:roundWidth="5dp"
+            app:textColor="#747474"
+            app:textSize="12sp" />
 
         <include
             android:id="@+id/roadshow_module2"
@@ -213,10 +225,4 @@
             android:layout_below="@id/roadshow_module1"
             android:layout_marginTop="9dp" />
     </RelativeLayout>
-
-    <View
-        android:id="@+id/empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:background="@android:color/white" />
 </LinearLayout>

@@ -10,8 +10,7 @@
         android:layout_height="72.5dp"
         android:layout_marginBottom="12dp"
         android:layout_marginLeft="13dp"
-        android:layout_marginTop="10dp"
-        android:src="@mipmap/text_img" />
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:id="@+id/item_investorg_fund_title"
@@ -20,7 +19,7 @@
         android:layout_marginLeft="11dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/item_investorg_fund_img"
-        android:text="聚英天使企业家领投基金"
+        android:text=""
         android:textColor="@color/bg_text"
         android:textSize="18sp" />
 
@@ -36,7 +35,6 @@
         android:ellipsize="end"
         android:lineSpacingExtra="5dp"
         android:maxLines="2"
-        android:text="聚英天使企业家领投基金在投资方向上，倾向于消费类趋势项目，轻资产形式的房间，倾向于消费类趋势项目，轻资产形式的房间"
         android:textColor="#747474"
         android:textSize="12sp" />
 </RelativeLayout>
