@@ -211,6 +211,7 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
     // 项目照片处理
     private void initPhotos() {
         // 准备数据
+        photos.clear();
         if (data.getProjectimageses().size() == 0) {
             return;
         } else if (data.getProjectimageses().size() == 1) {
@@ -257,6 +258,9 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
     // 团队成员处理
     private void initTeam() {
         // 准备数据
+        favicons.clear();
+        names.clear();
+        positions.clear();
         if (data.getTeams() == null) {
             return;
         }
@@ -289,10 +293,12 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
 
     // 报表处理
     private void initReport() {
+        // 准备数据
+        reportImgs.clear();
+        reportNames.clear();
         if (reportDatas == null) {
             return;
         }
-        // 准备数据
         for (ProjectDetailBean.DataBean.ExtrBean bean : reportDatas) {
             reportImgs.add(bean.getIcon());
             reportNames.add(bean.getContent());

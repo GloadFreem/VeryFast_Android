@@ -218,4 +218,8 @@ public class Constant {
      * 获取路演音频
      */
     public static final String GETROADSHOWVOICE = "requestScene.action";
+    /**
+     * 获取PPT数据
+     */
+    public static final String GETPPTDATA = "requestRecorData.action";
 }

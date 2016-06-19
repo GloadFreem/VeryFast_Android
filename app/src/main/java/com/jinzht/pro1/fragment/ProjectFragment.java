@@ -55,7 +55,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     private RelativeLayout rlProgress;// banner上的圆形进度条框架
     private BannerRoundProgressBar bannerProgress;// banner上的圆形进度条
 
-    private List<ImageView> imageViews;// banner的图片View
+    private List<ImageView> imageViews = new ArrayList<>();// banner的图片View
     private int prePointIndex = 0;// 记录当前指示点的位置
     private ScheduledExecutorService scheduledExecutorService;// 定时任务
     private BannerRun bannerRun;// banner自动轮播任务
@@ -133,7 +133,6 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     // 处理banner
     private void bannerPrepare() {
         // 准备图片
-        imageViews = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
             ImageView imageView = new ImageView(mContext);
             // 设置图片缩放类型
@@ -276,7 +275,6 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     SuperToastUtils.showSuperToast(mContext, 2, "点击了第" + newPosition + "张图片");
                 }
             });
-
             return imageView;
         }
 

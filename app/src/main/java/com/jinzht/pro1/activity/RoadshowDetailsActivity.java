@@ -1,14 +1,19 @@
 package com.jinzht.pro1.activity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,11 +24,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jinzht.pro1.R;
 import com.jinzht.pro1.base.BaseFragmentActivity;
 import com.jinzht.pro1.bean.CustomerServiceBean;
+import com.jinzht.pro1.bean.PPTBean;
 import com.jinzht.pro1.bean.ProjectCollectBean;
 import com.jinzht.pro1.bean.ProjectDetailBean;
+import com.jinzht.pro1.bean.RoadshowVoiceBean;
 import com.jinzht.pro1.bean.ShareBean;
 import com.jinzht.pro1.fragment.RoadshowDetailsFragment;
 import com.jinzht.pro1.fragment.RoadshowLiveFragment;
@@ -55,7 +63,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
     private LinearLayout btnCollect;// 收藏
     private ImageView ivCollect;// title右侧第二个按钮图标
     private LinearLayout btnShare;// title最右侧按钮，分享
-    private ViewPager vpPPt;// 播放PPT区域
+    private static ViewPager vpPPt;// 播放PPT区域
     private RadioGroup rgTab;// 详情、成员、现场总合tab
     private RadioButton rbtnDetail;// 详情按钮
     private RadioButton rbtnMember;// 成员按钮
@@ -66,14 +74,29 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
     private FrameLayout flModule;// 加载Fragment的布局
     private ScrollView sv;// ScrollView
 
-    private ArrayList<Fragment> fragments = new ArrayList<>();
-    private ProjectDetailBean.DataBean.ProjectBean data;// 项目数据
-    private List<ProjectDetailBean.DataBean.ExtrBean> reportDatas = new ArrayList<>();// 报表数据
-
     private int FLAG = 0;// 关注或取消关注的标识
     private int needRefresh = 0;// 是否需要在项目列表中刷新
     public final static int RESULT_CODE = 0;
     private final static int REQUEST_CODE = 1;
+
+    private ArrayList<Fragment> fragments = new ArrayList<>();
+    private ProjectDetailBean.DataBean.ProjectBean data;// 项目详情数据
+
+    private int pages = 0;// PPT数据页码
+    private List<PPTBean.DataBean> pptData = new ArrayList<>();// PPT数据
+    private List<ImageView> imageViews = new ArrayList<>();// PPT的图片View
+    private static List<Integer> pptTimes = new ArrayList<>();
+    private PPTAdapter pptAdapter;
+
+    private RoadshowVoiceBean.DataBean voiceData;// 现场音频数据
+    public static MediaPlayer player = new MediaPlayer();// 音频播放器
+    private static String url;// 音频播放地址
+    public static int postSize = 0;// 保存已播音频时间
+    public static boolean isPlaying = false;// 是否正在播放的标识
+    private static UpdateSeekBarR updateSeekBarR = new UpdateSeekBarR();// 更新进度条用的线程
+    private static String progress = "";// 播放时间进度
+    private final static int VIDEO_FILE_ERROR = 1;// 网络错误
+    private final static int VIDEO_UPDATE_SEEKBAR = 2;// 更新播放进度条
 
     @Override
     protected int getResourcesId() {
@@ -86,12 +109,35 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         findView();
         fragments.add(new RoadshowDetailsFragment());
         fragments.add(new RoadshowMemberFragment());
-        fragments.add(new RoadshowLiveFragment(getIntent().getStringExtra("id")));
+        fragments.add(new RoadshowLiveFragment());
+
+        pptAdapter = new PPTAdapter();
+
         // 设置tab的单选事件
         rgTab.setOnCheckedChangeListener(this);
         setSelect(fragments.get(0));
         GetDetailTask getDetailTask = new GetDetailTask();
         getDetailTask.execute();
+        GetVoidTask getVoidTask = new GetVoidTask();
+        getVoidTask.execute();
+
+        if (voiceData != null) {
+            long i = voiceData.getTotlalTime() / 1000;
+            long hour = i / (60 * 60);
+            long minute = i / 60 % 60;
+            long second = i % 60;
+            progress = String.format("%02d:%02d:%02d", hour, minute, second);
+            RoadshowLiveFragment.tvVoiceTime.setText(progress);
+        }
+
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() { //音频播放完成
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                isPlaying = false;
+                RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
+                postSize = 0;
+            }
+        });
     }
 
     private void findView() {
@@ -202,7 +248,49 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         }
     }
 
-    // 获取详情
+    // 处理PPT
+    private void initPPT() {
+        for (PPTBean.DataBean bean : pptData) {
+            ImageView imageView = new ImageView(mContext);
+            // 设置图片缩放类型
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            Glide.with(mContext).load(bean.getImageUrl()).into(imageView);
+            imageViews.add(imageView);
+
+            pptTimes.add(bean.getPlayTime());
+        }
+        vpPPt.setAdapter(pptAdapter);
+        vpPPt.setOffscreenPageLimit(5);
+        vpPPt.setCurrentItem(0);
+    }
+
+    // PPT的填充器
+    private class PPTAdapter extends PagerAdapter {
+
+        @Override
+        public int getCount() {
+            return imageViews.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            ImageView imageView = imageViews.get(position);
+            container.addView(imageView);
+            return imageView;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+    }
+
+    // 获取项目详情
     private class GetDetailTask extends AsyncTask<Void, Void, ProjectDetailBean> {
         @Override
         protected ProjectDetailBean doInBackground(Void... params) {
@@ -234,12 +322,99 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 if (projectDetailBean.getStatus() == 200) {
                     EventBus.getDefault().postSticky(projectDetailBean.getData());
                     data = projectDetailBean.getData().getProject();
-                    reportDatas = projectDetailBean.getData().getExtr();
                     if (data != null) {
                         initCollect();
                     }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, projectDetailBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 获取音频链接
+    private class GetVoidTask extends AsyncTask<Void, Void, RoadshowVoiceBean> {
+        @Override
+        protected RoadshowVoiceBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETROADSHOWVOICE)),
+                            "projectId", getIntent().getStringExtra("id"),
+                            Constant.BASE_URL + Constant.GETROADSHOWVOICE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("获取的路演音频", body);
+                return FastJsonTools.getBean(body, RoadshowVoiceBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(RoadshowVoiceBean roadshowVoiceBean) {
+            super.onPostExecute(roadshowVoiceBean);
+            if (roadshowVoiceBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (roadshowVoiceBean.getStatus() == 200) {
+                    if (roadshowVoiceBean.getData() != null && roadshowVoiceBean.getData().size() != 0) {
+                        EventBus.getDefault().postSticky(roadshowVoiceBean.getData().get(0));
+                        voiceData = roadshowVoiceBean.getData().get(0);
+                        url = roadshowVoiceBean.getData().get(0).getAudioPath();
+                        GetPPTTask getPPTTask = new GetPPTTask(roadshowVoiceBean.getData().get(0).getSceneId(), pages);
+                        getPPTTask.execute();
+                    }
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, roadshowVoiceBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 获取PPT数据
+    private class GetPPTTask extends AsyncTask<Void, Void, PPTBean> {
+        private int sceneId;
+        private int page;
+
+        public GetPPTTask(int sceneId, int page) {
+            this.sceneId = sceneId;
+            this.page = page;
+        }
+
+        @Override
+        protected PPTBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETPPTDATA)),
+                            "sceneId", String.valueOf(sceneId),
+                            "page", String.valueOf(page),
+                            Constant.BASE_URL + Constant.GETPPTDATA,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("PPT数据", body);
+                return FastJsonTools.getBean(body, PPTBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(PPTBean pptBean) {
+            super.onPostExecute(pptBean);
+            if (pptBean != null && pptBean.getStatus() == 200) {
+                pptData = pptBean.getData();
+                if (pptData.size() != 0) {
+                    initPPT();
                 }
             }
         }
@@ -390,5 +565,140 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
     @Override
     public void blankPage() {
 
+    }
+
+    //播放视频的方法
+    public static void playMediaMethod() {
+        if (postSize > 0 && url != null) {//说明，停止过 activity调用过pause方法，跳到停止位置播放
+            int sMax = RoadshowLiveFragment.sbVoice.getMax();
+            int mMax = player.getDuration();
+            RoadshowLiveFragment.sbVoice.setProgress(postSize * sMax / mMax);
+            new PlayThread(postSize).start();//从postSize位置开始放
+        } else {
+            new PlayThread(0).start();//表明是第一次开始播放
+        }
+    }
+
+    //播放音频的线程
+    public static class PlayThread extends Thread {
+        int post = 0;
+
+        public PlayThread(int post) {
+            this.post = post;
+        }
+
+        @Override
+        public void run() {
+            try {
+                player.reset();    //恢复播放器默认
+                player.setDataSource(url);   //设置播放路径
+                player.prepare();  //准备播放
+                player.setOnPreparedListener(new VoicePreparedL(post));  //设置监听事件
+            } catch (Exception e) {
+                e.printStackTrace();
+                mHandler.sendEmptyMessage(VIDEO_FILE_ERROR);
+            }
+            super.run();
+        }
+    }
+
+    //播放准备事件监听器
+    public static class VoicePreparedL implements MediaPlayer.OnPreparedListener {
+        int postSize;
+
+        public VoicePreparedL(int postSize) {
+            this.postSize = postSize;
+        }
+
+        @Override
+        public void onPrepared(MediaPlayer mp) {//准备完成
+            if (player != null) {
+                if (postSize > 0) {  //说明中途停止过（activity调用过pause方法，不是用户点击停止按钮），跳到停止时候位置开始播放
+                    player.seekTo(postSize);   //跳到postSize大小位置处进行播放
+                }
+                player.start();  //开始播放
+            } else {
+                return;
+            }
+            new Thread(updateSeekBarR).start();   //启动线程，更新进度条
+        }
+    }
+
+    //每隔1秒更新一下进度条线程
+    private static class UpdateSeekBarR implements Runnable {
+        @Override
+        public void run() {
+            mHandler.sendEmptyMessage(VIDEO_UPDATE_SEEKBAR);
+            if (isPlaying) {
+                mHandler.postDelayed(updateSeekBarR, 1000);
+            }
+        }
+    }
+
+    public static Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case VIDEO_FILE_ERROR:// 错误信息
+                    SuperToastUtils.showSuperToast(UiUtils.getContext(), 2, "网络连接异常");
+                    isPlaying = false;
+                    RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
+                    break;
+                case VIDEO_UPDATE_SEEKBAR:// 更新播放进度条
+                    if (isPlaying) {
+                        int position = player.getCurrentPosition();
+                        int mMax = player.getDuration();
+                        int sMax = RoadshowLiveFragment.sbVoice.getMax();
+                        RoadshowLiveFragment.sbVoice.setProgress(position * sMax / mMax);
+
+                        int i = position / 1000;
+                        int hour = i / (60 * 60);
+                        int minute = i / 60 % 60;
+                        int second = i % 60;
+                        progress = String.format("%02d:%02d:%02d", hour, minute, second);
+
+                        if (position == pptTimes.get(0)) {
+                            vpPPt.setCurrentItem(vpPPt.getCurrentItem() + 1);
+                            pptTimes.remove(0);
+                        }
+                    }
+                    RoadshowLiveFragment.tvVoiceTime.setText(progress);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    @Override
+    public void onPause() {
+        if (player != null && isPlaying) {
+            isPlaying = false;
+            player.pause();
+            postSize = player.getCurrentPosition();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        if (player != null && isPlaying) {
+            isPlaying = false;
+            player.pause();
+            postSize = player.getCurrentPosition();
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (player != null) {
+            if (isPlaying) {
+                isPlaying = false;
+                player.stop();
+            }
+            player.release();
+            player = null;
+        }
+        super.onDestroy();
     }
 }
