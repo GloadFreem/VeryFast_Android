@@ -259,7 +259,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="67dp">
 
-                    <com.jinzht.pro1.view.CircleImageView
+                    <com.jinzht.pro.view.CircleImageView
                         android:id="@+id/activity_iv_favicon1"
                         android:layout_width="49dp"
                         android:layout_height="49dp"
@@ -311,7 +311,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="67dp">
 
-                    <com.jinzht.pro1.view.CircleImageView
+                    <com.jinzht.pro.view.CircleImageView
                         android:id="@+id/activity_iv_favicon2"
                         android:layout_width="49dp"
                         android:layout_height="49dp"
@@ -363,7 +363,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="67dp">
 
-                    <com.jinzht.pro1.view.CircleImageView
+                    <com.jinzht.pro.view.CircleImageView
                         android:id="@+id/activity_iv_favicon3"
                         android:layout_width="49dp"
                         android:layout_height="49dp"
@@ -415,7 +415,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="67dp">
 
-                    <com.jinzht.pro1.view.CircleImageView
+                    <com.jinzht.pro.view.CircleImageView
                         android:id="@+id/activity_iv_favicon4"
                         android:layout_width="49dp"
                         android:layout_height="49dp"
@@ -467,7 +467,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="67dp">
 
-                    <com.jinzht.pro1.view.CircleImageView
+                    <com.jinzht.pro.view.CircleImageView
                         android:id="@+id/activity_iv_favicon5"
                         android:layout_width="49dp"
                         android:layout_height="49dp"

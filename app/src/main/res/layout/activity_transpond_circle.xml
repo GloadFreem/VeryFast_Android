@@ -80,7 +80,7 @@
         android:layout_marginTop="9dp"
         android:background="@android:color/white">
 
-        <com.jinzht.pro1.view.CircleImageView
+        <com.jinzht.pro.view.CircleImageView
             android:id="@+id/iv_favicon"
             android:layout_width="40dp"
             android:layout_height="40dp"

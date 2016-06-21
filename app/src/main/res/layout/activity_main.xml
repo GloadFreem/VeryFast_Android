@@ -19,7 +19,7 @@
             android:background="@mipmap/bg_bottomtab_padding"
             android:visibility="invisible" />
 
-        <com.jinzht.pro1.view.NoScrollViewPager
+        <com.jinzht.pro.view.NoScrollViewPager
             android:id="@+id/main_viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

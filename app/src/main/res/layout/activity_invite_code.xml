@@ -18,7 +18,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <com.jinzht.pro1.view.CircleImageView
+        <com.jinzht.pro.view.CircleImageView
             android:id="@+id/iv_favicon"
             android:layout_width="68dp"
             android:layout_height="68dp"

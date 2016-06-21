@@ -53,7 +53,7 @@
         android:textColor="@android:color/white"
         android:textSize="18sp" />
 
-    <com.jinzht.pro1.view.CircleImageView
+    <com.jinzht.pro.view.CircleImageView
         android:id="@+id/improve_info_iv_userimage"
         android:layout_width="99dp"
         android:layout_height="99dp"

@@ -20,13 +20,12 @@
         android:orientation="vertical"
         android:paddingBottom="40dp">
 
-        <com.jinzht.pro1.view.CircleImageView
+        <com.jinzht.pro.view.CircleImageView
             android:id="@+id/iv_favicon"
             android:layout_width="78dp"
             android:layout_height="78dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:src="@mipmap/favicon_test"
             app:civ_border_color="#E0E0E0"
             app:civ_border_width="2dp" />
 
@@ -35,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="张  三"
+            android:text=""
             android:textColor="@color/bg_text"
             android:textSize="18sp" />
 
@@ -44,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="逸景营地投资有限公司总经理"
+            android:text=""
             android:textColor="@color/bg_text"
             android:textSize="15sp" />
 
@@ -53,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="移动互联网    北京"
+            android:text=""
             android:textColor="@color/bg_text"
             android:textSize="13sp" />
 
@@ -61,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:gravity="center_vertical"
+            android:gravity="top"
             android:orientation="horizontal">
 
             <TextView
@@ -72,7 +71,7 @@
                 android:drawablePadding="12dp"
                 android:drawableTop="@mipmap/iconfont_email_blue"
                 android:gravity="center"
-                android:text="za12@163.com"
+                android:text=""
                 android:textColor="#747474"
                 android:textSize="20sp" />
 
@@ -84,7 +83,7 @@
                 android:drawablePadding="12dp"
                 android:drawableTop="@mipmap/iconfont_tel_orange"
                 android:gravity="center"
-                android:text="188 3678 9682"
+                android:text=""
                 android:textColor="#747474"
                 android:textSize="20sp" />
         </LinearLayout>

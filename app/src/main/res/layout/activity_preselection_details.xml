@@ -84,7 +84,7 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
-                    <com.jinzht.pro1.view.CircleImageView
+                    <com.jinzht.pro.view.CircleImageView
                         android:id="@+id/pre_iv_img"
                         android:layout_width="83dp"
                         android:layout_height="83dp"
@@ -266,7 +266,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp">
 
-                        <com.jinzht.pro1.view.CircleImageView
+                        <com.jinzht.pro.view.CircleImageView
                             android:id="@+id/item_comment_favicon1"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
@@ -323,7 +323,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp">
 
-                        <com.jinzht.pro1.view.CircleImageView
+                        <com.jinzht.pro.view.CircleImageView
                             android:id="@+id/item_comment_favicon2"
                             android:layout_width="32dp"
                             android:layout_height="32dp"

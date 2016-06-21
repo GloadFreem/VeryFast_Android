@@ -88,7 +88,7 @@
                 android:layout_centerInParent="true"
                 android:src="@mipmap/icon_bg_progress" />
 
-            <com.jinzht.pro1.view.BannerRoundProgressBar
+            <com.jinzht.pro.view.BannerRoundProgressBar
                 android:id="@+id/project_banner_progress"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

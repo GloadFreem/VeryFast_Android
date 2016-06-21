@@ -5,7 +5,7 @@
     android:background="@android:color/white"
     android:minHeight="165dp">
 
-    <com.jinzht.pro1.view.CircleImageView
+    <com.jinzht.pro.view.CircleImageView
         android:id="@+id/item_project_img"
         android:layout_width="60dp"
         android:layout_height="60dp"

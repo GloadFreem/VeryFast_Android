@@ -1,4 +1,4 @@
-package com.jinzht.pro1;
+package com.jinzht.pro;
 
 import org.junit.Test;
 

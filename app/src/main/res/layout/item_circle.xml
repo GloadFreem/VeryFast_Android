@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.jinzht.pro1.view.CircleImageView
+        <com.jinzht.pro.view.CircleImageView
             android:id="@+id/iv_favicon"
             android:layout_width="39dp"
             android:layout_height="39dp"

@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp">
 
-            <com.jinzht.pro1.view.CircleImageView
+            <com.jinzht.pro.view.CircleImageView
                 android:id="@+id/personal_center_iv_favicon"
                 android:layout_width="77.5dp"
                 android:layout_height="77.5dp"

@@ -16,7 +16,7 @@
         android:drawableLeft="@drawable/selector_message_check_btn"
         android:visibility="gone" />
 
-    <com.jinzht.pro1.view.CircleImageView
+    <com.jinzht.pro.view.CircleImageView
         android:id="@+id/item_message_img"
         android:layout_width="39dp"
         android:layout_height="39dp"

@@ -116,7 +116,7 @@
             android:orientation="horizontal"
             android:visibility="visible">
 
-            <com.jinzht.pro1.view.CircleImageView
+            <com.jinzht.pro.view.CircleImageView
                 android:id="@+id/item_bill_img"
                 android:layout_width="29dp"
                 android:layout_height="29dp"

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white">
 
-    <com.jinzht.pro1.view.CircleImageView
+    <com.jinzht.pro.view.CircleImageView
         android:id="@+id/item_project_img"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -224,7 +224,7 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <com.jinzht.pro1.view.RoundProgressBar
+            <com.jinzht.pro.view.RoundProgressBar
                 android:id="@+id/item_project_progress"
                 android:layout_width="52dp"
                 android:layout_height="52dp"

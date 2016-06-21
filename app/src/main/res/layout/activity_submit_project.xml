@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/white">
 
-                <com.jinzht.pro1.view.CircleImageView
+                <com.jinzht.pro.view.CircleImageView
                     android:id="@+id/submit_iv_favicon"
                     android:layout_width="58dp"
                     android:layout_height="58dp"
@@ -145,7 +145,7 @@
                     android:layout_marginTop="39dp"
                     android:background="@android:color/white">
 
-                    <com.jinzht.pro1.view.CircleImageView
+                    <com.jinzht.pro.view.CircleImageView
                         android:id="@+id/submit_iv_pro_img"
                         android:layout_width="58dp"
                         android:layout_height="58dp"
@@ -313,7 +313,7 @@
                                     android:textSize="16sp" />
                             </LinearLayout>
 
-                            <com.jinzht.pro1.view.RoundProgressBar
+                            <com.jinzht.pro.view.RoundProgressBar
                                 android:id="@+id/submit_financing_progress"
                                 android:layout_width="52dp"
                                 android:layout_height="52dp"

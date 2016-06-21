@@ -50,7 +50,7 @@
                     android:layout_centerVertical="true"
                     android:background="@mipmap/iconfont_right_arrow" />
 
-                <com.jinzht.pro1.view.CircleImageView
+                <com.jinzht.pro.view.CircleImageView
                     android:id="@+id/myinfo_iv_favicon"
                     android:layout_width="67.5dp"
                     android:layout_height="67.5dp"

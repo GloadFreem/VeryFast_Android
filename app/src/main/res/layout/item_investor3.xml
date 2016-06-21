@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white">
 
-    <com.jinzht.pro1.view.CircleImageView
+    <com.jinzht.pro.view.CircleImageView
         android:id="@+id/item_brain_favicon"
         android:layout_width="58dp"
         android:layout_height="58dp"

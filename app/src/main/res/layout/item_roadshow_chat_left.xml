@@ -11,7 +11,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.jinzht.pro1.view.CircleImageView
+        <com.jinzht.pro.view.CircleImageView
             android:id="@+id/item_chat_favicon"
             android:layout_width="32dp"
             android:layout_height="32dp"
