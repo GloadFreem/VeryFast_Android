@@ -373,6 +373,7 @@ public class Investor2Fragment extends BaseFragment {
         if (requestCode == REQUEST_CODE && data != null) {
             if (resultCode == InvestorgDetailActivity.RESULT_CODE) {
                 if (data.getBooleanExtra("needRefresh", false)) {// 在详情中进行了交互
+                    pages = 0;
                     GetInvestorListTask getInvestorListTask = new GetInvestorListTask(0);
                     getInvestorListTask.execute();
                 }

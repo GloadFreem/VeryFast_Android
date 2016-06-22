@@ -50,4 +50,5 @@ dependencies {
     compile 'com.github.chrisbanes:PhotoView:1.2.6'
     compile 'cn.finalteam:galleryfinal:1.4.8.7'
     compile files('libs/jpush-android-2.1.5.jar')
+    compile files('libs/xstream-1.4.9.jar')
 }

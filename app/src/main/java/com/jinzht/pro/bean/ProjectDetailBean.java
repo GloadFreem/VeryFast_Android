@@ -87,6 +87,7 @@ public class ProjectDetailBean {
              */
             private int projectId;
             private int userId;
+            private String borrowerUserNumber;
             private FinancestatusBean financestatus;// 项目状态：预选项目、待路演、融资中、融资成功、融资失败
             private String abbrevName;
             private String fullName;
@@ -108,6 +109,7 @@ public class ProjectDetailBean {
                 return "ProjectBean{" +
                         "projectId=" + projectId +
                         ", userId=" + userId +
+                        ", borrowerUserNumber='" + borrowerUserNumber + '\'' +
                         ", abbrevName='" + abbrevName + '\'' +
                         ", fullName='" + fullName + '\'' +
                         ", description='" + description + '\'' +
@@ -136,6 +138,14 @@ public class ProjectDetailBean {
 
             public void setUserId(int userId) {
                 this.userId = userId;
+            }
+
+            public String getBorrowerUserNumber() {
+                return borrowerUserNumber;
+            }
+
+            public void setBorrowerUserNumber(String borrowerUserNumber) {
+                this.borrowerUserNumber = borrowerUserNumber;
             }
 
             public FinancestatusBean getFinancestatus() {
@@ -389,12 +399,16 @@ public class ProjectDetailBean {
                      * endDate : 2016-06-10 00:00:00
                      * financeTotal : 200
                      * financedMount : 100
+                     * limitAmount : 5
+                     * profit : 0.02
                      */
                     private int financingId;
                     private String beginDate;
                     private String endDate;
                     private int financeTotal;
                     private int financedMount;
+                    private double limitAmount;
+                    private double profit;
 
                     public int getFinancingId() {
                         return financingId;
@@ -434,6 +448,22 @@ public class ProjectDetailBean {
 
                     public void setFinancedMount(int financedMount) {
                         this.financedMount = financedMount;
+                    }
+
+                    public double getLimitAmount() {
+                        return limitAmount;
+                    }
+
+                    public void setLimitAmount(double limitAmount) {
+                        this.limitAmount = limitAmount;
+                    }
+
+                    public double getProfit() {
+                        return profit;
+                    }
+
+                    public void setProfit(double profit) {
+                        this.profit = profit;
                     }
                 }
             }

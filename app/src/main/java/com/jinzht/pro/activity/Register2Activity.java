@@ -129,6 +129,7 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                     SharedPreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
+                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(registerBean.getData().getUserId()));
 //                    SharedPreferencesUtils.setIsLogin(mContext, true);
                     SharedPreferencesUtils.setChoseUserType(mContext, false);
                     SharedPreferencesUtils.setAuth(mContext, false);

@@ -194,8 +194,13 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 customerServiceTask.execute();
                 break;
             case R.id.details_btn_invest:// 认投
-                SuperToastUtils.showSuperToast(mContext, 2, "认投");
                 Intent intent = new Intent(mContext, InvestActivity.class);
+                intent.putExtra("projectId", String.valueOf(data.getProjectId()));
+                intent.putExtra("limitAmount", data.getRoadshows().get(0).getRoadshowplan().getLimitAmount());
+                intent.putExtra("profit", data.getRoadshows().get(0).getRoadshowplan().getProfit());
+                intent.putExtra("borrower_user_no", data.getBorrowerUserNumber());
+                intent.putExtra("abbrevName", data.getAbbrevName());
+                intent.putExtra("fullName",data.getFullName());
                 startActivity(intent);
                 break;
         }
@@ -749,22 +754,28 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
 
     @Override
     public void onPause() {
-        if (player != null && isPlaying) {
-            isPlaying = false;
-            vpPPt.setScrollable(true);
-            player.pause();
-            postSize = player.getCurrentPosition();
+        if (!RoadshowLiveFragment.flag) {
+            if (player != null && isPlaying) {
+                isPlaying = false;
+                RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
+                vpPPt.setScrollable(true);
+                player.pause();
+                postSize = player.getCurrentPosition();
+            }
         }
         super.onPause();
     }
 
     @Override
     protected void onStop() {
-        if (player != null && isPlaying) {
-            isPlaying = false;
-            vpPPt.setScrollable(true);
-            player.pause();
-            postSize = player.getCurrentPosition();
+        if (!RoadshowLiveFragment.flag) {
+            if (player != null && isPlaying) {
+                isPlaying = false;
+                RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
+                vpPPt.setScrollable(true);
+                player.pause();
+                postSize = player.getCurrentPosition();
+            }
         }
         super.onStop();
     }
@@ -774,6 +785,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         if (player != null) {
             if (isPlaying) {
                 isPlaying = false;
+                RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
                 vpPPt.setScrollable(true);
                 player.stop();
             }

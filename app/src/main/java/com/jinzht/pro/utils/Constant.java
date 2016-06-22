@@ -7,7 +7,7 @@ public class Constant {
 
 //    public static final String BASE_URL = "http://www.jinzht.com/jinzht/";
 
-    public static final String BASE_URL = "http://192.168.5.129:8080/jinzht/";
+    public static final String BASE_URL = "http://192.168.5.139:8080/jinzht/";
 
 //    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
@@ -234,4 +234,52 @@ public class Constant {
      * 交流评论
      */
     public static final String SCENECOMMENT = "requestSceneComment.action";
+
+
+    /**
+     * ==============================以下为易宝支付接口=======================================
+     */
+
+    /**
+     * 平台编号platformNo
+     */
+    public static final String PLATFORMNO = "10013200657";
+    /**
+     * 签名接口
+     */
+    public static final String SIGN = "signVerify.action";
+    /**
+     * 易宝网关接口
+     */
+    public static final String YEEPAY_GATEWAY = "http://220.181.25.233:8081/member/bhawireless/";
+//    public static final String YEEPAY_GATEWAY = "https://member.yeepay.com/member/bhawireless/";
+    /**
+     * 易宝直连接口
+     */
+    public static final String YEEPAY_DIRECT = "http://220.181.25.233:8081/member/bhaexter/bhaController";
+//    public static final String YEEPAY_DIRECT = "https://member.yeepay.com/member/bhaexter/bhaController";
+    /**
+     * 易宝回跳页面
+     */
+    public static final String YEEPAY_CALLBACK = "requestFinanceCallBackUrl.action";
+    /**
+     * 易宝回调通知
+     */
+    public static final String YEEPAY_NOTIFY = "requestFinanceNotifyUrl.action";
+    /**
+     * 易宝账户查询
+     */
+    public static final String YEEPAY_ACCOUNTINFO = "ACCOUNT_INFO";
+    /**
+     * 易宝账户注册
+     */
+    public static final String YEEPAY_REGISTER = "toRegister";
+    /**
+     * 易宝账户充值
+     */
+    public static final String YEEPAY_RECHARGE = "toRecharge";
+    /**
+     * 易宝投标
+     */
+    public static final String YEEPAY_TENDE = "toCpTransaction";
 }

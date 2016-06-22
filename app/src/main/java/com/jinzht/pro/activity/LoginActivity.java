@@ -237,6 +237,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 return;
             } else {
                 if (loginBean.getStatus() == 200) {
+                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
                     intent = new Intent(mContext, MainActivity.class);
                     startActivity(intent);
                     finish();

@@ -294,6 +294,7 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (commonBean.getStatus() == 200) {
+                    needRefresh = true;
                     popupWindow.dismiss();
                     comment = "";
                     GetCommentsTask getCommentsTask = new GetCommentsTask(0);

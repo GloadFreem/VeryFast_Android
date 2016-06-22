@@ -553,4 +553,25 @@ public class OkHttpUtils {
         }
         return body;
     }
+
+    // 易宝的post请求
+    public static String yeepayPost(String key1, String value1, String key2, String value2, String key3, String value3, String url) throws IOException {
+        String body = "";
+        RequestBody formBody = new FormEncodingBuilder()
+                .add(key1, value1)
+                .add(key2, value2)
+                .add(key3, value3)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            body = response.body().string();
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        return body;
+    }
 }

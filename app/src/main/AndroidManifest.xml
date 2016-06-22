@@ -37,7 +37,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
-        android:name="com.jinzht.pro.application.MyApplication"
+        android:name=".application.MyApplication"
         android:configChanges="orientation|keyboardHidden"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -46,7 +46,7 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.jinzht.pro.activity.WelcomeActivity"
+            android:name=".activity.WelcomeActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -129,7 +129,7 @@
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
         <!-- User defined.  For test only  用户自定义的广播接收器 -->
         <receiver
-            android:name="com.jinzht.pro.receiver.MyReceiver"
+            android:name=".receiver.MyReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION" />
@@ -184,61 +184,65 @@
         </activity>
         <!-- 微信分享回调 -->
         <activity
-            android:name="com.jinzht.pro.wxapi.WXEntryActivity"
+            android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name="com.jinzht.pro.activity.LoginActivity" />
-        <activity android:name="com.jinzht.pro.activity.FindPasswordActivity" />
-        <activity android:name="com.jinzht.pro.activity.SetPasswordActivity" />
-        <activity android:name="com.jinzht.pro.activity.Register1Activity" />
-        <activity android:name="com.jinzht.pro.activity.Register2Activity" />
-        <activity android:name="com.jinzht.pro.activity.SetUserTypeActivity" />
-        <activity android:name="com.jinzht.pro.activity.CompleteRegisterActivity" />
-        <activity android:name="com.jinzht.pro.activity.CertificationIDCardActivity" />
-        <activity android:name="com.jinzht.pro.activity.CertificationCompActivity" />
-        <activity android:name="com.jinzht.pro.activity.CertificationDescActivity" />
-        <activity android:name="com.jinzht.pro.activity.CertificationCapacityActivity" />
-        <activity android:name="com.jinzht.pro.activity.SelectInvestFieldActivity" />
-        <activity android:name="com.jinzht.pro.activity.WechatVerifyActivity" />
-        <activity android:name="com.jinzht.pro.activity.WechatSetPwdActivity" />
-        <activity android:name="com.jinzht.pro.activity.SelectProvinceActivity" />
-        <activity android:name="com.jinzht.pro.activity.SelectCityActivity" />
-        <activity android:name="com.jinzht.pro.activity.MainActivity" />
-        <activity android:name="com.jinzht.pro.activity.UploadActivity" />
-        <activity android:name="com.jinzht.pro.activity.RoadshowDetailsActivity" />
-        <activity android:name="com.jinzht.pro.activity.PreselectionDetailsActivity" />
-        <activity android:name="com.jinzht.pro.activity.InvestActivity" />
-        <activity android:name="com.jinzht.pro.activity.InvestorDetailActivity" />
-        <activity android:name="com.jinzht.pro.activity.BrainDetailActivity" />
-        <activity android:name="com.jinzht.pro.activity.SubmitProjectActivity" />
-        <activity android:name="com.jinzht.pro.activity.ActivityDetailActivity" />
-        <activity android:name="com.jinzht.pro.activity.MessageActivity" />
-        <activity android:name="com.jinzht.pro.activity.PersonalCenterActivity" />
-        <activity android:name="com.jinzht.pro.activity.AccountActivity" />
-        <activity android:name="com.jinzht.pro.activity.BillActivity" />
-        <activity android:name="com.jinzht.pro.activity.MyGoldActivity" />
-        <activity android:name="com.jinzht.pro.activity.GoldInOutActivity" />
-        <activity android:name="com.jinzht.pro.activity.ProCenterActivity" />
-        <activity android:name="com.jinzht.pro.activity.MyCollectActivity" />
-        <activity android:name="com.jinzht.pro.activity.AboutUsActivity" />
-        <activity android:name="com.jinzht.pro.activity.SettingActivity" />
-        <activity android:name="com.jinzht.pro.activity.ChangeTelActivity" />
-        <activity android:name="com.jinzht.pro.activity.ChangePwdActivity" />
-        <activity android:name="com.jinzht.pro.activity.MyInfoActivity" />
-        <activity android:name="com.jinzht.pro.activity.InviteCodeActivity" />
-        <activity android:name="com.jinzht.pro.activity.UserTypeActivity" />
-        <activity android:name="com.jinzht.pro.activity.ChangeCompActivity" />
-        <activity android:name="com.jinzht.pro.activity.MyActivitysActivity" />
-        <activity android:name="com.jinzht.pro.activity.ReleaseCircleActivity" />
-        <activity android:name="com.jinzht.pro.activity.TranspondCircleActivity" />
-        <activity android:name="com.jinzht.pro.activity.CircleDetailActivity" />
-        <activity android:name="com.jinzht.pro.activity.ImagePagerActivity" />
-        <activity android:name="com.jinzht.pro.activity.ActivityAllApplys" />
-        <activity android:name="com.jinzht.pro.activity.ActivityAllComments" />
-        <activity android:name="com.jinzht.pro.activity.InvestorgDetailActivity" />
-        <activity android:name="com.jinzht.pro.activity.PreselectionAllCommentsActivity"></activity>
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.FindPasswordActivity" />
+        <activity android:name=".activity.SetPasswordActivity" />
+        <activity android:name=".activity.Register1Activity" />
+        <activity android:name=".activity.Register2Activity" />
+        <activity android:name=".activity.SetUserTypeActivity" />
+        <activity android:name=".activity.CompleteRegisterActivity" />
+        <activity android:name=".activity.CertificationIDCardActivity" />
+        <activity android:name=".activity.CertificationCompActivity" />
+        <activity android:name=".activity.CertificationDescActivity" />
+        <activity android:name=".activity.CertificationCapacityActivity" />
+        <activity android:name=".activity.SelectInvestFieldActivity" />
+        <activity android:name=".activity.WechatVerifyActivity" />
+        <activity android:name=".activity.WechatSetPwdActivity" />
+        <activity android:name=".activity.SelectProvinceActivity" />
+        <activity android:name=".activity.SelectCityActivity" />
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.UploadActivity" />
+        <activity android:name=".activity.RoadshowDetailsActivity" />
+        <activity android:name=".activity.PreselectionDetailsActivity" />
+        <activity android:name=".activity.InvestActivity" />
+        <activity android:name=".activity.InvestorDetailActivity" />
+        <activity android:name=".activity.BrainDetailActivity" />
+        <activity android:name=".activity.SubmitProjectActivity" />
+        <activity android:name=".activity.ActivityDetailActivity" />
+        <activity android:name=".activity.MessageActivity" />
+        <activity android:name=".activity.PersonalCenterActivity" />
+        <activity android:name=".activity.AccountActivity" />
+        <activity android:name=".activity.BillActivity" />
+        <activity android:name=".activity.MyGoldActivity" />
+        <activity android:name=".activity.GoldInOutActivity" />
+        <activity android:name=".activity.ProCenterActivity" />
+        <activity android:name=".activity.MyCollectActivity" />
+        <activity android:name=".activity.AboutUsActivity" />
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.ChangeTelActivity" />
+        <activity android:name=".activity.ChangePwdActivity" />
+        <activity android:name=".activity.MyInfoActivity" />
+        <activity android:name=".activity.InviteCodeActivity" />
+        <activity android:name=".activity.UserTypeActivity" />
+        <activity android:name=".activity.ChangeCompActivity" />
+        <activity android:name=".activity.MyActivitysActivity" />
+        <activity android:name=".activity.ReleaseCircleActivity" />
+        <activity android:name=".activity.TranspondCircleActivity" />
+        <activity android:name=".activity.CircleDetailActivity" />
+        <activity android:name=".activity.ImagePagerActivity" />
+        <activity android:name=".activity.ActivityAllApplys" />
+        <activity android:name=".activity.ActivityAllComments" />
+        <activity android:name=".activity.InvestorgDetailActivity" />
+        <activity android:name=".activity.PreselectionAllCommentsActivity" />
+        <activity android:name=".activity.RoadshowChatActivity" />
+        <activity android:name=".activity.YeepayRegisterActivity" />
+        <activity android:name=".activity.YeepayRechargeActivity" />
+        <activity android:name=".activity.YeepayTenderActivity"></activity>
     </application>
 
 </manifest>

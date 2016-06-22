@@ -1,9 +1,8 @@
-package com.jinzht.pro.fragment;
+package com.jinzht.pro.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,17 +10,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
-import com.jinzht.pro.activity.RoadshowChatActivity;
-import com.jinzht.pro.activity.RoadshowDetailsActivity;
-import com.jinzht.pro.base.BaseFragment;
+import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.CommentsListBean;
 import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.utils.AESUtils;
@@ -33,6 +27,7 @@ import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
+import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.view.CircleImageView;
 import com.jinzht.pro.view.PullToRefreshLayout;
 import com.jinzht.pro.view.PullableListView;
@@ -42,19 +37,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 路演项目详情页中的现场
+ * 路演项目中全屏交流
  */
-public class RoadshowLiveFragment extends BaseFragment implements View.OnClickListener {
+public class RoadshowChatActivity extends BaseActivity implements View.OnClickListener {
 
-    private LinearLayout btnPlay;// 播放暂停按钮
-    public static ImageView ivPlay;// 播放暂停按钮图标
-    public static SeekBar sbVoice;// 播放进度条
-    public static TextView tvVoiceTime;// 播放时间
-    private EditText edChat;// 发送消息输入框
-    private TextView btnChatSend;// 发送按钮
+    private LinearLayout btnBack;// 返回
+    private TextView tvTitle;// 标题
+    private EditText edChat;// 输入框
+    private TextView btnSend;// 发送按钮
     private PullToRefreshLayout refreshView;// 刷新布局
     private PullableListView listview;// 聊天列表
-    private ImageButton btnFullscreen;// 全屏聊天按钮
 
     private int pages = 0;
     private List<CommentsListBean.DataBean> datas = new ArrayList<>();// 聊天内容数据
@@ -62,60 +54,33 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
 
     private InputMethodManager imm;// 控制键盘
 
-    private final static int REQUEST_CODE = 1;
-    public static boolean flag = false;// 是否跳转到全部列表，true跳转了，false没跳转
+    public final static int RESULT_CODE = 0;
+    public boolean needRefresh = false;// 是否进行了交互，返回时是否刷新
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_roadshow_live, container, false);
-        btnPlay = (LinearLayout) view.findViewById(R.id.roadshow_btn_play);// 播放暂停按钮
-        btnPlay.setOnClickListener(this);
-        ivPlay = (ImageView) view.findViewById(R.id.roadshow_iv_play);// 播放暂停按钮图标
-        if (RoadshowDetailsActivity.isPlaying) {
-            ivPlay.setBackgroundResource(R.mipmap.icon_pause);
-        } else {
-            ivPlay.setBackgroundResource(R.mipmap.icon_play);
-        }
-        sbVoice = (SeekBar) view.findViewById(R.id.roadshow_sb_voice);// 播放进度条
-        tvVoiceTime = (TextView) view.findViewById(R.id.roadshow_tv_voice_time);// 播放时间
-        edChat = (EditText) view.findViewById(R.id.roadshow_ed_chat);// 发送消息输入框
-        btnChatSend = (TextView) view.findViewById(R.id.roadshow_btn_chat_send);// 发送按钮
-        btnChatSend.setOnClickListener(this);
-        refreshView = (PullToRefreshLayout) view.findViewById(R.id.refresh_view);// 刷新布局
-        listview = (PullableListView) view.findViewById(R.id.roadshow_lv_chat);// 聊天界面列表
-        btnFullscreen = (ImageButton) view.findViewById(R.id.btn_fullscreen);// 全屏聊天
-        btnFullscreen.setOnClickListener(this);
-        return view;
+    protected int getResourcesId() {
+        return R.layout.activity_roadshow_chat;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected void init() {
+        UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
+        btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
+        btnBack.setOnClickListener(this);
+        tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
+        tvTitle.setText("互动交流");
+        edChat = (EditText) findViewById(R.id.ed_chat);// 输入框
+        btnSend = (TextView) findViewById(R.id.btn_send);// 发送按钮
+        btnSend.setOnClickListener(this);
+        refreshView = (PullToRefreshLayout) findViewById(R.id.refresh_view);// 刷新布局
+        listview = (PullableListView) findViewById(R.id.listview);// 聊天列表
 
         refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
-
-        sbVoice.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                if (RoadshowDetailsActivity.isPlaying) {
-                    int value = seekBar.getProgress() * RoadshowDetailsActivity.player.getDuration() / seekBar.getMax();  //计算进度条需要前进的位置数据大小
-                    RoadshowDetailsActivity.player.seekTo(value);
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            }
-        });
 
         msgAdapter = new ChatMsgAdapter();
         listview.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null), null, false);
 
-        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         GetCommentsListTask getCommentsListTask = new GetCommentsListTask(0);
         getCommentsListTask.execute();
@@ -124,21 +89,10 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.roadshow_btn_play:
-                if (RoadshowDetailsActivity.isPlaying) {// 正在播放，点击暂停
-                    RoadshowDetailsActivity.isPlaying = false;
-                    RoadshowDetailsActivity.vpPPt.setScrollable(true);
-                    ivPlay.setBackgroundResource(R.mipmap.icon_play);
-                    RoadshowDetailsActivity.player.pause();
-                    RoadshowDetailsActivity.postSize = RoadshowDetailsActivity.player.getCurrentPosition();
-                } else {// 暂停，点击播放
-                    RoadshowDetailsActivity.isPlaying = true;
-                    RoadshowDetailsActivity.vpPPt.setScrollable(false);
-                    ivPlay.setBackgroundResource(R.mipmap.icon_pause);
-                    RoadshowDetailsActivity.playMediaMethod();
-                }
+            case R.id.btn_back:// 返回
+                onBackPressed();
                 break;
-            case R.id.roadshow_btn_chat_send:// 发送消息
+            case R.id.btn_send:// 发送
                 if (!StringUtils.isBlank(edChat.getText().toString())) {
                     CommentTask commentTask = new CommentTask(edChat.getText().toString());
                     commentTask.execute();
@@ -146,12 +100,17 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入聊天内容");
                 }
                 break;
-            case R.id.btn_fullscreen:// 全屏聊天
-                Intent intent = new Intent(mContext, RoadshowChatActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
-                flag = true;
-                break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (needRefresh) {
+            Intent intent = new Intent();
+            intent.putExtra("needRefresh", needRefresh);
+            setResult(RESULT_CODE, intent);
+        }
+        finish();
     }
 
     private class ChatMsgAdapter extends BaseAdapter {
@@ -246,7 +205,7 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.i("交流列表", body);
+                Log.i("交流列表" + page, body);
                 return FastJsonTools.getBean(body, CommentsListBean.class);
             } else {
                 return null;
@@ -349,6 +308,7 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
                 return;
             } else {
                 if (commonBean.getStatus() == 200) {
+                    needRefresh = true;
                     edChat.setText("");
                     if (imm != null) {
                         imm.hideSoftInputFromWindow(edChat.getWindowToken(), 0);
@@ -364,21 +324,6 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        flag = false;
-        if (requestCode == REQUEST_CODE && data != null) {
-            if (resultCode == RoadshowChatActivity.RESULT_CODE) {
-                if (data.getBooleanExtra("needRefresh", false)) {// 在全部评论里进行了交互
-                    pages = 0;
-                    GetCommentsListTask getCommentsListTask = new GetCommentsListTask(0);
-                    getCommentsListTask.execute();
-                }
-            }
-        }
-    }
-
-    @Override
     public void errorPage() {
 
     }
@@ -387,4 +332,5 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
     public void blankPage() {
 
     }
+
 }

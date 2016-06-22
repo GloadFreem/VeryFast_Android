@@ -139,6 +139,7 @@ public class WelcomeActivity extends FullBaseActivity {
                 return;
             } else {
                 if (loginBean.getStatus() == 200) {
+                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
                     intent = new Intent(mContext, MainActivity.class);
                     startActivity(intent);
                     finish();

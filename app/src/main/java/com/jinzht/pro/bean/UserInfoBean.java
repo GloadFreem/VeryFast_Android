@@ -40,13 +40,33 @@ public class UserInfoBean {
         this.data = data;
     }
 
-    public static class DataBean implements Serializable{
+    public static class DataBean implements Serializable {
         /**
+         * userId : 1
+         * telephone : 13636369898
          * headSculpture : http://img4q.duitang.com/uploads/item/201311/09/20131109003922_JLyhT.jpeg
          * authentics : [{"authId":110,"identiytype":{"identiyTypeId":3,"name":"机构投资人"},"authenticstatus":{"statusId":6,"name":"未认证"},"city":{"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true},"name":"QQ群","identiyCarA":"http://192.168.5.108:8080/jinzht/upload/identityImages/jinzht_user_identiy_a_1.jpg","identiyCarB":"http://192.168.5.107:8080/jinzht/upload/identityImages/jinzht_user_identiy_b_1.jpg","identiyCarNo":"123456789123456789","companyName":"梦工厂","companyAddress":"陕西西安","position":"职业经理人","buinessLicence":"http://192.168.5.102:8080/jinzht/upload/identityImages/jinzht_user_identiy_buiness_1.jpg","buinessLicenceNo":"123456","introduce":"","companyIntroduce":"","industoryArea":"1,2,3"}]
          */
+        private int userId;
+        private String telephone;
         private String headSculpture;// 头像
         private List<AuthenticsBean> authentics;
+
+        public int getUserId() {
+            return userId;
+        }
+
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+
+        public String getTelephone() {
+            return telephone;
+        }
+
+        public void setTelephone(String telephone) {
+            this.telephone = telephone;
+        }
 
         public String getHeadSculpture() {
             return headSculpture;
@@ -64,7 +84,7 @@ public class UserInfoBean {
             this.authentics = authentics;
         }
 
-        public static class AuthenticsBean implements Serializable{
+        public static class AuthenticsBean implements Serializable {
             /**
              * authId : 110
              * identiytype : {"identiyTypeId":3,"name":"机构投资人"}
@@ -247,7 +267,7 @@ public class UserInfoBean {
                 this.industoryArea = industoryArea;
             }
 
-            public static class IdentiytypeBean implements Serializable{
+            public static class IdentiytypeBean implements Serializable {
                 /**
                  * identiyTypeId : 3
                  * name : 机构投资人
@@ -272,7 +292,7 @@ public class UserInfoBean {
                 }
             }
 
-            public static class AuthenticstatusBean implements Serializable{
+            public static class AuthenticstatusBean implements Serializable {
                 /**
                  * statusId : 6
                  * name : 未认证
@@ -297,7 +317,7 @@ public class UserInfoBean {
                 }
             }
 
-            public static class CityBean implements Serializable{
+            public static class CityBean implements Serializable {
                 /**
                  * cityId : 6
                  * province : {"provinceId":2,"name":"山西省","isInvlid":true}
@@ -341,7 +361,7 @@ public class UserInfoBean {
                     this.isInvlid = isInvlid;
                 }
 
-                public static class ProvinceBean implements Serializable{
+                public static class ProvinceBean implements Serializable {
                     /**
                      * provinceId : 2
                      * name : 山西省

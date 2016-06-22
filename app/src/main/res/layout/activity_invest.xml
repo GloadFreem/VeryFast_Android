@@ -38,8 +38,11 @@
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:background="@null"
+                android:gravity="center_vertical|left"
                 android:hint="最小单位为(万)"
+                android:inputType="numberDecimal"
                 android:paddingLeft="9dp"
+                android:singleLine="true"
                 android:textColorHint="#a1a1a1"
                 android:textSize="17sp" />
 
