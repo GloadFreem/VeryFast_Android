@@ -3,9 +3,9 @@ package com.jinzht.pro.bean;
 import java.util.List;
 
 /**
- * 项目列表
+ * 路演项目列表
  */
-public class ProjectListBean {
+public class RoadshowProjectListBean {
 
     /**
      * message :

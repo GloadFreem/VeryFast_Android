@@ -1,15 +1,21 @@
 package com.jinzht.pro.fragment;
 
 import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -19,9 +25,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
-import com.jinzht.pro.adapter.ProjectFragmentAdapter;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.BannerInfoBean;
+import com.jinzht.pro.bean.PreselectionProjectListBean;
+import com.jinzht.pro.bean.RoadshowProjectListBean;
+import com.jinzht.pro.utils.AESUtils;
+import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.FastJsonTools;
+import com.jinzht.pro.utils.MD5Utils;
+import com.jinzht.pro.utils.NetWorkUtils;
+import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiUtils;
 import com.jinzht.pro.view.BannerRoundProgressBar;
@@ -51,9 +64,11 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     private RadioGroup projectRgTab;// 项目页签的RadioGroup
     private RadioButton projectRbtnRoadshow;// 路演项目按钮
     private RadioButton projectRbtnPreselection;// 预选项目按钮
-    private ViewPager projectVpType;// 路演项目和预选项目
     private RelativeLayout rlProgress;// banner上的圆形进度条框架
     private BannerRoundProgressBar bannerProgress;// banner上的圆形进度条
+    private FrameLayout flModule;// 加载Fragment的布局
+
+    private ArrayList<Fragment> fragments = new ArrayList<>();
 
     private List<ImageView> imageViews = new ArrayList<>();// banner的图片View
     private int prePointIndex = 0;// 记录当前指示点的位置
@@ -87,9 +102,9 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         projectRgTab = (RadioGroup) view.findViewById(R.id.project_rg_tab);// 项目页签的RadioGroup
         projectRbtnRoadshow = (RadioButton) view.findViewById(R.id.project_rbtn_roadshow);// 路演项目按钮
         projectRbtnPreselection = (RadioButton) view.findViewById(R.id.project_rbtn_preselection);// 预选项目按钮
-        projectVpType = (ViewPager) view.findViewById(R.id.project_vp_type);// 路演项目和预选项目
         rlProgress = (RelativeLayout) view.findViewById(R.id.project_banner_rl_progress);// banner上的圆形进度条框架
         bannerProgress = (BannerRoundProgressBar) view.findViewById(R.id.project_banner_progress);// banner上的圆形进度条
+        flModule = (FrameLayout) view.findViewById(R.id.fl_module);// 加载Fragment的布局
         return view;
     }
 
@@ -99,31 +114,22 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 
         EventBus.getDefault().register(this);
 
+        fragments.clear();
+        fragments.add(new RoadshowFragment());
+        fragments.add(new PreselectionFragment());
         // 设置tab的单选事件
         projectRgTab.setOnCheckedChangeListener(this);
-        // 给项目类型填充数据
-        projectVpType.setAdapter(new ProjectFragmentAdapter(getChildFragmentManager()));
-        projectVpType.setCurrentItem(0);
-        // 设置项目Tab和项目ViewPager联动
-        projectVpType.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                switch (position) {
-                    case 0:
-                        projectRgTab.check(R.id.project_rbtn_roadshow);
-                        break;
-                    case 1:
-                        projectRgTab.check(R.id.project_rbtn_preselection);
-                        break;
-                }
-            }
-        });
+        setSelect(fragments.get(0));
+
+        GetRoadshowProjectListTask getRoadshowProjectListTask = new GetRoadshowProjectListTask();
+        getRoadshowProjectListTask.execute();
+        GetPreselectionProjectListTask getPreselectionProjectListTask = new GetPreselectionProjectListTask();
+        getPreselectionProjectListTask.execute();
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread, sticky = true)
-    public void getBannerInfo(List<BannerInfoBean.DataBean> data) {
-        this.data = data;
+    public void getBannerInfo(BannerInfoBean bean) {
+        data = bean.getData();
         if (this.data.size() != 0) {
             // 处理banner
             bannerPrepare();
@@ -239,16 +245,24 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.project_rbtn_roadshow:// 选择了路演项目
-                projectVpType.setCurrentItem(0);
+                setSelect(fragments.get(0));
                 projectRbtnRoadshow.setTextColor(UiUtils.getColor(R.color.custom_orange));
                 projectRbtnPreselection.setTextColor(UiUtils.getColor(R.color.bg_text));
                 break;
             case R.id.project_rbtn_preselection:// 选择了预选项目
-                projectVpType.setCurrentItem(1);
+                setSelect(fragments.get(1));
                 projectRbtnPreselection.setTextColor(UiUtils.getColor(R.color.custom_orange));
                 projectRbtnRoadshow.setTextColor(UiUtils.getColor(R.color.bg_text));
                 break;
         }
+    }
+
+    // 选择Fragment
+    private void setSelect(Fragment fragment) {
+        FragmentManager manager = getChildFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.fl_module, fragment);
+        transaction.commit();
     }
 
     // banner的数据适配器
@@ -320,6 +334,84 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 
         public void stopThread() {
             progressStop = true;
+        }
+    }
+
+    // 获取路演项目列表
+    private class GetRoadshowProjectListTask extends AsyncTask<Void, Void, RoadshowProjectListBean> {
+        @Override
+        protected RoadshowProjectListBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETPROJECTLIST)),
+                            "page", "0",
+                            "type", "0",
+                            Constant.BASE_URL + Constant.GETPROJECTLIST,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("路演项目列表", body);
+                return FastJsonTools.getBean(body, RoadshowProjectListBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(RoadshowProjectListBean roadshowProjectListBean) {
+            super.onPostExecute(roadshowProjectListBean);
+            if (roadshowProjectListBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (roadshowProjectListBean.getStatus() == 200) {
+                    EventBus.getDefault().postSticky(roadshowProjectListBean);
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, roadshowProjectListBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 获取预选项目列表
+    private class GetPreselectionProjectListTask extends AsyncTask<Void, Void, PreselectionProjectListBean> {
+        @Override
+        protected PreselectionProjectListBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETPROJECTLIST)),
+                            "page", "0",
+                            "type", "1",
+                            Constant.BASE_URL + Constant.GETPROJECTLIST,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("预选项目列表", body);
+                return FastJsonTools.getBean(body, PreselectionProjectListBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(PreselectionProjectListBean preselectionProjectListBean) {
+            super.onPostExecute(preselectionProjectListBean);
+            if (preselectionProjectListBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (preselectionProjectListBean.getStatus() == 200) {
+                    EventBus.getDefault().postSticky(preselectionProjectListBean);
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, preselectionProjectListBean.getMessage());
+                }
+            }
         }
     }
 

@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
 import com.jinzht.pro.activity.PreselectionDetailsActivity;
 import com.jinzht.pro.base.BaseFragment;
-import com.jinzht.pro.bean.ProjectListBean;
+import com.jinzht.pro.bean.PreselectionProjectListBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.FastJsonTools;
@@ -30,6 +30,10 @@ import com.jinzht.pro.view.PullToRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
+
 /**
  * 预选项目列表
  */
@@ -40,7 +44,7 @@ public class PreselectionFragment extends BaseFragment {
 
     private MyAdapter myAdapter;
     private int pages = 0;
-    List<ProjectListBean.DataBean> datas = new ArrayList<>();// 数据集合
+    List<PreselectionProjectListBean.DataBean> datas = new ArrayList<>();// 数据集合
     private int POSITION = 0;
     private final static int REQUEST_CODE = 1;
 
@@ -55,6 +59,7 @@ public class PreselectionFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         refreshView.setOnRefreshListener(new PullListener());
         myAdapter = new MyAdapter();
         listview.addHeaderView(View.inflate(mContext, R.layout.layout_empty_view_9dp, null));
@@ -67,9 +72,15 @@ public class PreselectionFragment extends BaseFragment {
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
+    }
 
-        GetProjectListTask getProjectListTask = new GetProjectListTask(0);
-        getProjectListTask.execute();
+    @Subscribe(threadMode = ThreadMode.MainThread, sticky = true)
+    public void getPreselectionList(PreselectionProjectListBean bean) {
+        Log.i("收到", "预选项目列表");
+        datas = bean.getData();
+        if (datas != null && datas.size() != 0) {
+            listview.setAdapter(myAdapter);
+        }
     }
 
     private class MyAdapter extends BaseAdapter {
@@ -145,7 +156,7 @@ public class PreselectionFragment extends BaseFragment {
     }
 
     // 获取项目列表
-    private class GetProjectListTask extends AsyncTask<Void, Void, ProjectListBean> {
+    private class GetProjectListTask extends AsyncTask<Void, Void, PreselectionProjectListBean> {
         private int page;
 
         public GetProjectListTask(int page) {
@@ -153,7 +164,7 @@ public class PreselectionFragment extends BaseFragment {
         }
 
         @Override
-        protected ProjectListBean doInBackground(Void... params) {
+        protected PreselectionProjectListBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
@@ -167,15 +178,15 @@ public class PreselectionFragment extends BaseFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.i("预选项目列表", body);
-                return FastJsonTools.getBean(body, ProjectListBean.class);
+                Log.i("预选项目列表" + page, body);
+                return FastJsonTools.getBean(body, PreselectionProjectListBean.class);
             } else {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(ProjectListBean projectListBean) {
+        protected void onPostExecute(PreselectionProjectListBean projectListBean) {
             super.onPostExecute(projectListBean);
             if (projectListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
@@ -190,7 +201,7 @@ public class PreselectionFragment extends BaseFragment {
                         datas = projectListBean.getData();
                         listview.setAdapter(myAdapter);
                     } else {
-                        for (ProjectListBean.DataBean dataBean : projectListBean.getData()) {
+                        for (PreselectionProjectListBean.DataBean dataBean : projectListBean.getData()) {
                             datas.add(dataBean);
                         }
                         myAdapter.notifyDataSetChanged();
@@ -251,5 +262,11 @@ public class PreselectionFragment extends BaseFragment {
     @Override
     public void blankPage() {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

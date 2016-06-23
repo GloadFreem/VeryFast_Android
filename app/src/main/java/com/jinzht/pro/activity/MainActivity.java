@@ -23,8 +23,6 @@ import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.view.NoScrollViewPager;
 
-import java.util.List;
-
 import de.greenrobot.event.EventBus;
 
 /**
@@ -152,8 +150,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (bannerInfoBean.getStatus() == 200) {
-                    List<BannerInfoBean.DataBean> data = bannerInfoBean.getData();
-                    EventBus.getDefault().postSticky(data);
+                    EventBus.getDefault().postSticky(bannerInfoBean);
                     initData();
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, bannerInfoBean.getMessage());
