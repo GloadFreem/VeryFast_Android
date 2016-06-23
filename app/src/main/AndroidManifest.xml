@@ -242,7 +242,8 @@
         <activity android:name=".activity.RoadshowChatActivity" />
         <activity android:name=".activity.YeepayRegisterActivity" />
         <activity android:name=".activity.YeepayRechargeActivity" />
-        <activity android:name=".activity.YeepayTenderActivity"></activity>
+        <activity android:name=".activity.YeepayTenderActivity" />
+        <activity android:name=".activity.PaySecceedActivity"></activity>
     </application>
 
 </manifest>

@@ -4,23 +4,23 @@ package com.jinzht.pro.bean;
  * 易宝投标扩展参数
  */
 public class ToTenderPropertyBean {
-    private String key;
+    private String name;
     private String value;
 
     public ToTenderPropertyBean() {
     }
 
-    public ToTenderPropertyBean(String key, String value) {
-        this.key = key;
+    public ToTenderPropertyBean(String name, String value) {
+        this.name = name;
         this.value = value;
     }
 
-    public String getKey() {
-        return key;
+    public String getName() {
+        return name;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getValue() {

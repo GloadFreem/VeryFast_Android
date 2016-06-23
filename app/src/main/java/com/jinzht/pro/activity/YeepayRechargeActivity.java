@@ -5,10 +5,8 @@ import android.util.Log;
 
 import com.jinzht.pro.base.YeepayWebViewActivity;
 import com.jinzht.pro.bean.ToRechargeBean;
-import com.jinzht.pro.bean.ToRegisterBean;
 import com.jinzht.pro.utils.Constant;
 
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,19 +29,19 @@ public class YeepayRechargeActivity extends YeepayWebViewActivity {
         time = time.replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
         String requestNo = time + getIntent().getStringExtra("userId");
 
-        double amount_totle = Double.parseDouble(getIntent().getStringExtra("amount")) * 10000.0000;
+        double amount_totle = Double.parseDouble(getIntent().getStringExtra("amount")) * 10000;
 
         ToRechargeBean toRechargeBean = new ToRechargeBean();
         toRechargeBean.setPlatformNo(Constant.PLATFORMNO);
         toRechargeBean.setPlatformUserNo("jinzht_0000_" + getIntent().getStringExtra("userId"));
         toRechargeBean.setRequestNo(requestNo);
-        toRechargeBean.setAmount(String.valueOf(amount_totle));
+        toRechargeBean.setAmount(String.format("%.2f", amount_totle));
         toRechargeBean.setFeeMode("PLATFORM");
         toRechargeBean.setCallbackUrl(Constant.BASE_URL + Constant.YEEPAY_CALLBACK);
         toRechargeBean.setNotifyUrl(Constant.BASE_URL + Constant.YEEPAY_NOTIFY);
 
-        xStream.alias("request", ToRegisterBean.class);// 重命名标签
-        xStream.useAttributeFor(ToRegisterBean.class, "platformNo");// 标记为属性
+        xStream.alias("request", ToRechargeBean.class);// 重命名标签
+        xStream.useAttributeFor(ToRechargeBean.class, "platformNo");// 标记为属性
         String xml = xStream.toXML(toRechargeBean);
         xml = xml.replaceAll("\\r", "");
         xml = xml.replaceAll("\\n", "");
@@ -58,7 +56,6 @@ public class YeepayRechargeActivity extends YeepayWebViewActivity {
 
     @Override
     protected void loadUrl() {
-        request = URLEncoder.encode(request);
         String postData = "req=" + request + "&sign=" + sign;
         Log.i("请求参数", request);
         webview.postUrl(Constant.YEEPAY_GATEWAY + Constant.YEEPAY_RECHARGE, postData.getBytes());
@@ -77,8 +74,11 @@ public class YeepayRechargeActivity extends YeepayWebViewActivity {
             intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
             intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
             intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
-
+            intent.putExtra("type", getIntent().getStringExtra("type"));
+            intent.putExtra("img", getIntent().getStringExtra("img"));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            finish();
         }
     }
 }

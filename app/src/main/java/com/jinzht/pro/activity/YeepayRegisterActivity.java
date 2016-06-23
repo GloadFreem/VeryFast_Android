@@ -7,7 +7,6 @@ import com.jinzht.pro.base.YeepayWebViewActivity;
 import com.jinzht.pro.bean.ToRegisterBean;
 import com.jinzht.pro.utils.Constant;
 
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,7 +56,6 @@ public class YeepayRegisterActivity extends YeepayWebViewActivity {
 
     @Override
     protected void loadUrl() {
-        request = URLEncoder.encode(request);
         String postData = "req=" + request + "&sign=" + sign;
         Log.i("请求参数", request);
         webview.postUrl(Constant.YEEPAY_GATEWAY + Constant.YEEPAY_REGISTER, postData.getBytes());
@@ -76,8 +74,11 @@ public class YeepayRegisterActivity extends YeepayWebViewActivity {
             intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
             intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
             intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
-
+            intent.putExtra("type", getIntent().getStringExtra("type"));
+            intent.putExtra("img", getIntent().getStringExtra("img"));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            finish();
         }
     }
 }

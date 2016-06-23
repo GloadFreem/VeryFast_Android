@@ -1,5 +1,6 @@
 package com.jinzht.pro.base;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,6 +26,11 @@ import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.thoughtworks.xstream.XStream;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * 易宝支付统一WebView
@@ -71,8 +77,8 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);// 支持JavaScript
         webSettings.setSaveFormData(false);// 不保存表单
-        webSettings.setAppCacheEnabled(false);// 不启用缓存
-        webview.setWebViewClient(new MyWebViewCClient());
+        webSettings.setAppCacheEnabled(true);// 启用缓存
+        webview.setWebViewClient(new MyWebViewClient());
         webview.setWebChromeClient(new MyWebChromeClient());
         webview.addJavascriptInterface(getHtmlObject(), "fromJS");// fromJS是给js识别的名称
         webview.setOnKeyListener(new View.OnKeyListener() {
@@ -104,8 +110,10 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
                 try {
                     body = OkHttpUtils.post(
                             MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SIGN)),
-                            "Method", "sign",
+                            "method", "sign",
                             "req", request,
+                            "sign", "",
+                            "type", "1",
                             Constant.BASE_URL + Constant.SIGN,
                             mContext
                     );
@@ -136,21 +144,29 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
 
     protected abstract void loadUrl();
 
-    private class MyWebViewCClient extends WebViewClient {
+    private class MyWebViewClient extends WebViewClient {
         // 让webview自己处理后面的URL
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        public boolean shouldOverrideUrlLoading(WebView view, final String url) {
             view.loadUrl(url);
             return true;
         }
 
         @Override
-        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            super.onReceivedError(view, errorCode, description, failingUrl);
-            String imgPath = "file:///android_asset/error_pages.png";
-            String data = "<HTML><Div align=\"center\"  margin=\"0px\"><IMG src=\"" + imgPath + "\" margin=\"0px\"/></Div>";
-            view.loadDataWithBaseURL(imgPath, data, "text/html", "utf-8", null);
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            Log.i("要开始的URL", url);
+//            if (url.endsWith("swiftRecharge")) {
+//            }
+            super.onPageStarted(view, url, favicon);
         }
+
+//        @Override
+//        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+//            super.onReceivedError(view, errorCode, description, failingUrl);
+//            String imgPath = "file:///android_asset/error_pages.png";
+//            String data = "<HTML><Div align=\"center\"  margin=\"0px\"><IMG src=\"" + imgPath + "\" margin=\"0px\"/></Div>";
+//            view.loadDataWithBaseURL(imgPath, data, "text/html", "utf-8", null);
+//        }
     }
 
     private class MyWebChromeClient extends WebChromeClient {
@@ -170,9 +186,7 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
 
     // 让JS调用Java方法
     private Object getHtmlObject() {
-
         Object insertObj = new Object() {
-
             @JavascriptInterface
             public void getResp(final String respResult, final String signResult) {
                 Log.i("返回的XML", respResult);
@@ -185,7 +199,6 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
                 });
             }
         };
-
         return insertObj;
     }
 

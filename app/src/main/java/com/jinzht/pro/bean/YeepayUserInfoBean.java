@@ -6,6 +6,7 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 /**
  * 易宝账户查询返回信息
  */
+@XStreamAlias("response")
 public class YeepayUserInfoBean {
     @XStreamAsAttribute
     private String platformNo;// 商户编号

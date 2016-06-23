@@ -111,7 +111,7 @@ public class WelcomeActivity extends FullBaseActivity {
         @Override
         protected LoginBean doInBackground(Void... params) {
             String body = "";
-            Log.i("极光推送",JPushInterface.getRegistrationID(mContext)+"123");
+            Log.i("极光推送",JPushInterface.getRegistrationID(mContext)+" ");
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.loginPost(

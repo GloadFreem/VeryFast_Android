@@ -200,7 +200,8 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 intent.putExtra("profit", data.getRoadshows().get(0).getRoadshowplan().getProfit());
                 intent.putExtra("borrower_user_no", data.getBorrowerUserNumber());
                 intent.putExtra("abbrevName", data.getAbbrevName());
-                intent.putExtra("fullName",data.getFullName());
+                intent.putExtra("fullName", data.getFullName());
+                intent.putExtra("img", data.getStartPageImage());
                 startActivity(intent);
                 break;
         }

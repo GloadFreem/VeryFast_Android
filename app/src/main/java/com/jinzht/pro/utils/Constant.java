@@ -5,10 +5,8 @@ package com.jinzht.pro.utils;
  */
 public class Constant {
 
-//    public static final String BASE_URL = "http://www.jinzht.com/jinzht/";
-
+    //    public static final String BASE_URL = "http://www.jinzht.com/jinzht/";
     public static final String BASE_URL = "http://192.168.5.139:8080/jinzht/";
-
 //    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 微信APP_ID
@@ -234,6 +232,10 @@ public class Constant {
      * 交流评论
      */
     public static final String SCENECOMMENT = "requestSceneComment.action";
+    /**
+     * 投资
+     */
+    public static final String INVEST = "requestInvestProject.action";
 
 
     /**
@@ -243,7 +245,8 @@ public class Constant {
     /**
      * 平台编号platformNo
      */
-    public static final String PLATFORMNO = "10013200657";
+//    public static final String PLATFORMNO = "10013200657";
+    public static final String PLATFORMNO = "10013200658";
     /**
      * 签名接口
      */
@@ -261,7 +264,8 @@ public class Constant {
     /**
      * 易宝回跳页面
      */
-    public static final String YEEPAY_CALLBACK = "requestFinanceCallBackUrl.action";
+//    public static final String YEEPAY_CALLBACK = "requestFinanceCallBackUrl.action";
+    public static final String YEEPAY_CALLBACK = "YibaoCallback.jsp";
     /**
      * 易宝回调通知
      */

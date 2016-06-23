@@ -30,6 +30,8 @@ import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.thoughtworks.xstream.XStream;
 
+import java.math.BigDecimal;
+
 /**
  * 认投项目输入金额界面
  */
@@ -44,6 +46,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
     private TextView pullDownTextView;// 下拉窗口的TextView
     private PopupWindow pullDownWindow;// 下拉窗口
     private boolean isShowing = false;// PopupWindow是否展开的标识
+    private int type = 0;// 跟投0，领投1
 
     private UserInfoBean.DataBean userInfoBean;// 用户信息
     private String request;// 易宝请求体
@@ -129,6 +132,14 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                 }
                 break;
             case R.id.invest_btn_pay:// 支付
+                switch (btnPullDown.getText().toString()) {
+                    case "跟投":
+                        type = 0;
+                        break;
+                    case "领投":
+                        type = 1;
+                        break;
+                }
                 if (StringUtils.isBlank(edInputMoney.getText().toString())) {
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入投资金额");
                 } else if (Double.parseDouble(edInputMoney.getText().toString()) < getIntent().getDoubleExtra("limitAmount", 0)) {
@@ -184,12 +195,15 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected YeepaySignBean doInBackground(Void... params) {
             String body = "";
+            Log.i("request", request);
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
                             MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SIGN)),
-                            "Method", "sign",
+                            "method", "sign",
                             "req", request,
+                            "sign", "",
+                            "type", "0",
                             Constant.BASE_URL + Constant.SIGN,
                             mContext
                     );
@@ -258,22 +272,19 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                         // 进入易宝注册页面
                         Intent intent = new Intent(mContext, YeepayRegisterActivity.class);
 //                        intent.putExtra("activity", "WantInvestActivity");
-                        intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
-                        intent.putExtra("amount", edInputMoney.getText().toString());
-                        intent.putExtra("companyName", getIntent().getStringExtra("companyName"));
-                        intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
-//                        intent.putExtra("image", getIntent().getStringExtra("image"));
                         intent.putExtra("userId", String.valueOf(userInfoBean.getUserId()));
+                        intent.putExtra("amount", edInputMoney.getText().toString());
+                        intent.putExtra("profit", getIntent().getDoubleExtra("profit", 0));
+                        intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
+                        intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
+                        intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
+                        intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
+                        intent.putExtra("type", String.valueOf(type));
+                        intent.putExtra("img", getIntent().getStringExtra("img"));
                         intent.putExtra("name", userInfoBean.getAuthentics().get(0).getName());
                         intent.putExtra("idNo", userInfoBean.getAuthentics().get(0).getIdentiyCarNo());
                         intent.putExtra("telephone", userInfoBean.getTelephone());
-//                        intent.putExtra("email", informationBean.getData().getEmail());
-//                        intent.putExtra("flag", flag + "");
-//                        intent.putExtra("profile", getIntent().getStringExtra("profile"));
-//                        intent.putExtra("image", getIntent().getStringExtra("image"));
-                        intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
-                        intent.putExtra("profit", getIntent().getDoubleExtra("profit", 0));
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         mContext.startActivity(intent);
                         finish();
                     }
@@ -318,10 +329,38 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
             } else {
                 Log.i("易宝账户信息", bean.toString());
                 if ("1".equals(bean.getCode())) {
-                    if (getIntent().getDoubleExtra("limitAmount", 0) > Double.parseDouble(bean.getAvailableAmount())) {
+                    BigDecimal bigDecimal = new BigDecimal(Double.parseDouble(edInputMoney.getText().toString()) * 10000);
+                    double v = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    if (v > Double.parseDouble(bean.getAvailableAmount())) {
                         Log.i("余额不足" + bean.getAvailableAmount(), "去充值");
+                        Intent intent = new Intent(mContext, YeepayRechargeActivity.class);
+                        intent.putExtra("userId", SharedPreferencesUtils.getUserId(mContext));
+                        intent.putExtra("amount", edInputMoney.getText().toString());
+                        intent.putExtra("profit", getIntent().getDoubleExtra("profit", 0));
+                        intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
+                        intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
+                        intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
+                        intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
+                        intent.putExtra("type", String.valueOf(type));
+                        intent.putExtra("img", getIntent().getStringExtra("img"));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
                     } else {
                         Log.i("余额充足" + bean.getAvailableAmount(), "去投标");
+                        Intent intent = new Intent(mContext, YeepayTenderActivity.class);
+                        intent.putExtra("userId", SharedPreferencesUtils.getUserId(mContext));
+                        intent.putExtra("amount", edInputMoney.getText().toString());
+                        intent.putExtra("profit", getIntent().getDoubleExtra("profit", 0));
+                        intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
+                        intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
+                        intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
+                        intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
+                        intent.putExtra("type", String.valueOf(type));
+                        intent.putExtra("img", getIntent().getStringExtra("img"));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
                     }
                 } else if ("101".equals(bean.getCode())) {
                     Log.i("返回码101", "去注册");
