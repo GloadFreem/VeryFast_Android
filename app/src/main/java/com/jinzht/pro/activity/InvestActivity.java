@@ -274,7 +274,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
 //                        intent.putExtra("activity", "WantInvestActivity");
                         intent.putExtra("userId", String.valueOf(userInfoBean.getUserId()));
                         intent.putExtra("amount", edInputMoney.getText().toString());
-                        intent.putExtra("profit", getIntent().getDoubleExtra("profit", 0));
+                        intent.putExtra("profit", getIntent().getStringExtra("profit"));
                         intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
                         intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
                         intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
@@ -335,8 +335,10 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                         Log.i("余额不足" + bean.getAvailableAmount(), "去充值");
                         Intent intent = new Intent(mContext, YeepayRechargeActivity.class);
                         intent.putExtra("userId", SharedPreferencesUtils.getUserId(mContext));
+                        double recharge = v - Double.parseDouble(bean.getAvailableAmount());
+                        intent.putExtra("recharge", recharge);
                         intent.putExtra("amount", edInputMoney.getText().toString());
-                        intent.putExtra("profit", getIntent().getDoubleExtra("profit", 0));
+                        intent.putExtra("profit", getIntent().getStringExtra("profit"));
                         intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
                         intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
                         intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
@@ -351,7 +353,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                         Intent intent = new Intent(mContext, YeepayTenderActivity.class);
                         intent.putExtra("userId", SharedPreferencesUtils.getUserId(mContext));
                         intent.putExtra("amount", edInputMoney.getText().toString());
-                        intent.putExtra("profit", getIntent().getDoubleExtra("profit", 0));
+                        intent.putExtra("profit", getIntent().getStringExtra("profit"));
                         intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
                         intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
                         intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));

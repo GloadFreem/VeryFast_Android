@@ -1,21 +1,18 @@
 package com.jinzht.pro.fragment;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -25,6 +22,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
+import com.jinzht.pro.activity.PreselectionDetailsActivity;
+import com.jinzht.pro.activity.RoadshowDetailsActivity;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.BannerInfoBean;
 import com.jinzht.pro.bean.PreselectionProjectListBean;
@@ -38,6 +37,10 @@ import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiUtils;
 import com.jinzht.pro.view.BannerRoundProgressBar;
+import com.jinzht.pro.view.CircleImageView;
+import com.jinzht.pro.view.PullToRefreshLayout;
+import com.jinzht.pro.view.PullableListView;
+import com.jinzht.pro.view.RoundProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,177 +55,444 @@ import de.greenrobot.event.ThreadMode;
 /**
  * 项目界面
  */
-public class ProjectFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
+public class ProjectFragment extends BaseFragment implements View.OnClickListener {
 
     private LinearLayout titleBtnLeft;// title的左侧按钮
-    private ImageView titleIvLeft;// title左侧图标，站内信
-    private ViewPager projectVpBanner;// banner轮播条
-    private LinearLayout projectBannerBottombg;// banner底部的阴影
-    private TextView projectBannerTitle;// banner标题
-    private TextView projectBannerDesc;// banner描述
-    private LinearLayout projectBannerPoints;// banner指示点
-    private RadioGroup projectRgTab;// 项目页签的RadioGroup
-    private RadioButton projectRbtnRoadshow;// 路演项目按钮
-    private RadioButton projectRbtnPreselection;// 预选项目按钮
-    private RelativeLayout rlProgress;// banner上的圆形进度条框架
-    private BannerRoundProgressBar bannerProgress;// banner上的圆形进度条
-    private FrameLayout flModule;// 加载Fragment的布局
+    private PullToRefreshLayout refreshView;// 刷新布局
+    private PullableListView listview;// 项目列表
+    private MyAdapter myAdapter = new MyAdapter();
 
-    private ArrayList<Fragment> fragments = new ArrayList<>();
-
+    private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();// 定时任务
+    private Runnable bannerRunnable;// banner自动轮播
+    private Handler handler;// 用于自动轮播
+    private boolean isAuto = true;
     private List<ImageView> imageViews = new ArrayList<>();// banner的图片View
     private int prePointIndex = 0;// 记录当前指示点的位置
-    private ScheduledExecutorService scheduledExecutorService;// 定时任务
-    private BannerRun bannerRun;// banner自动轮播任务
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            projectVpBanner.setCurrentItem(projectVpBanner.getCurrentItem() + 1);
-        }
-    };
 
+    private Handler mHandler;// 用于圆形进度
     private int proTotal = 0;// 要显示的全部进度
     private int progress = 0;// 当前进度
     private boolean progressStop = false;// 正在滑动的标识
     private ProThread thread;// banner的进度条的线程
+    private List<BannerInfoBean.DataBean> bannerData = new ArrayList<>();
 
-    private List<BannerInfoBean.DataBean> data = new ArrayList<>();
+    private int flag = 0;// 0是路演项目，1是预选项目
+
+    private int rPages = 0;
+    List<RoadshowProjectListBean.DataBean> rDatas = new ArrayList<>();// 路演项目列表数据集合
+
+    private int pPages = 0;
+    List<PreselectionProjectListBean.DataBean> pDatas = new ArrayList<>();// 数据集合
+
+    private int rPOSITION = 0;
+    private int pPOSITION = 0;
+    private final static int REQUEST_CODE = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_project, container, false);
         titleBtnLeft = (LinearLayout) view.findViewById(R.id.title_btn_left);// title的左侧按钮
         titleBtnLeft.setOnClickListener(this);
-        titleIvLeft = (ImageView) view.findViewById(R.id.title_iv_left);// title左侧图标，站内信
-        projectVpBanner = (ViewPager) view.findViewById(R.id.project_vp_banner);// banner轮播条
-        projectBannerBottombg = (LinearLayout) view.findViewById(R.id.project_banner_bottombg);// banner底部的阴影
-        projectBannerTitle = (TextView) view.findViewById(R.id.project_banner_title);// banner标题
-        projectBannerDesc = (TextView) view.findViewById(R.id.project_banner_desc);// banner描述
-        projectBannerPoints = (LinearLayout) view.findViewById(R.id.project_banner_points);// banner指示点
-        projectRgTab = (RadioGroup) view.findViewById(R.id.project_rg_tab);// 项目页签的RadioGroup
-        projectRbtnRoadshow = (RadioButton) view.findViewById(R.id.project_rbtn_roadshow);// 路演项目按钮
-        projectRbtnPreselection = (RadioButton) view.findViewById(R.id.project_rbtn_preselection);// 预选项目按钮
-        rlProgress = (RelativeLayout) view.findViewById(R.id.project_banner_rl_progress);// banner上的圆形进度条框架
-        bannerProgress = (BannerRoundProgressBar) view.findViewById(R.id.project_banner_progress);// banner上的圆形进度条
-        flModule = (FrameLayout) view.findViewById(R.id.fl_module);// 加载Fragment的布局
+        refreshView = (PullToRefreshLayout) view.findViewById(R.id.refresh_view);// 刷新布局
+        listview = (PullableListView) view.findViewById(R.id.listview);// 项目列表
         return view;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         EventBus.getDefault().register(this);
-
-        fragments.clear();
-        fragments.add(new RoadshowFragment());
-        fragments.add(new PreselectionFragment());
-        // 设置tab的单选事件
-        projectRgTab.setOnCheckedChangeListener(this);
-        setSelect(fragments.get(0));
-
-        GetRoadshowProjectListTask getRoadshowProjectListTask = new GetRoadshowProjectListTask();
-        getRoadshowProjectListTask.execute();
-        GetPreselectionProjectListTask getPreselectionProjectListTask = new GetPreselectionProjectListTask();
-        getPreselectionProjectListTask.execute();
+        refreshView.setOnRefreshListener(new PullListener());
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (flag == 0) {
+                    rPOSITION = position - 1;
+                    Intent intent = new Intent(mContext, RoadshowDetailsActivity.class);
+                    intent.putExtra("id", String.valueOf(rDatas.get(position - 1).getProjectId()));
+                    startActivityForResult(intent, REQUEST_CODE);
+                } else {
+                    pPOSITION = position - 1;
+                    Intent intent = new Intent(mContext, PreselectionDetailsActivity.class);
+                    intent.putExtra("id", String.valueOf(pDatas.get(position - 1).getProjectId()));
+                    startActivityForResult(intent, REQUEST_CODE);
+                }
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread, sticky = true)
     public void getBannerInfo(BannerInfoBean bean) {
-        data = bean.getData();
-        if (this.data.size() != 0) {
+        bannerData = bean.getData();
+        if (bannerData != null && bannerData.size() != 0) {
             // 处理banner
-            bannerPrepare();
+            listview.setAdapter(myAdapter);
+            GetRoadshowProjectListTask getRoadshowProjectListTask = new GetRoadshowProjectListTask(0);
+            getRoadshowProjectListTask.execute();
+            GetPreselectionProjectListTask getPreselectionProjectListTask = new GetPreselectionProjectListTask(0);
+            getPreselectionProjectListTask.execute();
         }
     }
 
-    // 处理banner
-    private void bannerPrepare() {
-        // 准备图片
-        imageViews.clear();
-        for (int i = 0; i < data.size(); i++) {
-            ImageView imageView = new ImageView(mContext);
-            // 设置图片缩放类型
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            Glide.with(mContext).load(data.get(i).getBody().getImage()).into(imageView);
-            imageViews.add(imageView);
-            // 创建圆点指示器
-            ImageView point = new ImageView(mContext);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(UiUtils.dip2px(3), UiUtils.dip2px(3));
-            if (i != 0) {
-                params.leftMargin = 10;
+    private class MyAdapter extends BaseAdapter {
+        private ViewHolder holder = null;
+
+        @Override
+        public int getCount() {
+            if (flag == 0) {
+                if (rDatas != null && rDatas.size() != 0) {
+                    return rDatas.size() + 1;
+                } else {
+                    return 1;
+                }
+            } else {
+                if (pDatas != null && pDatas.size() != 0) {
+                    return pDatas.size() + 1;
+                } else {
+                    return 1;
+                }
             }
-            point.setLayoutParams(params);
-            point.setEnabled(false);
-            point.setBackgroundResource(R.drawable.selector_banner_point);
-            // 将点点指示器添加到线性容器中
-            projectBannerPoints.addView(point);
         }
-        // 给banner填充数据
-        projectVpBanner.setAdapter(new BannerAdapter());
-        // 监听banner的滑动
-        projectVpBanner.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                int newPosition = position % imageViews.size();
-                // 把前一个点变成normal
-                projectBannerPoints.getChildAt(prePointIndex).setEnabled(false);
-                // 把相应位置的点变成selected
-                projectBannerPoints.getChildAt(newPosition).setEnabled(true);
-                // 当滑到某一页时，改变文字
-                projectBannerTitle.setText(data.get(newPosition).getBody().getName());
-                projectBannerDesc.setText(data.get(newPosition).getBody().getDescription());
-                // 改变圆形进度条
-                if (data.get(newPosition).getType().equals("Project")) {
-                    if (data.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinancedMount() == 0) {
-                        projectBannerBottombg.setVisibility(View.GONE);
-                        rlProgress.setVisibility(View.GONE);
-                    } else {
-                        projectBannerBottombg.setVisibility(View.VISIBLE);
-                        rlProgress.setVisibility(View.VISIBLE);
-                        bannerProgress.setTextBottom(String.valueOf(data.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinanceTotal()));
-                        proTotal = (int) ((double) (data.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (data.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
-                        // banner的圆形进度条开始动
-                        startBannerProgress();
-                        if (progressStop) {
-                            bannerProgress.setProgress(proTotal);
+
+        @Override
+        public Object getItem(int position) {
+            if (flag == 0) {
+                return rDatas.get(position - 1);
+            } else {
+                return pDatas.get(position - 1);
+            }
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position - 1;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 3;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == 0) {
+                return 0;
+            } else {
+                if (flag == 0) {
+                    return 1;
+                } else {
+                    return 2;
+                }
+            }
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                holder = new ViewHolder();
+                if (getItemViewType(position) == 0) {
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.item_banner_and_tab, null);
+                    holder.projectVpBanner = (ViewPager) convertView.findViewById(R.id.project_vp_banner);// banner轮播条
+                    holder.projectBannerBottombg = (LinearLayout) convertView.findViewById(R.id.project_banner_bottombg);// banner底部的阴影
+                    holder.projectBannerTitle = (TextView) convertView.findViewById(R.id.project_banner_title);// banner标题
+                    holder.projectBannerDesc = (TextView) convertView.findViewById(R.id.project_banner_desc);// banner描述
+                    holder.projectBannerPoints = (LinearLayout) convertView.findViewById(R.id.project_banner_points);// banner指示点
+                    holder.projectRgTab = (RadioGroup) convertView.findViewById(R.id.project_rg_tab);// 项目页签的RadioGroup
+                    holder.rlProgress = (RelativeLayout) convertView.findViewById(R.id.project_banner_rl_progress);// banner上的圆形进度条框架
+                    holder.bannerProgress = (BannerRoundProgressBar) convertView.findViewById(R.id.project_banner_progress);// banner上的圆形进度条
+                    holder.projectRbtnRoadshow = (RadioButton) convertView.findViewById(R.id.project_rbtn_roadshow);// 路演项目按钮
+                    holder.projectRbtnPreselection = (RadioButton) convertView.findViewById(R.id.project_rbtn_preselection);// 预选项目按钮
+                } else if (getItemViewType(position) == 1) {
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.item_project_roadshow, null);
+                    holder.itemProjectImg = (CircleImageView) convertView.findViewById(R.id.item_project_img);
+                    holder.itemProjectTitle = (TextView) convertView.findViewById(R.id.item_project_title);
+                    holder.itemProjectAddr = (TextView) convertView.findViewById(R.id.item_project_addr);
+                    holder.itemProjectTag = (ImageView) convertView.findViewById(R.id.item_project_tag);
+                    holder.itemProjectCompname = (TextView) convertView.findViewById(R.id.item_project_compname);
+                    holder.itemProjectField1 = (TextView) convertView.findViewById(R.id.item_project_field1);
+                    holder.itemProjectField2 = (TextView) convertView.findViewById(R.id.item_project_field2);
+                    holder.itemProjectField3 = (TextView) convertView.findViewById(R.id.item_project_field3);
+                    holder.itemProjectPopularity = (TextView) convertView.findViewById(R.id.item_project_popularity);
+                    holder.itemProjectTime = (TextView) convertView.findViewById(R.id.item_project_time);
+                    holder.itemProjectAmount = (TextView) convertView.findViewById(R.id.item_project_amount);
+                    holder.itemProjectProgress = (RoundProgressBar) convertView.findViewById(R.id.item_project_progress);
+                } else {
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.item_project_preselect, null);
+                    holder.itemProjectImg = (CircleImageView) convertView.findViewById(R.id.item_project_img);
+                    holder.itemProjectTitle = (TextView) convertView.findViewById(R.id.item_project_title);
+                    holder.itemProjectAddr = (TextView) convertView.findViewById(R.id.item_project_addr);
+                    holder.itemProjectCompname = (TextView) convertView.findViewById(R.id.item_project_compname);
+                    holder.itemProjectField1 = (TextView) convertView.findViewById(R.id.item_project_field1);
+                    holder.itemProjectField2 = (TextView) convertView.findViewById(R.id.item_project_field2);
+                    holder.itemProjectField3 = (TextView) convertView.findViewById(R.id.item_project_field3);
+                    holder.itemProjectPopularity = (TextView) convertView.findViewById(R.id.item_project_popularity);
+                    holder.itemProjectAmount = (TextView) convertView.findViewById(R.id.item_project_amount);
+                }
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            // 处理banner
+            if (getItemViewType(position) == 0) {
+                final ViewHolder finalHolder = holder;
+                // 准备图片
+                imageViews.clear();
+                holder.projectBannerPoints.removeAllViews();
+                for (int i = 0; i < bannerData.size(); i++) {
+                    ImageView imageView = new ImageView(mContext);
+                    // 设置图片缩放类型
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    Glide.with(mContext).load(bannerData.get(i).getBody().getImage()).into(imageView);
+                    imageViews.add(imageView);
+                    // 创建圆点指示器
+                    ImageView point = new ImageView(mContext);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(UiUtils.dip2px(3), UiUtils.dip2px(3));
+                    if (i != 0) {
+                        params.leftMargin = 10;
+                    }
+                    point.setLayoutParams(params);
+                    point.setEnabled(false);
+                    point.setBackgroundResource(R.drawable.selector_banner_point);
+                    // 将点点指示器添加到线性容器中
+                    holder.projectBannerPoints.addView(point);
+                }
+                // 给banner填充数据
+                holder.projectVpBanner.setAdapter(new PagerAdapter() {
+                    @Override
+                    public int getCount() {
+                        return Integer.MAX_VALUE;// 为了实现无限循环
+                    }
+
+                    @Override
+                    public boolean isViewFromObject(View view, Object object) {
+                        return view == object;
+                    }
+
+                    @Override
+                    public Object instantiateItem(ViewGroup container, int position) {
+                        final int newPosition = position % imageViews.size();
+                        ImageView imageView = imageViews.get(newPosition);
+                        // 把要返回的控件添加到容器
+                        container.addView(imageView);
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                SuperToastUtils.showSuperToast(mContext, 2, "点击了第" + newPosition + "张图片");
+                            }
+                        });
+                        return imageView;
+                    }
+
+                    // 删除条目
+                    @Override
+                    public void destroyItem(ViewGroup container, int position, Object object) {
+                        container.removeView((View) object);
+                    }
+                });
+                // 监听banner的滑动
+                holder.projectVpBanner.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        int newPosition = position % imageViews.size();
+                        // 把前一个点变成normal
+                        finalHolder.projectBannerPoints.getChildAt(prePointIndex).setEnabled(false);
+                        // 把相应位置的点变成selected
+                        finalHolder.projectBannerPoints.getChildAt(newPosition).setEnabled(true);
+                        // 当滑到某一页时，改变文字
+                        finalHolder.projectBannerTitle.setText(bannerData.get(newPosition).getBody().getName());
+                        finalHolder.projectBannerDesc.setText(bannerData.get(newPosition).getBody().getDescription());
+                        // 改变圆形进度条
+                        if (bannerData.get(newPosition).getType().equals("Project")) {
+                            if (bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinancedMount() == 0) {
+                                finalHolder.projectBannerBottombg.setVisibility(View.GONE);
+                                finalHolder.rlProgress.setVisibility(View.GONE);
+                            } else {
+                                finalHolder.projectBannerBottombg.setVisibility(View.VISIBLE);
+                                finalHolder.rlProgress.setVisibility(View.VISIBLE);
+                                finalHolder.bannerProgress.setTextBottom(String.valueOf(bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinanceTotal()));
+                                proTotal = (int) ((double) (bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
+                                // banner的圆形进度条开始动
+                                startBannerProgress();
+
+                                // 控制banner进度条，更新UI
+                                if (mHandler == null) {
+                                    mHandler = new Handler() {
+                                        @Override
+                                        public void handleMessage(Message msg) {
+                                            int temp = (int) msg.obj;
+                                            if (proTotal - temp > 0) {
+                                                finalHolder.bannerProgress.setProgress(temp);
+                                            } else {
+                                                finalHolder.bannerProgress.setProgress(proTotal);
+                                                thread.stopThread();
+                                            }
+                                        }
+                                    };
+                                }
+
+                                if (progressStop) {
+                                    finalHolder.bannerProgress.setProgress(proTotal);
+                                }
+                            }
+                        } else {
+                            finalHolder.projectBannerBottombg.setVisibility(View.GONE);
+                            finalHolder.rlProgress.setVisibility(View.GONE);
+                        }
+                        prePointIndex = newPosition;
+                    }
+                });
+                // 初始化第0页
+                holder.projectBannerTitle.setText(bannerData.get(0).getBody().getName());
+                holder.projectBannerDesc.setText(bannerData.get(0).getBody().getDescription());
+                // 初始化第0个点
+                holder.projectBannerPoints.getChildAt(0).setEnabled(true);
+                // 实现往复无限滑动，设置当前条目位置为一个大值
+//                int center = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % imageViews.size();
+                holder.projectVpBanner.setCurrentItem(100);
+
+                // 自动轮播
+                if (isAuto) {
+                    if (handler == null) {
+                        handler = new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                finalHolder.projectVpBanner.setCurrentItem(finalHolder.projectVpBanner.getCurrentItem() + 1);
+                            }
+                        };
+                    }
+                    if (bannerRunnable == null) {
+                        bannerRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                synchronized (finalHolder.projectVpBanner) {
+                                    handler.obtainMessage().sendToTarget();
+                                }
+                            }
+                        };
+                    }
+                    scheduledExecutorService.scheduleAtFixedRate(bannerRunnable, 4, 4, TimeUnit.SECONDS);
+                }
+
+                // 设置tab的单选事件
+                holder.projectRgTab.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        switch (checkedId) {
+                            case R.id.project_rbtn_roadshow:// 选择了路演项目
+                                flag = 0;
+                                finalHolder.projectRbtnRoadshow.setTextColor(UiUtils.getColor(R.color.custom_orange));
+                                finalHolder.projectRbtnPreselection.setTextColor(UiUtils.getColor(R.color.bg_text));
+                                isAuto = false;
+                                myAdapter.notifyDataSetChanged();
+                                break;
+                            case R.id.project_rbtn_preselection:// 选择了预选项目
+                                flag = 1;
+                                finalHolder.projectRbtnPreselection.setTextColor(UiUtils.getColor(R.color.custom_orange));
+                                finalHolder.projectRbtnRoadshow.setTextColor(UiUtils.getColor(R.color.bg_text));
+                                isAuto = false;
+                                myAdapter.notifyDataSetChanged();
+                                break;
                         }
                     }
-                } else {
-                    projectBannerBottombg.setVisibility(View.GONE);
-                    rlProgress.setVisibility(View.GONE);
+                });
+            } else if (getItemViewType(position) == 1) {
+                // 路演项目列表
+                Glide.with(mContext).load(rDatas.get(position - 1).getStartPageImage()).into(holder.itemProjectImg);
+                holder.itemProjectTitle.setText(rDatas.get(position - 1).getAbbrevName());
+                holder.itemProjectAddr.setText(rDatas.get(position - 1).getAddress());
+                switch (rDatas.get(position - 1).getFinancestatus().getName()) {
+                    case "待路演":
+                        holder.itemProjectTag.setImageResource(R.mipmap.tag_dailuyan);
+                        break;
+                    case "路演中":
+                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzizhong);
+                        break;
+                    case "融资成功":
+                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
+                        break;
+                    case "融资失败":
+                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzishibai);
+                        break;
                 }
-                prePointIndex = newPosition;
+                holder.itemProjectCompname.setText(rDatas.get(position - 1).getFullName());
+                String[] fields = rDatas.get(position - 1).getIndustoryType().split("，");
+                if (fields.length == 0) {
+                    holder.itemProjectField1.setVisibility(View.INVISIBLE);
+                    holder.itemProjectField2.setVisibility(View.INVISIBLE);
+                    holder.itemProjectField3.setVisibility(View.INVISIBLE);
+                } else if (fields.length == 1) {
+                    holder.itemProjectField1.setText(fields[0]);
+                    holder.itemProjectField2.setVisibility(View.INVISIBLE);
+                    holder.itemProjectField3.setVisibility(View.INVISIBLE);
+                } else if (fields.length == 2) {
+                    holder.itemProjectField1.setText(fields[0]);
+                    holder.itemProjectField2.setText(fields[1]);
+                    holder.itemProjectField3.setVisibility(View.INVISIBLE);
+                } else if (fields.length == 3) {
+                    holder.itemProjectField1.setText(fields[0]);
+                    holder.itemProjectField2.setText(fields[1]);
+                    holder.itemProjectField3.setText(fields[2]);
+                }
+                holder.itemProjectPopularity.setText(String.valueOf(rDatas.get(position - 1).getCollectionCount()));
+                holder.itemProjectTime.setText(String.valueOf(rDatas.get(position - 1).getTimeLeft()));
+                holder.itemProjectAmount.setText(rDatas.get(position - 1).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
+                int progress = (int) ((double) (rDatas.get(position - 1).getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (rDatas.get(position - 1).getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
+                holder.itemProjectProgress.setProgress(progress);
+            } else {
+                // 预选项目列表
+                Glide.with(mContext).load(pDatas.get(position - 1).getStartPageImage()).into(holder.itemProjectImg);
+                holder.itemProjectTitle.setText(pDatas.get(position - 1).getAbbrevName());
+                holder.itemProjectAddr.setText(pDatas.get(position - 1).getAddress());
+                holder.itemProjectCompname.setText(pDatas.get(position - 1).getFullName());
+                String[] fields = pDatas.get(position - 1).getIndustoryType().split("，");
+                if (fields.length == 0) {
+                    holder.itemProjectField1.setVisibility(View.INVISIBLE);
+                    holder.itemProjectField2.setVisibility(View.INVISIBLE);
+                    holder.itemProjectField3.setVisibility(View.INVISIBLE);
+                } else if (fields.length == 1) {
+                    holder.itemProjectField1.setText(fields[0]);
+                    holder.itemProjectField2.setVisibility(View.INVISIBLE);
+                    holder.itemProjectField3.setVisibility(View.INVISIBLE);
+                } else if (fields.length == 2) {
+                    holder.itemProjectField1.setText(fields[0]);
+                    holder.itemProjectField2.setText(fields[1]);
+                    holder.itemProjectField3.setVisibility(View.INVISIBLE);
+                } else if (fields.length == 3) {
+                    holder.itemProjectField1.setText(fields[0]);
+                    holder.itemProjectField2.setText(fields[1]);
+                    holder.itemProjectField3.setText(fields[2]);
+                }
+                holder.itemProjectPopularity.setText(String.valueOf(pDatas.get(position - 1).getCollectionCount()));
+                holder.itemProjectAmount.setText(pDatas.get(position - 1).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
             }
-        });
-        // 初始化第0页
-        projectBannerTitle.setText(data.get(0).getBody().getName());
-        projectBannerDesc.setText(data.get(0).getBody().getDescription());
-        // 初始化第0个点
-        projectBannerPoints.getChildAt(0).setEnabled(true);
-        // 实现往复无限滑动，设置当前条目位置为一个大值
-        int center = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2
-                % imageViews.size();
-        projectVpBanner.setCurrentItem(center);
-        // 自动轮播
-        autoPlay();
-    }
-
-    // banner自动轮播
-    private void autoPlay() {
-        if (bannerRun == null) {
-            bannerRun = new BannerRun();
+            return convertView;
         }
-        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleAtFixedRate(bannerRun, 4, 4, TimeUnit.SECONDS);
-    }
 
-    private class BannerRun implements Runnable {
-        @Override
-        public void run() {
-            synchronized (projectVpBanner) {
-                handler.obtainMessage().sendToTarget();
-            }
+        class ViewHolder {
+            private ViewPager projectVpBanner;// banner轮播条
+            private LinearLayout projectBannerBottombg;// banner底部的阴影
+            private TextView projectBannerTitle;// banner标题
+            private TextView projectBannerDesc;// banner描述
+            private LinearLayout projectBannerPoints;// banner指示点
+            private RelativeLayout rlProgress;// banner上的圆形进度条框架
+            private RadioGroup projectRgTab;// 项目页签的RadioGroup
+            private BannerRoundProgressBar bannerProgress;// banner上的圆形进度条
+            private RadioButton projectRbtnRoadshow;// 路演项目按钮
+            private RadioButton projectRbtnPreselection;// 预选项目按钮
+
+            private CircleImageView itemProjectImg;
+            private TextView itemProjectTitle;
+            private TextView itemProjectAddr;
+            private ImageView itemProjectTag;// 路演项目独有
+            private TextView itemProjectCompname;
+            private TextView itemProjectField1;
+            private TextView itemProjectField2;
+            private TextView itemProjectField3;
+            private TextView itemProjectPopularity;
+            private TextView itemProjectTime;// 路演项目独有
+            private TextView itemProjectAmount;
+            private RoundProgressBar itemProjectProgress;// 路演项目独有
         }
     }
 
@@ -230,90 +500,6 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         thread = new ProThread();
         thread.start();
     }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.title_btn_left:// 点击进入站内信
-                SuperToastUtils.showSuperToast(mContext, 2, "站内信");
-                break;
-        }
-    }
-
-    // 项目页签的RadioGroup选择
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.project_rbtn_roadshow:// 选择了路演项目
-                setSelect(fragments.get(0));
-                projectRbtnRoadshow.setTextColor(UiUtils.getColor(R.color.custom_orange));
-                projectRbtnPreselection.setTextColor(UiUtils.getColor(R.color.bg_text));
-                break;
-            case R.id.project_rbtn_preselection:// 选择了预选项目
-                setSelect(fragments.get(1));
-                projectRbtnPreselection.setTextColor(UiUtils.getColor(R.color.custom_orange));
-                projectRbtnRoadshow.setTextColor(UiUtils.getColor(R.color.bg_text));
-                break;
-        }
-    }
-
-    // 选择Fragment
-    private void setSelect(Fragment fragment) {
-        FragmentManager manager = getChildFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fl_module, fragment);
-        transaction.commit();
-    }
-
-    // banner的数据适配器
-    private class BannerAdapter extends PagerAdapter {
-
-        @Override
-        public int getCount() {
-            return Integer.MAX_VALUE;// 为了实现无限循环
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, final int position) {
-            final int newPosition = position % imageViews.size();
-            ImageView imageView = imageViews.get(newPosition);
-            // 把要返回的控件添加到容器
-            container.addView(imageView);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SuperToastUtils.showSuperToast(mContext, 2, "点击了第" + newPosition + "张图片");
-                }
-            });
-            return imageView;
-        }
-
-        // 删除条目
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
-        }
-    }
-
-    // 控制banner进度条，更新UI
-    @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            int temp = (int) msg.obj;
-            if (proTotal - temp > 0) {
-                bannerProgress.setProgress(temp);
-            } else {
-                bannerProgress.setProgress(proTotal);
-                thread.stopThread();
-            }
-        }
-    };
 
     // banner的圆形进度条的线程
     private class ProThread extends Thread {
@@ -337,8 +523,23 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.title_btn_left:// 点击进入站内信
+                SuperToastUtils.showSuperToast(mContext, 2, "站内信");
+                break;
+        }
+    }
+
     // 获取路演项目列表
     private class GetRoadshowProjectListTask extends AsyncTask<Void, Void, RoadshowProjectListBean> {
+        private int page;
+
+        public GetRoadshowProjectListTask(int page) {
+            this.page = page;
+        }
+
         @Override
         protected RoadshowProjectListBean doInBackground(Void... params) {
             String body = "";
@@ -346,7 +547,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 try {
                     body = OkHttpUtils.post(
                             MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETPROJECTLIST)),
-                            "page", "0",
+                            "page", String.valueOf(page),
                             "type", "0",
                             Constant.BASE_URL + Constant.GETPROJECTLIST,
                             mContext
@@ -366,11 +567,29 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             super.onPostExecute(roadshowProjectListBean);
             if (roadshowProjectListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
+                refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (roadshowProjectListBean.getStatus() == 200) {
-                    EventBus.getDefault().postSticky(roadshowProjectListBean);
+                    refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
+                    refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
+                    if (page == 0) {
+                        rDatas.clear();
+                    }
+                    if (roadshowProjectListBean.getData() != null && roadshowProjectListBean.getData().size() != 0) {
+                        for (RoadshowProjectListBean.DataBean dataBean : roadshowProjectListBean.getData()) {
+                            rDatas.add(dataBean);
+                        }
+                    }
+                    isAuto = false;
+                    myAdapter.notifyDataSetChanged();
+                } else if (roadshowProjectListBean.getStatus() == 201) {
+                    rPages--;
+                    refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, roadshowProjectListBean.getMessage());
+                    refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
+                    refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                 }
             }
         }
@@ -378,6 +597,12 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 
     // 获取预选项目列表
     private class GetPreselectionProjectListTask extends AsyncTask<Void, Void, PreselectionProjectListBean> {
+        private int page;
+
+        public GetPreselectionProjectListTask(int page) {
+            this.page = page;
+        }
+
         @Override
         protected PreselectionProjectListBean doInBackground(Void... params) {
             String body = "";
@@ -385,7 +610,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 try {
                     body = OkHttpUtils.post(
                             MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETPROJECTLIST)),
-                            "page", "0",
+                            "page", String.valueOf(page),
                             "type", "1",
                             Constant.BASE_URL + Constant.GETPROJECTLIST,
                             mContext
@@ -405,12 +630,87 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             super.onPostExecute(preselectionProjectListBean);
             if (preselectionProjectListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
+                refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (preselectionProjectListBean.getStatus() == 200) {
-                    EventBus.getDefault().postSticky(preselectionProjectListBean);
+                    refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
+                    refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
+                    if (page == 0) {
+                        pDatas.clear();
+                    }
+                    if (preselectionProjectListBean.getData() != null && preselectionProjectListBean.getData().size() != 0) {
+                        for (PreselectionProjectListBean.DataBean dataBean : preselectionProjectListBean.getData()) {
+                            pDatas.add(dataBean);
+                        }
+                    }
+                    isAuto = false;
+                    myAdapter.notifyDataSetChanged();
+                } else if (preselectionProjectListBean.getStatus() == 201) {
+                    pPages--;
+                    refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, preselectionProjectListBean.getMessage());
+                    refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
+                    refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                 }
+            }
+        }
+    }
+
+    // 下拉刷新和上拉加载
+    private class PullListener implements PullToRefreshLayout.OnRefreshListener {
+
+        @Override
+        public void onRefresh(final PullToRefreshLayout pullToRefreshLayout) {
+            // 下拉刷新
+            if (flag == 0) {
+                rPages = 0;
+                GetRoadshowProjectListTask getRoadshowProjectListTask = new GetRoadshowProjectListTask(0);
+                getRoadshowProjectListTask.execute();
+            } else {
+                pPages = 0;
+                GetPreselectionProjectListTask getPreselectionProjectListTask = new GetPreselectionProjectListTask(0);
+                getPreselectionProjectListTask.execute();
+            }
+        }
+
+        @Override
+        public void onLoadMore(final PullToRefreshLayout pullToRefreshLayout) {
+            // 上拉加载
+            if (flag == 0) {
+                rPages++;
+                Log.i("路演项目页码", String.valueOf(rPages));
+                GetRoadshowProjectListTask getRoadshowProjectListTask = new GetRoadshowProjectListTask(rPages);
+                getRoadshowProjectListTask.execute();
+            } else {
+                pPages++;
+                Log.i("预选项目页码", String.valueOf(pPages));
+                GetPreselectionProjectListTask getPreselectionProjectListTask = new GetPreselectionProjectListTask(pPages);
+                getPreselectionProjectListTask.execute();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && data != null) {
+            if (resultCode == RoadshowDetailsActivity.RESULT_CODE) {
+                if (data.getIntExtra("FLAG", 0) == 1) {// 在详情中关注了项目
+                    rDatas.get(rPOSITION).setCollectionCount(rDatas.get(rPOSITION).getCollectionCount() + 1);
+                } else if (data.getIntExtra("FLAG", 0) == 2) {// 在详情中取消了关注
+                    rDatas.get(rPOSITION).setCollectionCount(rDatas.get(rPOSITION).getCollectionCount() - 1);
+                }
+                myAdapter.notifyDataSetChanged();
+            }
+            if (resultCode == PreselectionDetailsActivity.RESULT_CODE) {
+                if (data.getIntExtra("FLAG", 0) == 1) {// 在详情中关注了项目
+                    pDatas.get(pPOSITION).setCollectionCount(pDatas.get(pPOSITION).getCollectionCount() + 1);
+                } else if (data.getIntExtra("FLAG", 0) == 2) {// 在详情中取消了关注
+                    pDatas.get(pPOSITION).setCollectionCount(pDatas.get(pPOSITION).getCollectionCount() - 1);
+                }
+                myAdapter.notifyDataSetChanged();
             }
         }
     }

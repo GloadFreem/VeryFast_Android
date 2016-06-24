@@ -147,7 +147,11 @@ public class Investor2Fragment extends BaseFragment {
                 Glide.with(mContext).load(datas.get(position - 3).getUser().getHeadSculpture()).into(holder.itemInvestorgFavicon);
                 holder.itemInvestorgName.setText(datas.get(position - 3).getUser().getName());
                 holder.itemInvestorgAddr.setText(datas.get(position - 3).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position - 3).getUser().getAuthentics().get(0).getCity().getName());
-                if (datas.get(position - 3).getAreas().size() == 1) {
+                if (datas.get(position - 3).getAreas().size() == 0) {
+                    holder.itemInvestorgField1.setVisibility(View.INVISIBLE);
+                    holder.itemInvestorgField2.setVisibility(View.INVISIBLE);
+                    holder.itemInvestorgField3.setVisibility(View.INVISIBLE);
+                } else if (datas.get(position - 3).getAreas().size() == 1) {
                     holder.itemInvestorgField1.setText(datas.get(position - 3).getAreas().get(0));
                     holder.itemInvestorgField2.setVisibility(View.INVISIBLE);
                     holder.itemInvestorgField3.setVisibility(View.INVISIBLE);
@@ -273,7 +277,9 @@ public class Investor2Fragment extends BaseFragment {
                     if (page == 0) {
                         funds = investorgListBean.getData().getFounddations();
                         datas = investorgListBean.getData().getInvestors();
-                        listview.setAdapter(myAdapter);
+                        if (datas != null && datas.size() != 0) {
+                            listview.setAdapter(myAdapter);
+                        }
                     } else {
                         for (InvestorgListBean.DataBean.InvestorsBean dataBean : investorgListBean.getData().getInvestors()) {
                             datas.add(dataBean);

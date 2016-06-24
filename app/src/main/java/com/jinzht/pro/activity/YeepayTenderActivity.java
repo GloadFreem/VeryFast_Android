@@ -53,7 +53,7 @@ public class YeepayTenderActivity extends YeepayWebViewActivity {
         toTenderBean.setNotifyUrl(Constant.BASE_URL + Constant.YEEPAY_NOTIFY);
 
         amount_totle = Double.parseDouble(getIntent().getStringExtra("amount")) * 10000;
-        double profit = getIntent().getDoubleExtra("profit", 0);// 分润比率
+        double profit = Double.parseDouble(getIntent().getStringExtra("profit"));// 分润比率
         double amount_platform = amount_totle * profit;// 平台分润金额
         double amount_user = amount_totle - amount_platform;// 借款人得到金额
 

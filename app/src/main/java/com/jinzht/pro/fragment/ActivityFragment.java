@@ -213,13 +213,11 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         datas = activityListBean.getData();
-//                        for (ActivityListBean.DataBean dataBean : datas) {
-//                            Log.i("内容", dataBean.toString());
-//                        }
-                        listview.setAdapter(myAdapter);
+                        if (datas != null && datas.size() != 0) {
+                            listview.setAdapter(myAdapter);
+                        }
                     } else {
                         for (ActivityListBean.DataBean dataBean : activityListBean.getData()) {
-//                            Log.i("内容", dataBean.toString());
                             datas.add(dataBean);
                         }
                         myAdapter.notifyDataSetChanged();

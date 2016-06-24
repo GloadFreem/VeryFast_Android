@@ -201,7 +201,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder = null;
             if (convertView == null) {
                 holder = new ViewHolder();

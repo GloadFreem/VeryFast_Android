@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_main"
@@ -35,117 +34,22 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
-    <ScrollView
+    <com.jinzht.pro.view.PullToRefreshLayout
+        android:id="@+id/refresh_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <include layout="@layout/refresh_head" />
+
+        <com.jinzht.pro.view.PullableListView
+            android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="@color/bg_main"
+            android:divider="@null"
+            android:dividerHeight="9dp"
+            android:scrollbars="none" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="183dp">
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/project_vp_banner"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <LinearLayout
-                    android:id="@+id/project_banner_bottombg"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_gravity="bottom"
-                    android:background="#50000000"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/project_banner_title"
-                        android:layout_width="220dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="79dp"
-                        android:layout_marginTop="5dp"
-                        android:text="逸景营地"
-                        android:textColor="@android:color/white"
-                        android:textSize="17sp" />
-
-                    <TextView
-                        android:id="@+id/project_banner_desc"
-                        android:layout_width="220dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="79dp"
-                        android:layout_marginTop="0dp"
-                        android:singleLine="true"
-                        android:text="新三板VR企业也在新三板VR企业也在新三板VR企业也在新三板VR企业也在"
-                        android:textColor="#d9d9d9"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/project_banner_rl_progress"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="left|bottom"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="20dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:src="@mipmap/icon_bg_progress" />
-
-                    <com.jinzht.pro.view.BannerRoundProgressBar
-                        android:id="@+id/project_banner_progress"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:roundColorB="@android:color/transparent"
-                        app:roundProgressColorB="@color/custom_orange"
-                        app:roundWidthB="8dp"
-                        app:textBottom="800"
-                        app:textColorB="@color/custom_orange"
-                        app:textSizeB="10sp"
-                        app:textTop="W" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/project_banner_points"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right|bottom"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginRight="17dp"
-                    android:orientation="horizontal" />
-            </FrameLayout>
-
-            <RadioGroup
-                android:id="@+id/project_rg_tab"
-                android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/project_rbtn_roadshow"
-                    style="@style/RadioBtn_Project_Tab"
-                    android:checked="true"
-                    android:drawableBottom="@drawable/selector_viewpagertab_project"
-                    android:text="@string/project_roadshow" />
-
-                <RadioButton
-                    android:id="@+id/project_rbtn_preselection"
-                    style="@style/RadioBtn_Project_Tab"
-                    android:drawableBottom="@drawable/selector_viewpagertab_project"
-                    android:text="@string/project_preselection" />
-            </RadioGroup>
-
-            <FrameLayout
-                android:id="@+id/fl_module"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-    </ScrollView>
+        <include layout="@layout/load_more" />
+    </com.jinzht.pro.view.PullToRefreshLayout>
 </LinearLayout>

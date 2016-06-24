@@ -199,13 +199,11 @@ public class Investor3Fragment extends BaseFragment {
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         datas = investorListBean.getData();
-//                        for (InvestorListBean.DataBean dataBean : datas) {
-//                            Log.i("内容", dataBean.toString());
-//                        }
-                        listview.setAdapter(myAdapter);
+                        if (datas != null && datas.size() != 0) {
+                            listview.setAdapter(myAdapter);
+                        }
                     } else {
                         for (InvestorListBean.DataBean dataBean : investorListBean.getData()) {
-//                            Log.i("内容", dataBean.toString());
                             datas.add(dataBean);
                         }
                         myAdapter.notifyDataSetChanged();

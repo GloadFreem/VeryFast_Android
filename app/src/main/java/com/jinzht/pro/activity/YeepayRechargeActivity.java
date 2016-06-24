@@ -29,7 +29,12 @@ public class YeepayRechargeActivity extends YeepayWebViewActivity {
         time = time.replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
         String requestNo = time + getIntent().getStringExtra("userId");
 
-        double amount_totle = Double.parseDouble(getIntent().getStringExtra("amount")) * 10000;
+        double amount_totle;
+        if (getIntent().getDoubleExtra("recharge", 0) == 0) {
+            amount_totle = Double.parseDouble(getIntent().getStringExtra("amount")) * 10000;
+        } else {
+            amount_totle = getIntent().getDoubleExtra("recharge", 0);
+        }
 
         ToRechargeBean toRechargeBean = new ToRechargeBean();
         toRechargeBean.setPlatformNo(Constant.PLATFORMNO);
@@ -69,7 +74,7 @@ public class YeepayRechargeActivity extends YeepayWebViewActivity {
             Intent intent = new Intent(mContext, YeepayTenderActivity.class);
             intent.putExtra("userId", getIntent().getStringExtra("userId"));
             intent.putExtra("amount", getIntent().getStringExtra("amount"));
-            intent.putExtra("profit", getIntent().getDoubleExtra("profit", 0));
+            intent.putExtra("profit", getIntent().getStringExtra("profit"));
             intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
             intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
             intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));

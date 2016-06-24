@@ -245,8 +245,8 @@ public class Constant {
     /**
      * 平台编号platformNo
      */
-//    public static final String PLATFORMNO = "10013200657";
-    public static final String PLATFORMNO = "10013200658";
+    public static final String PLATFORMNO = "10013200657";
+//    public static final String PLATFORMNO = "10013200658";
     /**
      * 签名接口
      */

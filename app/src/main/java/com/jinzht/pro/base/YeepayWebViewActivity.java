@@ -27,11 +27,6 @@ import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.thoughtworks.xstream.XStream;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-
 /**
  * 易宝支付统一WebView
  */
@@ -155,12 +150,20 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             Log.i("要开始的URL", url);
-//            if (url.endsWith("swiftRecharge")) {
-//            }
+            if (url.endsWith("swiftRecharge")) {
+            }
             super.onPageStarted(view, url, favicon);
         }
 
-//        @Override
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            if (url.endsWith("swiftRecharge")) {
+                view.loadUrl("javascript:submit()");
+            }
+            super.onPageFinished(view, url);
+        }
+
+        //        @Override
 //        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 //            super.onReceivedError(view, errorCode, description, failingUrl);
 //            String imgPath = "file:///android_asset/error_pages.png";

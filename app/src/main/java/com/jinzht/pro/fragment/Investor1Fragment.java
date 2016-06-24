@@ -119,7 +119,11 @@ public class Investor1Fragment extends BaseFragment {
             holder.itemInvestorPosition.setText(datas.get(position).getUser().getAuthentics().get(0).getPosition());
             holder.itemInvestorCompName.setText(datas.get(position).getUser().getAuthentics().get(0).getCompanyName());
             holder.itemInvestorAddr.setText(datas.get(position).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position).getUser().getAuthentics().get(0).getCity().getName());
-            if (datas.get(position).getAreas().size() == 1) {
+            if (datas.get(position).getAreas().size() == 0) {
+                holder.itemInvestorField1.setVisibility(View.INVISIBLE);
+                holder.itemInvestorField2.setVisibility(View.INVISIBLE);
+                holder.itemInvestorField3.setVisibility(View.INVISIBLE);
+            } else if (datas.get(position).getAreas().size() == 1) {
                 holder.itemInvestorField1.setText(datas.get(position).getAreas().get(0));
                 holder.itemInvestorField2.setVisibility(View.INVISIBLE);
                 holder.itemInvestorField3.setVisibility(View.INVISIBLE);
@@ -241,7 +245,9 @@ public class Investor1Fragment extends BaseFragment {
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         datas = investorListBean.getData();
-                        listview.setAdapter(myAdapter);
+                        if (datas != null && datas.size() != 0) {
+                            listview.setAdapter(myAdapter);
+                        }
                     } else {
                         for (InvestorListBean.DataBean dataBean : investorListBean.getData()) {
                             datas.add(dataBean);

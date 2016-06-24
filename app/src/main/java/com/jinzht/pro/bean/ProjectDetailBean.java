@@ -408,7 +408,7 @@ public class ProjectDetailBean {
                     private int financeTotal;
                     private int financedMount;
                     private double limitAmount;
-                    private double profit;
+                    private String profit;
 
                     public int getFinancingId() {
                         return financingId;
@@ -458,11 +458,11 @@ public class ProjectDetailBean {
                         this.limitAmount = limitAmount;
                     }
 
-                    public double getProfit() {
+                    public String getProfit() {
                         return profit;
                     }
 
-                    public void setProfit(double profit) {
+                    public void setProfit(String profit) {
                         this.profit = profit;
                     }
                 }

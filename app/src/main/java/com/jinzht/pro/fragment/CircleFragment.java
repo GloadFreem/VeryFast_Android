@@ -344,13 +344,11 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         datas = circleListBean.getData();
-//                        for (CircleListBean.DataBean dataBean : datas) {
-//                            Log.i("内容", dataBean.toString());
-//                        }
-                        listview.setAdapter(myAdapter);
+                        if (datas != null && datas.size() != 0) {
+                            listview.setAdapter(myAdapter);
+                        }
                     } else {
                         for (CircleListBean.DataBean dataBean : circleListBean.getData()) {
-//                            Log.i("内容", dataBean.toString());
                             datas.add(dataBean);
                         }
                         myAdapter.notifyDataSetChanged();
