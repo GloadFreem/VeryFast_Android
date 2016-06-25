@@ -65,20 +65,29 @@ public class YeepayRegisterActivity extends YeepayWebViewActivity {
     protected void saveSign(String signResult) {
         backSign = signResult;
         if (callBackBean != null && "1".equals(callBackBean.getCode())) {
-            // 跳转到充值界面
-            Intent intent = new Intent(mContext, YeepayRechargeActivity.class);
-            intent.putExtra("userId", getIntent().getStringExtra("userId"));
-            intent.putExtra("amount", getIntent().getStringExtra("amount"));
-            intent.putExtra("profit", getIntent().getDoubleExtra("profit", 0));
-            intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
-            intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
-            intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
-            intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
-            intent.putExtra("type", getIntent().getStringExtra("type"));
-            intent.putExtra("img", getIntent().getStringExtra("img"));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+            Intent intent = new Intent();
+            switch (getIntent().getStringExtra("TAG")) {
+                // 跳转到充值界面
+                case "InvestActivity":
+                    intent.setClass(mContext, YeepayRechargeActivity.class);
+                    intent.putExtra("userId", getIntent().getStringExtra("userId"));
+                    intent.putExtra("amount", getIntent().getStringExtra("amount"));
+                    intent.putExtra("profit", getIntent().getDoubleExtra("profit", 0));
+                    intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
+                    intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
+                    intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
+                    intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
+                    intent.putExtra("type", getIntent().getStringExtra("type"));
+                    intent.putExtra("img", getIntent().getStringExtra("img"));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                    break;
+                // 从资金账户来，注册完后返回
+                case "AccountActivity":
+                    finish();
+                    break;
+            }
         }
     }
 }

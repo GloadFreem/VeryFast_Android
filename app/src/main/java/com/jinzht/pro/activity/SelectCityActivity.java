@@ -51,7 +51,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
-        tvTitle.setText("公司所在地");
+        tvTitle.setText("所在地");
         btnConfirm = (LinearLayout) findViewById(R.id.btn_confirm);// 确定按钮
         btnConfirm.setVisibility(View.GONE);
         lvInvestField = (ListView) findViewById(R.id.lv_invest_field);// 省份列表
@@ -63,7 +63,15 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i("选择了", citys.get(position).getName());
-                Intent intent = new Intent(mContext, CertificationIDCardActivity.class);
+                Intent intent = new Intent();
+                switch (getIntent().getStringExtra("TAG")) {
+                    case "认证":
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                        break;
+                    case "修改":
+                        intent.setClass(mContext, MyInfoActivity.class);
+                        break;
+                }
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra("TAG", "城市");

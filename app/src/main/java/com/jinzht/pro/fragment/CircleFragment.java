@@ -50,7 +50,7 @@ import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 
 /**
- * 圈子界面
+ * 圈子列表界面
  */
 public class CircleFragment extends BaseFragment implements View.OnClickListener {
 

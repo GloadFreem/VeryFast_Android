@@ -9,72 +9,126 @@
 
     <include layout="@layout/title_back" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:background="@android:color/white"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/iv_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@mipmap/icon_project_selected" />
-
-        <TextView
-            android:id="@+id/tv_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="项目方"
-            android:textColor="@color/custom_orange"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/tv_desc"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/bg_tv_user_type"
-            android:lineSpacingExtra="7dp"
-            android:padding="10dp"
-            android:text="项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目"
-            android:textColor="#474747"
-            android:textSize="15sp" />
-    </LinearLayout>
+            android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="19dp"
-        android:paddingLeft="13dp"
-        android:text="注：如有更多需求可新增身份"
-        android:textColor="#a9a9a9"
-        android:textSize="14sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:background="@android:color/white"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:background="@android:color/white">
+                <ImageView
+                    android:id="@+id/iv_type1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@mipmap/icon_project_selected" />
 
-        <TextView
-            android:id="@+id/btn_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="25dp"
-            android:layout_marginTop="25dp"
-            android:drawablePadding="10dp"
-            android:drawableTop="@mipmap/icon_add"
-            android:text="新增身份"
-            android:textColor="#474747"
-            android:textSize="20sp" />
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_type1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text=""
+                    android:textColor="@color/custom_orange"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_desc1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bg_tv_user_type"
+                    android:lineSpacingExtra="7dp"
+                    android:padding="10dp"
+                    android:textColor="#474747"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_type2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:background="@android:color/white"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv_type2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@mipmap/icon_project_selected" />
+
+                <TextView
+                    android:id="@+id/tv_type2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="项目方"
+                    android:textColor="@color/custom_orange"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_desc2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bg_tv_user_type"
+                    android:lineSpacingExtra="7dp"
+                    android:padding="10dp"
+                    android:text="项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目项目方可以上传项目"
+                    android:textColor="#474747"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="19dp"
+                android:paddingLeft="13dp"
+                android:text="注：如有更多需求可新增身份"
+                android:textColor="#a9a9a9"
+                android:textSize="14sp" />
+
+            <RelativeLayout
+                android:id="@+id/rl_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:id="@+id/btn_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="25dp"
+                    android:layout_marginTop="25dp"
+                    android:drawablePadding="10dp"
+                    android:drawableTop="@mipmap/icon_add"
+                    android:text="新增身份"
+                    android:textColor="#474747"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

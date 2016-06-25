@@ -75,6 +75,8 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
     private TextView tvRemind;// 提示
     private TextView btnBottom;// 底部按钮
 
+    private Intent intent = new Intent();
+
     private UserInfoBean.DataBean data;// 个人信息
     private String inviteCode = "";
     private String str;// 转换字体的临时字符串
@@ -98,10 +100,6 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         photo_path = getCacheDir() + "/" + "favicon.jpg";// 头像保存地址
         photoFile = new File(Environment.getExternalStorageDirectory() + "/" + "favicon.jpg");
         EventBus.getDefault().register(this);
-//        data = (UserInfoBean.DataBean) getIntent().getSerializableExtra("data");
-//        if (data != null) {
-//            initData();
-//        }
     }
 
     private void findView() {
@@ -157,7 +155,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         GetInviteCode getInviteCode = new GetInviteCode();
         getInviteCode.execute();
         tvType.setText(data.getAuthentics().get(0).getIdentiytype().getName());
-        data.getAuthentics().get(0).getAuthenticstatus().setName("已认证");
+        Log.i("认证状态", data.getAuthentics().get(0).getAuthenticstatus().getName());
         switch (data.getAuthentics().get(0).getAuthenticstatus().getName()) {
             case "未认证":
                 tvTag.setText("实名认证信息(未认证)");
@@ -234,25 +232,43 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                 choosePhoto();
                 break;
             case R.id.myinfo_btn_invite:// 点击查看指环码
-                SuperToastUtils.showSuperToast(mContext, 2, "指环码");
+                intent.setClass(this, InviteCodeActivity.class);
+                intent.putExtra("inviteCode", inviteCode);
+                startActivity(intent);
                 break;
             case R.id.myinfo_btn_type:// 点击查看和新增身份
-                SuperToastUtils.showSuperToast(mContext, 2, "身份");
+                intent.setClass(this, UserTypeActivity.class);
+                EventBus.getDefault().postSticky(data.getAuthentics());
+                startActivity(intent);
                 break;
             case R.id.myinfo_rl_idcard:// 未认证和认证失败时点击认证
-                SuperToastUtils.showSuperToast(mContext, 2, "身份证");
+                intent.setClass(this, CertificationIDCardActivity.class);
+                intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
+                startActivity(intent);
                 break;
             case R.id.myinfo_btn_comp:// 点击修改公司名
-                SuperToastUtils.showSuperToast(mContext, 2, "修改公司");
+                intent.setClass(this, ChangeCompActivity.class);
+                intent.putExtra("TAG", "公司");
+                startActivity(intent);
                 break;
             case R.id.myinfo_btn_position:// 点击修改职位
-                SuperToastUtils.showSuperToast(mContext, 2, "修改职位");
+                intent.setClass(this, ChangeCompActivity.class);
+                intent.putExtra("TAG", "职位");
+                startActivity(intent);
                 break;
             case R.id.myinfo_btn_addr:// 点击修改所在地
-                SuperToastUtils.showSuperToast(mContext, 2, "修改所在地");
+                intent.setClass(this, SelectProvinceActivity.class);
+                intent.putExtra("TAG", "修改");
+                startActivity(intent);
                 break;
             case R.id.myinfo_btn_bottom:// 提交认证或催一催或者重新认证
-                SuperToastUtils.showSuperToast(mContext, 2, "谁知道是啥");
+                if ("催一催".equals(btnBottom.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "催一催");
+                } else {
+                    intent.setClass(this, CertificationIDCardActivity.class);
+                    intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
+                    startActivity(intent);
+                }
                 break;
         }
     }
@@ -265,6 +281,26 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
             setResult(RESULT_CODE, intent);
         }
         finish();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        switch (intent.getStringExtra("TAG")) {
+            case "changeCompany":
+                tvComp.setText(intent.getStringExtra("companyName"));
+                needRefresh = true;
+                break;
+            case "changePosition":
+                tvPosition.setText(intent.getStringExtra("position"));
+                needRefresh = true;
+                break;
+            case "城市":
+                tvAddr.setText(intent.getStringExtra("provinceName") + " | " + intent.getStringExtra("cityName"));
+                ChangeAddr changeAddr = new ChangeAddr(intent.getStringExtra("cityId"));
+                changeAddr.execute();
+                break;
+        }
     }
 
     // 选择头像
@@ -362,8 +398,8 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         protected void onPostExecute(InviteCodeBean inviteCodeBean) {
             super.onPostExecute(inviteCodeBean);
             if (inviteCodeBean != null && inviteCodeBean.getStatus() == 200) {
-                tvInvite.setText(inviteCodeBean.getData().getCode());
-                inviteCode = inviteCodeBean.getData().getCode();
+                tvInvite.setText(inviteCodeBean.getData());
+                inviteCode = inviteCodeBean.getData();
             }
         }
     }
@@ -403,6 +439,44 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
                 }
+            }
+        }
+    }
+
+    // 修改城市
+    private class ChangeAddr extends AsyncTask<Void, Void, CommonBean> {
+        private String cityId;
+
+        public ChangeAddr(String cityId) {
+            this.cityId = cityId;
+        }
+
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.endsWith(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.CHANGEADDR)),
+                            "cityId", cityId,
+                            Constant.BASE_URL + Constant.CHANGEADDR,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("修改所在地", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            if (commonBean != null && commonBean.getStatus() == 200) {
+                needRefresh = true;
             }
         }
     }

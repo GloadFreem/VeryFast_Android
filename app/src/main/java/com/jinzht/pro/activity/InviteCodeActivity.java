@@ -1,12 +1,17 @@
 package com.jinzht.pro.activity;
 
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
+import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.view.CircleImageView;
 
@@ -38,7 +43,9 @@ public class InviteCodeActivity extends BaseActivity implements View.OnClickList
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
         tvTitle.setText("指环码");
         ivFavicon = (CircleImageView) findViewById(R.id.iv_favicon);// 头像
+        Glide.with(this).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).into(ivFavicon);
         tvInviteCode = (TextView) findViewById(R.id.tv_invite_code);// 指环码
+        tvInviteCode.setText(getIntent().getStringExtra("inviteCode"));
         btnCopy = (ImageView) findViewById(R.id.btn_copy);// 复制按钮
         btnCopy.setOnClickListener(this);
     }
@@ -50,6 +57,9 @@ public class InviteCodeActivity extends BaseActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.btn_copy:// 复制指环码
+                ClipboardManager cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                cmb.setText(tvInviteCode.getText().toString());
+                SuperToastUtils.showSuperToast(mContext, 2, "已复制到剪贴板");
                 break;
         }
     }

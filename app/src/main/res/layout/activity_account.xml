@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="62.5dp"
-            android:text="23,000,000元"
+            android:text="0.00元"
             android:textColor="@android:color/white"
             android:textSize="39sp" />
 
@@ -51,7 +51,7 @@
             android:id="@+id/account_tv_totle_balance_upper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="两仟叁佰万元整"
+            android:text="零元"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 
@@ -87,11 +87,11 @@
 
             <TextView
                 android:id="@+id/account_tv_available_lower"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="9,000,000元"
+                android:text="0.00元"
                 android:textColor="@android:color/white"
                 android:textSize="19sp" />
 
@@ -102,11 +102,11 @@
 
             <TextView
                 android:id="@+id/account_tv_freeze_lower"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="14,000,000元"
+                android:text="0.00元"
                 android:textColor="@android:color/white"
                 android:textSize="19sp" />
         </LinearLayout>
@@ -118,21 +118,21 @@
 
             <TextView
                 android:id="@+id/account_tv_available_upper"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="玖佰万元整"
+                android:text="零元"
                 android:textColor="@android:color/white"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/account_tv_freeze_upper"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="壹仟肆佰万元整"
+                android:text="零元"
                 android:textColor="@android:color/white"
                 android:textSize="12sp" />
         </LinearLayout>

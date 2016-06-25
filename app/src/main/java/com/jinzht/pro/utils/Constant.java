@@ -5,9 +5,8 @@ package com.jinzht.pro.utils;
  */
 public class Constant {
 
-    //    public static final String BASE_URL = "http://www.jinzht.com/jinzht/";
-    public static final String BASE_URL = "http://192.168.5.139:8080/jinzht/";
-//    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
+//    public static final String BASE_URL = "http://192.168.5.139:8080/jinzht/";
+    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 微信APP_ID
      */
@@ -236,6 +235,18 @@ public class Constant {
      * 投资
      */
     public static final String INVEST = "requestInvestProject.action";
+    /**
+     * 修改公司名
+     */
+    public static final String CHANGECOMPANY = "requestModifyCompany.action";
+    /**
+     * 修改职位
+     */
+    public static final String CHANGEPOSITION = "requestModifyPosition.action";
+    /**
+     * 修改所在地
+     */
+    public static final String CHANGEADDR = "requestModifyCity.action";
 
 
     /**
@@ -248,7 +259,7 @@ public class Constant {
     public static final String PLATFORMNO = "10013200657";
 //    public static final String PLATFORMNO = "10013200658";
     /**
-     * 签名接口
+     * 签名接口，type = 0表示网关，type = 1表示直连。
      */
     public static final String SIGN = "signVerify.action";
     /**

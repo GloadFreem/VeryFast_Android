@@ -108,7 +108,7 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
                             "method", "sign",
                             "req", request,
                             "sign", "",
-                            "type", "1",
+                            "type", "0",
                             Constant.BASE_URL + Constant.SIGN,
                             mContext
                     );

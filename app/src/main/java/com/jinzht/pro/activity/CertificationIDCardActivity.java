@@ -181,6 +181,7 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
                 break;
             case R.id.certification_tv_company_addr1:// 点击选择公司所在地
                 intent = new Intent(this, SelectProvinceActivity.class);
+                intent.putExtra("TAG", "认证");
                 startActivity(intent);
                 break;
             case R.id.tv_select_field:// 点击选择投资领域

@@ -126,12 +126,190 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         bannerData = bean.getData();
         if (bannerData != null && bannerData.size() != 0) {
             // 处理banner
-            listview.setAdapter(myAdapter);
+            initListHeader();
+//            listview.setAdapter(myAdapter);
             GetRoadshowProjectListTask getRoadshowProjectListTask = new GetRoadshowProjectListTask(0);
             getRoadshowProjectListTask.execute();
             GetPreselectionProjectListTask getPreselectionProjectListTask = new GetPreselectionProjectListTask(0);
             getPreselectionProjectListTask.execute();
         }
+    }
+
+    // 添加banner头布局
+    private void initListHeader() {
+        View header = LayoutInflater.from(mContext).inflate(R.layout.item_banner_and_tab, null);
+        final ViewPager projectVpBanner = (ViewPager) header.findViewById(R.id.project_vp_banner);// banner轮播条
+        final LinearLayout projectBannerBottombg = (LinearLayout) header.findViewById(R.id.project_banner_bottombg);// banner底部的阴影
+        final TextView projectBannerTitle = (TextView) header.findViewById(R.id.project_banner_title);// banner标题
+        final TextView projectBannerDesc = (TextView) header.findViewById(R.id.project_banner_desc);// banner描述
+        final LinearLayout projectBannerPoints = (LinearLayout) header.findViewById(R.id.project_banner_points);// banner指示点
+        RadioGroup projectRgTab = (RadioGroup) header.findViewById(R.id.project_rg_tab);// 项目页签的RadioGroup
+        final RelativeLayout rlProgress = (RelativeLayout) header.findViewById(R.id.project_banner_rl_progress);// banner上的圆形进度条框架
+        final BannerRoundProgressBar bannerProgress = (BannerRoundProgressBar) header.findViewById(R.id.project_banner_progress);// banner上的圆形进度条
+        final RadioButton projectRbtnRoadshow = (RadioButton) header.findViewById(R.id.project_rbtn_roadshow);// 路演项目按钮
+        final RadioButton projectRbtnPreselection = (RadioButton) header.findViewById(R.id.project_rbtn_preselection);// 预选项目按钮
+        // 准备图片
+        imageViews.clear();
+        projectBannerPoints.removeAllViews();
+        for (int i = 0; i < bannerData.size(); i++) {
+            ImageView imageView = new ImageView(mContext);
+            // 设置图片缩放类型
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            Glide.with(mContext).load(bannerData.get(i).getBody().getImage()).into(imageView);
+            imageViews.add(imageView);
+            // 创建圆点指示器
+            ImageView point = new ImageView(mContext);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(UiUtils.dip2px(3), UiUtils.dip2px(3));
+            if (i != 0) {
+                params.leftMargin = 10;
+            }
+            point.setLayoutParams(params);
+            point.setEnabled(false);
+            point.setBackgroundResource(R.drawable.selector_banner_point);
+            // 将点点指示器添加到线性容器中
+            projectBannerPoints.addView(point);
+        }
+        // 给banner填充数据
+        projectVpBanner.setAdapter(new PagerAdapter() {
+            @Override
+            public int getCount() {
+                return Integer.MAX_VALUE;// 为了实现无限循环
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
+            }
+
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                final int newPosition = position % imageViews.size();
+                ImageView imageView = imageViews.get(newPosition);
+                // 把要返回的控件添加到容器
+                container.addView(imageView);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SuperToastUtils.showSuperToast(mContext, 2, "点击了第" + newPosition + "张图片");
+                    }
+                });
+                return imageView;
+            }
+
+            // 删除条目
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                container.removeView((View) object);
+            }
+        });
+        // 监听banner的滑动
+        projectVpBanner.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                int newPosition = position % imageViews.size();
+                // 把前一个点变成normal
+                projectBannerPoints.getChildAt(prePointIndex).setEnabled(false);
+                // 把相应位置的点变成selected
+                projectBannerPoints.getChildAt(newPosition).setEnabled(true);
+                // 当滑到某一页时，改变文字
+                projectBannerTitle.setText(bannerData.get(newPosition).getBody().getName());
+                projectBannerDesc.setText(bannerData.get(newPosition).getBody().getDescription());
+                // 改变圆形进度条
+                if (bannerData.get(newPosition).getType().equals("Project")) {
+                    if (bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinancedMount() == 0) {
+                        projectBannerBottombg.setVisibility(View.GONE);
+                        rlProgress.setVisibility(View.GONE);
+                    } else {
+                        projectBannerBottombg.setVisibility(View.VISIBLE);
+                        rlProgress.setVisibility(View.VISIBLE);
+                        bannerProgress.setTextBottom(String.valueOf(bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinanceTotal()));
+                        proTotal = (int) ((double) (bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
+                        // banner的圆形进度条开始动
+                        startBannerProgress();
+
+                        // 控制banner进度条，更新UI
+                        if (mHandler == null) {
+                            mHandler = new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    int temp = (int) msg.obj;
+                                    if (proTotal - temp > 0) {
+                                        bannerProgress.setProgress(temp);
+                                    } else {
+                                        bannerProgress.setProgress(proTotal);
+                                        thread.stopThread();
+                                    }
+                                }
+                            };
+                        }
+
+                        if (progressStop) {
+                            bannerProgress.setProgress(proTotal);
+                        }
+                    }
+                } else {
+                    projectBannerBottombg.setVisibility(View.GONE);
+                    rlProgress.setVisibility(View.GONE);
+                }
+                prePointIndex = newPosition;
+            }
+        });
+        // 初始化第0页
+        projectBannerTitle.setText(bannerData.get(0).getBody().getName());
+        projectBannerDesc.setText(bannerData.get(0).getBody().getDescription());
+        // 初始化第0个点
+        projectBannerPoints.getChildAt(0).setEnabled(true);
+        // 实现往复无限滑动，设置当前条目位置为一个大值
+        int center = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % imageViews.size();
+        projectVpBanner.setCurrentItem(center);
+
+        // 自动轮播
+        if (isAuto) {
+            if (handler == null) {
+                handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        projectVpBanner.setCurrentItem(projectVpBanner.getCurrentItem() + 1);
+                    }
+                };
+            }
+            if (bannerRunnable == null) {
+                bannerRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        synchronized (projectVpBanner) {
+                            handler.obtainMessage().sendToTarget();
+                        }
+                    }
+                };
+            }
+            scheduledExecutorService.scheduleAtFixedRate(bannerRunnable, 4, 4, TimeUnit.SECONDS);
+        }
+
+        // 设置tab的单选事件
+        projectRgTab.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.project_rbtn_roadshow:// 选择了路演项目
+                        flag = 0;
+                        projectRbtnRoadshow.setTextColor(UiUtils.getColor(R.color.custom_orange));
+                        projectRbtnPreselection.setTextColor(UiUtils.getColor(R.color.bg_text));
+                        isAuto = false;
+                        myAdapter.notifyDataSetChanged();
+                        break;
+                    case R.id.project_rbtn_preselection:// 选择了预选项目
+                        flag = 1;
+                        projectRbtnPreselection.setTextColor(UiUtils.getColor(R.color.custom_orange));
+                        projectRbtnRoadshow.setTextColor(UiUtils.getColor(R.color.bg_text));
+                        isAuto = false;
+                        myAdapter.notifyDataSetChanged();
+                        break;
+                }
+            }
+        });
+
+        listview.addHeaderView(header);
     }
 
     private class MyAdapter extends BaseAdapter {
@@ -141,15 +319,15 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         public int getCount() {
             if (flag == 0) {
                 if (rDatas != null && rDatas.size() != 0) {
-                    return rDatas.size() + 1;
+                    return rDatas.size();
                 } else {
-                    return 1;
+                    return 0;
                 }
             } else {
                 if (pDatas != null && pDatas.size() != 0) {
-                    return pDatas.size() + 1;
+                    return pDatas.size();
                 } else {
-                    return 1;
+                    return 0;
                 }
             }
         }
@@ -157,32 +335,28 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         @Override
         public Object getItem(int position) {
             if (flag == 0) {
-                return rDatas.get(position - 1);
+                return rDatas.get(position);
             } else {
-                return pDatas.get(position - 1);
+                return pDatas.get(position);
             }
         }
 
         @Override
         public long getItemId(int position) {
-            return position - 1;
+            return position;
         }
 
         @Override
         public int getViewTypeCount() {
-            return 3;
+            return 2;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position == 0) {
+            if (flag == 0) {
                 return 0;
             } else {
-                if (flag == 0) {
-                    return 1;
-                } else {
-                    return 2;
-                }
+                return 1;
             }
         }
 
@@ -191,18 +365,6 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             if (convertView == null) {
                 holder = new ViewHolder();
                 if (getItemViewType(position) == 0) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.item_banner_and_tab, null);
-                    holder.projectVpBanner = (ViewPager) convertView.findViewById(R.id.project_vp_banner);// banner轮播条
-                    holder.projectBannerBottombg = (LinearLayout) convertView.findViewById(R.id.project_banner_bottombg);// banner底部的阴影
-                    holder.projectBannerTitle = (TextView) convertView.findViewById(R.id.project_banner_title);// banner标题
-                    holder.projectBannerDesc = (TextView) convertView.findViewById(R.id.project_banner_desc);// banner描述
-                    holder.projectBannerPoints = (LinearLayout) convertView.findViewById(R.id.project_banner_points);// banner指示点
-                    holder.projectRgTab = (RadioGroup) convertView.findViewById(R.id.project_rg_tab);// 项目页签的RadioGroup
-                    holder.rlProgress = (RelativeLayout) convertView.findViewById(R.id.project_banner_rl_progress);// banner上的圆形进度条框架
-                    holder.bannerProgress = (BannerRoundProgressBar) convertView.findViewById(R.id.project_banner_progress);// banner上的圆形进度条
-                    holder.projectRbtnRoadshow = (RadioButton) convertView.findViewById(R.id.project_rbtn_roadshow);// 路演项目按钮
-                    holder.projectRbtnPreselection = (RadioButton) convertView.findViewById(R.id.project_rbtn_preselection);// 预选项目按钮
-                } else if (getItemViewType(position) == 1) {
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.item_project_roadshow, null);
                     holder.itemProjectImg = (CircleImageView) convertView.findViewById(R.id.item_project_img);
                     holder.itemProjectTitle = (TextView) convertView.findViewById(R.id.item_project_title);
@@ -233,175 +395,12 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            // 处理banner
             if (getItemViewType(position) == 0) {
-                final ViewHolder finalHolder = holder;
-                // 准备图片
-                imageViews.clear();
-                holder.projectBannerPoints.removeAllViews();
-                for (int i = 0; i < bannerData.size(); i++) {
-                    ImageView imageView = new ImageView(mContext);
-                    // 设置图片缩放类型
-                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    Glide.with(mContext).load(bannerData.get(i).getBody().getImage()).into(imageView);
-                    imageViews.add(imageView);
-                    // 创建圆点指示器
-                    ImageView point = new ImageView(mContext);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(UiUtils.dip2px(3), UiUtils.dip2px(3));
-                    if (i != 0) {
-                        params.leftMargin = 10;
-                    }
-                    point.setLayoutParams(params);
-                    point.setEnabled(false);
-                    point.setBackgroundResource(R.drawable.selector_banner_point);
-                    // 将点点指示器添加到线性容器中
-                    holder.projectBannerPoints.addView(point);
-                }
-                // 给banner填充数据
-                holder.projectVpBanner.setAdapter(new PagerAdapter() {
-                    @Override
-                    public int getCount() {
-                        return Integer.MAX_VALUE;// 为了实现无限循环
-                    }
-
-                    @Override
-                    public boolean isViewFromObject(View view, Object object) {
-                        return view == object;
-                    }
-
-                    @Override
-                    public Object instantiateItem(ViewGroup container, int position) {
-                        final int newPosition = position % imageViews.size();
-                        ImageView imageView = imageViews.get(newPosition);
-                        // 把要返回的控件添加到容器
-                        container.addView(imageView);
-                        imageView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                SuperToastUtils.showSuperToast(mContext, 2, "点击了第" + newPosition + "张图片");
-                            }
-                        });
-                        return imageView;
-                    }
-
-                    // 删除条目
-                    @Override
-                    public void destroyItem(ViewGroup container, int position, Object object) {
-                        container.removeView((View) object);
-                    }
-                });
-                // 监听banner的滑动
-                holder.projectVpBanner.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        int newPosition = position % imageViews.size();
-                        // 把前一个点变成normal
-                        finalHolder.projectBannerPoints.getChildAt(prePointIndex).setEnabled(false);
-                        // 把相应位置的点变成selected
-                        finalHolder.projectBannerPoints.getChildAt(newPosition).setEnabled(true);
-                        // 当滑到某一页时，改变文字
-                        finalHolder.projectBannerTitle.setText(bannerData.get(newPosition).getBody().getName());
-                        finalHolder.projectBannerDesc.setText(bannerData.get(newPosition).getBody().getDescription());
-                        // 改变圆形进度条
-                        if (bannerData.get(newPosition).getType().equals("Project")) {
-                            if (bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinancedMount() == 0) {
-                                finalHolder.projectBannerBottombg.setVisibility(View.GONE);
-                                finalHolder.rlProgress.setVisibility(View.GONE);
-                            } else {
-                                finalHolder.projectBannerBottombg.setVisibility(View.VISIBLE);
-                                finalHolder.rlProgress.setVisibility(View.VISIBLE);
-                                finalHolder.bannerProgress.setTextBottom(String.valueOf(bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinanceTotal()));
-                                proTotal = (int) ((double) (bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (bannerData.get(newPosition).getExtr().getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
-                                // banner的圆形进度条开始动
-                                startBannerProgress();
-
-                                // 控制banner进度条，更新UI
-                                if (mHandler == null) {
-                                    mHandler = new Handler() {
-                                        @Override
-                                        public void handleMessage(Message msg) {
-                                            int temp = (int) msg.obj;
-                                            if (proTotal - temp > 0) {
-                                                finalHolder.bannerProgress.setProgress(temp);
-                                            } else {
-                                                finalHolder.bannerProgress.setProgress(proTotal);
-                                                thread.stopThread();
-                                            }
-                                        }
-                                    };
-                                }
-
-                                if (progressStop) {
-                                    finalHolder.bannerProgress.setProgress(proTotal);
-                                }
-                            }
-                        } else {
-                            finalHolder.projectBannerBottombg.setVisibility(View.GONE);
-                            finalHolder.rlProgress.setVisibility(View.GONE);
-                        }
-                        prePointIndex = newPosition;
-                    }
-                });
-                // 初始化第0页
-                holder.projectBannerTitle.setText(bannerData.get(0).getBody().getName());
-                holder.projectBannerDesc.setText(bannerData.get(0).getBody().getDescription());
-                // 初始化第0个点
-                holder.projectBannerPoints.getChildAt(0).setEnabled(true);
-                // 实现往复无限滑动，设置当前条目位置为一个大值
-//                int center = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % imageViews.size();
-                holder.projectVpBanner.setCurrentItem(100);
-
-                // 自动轮播
-                if (isAuto) {
-                    if (handler == null) {
-                        handler = new Handler() {
-                            @Override
-                            public void handleMessage(Message msg) {
-                                finalHolder.projectVpBanner.setCurrentItem(finalHolder.projectVpBanner.getCurrentItem() + 1);
-                            }
-                        };
-                    }
-                    if (bannerRunnable == null) {
-                        bannerRunnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                synchronized (finalHolder.projectVpBanner) {
-                                    handler.obtainMessage().sendToTarget();
-                                }
-                            }
-                        };
-                    }
-                    scheduledExecutorService.scheduleAtFixedRate(bannerRunnable, 4, 4, TimeUnit.SECONDS);
-                }
-
-                // 设置tab的单选事件
-                holder.projectRgTab.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        switch (checkedId) {
-                            case R.id.project_rbtn_roadshow:// 选择了路演项目
-                                flag = 0;
-                                finalHolder.projectRbtnRoadshow.setTextColor(UiUtils.getColor(R.color.custom_orange));
-                                finalHolder.projectRbtnPreselection.setTextColor(UiUtils.getColor(R.color.bg_text));
-                                isAuto = false;
-                                myAdapter.notifyDataSetChanged();
-                                break;
-                            case R.id.project_rbtn_preselection:// 选择了预选项目
-                                flag = 1;
-                                finalHolder.projectRbtnPreselection.setTextColor(UiUtils.getColor(R.color.custom_orange));
-                                finalHolder.projectRbtnRoadshow.setTextColor(UiUtils.getColor(R.color.bg_text));
-                                isAuto = false;
-                                myAdapter.notifyDataSetChanged();
-                                break;
-                        }
-                    }
-                });
-            } else if (getItemViewType(position) == 1) {
                 // 路演项目列表
-                Glide.with(mContext).load(rDatas.get(position - 1).getStartPageImage()).into(holder.itemProjectImg);
-                holder.itemProjectTitle.setText(rDatas.get(position - 1).getAbbrevName());
-                holder.itemProjectAddr.setText(rDatas.get(position - 1).getAddress());
-                switch (rDatas.get(position - 1).getFinancestatus().getName()) {
+                Glide.with(mContext).load(rDatas.get(position).getStartPageImage()).into(holder.itemProjectImg);
+                holder.itemProjectTitle.setText(rDatas.get(position).getAbbrevName());
+                holder.itemProjectAddr.setText(rDatas.get(position).getAddress());
+                switch (rDatas.get(position).getFinancestatus().getName()) {
                     case "待路演":
                         holder.itemProjectTag.setImageResource(R.mipmap.tag_dailuyan);
                         break;
@@ -415,8 +414,8 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                         holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzishibai);
                         break;
                 }
-                holder.itemProjectCompname.setText(rDatas.get(position - 1).getFullName());
-                String[] fields = rDatas.get(position - 1).getIndustoryType().split("，");
+                holder.itemProjectCompname.setText(rDatas.get(position).getFullName());
+                String[] fields = rDatas.get(position).getIndustoryType().split("，");
                 if (fields.length == 0) {
                     holder.itemProjectField1.setVisibility(View.INVISIBLE);
                     holder.itemProjectField2.setVisibility(View.INVISIBLE);
@@ -434,18 +433,18 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     holder.itemProjectField2.setText(fields[1]);
                     holder.itemProjectField3.setText(fields[2]);
                 }
-                holder.itemProjectPopularity.setText(String.valueOf(rDatas.get(position - 1).getCollectionCount()));
-                holder.itemProjectTime.setText(String.valueOf(rDatas.get(position - 1).getTimeLeft()));
-                holder.itemProjectAmount.setText(rDatas.get(position - 1).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
-                int progress = (int) ((double) (rDatas.get(position - 1).getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (rDatas.get(position - 1).getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
+                holder.itemProjectPopularity.setText(String.valueOf(rDatas.get(position).getCollectionCount()));
+                holder.itemProjectTime.setText(String.valueOf(rDatas.get(position).getTimeLeft()));
+                holder.itemProjectAmount.setText(rDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
+                int progress = (int) ((double) (rDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (rDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
                 holder.itemProjectProgress.setProgress(progress);
             } else {
                 // 预选项目列表
-                Glide.with(mContext).load(pDatas.get(position - 1).getStartPageImage()).into(holder.itemProjectImg);
-                holder.itemProjectTitle.setText(pDatas.get(position - 1).getAbbrevName());
-                holder.itemProjectAddr.setText(pDatas.get(position - 1).getAddress());
-                holder.itemProjectCompname.setText(pDatas.get(position - 1).getFullName());
-                String[] fields = pDatas.get(position - 1).getIndustoryType().split("，");
+                Glide.with(mContext).load(pDatas.get(position).getStartPageImage()).into(holder.itemProjectImg);
+                holder.itemProjectTitle.setText(pDatas.get(position).getAbbrevName());
+                holder.itemProjectAddr.setText(pDatas.get(position).getAddress());
+                holder.itemProjectCompname.setText(pDatas.get(position).getFullName());
+                String[] fields = pDatas.get(position).getIndustoryType().split("，");
                 if (fields.length == 0) {
                     holder.itemProjectField1.setVisibility(View.INVISIBLE);
                     holder.itemProjectField2.setVisibility(View.INVISIBLE);
@@ -463,24 +462,13 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     holder.itemProjectField2.setText(fields[1]);
                     holder.itemProjectField3.setText(fields[2]);
                 }
-                holder.itemProjectPopularity.setText(String.valueOf(pDatas.get(position - 1).getCollectionCount()));
-                holder.itemProjectAmount.setText(pDatas.get(position - 1).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
+                holder.itemProjectPopularity.setText(String.valueOf(pDatas.get(position).getCollectionCount()));
+                holder.itemProjectAmount.setText(pDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
             }
             return convertView;
         }
 
         class ViewHolder {
-            private ViewPager projectVpBanner;// banner轮播条
-            private LinearLayout projectBannerBottombg;// banner底部的阴影
-            private TextView projectBannerTitle;// banner标题
-            private TextView projectBannerDesc;// banner描述
-            private LinearLayout projectBannerPoints;// banner指示点
-            private RelativeLayout rlProgress;// banner上的圆形进度条框架
-            private RadioGroup projectRgTab;// 项目页签的RadioGroup
-            private BannerRoundProgressBar bannerProgress;// banner上的圆形进度条
-            private RadioButton projectRbtnRoadshow;// 路演项目按钮
-            private RadioButton projectRbtnPreselection;// 预选项目按钮
-
             private CircleImageView itemProjectImg;
             private TextView itemProjectTitle;
             private TextView itemProjectAddr;
@@ -574,15 +562,19 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
-                        rDatas.clear();
-                    }
-                    if (roadshowProjectListBean.getData() != null && roadshowProjectListBean.getData().size() != 0) {
-                        for (RoadshowProjectListBean.DataBean dataBean : roadshowProjectListBean.getData()) {
-                            rDatas.add(dataBean);
+                        rDatas = roadshowProjectListBean.getData();
+                        if (rDatas != null && rDatas.size() != 0) {
+                            listview.setAdapter(myAdapter);
+                        }
+                    } else {
+                        if (roadshowProjectListBean.getData() != null && roadshowProjectListBean.getData().size() != 0) {
+                            for (RoadshowProjectListBean.DataBean dataBean : roadshowProjectListBean.getData()) {
+                                rDatas.add(dataBean);
+                            }
+                            isAuto = false;
+                            myAdapter.notifyDataSetChanged();
                         }
                     }
-                    isAuto = false;
-                    myAdapter.notifyDataSetChanged();
                 } else if (roadshowProjectListBean.getStatus() == 201) {
                     rPages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
@@ -637,15 +629,19 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
-                        pDatas.clear();
-                    }
-                    if (preselectionProjectListBean.getData() != null && preselectionProjectListBean.getData().size() != 0) {
-                        for (PreselectionProjectListBean.DataBean dataBean : preselectionProjectListBean.getData()) {
-                            pDatas.add(dataBean);
+                        pDatas = preselectionProjectListBean.getData();
+                        if (pDatas != null && pDatas.size() != 0) {
+                            listview.setAdapter(myAdapter);
+                        }
+                    } else {
+                        if (preselectionProjectListBean.getData() != null && preselectionProjectListBean.getData().size() != 0) {
+                            for (PreselectionProjectListBean.DataBean dataBean : preselectionProjectListBean.getData()) {
+                                pDatas.add(dataBean);
+                            }
+                            isAuto = false;
+                            myAdapter.notifyDataSetChanged();
                         }
                     }
-                    isAuto = false;
-                    myAdapter.notifyDataSetChanged();
                 } else if (preselectionProjectListBean.getStatus() == 201) {
                     pPages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页

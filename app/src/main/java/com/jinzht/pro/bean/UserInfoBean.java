@@ -275,6 +275,14 @@ public class UserInfoBean {
                 private int identiyTypeId;
                 private String name;
 
+                @Override
+                public String toString() {
+                    return "IdentiytypeBean{" +
+                            "identiyTypeId=" + identiyTypeId +
+                            ", name='" + name + '\'' +
+                            '}';
+                }
+
                 public int getIdentiyTypeId() {
                     return identiyTypeId;
                 }

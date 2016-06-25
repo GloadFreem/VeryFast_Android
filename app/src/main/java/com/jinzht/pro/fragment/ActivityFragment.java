@@ -41,7 +41,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * 活动界面
+ * 活动列表界面
  */
 public class ActivityFragment extends BaseFragment implements View.OnClickListener {
 

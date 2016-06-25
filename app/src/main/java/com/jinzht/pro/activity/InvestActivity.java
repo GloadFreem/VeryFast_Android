@@ -71,7 +71,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
         btnPay = (Button) findViewById(R.id.invest_btn_pay);// 支付按钮
         btnPay.setOnClickListener(this);
 
-        setPricePoint(edInputMoney);
+//        setPricePoint(edInputMoney);
     }
 
     // 保证金额输入框只能输入两位小数
@@ -203,7 +203,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                             "method", "sign",
                             "req", request,
                             "sign", "",
-                            "type", "0",
+                            "type", "1",
                             Constant.BASE_URL + Constant.SIGN,
                             mContext
                     );
@@ -271,7 +271,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                     } else {
                         // 进入易宝注册页面
                         Intent intent = new Intent(mContext, YeepayRegisterActivity.class);
-//                        intent.putExtra("activity", "WantInvestActivity");
+                        intent.putExtra("TAG", "InvestActivity");
                         intent.putExtra("userId", String.valueOf(userInfoBean.getUserId()));
                         intent.putExtra("amount", edInputMoney.getText().toString());
                         intent.putExtra("profit", getIntent().getStringExtra("profit"));
@@ -285,7 +285,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                         intent.putExtra("idNo", userInfoBean.getAuthentics().get(0).getIdentiyCarNo());
                         intent.putExtra("telephone", userInfoBean.getTelephone());
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mContext.startActivity(intent);
+                        startActivity(intent);
                         finish();
                     }
                 } else {

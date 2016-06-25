@@ -51,7 +51,7 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
-        tvTitle.setText("公司所在地");
+        tvTitle.setText("所在地");
         btnConfirm = (LinearLayout) findViewById(R.id.btn_confirm);// 确定按钮
         btnConfirm.setVisibility(View.GONE);
         lvInvestField = (ListView) findViewById(R.id.lv_invest_field);// 省份列表
@@ -64,6 +64,7 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i("选择了", provinces.get(position).getName());
                 Intent intent = new Intent(mContext, SelectCityActivity.class);
+                intent.putExtra("TAG", getIntent().getStringExtra("TAG"));
                 intent.putExtra("provinceId", String.valueOf(provinces.get(position).getProvinceId()));
                 intent.putExtra("provinceName", provinces.get(position).getName());
                 startActivity(intent);

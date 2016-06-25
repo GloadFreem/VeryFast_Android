@@ -8,17 +8,12 @@ public class InviteCodeBean {
     /**
      * message :
      * status : 200
-     * data : {"codeId":1,"code":"dfsfdsf"}
+     * data : JZT0003914F
      */
 
     private String message;
     private int status;
-    /**
-     * codeId : 1
-     * code : dfsfdsf
-     */
-
-    private DataBean data;
+    private String data;
 
     public String getMessage() {
         return message;
@@ -36,32 +31,11 @@ public class InviteCodeBean {
         this.status = status;
     }
 
-    public DataBean getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(DataBean data) {
+    public void setData(String data) {
         this.data = data;
-    }
-
-    public static class DataBean {
-        private int codeId;
-        private String code;
-
-        public int getCodeId() {
-            return codeId;
-        }
-
-        public void setCodeId(int codeId) {
-            this.codeId = codeId;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public void setCode(String code) {
-            this.code = code;
-        }
     }
 }
