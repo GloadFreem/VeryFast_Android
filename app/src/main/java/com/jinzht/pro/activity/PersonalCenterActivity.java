@@ -147,6 +147,10 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                             startActivity(intent);
                         }
                         break;
+                    case 1:
+                        intent.setClass(mContext, MyCollectActivity.class);
+                        startActivity(intent);
+                        break;
                 }
             }
 

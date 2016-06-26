@@ -95,6 +95,45 @@
         <item>从相册选择</item>
     </string-array>
 
+    <string-array name="banks">
+        <item>交通银行</item>
+        <item>中国光大银行</item>
+        <item>上海浦发发展银行</item>
+        <item>中国农业银行</item>
+        <item>中信银行</item>
+        <item>中国建设银行</item>
+        <item>中国民生银行</item>
+        <item>中国平安银行</item>
+        <item>中国邮政储蓄</item>
+        <item>招商银行</item>
+        <item>兴业银行</item>
+        <item>中国工商银行</item>
+        <item>中国银行</item>
+        <item>北京银行</item>
+        <item>广发银行</item>
+        <item>华夏银行</item>
+        <item>西安市商业银行</item>
+        <item>上海银行</item>
+        <item>天津市商业银行</item>
+        <item>深圳农村商业银行</item>
+        <item>北京农商银行</item>
+        <item>杭州市商业银行</item>
+        <item>昆仑银行</item>
+        <item>郑州银行</item>
+        <item>温州银行</item>
+        <item>汉口银行</item>
+        <item>南京银行</item>
+        <item>厦门银行</item>
+        <item>南昌银行</item>
+        <item>江苏银行</item>
+        <item>东亚银行</item>
+        <item>成都银行</item>
+        <item>宁波银行</item>
+        <item>长沙银行</item>
+        <item>河北银行</item>
+        <item>广州银行</item>
+    </string-array>
+
     <string name="viewpager_indicator">%1$d/%2$d</string>
 
 </resources>

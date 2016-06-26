@@ -219,12 +219,16 @@ public class PreselectionProjectListBean {
                  * financingId : 1
                  * beginDate : 2016-06-07 00:00:00
                  * endDate : 2016-06-10 00:00:00
+                 * limitAmount : 5
+                 * profit : 0.02
                  * financeTotal : 200
                  * financedMount : 100
                  */
                 private int financingId;
                 private String beginDate;
                 private String endDate;
+                private double limitAmount;
+                private String profit;
                 private int financeTotal;
                 private int financedMount;
 
@@ -250,6 +254,22 @@ public class PreselectionProjectListBean {
 
                 public void setEndDate(String endDate) {
                     this.endDate = endDate;
+                }
+
+                public double getLimitAmount() {
+                    return limitAmount;
+                }
+
+                public void setLimitAmount(double limitAmount) {
+                    this.limitAmount = limitAmount;
+                }
+
+                public String getProfit() {
+                    return profit;
+                }
+
+                public void setProfit(String profit) {
+                    this.profit = profit;
                 }
 
                 public int getFinanceTotal() {

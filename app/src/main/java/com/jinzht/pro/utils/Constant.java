@@ -5,8 +5,8 @@ package com.jinzht.pro.utils;
  */
 public class Constant {
 
-//    public static final String BASE_URL = "http://192.168.5.139:8080/jinzht/";
-    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
+    public static final String BASE_URL = "http://192.168.5.139:8080/jinzht/";
+//    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 微信APP_ID
      */
@@ -247,7 +247,14 @@ public class Constant {
      * 修改所在地
      */
     public static final String CHANGEADDR = "requestModifyCity.action";
-
+    /**
+     * 获取交易账单列表
+     */
+    public static final String GETBILLLIST = "requestTradeList.action";
+    /**
+     * 获取我的关注列表
+     */
+    public static final String GETMYCOLLECT = "requestMineCollection.action";
 
     /**
      * ==============================以下为易宝支付接口=======================================

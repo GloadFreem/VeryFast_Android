@@ -69,6 +69,7 @@ public class ProjectDetailBean {
             /**
              * projectId : 1
              * userId : 1
+             * borrowerUserNumber : "jinzht_0000_1234"
              * financestatus : {"name":"融资中"}
              * abbrevName : 北京金指投
              * fullName : 北京金指投信息科技有限公司

@@ -116,7 +116,32 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
         rvAdaper.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                SuperToastUtils.showSuperToast(mContext, 2, names.get(position));
+                Intent intent = new Intent();
+                switch (position) {
+                    case 0:
+                        if (yeepayUserInfo == null) {
+                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                        } else {
+                            intent.setClass(mContext, BankCardActivity.class);
+                            intent.putExtra("bankNo", yeepayUserInfo.getCardNo());
+                            intent.putExtra("bankName", yeepayUserInfo.getBank());
+                            startActivity(intent);
+                        }
+                        break;
+                    case 1:
+                        intent.setClass(mContext, YeepayRechargeActivity.class);
+                        intent.putExtra("userId", String.valueOf(userInfo.getUserId()));
+
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        intent.setClass(mContext, BillActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 3:
+                        break;
+                }
             }
 
             @Override

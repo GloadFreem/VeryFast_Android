@@ -115,6 +115,7 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                Log.i("获取签名", body);
                 return FastJsonTools.getBean(body, YeepaySignBean.class);
             } else {
                 return null;
