@@ -244,7 +244,10 @@
         <activity android:name=".activity.YeepayRechargeActivity" />
         <activity android:name=".activity.YeepayTenderActivity" />
         <activity android:name=".activity.PaySecceedActivity" />
-        <activity android:name=".activity.BankCardActivity"></activity>
+        <activity android:name=".activity.BankCardActivity" />
+        <activity android:name=".activity.YeepayBindCardActivity" />
+        <activity android:name=".activity.RechargeActivity" />
+        <activity android:name=".activity.YeepayWithdrawActivity"></activity>
     </application>
 
 </manifest>

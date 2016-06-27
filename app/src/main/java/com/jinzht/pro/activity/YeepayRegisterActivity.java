@@ -72,7 +72,7 @@ public class YeepayRegisterActivity extends YeepayWebViewActivity {
                     intent.setClass(mContext, YeepayRechargeActivity.class);
                     intent.putExtra("userId", getIntent().getStringExtra("userId"));
                     intent.putExtra("amount", getIntent().getStringExtra("amount"));
-                    intent.putExtra("profit", getIntent().getDoubleExtra("profit", 0));
+                    intent.putExtra("profit", getIntent().getStringExtra("profit"));
                     intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
                     intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
                     intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
@@ -85,7 +85,11 @@ public class YeepayRegisterActivity extends YeepayWebViewActivity {
                     break;
                 // 从资金账户来，注册完后返回
                 case "AccountActivity":
-                    finish();
+                    Intent intent1 = new Intent(mContext, AccountActivity.class);
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent1.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent1.putExtra("TAG", "注册");
+                    startActivity(intent1);
                     break;
             }
         }

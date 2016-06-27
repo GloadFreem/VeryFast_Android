@@ -12,9 +12,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.FullBaseActivity;
-import com.jinzht.pro.bean.ShareBean;
 import com.jinzht.pro.bean.CommonBean;
-import com.jinzht.pro.bean.InvestorListBean;
+import com.jinzht.pro.bean.InvestorDetailBean;
+import com.jinzht.pro.bean.ShareBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.DialogUtils;
@@ -47,10 +47,11 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
     private TextView tvSubmit;// 提交
     private TextView tvCollect;// 关注
 
-    private InvestorListBean.DataBean data;
+    private InvestorDetailBean.DataBean data;
 
-    public final static int RESULT_CODE = 0;
-    public boolean needRefresh = false;// 是否进行了交互，返回时是否刷新
+    private int FLAG = 0;// 关注或取消关注的标识
+    public int needRefresh = 0;// 是否进行了关注交互，返回时是否刷新
+    public final static int RESULT_CODE = 2;
 
     @Override
     protected int getResourcesId() {
@@ -59,7 +60,6 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
 
     @Override
     protected void init() {
-//        UiHelp.setFullScreenStatus(this);// 设置系统状态栏跟随应用背景
         btnBack = (LinearLayout) findViewById(R.id.title_btn_back);// 返回
         btnBack.setOnClickListener(this);
         btnShare = (LinearLayout) findViewById(R.id.title_btn_share);// 分享
@@ -81,8 +81,8 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
         tvSubmit = (TextView) findViewById(R.id.investor_detail_tv_submit);// 提交
         tvCollect = (TextView) findViewById(R.id.investor_detail_tv_collect);// 关注
 
-        data = (InvestorListBean.DataBean) getIntent().getSerializableExtra("detail");
-        initData();
+        GetInvestorDetail getInvestorDetail = new GetInvestorDetail();
+        getInvestorDetail.execute();
     }
 
     // 填充数据
@@ -92,7 +92,11 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
         tvPosition.setText(data.getUser().getAuthentics().get(0).getPosition());
         tvCompName.setText(data.getUser().getAuthentics().get(0).getCompanyName());
         tvAddr.setText(data.getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + data.getUser().getAuthentics().get(0).getCity().getName());
-        if (data.getAreas().size() == 1) {
+        if (data.getAreas().size() == 0) {
+            tvField1.setVisibility(View.GONE);
+            tvField2.setVisibility(View.GONE);
+            tvField3.setVisibility(View.GONE);
+        } else if (data.getAreas().size() == 1) {
             tvField1.setText(data.getAreas().get(0));
             tvField2.setVisibility(View.GONE);
             tvField3.setVisibility(View.GONE);
@@ -162,12 +166,53 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
 
     @Override
     public void onBackPressed() {
-        if (needRefresh) {
+        if (needRefresh % 2 != 0 && FLAG != 0) {
             Intent intent = new Intent();
-            intent.putExtra("needRefresh", needRefresh);
+            intent.putExtra("FLAG", FLAG);
             setResult(RESULT_CODE, intent);
         }
         finish();
+    }
+
+    // 获取投资人详情
+    private class GetInvestorDetail extends AsyncTask<Void, Void, InvestorDetailBean> {
+        @Override
+        protected InvestorDetailBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETINVESTORDETAIL)),
+                            "investorId", getIntent().getStringExtra("id"),
+                            Constant.BASE_URL + Constant.GETINVESTORDETAIL,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("投资人详情", body);
+                return FastJsonTools.getBean(body, InvestorDetailBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(InvestorDetailBean investorDetailBean) {
+            super.onPostExecute(investorDetailBean);
+            if (investorDetailBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (investorDetailBean.getStatus() == 200) {
+                    data = investorDetailBean.getData();
+                    if (data != null) {
+                        initData();
+                    }
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, investorDetailBean.getMessage());
+                }
+            }
+        }
     }
 
     // 关注投资人
@@ -210,12 +255,14 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
                     if (flag == 1) {
                         data.setCollected(true);
                         data.setCollectCount(data.getCollectCount() + 1);
+                        FLAG = 1;
                     } else if (flag == 2) {
                         data.setCollected(false);
                         data.setCollectCount(data.getCollectCount() - 1);
+                        FLAG = 2;
                     }
+                    needRefresh++;
                     initData();
-                    needRefresh = true;
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
                 }

@@ -66,13 +66,12 @@ public class Investor2Fragment extends BaseFragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position < 4) {
+                if (position < funds.size() + 1) {
                     SuperToastUtils.showSuperToast(mContext, 2, "点击了条目" + position);
                 } else {
+                    POSITION = position - funds.size() - 1;
                     Intent intent = new Intent(mContext, InvestorgDetailActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("detail", datas.get(position - 4));
-                    intent.putExtras(bundle);
+                    intent.putExtra("id", String.valueOf(datas.get(position - funds.size() - 1).getUser().getUserId()));
                     startActivityForResult(intent, REQUEST_CODE);
                 }
             }
@@ -85,7 +84,7 @@ public class Investor2Fragment extends BaseFragment {
 
         @Override
         public int getCount() {
-            return datas.size() + 3;
+            return funds.size() + datas.size();
         }
 
         @Override
@@ -105,7 +104,7 @@ public class Investor2Fragment extends BaseFragment {
 
         @Override
         public int getItemViewType(int position) {
-            if (position < 3) {
+            if (position < funds.size()) {
                 return 0;
             } else {
                 return 1;
@@ -140,42 +139,42 @@ public class Investor2Fragment extends BaseFragment {
                 holder = (ViewHolder) convertView.getTag();
             }
             if (getItemViewType(position) == 0) {
-                Glide.with(mContext).load(funds.get(0).getImage()).into(holder.itemInvestorgFundImg);
-                holder.itemInvestorgFundTitle.setText(funds.get(0).getName());
-                holder.itemInvestorgFundContent.setText(funds.get(0).getContent());
+                Glide.with(mContext).load(funds.get(position).getImage()).into(holder.itemInvestorgFundImg);
+                holder.itemInvestorgFundTitle.setText(funds.get(position).getName());
+                holder.itemInvestorgFundContent.setText(funds.get(position).getContent());
             } else {
-                Glide.with(mContext).load(datas.get(position - 3).getUser().getHeadSculpture()).into(holder.itemInvestorgFavicon);
-                holder.itemInvestorgName.setText(datas.get(position - 3).getUser().getName());
-                holder.itemInvestorgAddr.setText(datas.get(position - 3).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position - 3).getUser().getAuthentics().get(0).getCity().getName());
-                if (datas.get(position - 3).getAreas().size() == 0) {
+                Glide.with(mContext).load(datas.get(position - funds.size()).getUser().getHeadSculpture()).into(holder.itemInvestorgFavicon);
+                holder.itemInvestorgName.setText(datas.get(position - funds.size()).getUser().getName());
+                holder.itemInvestorgAddr.setText(datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCity().getName());
+                if (datas.get(position - funds.size()).getAreas().size() == 0) {
                     holder.itemInvestorgField1.setVisibility(View.INVISIBLE);
                     holder.itemInvestorgField2.setVisibility(View.INVISIBLE);
                     holder.itemInvestorgField3.setVisibility(View.INVISIBLE);
-                } else if (datas.get(position - 3).getAreas().size() == 1) {
-                    holder.itemInvestorgField1.setText(datas.get(position - 3).getAreas().get(0));
+                } else if (datas.get(position - funds.size()).getAreas().size() == 1) {
+                    holder.itemInvestorgField1.setText(datas.get(position - funds.size()).getAreas().get(0));
                     holder.itemInvestorgField2.setVisibility(View.INVISIBLE);
                     holder.itemInvestorgField3.setVisibility(View.INVISIBLE);
-                } else if (datas.get(position - 3).getAreas().size() == 2) {
-                    holder.itemInvestorgField1.setText(datas.get(position - 3).getAreas().get(0));
-                    holder.itemInvestorgField2.setText(datas.get(position - 3).getAreas().get(1));
+                } else if (datas.get(position - funds.size()).getAreas().size() == 2) {
+                    holder.itemInvestorgField1.setText(datas.get(position - funds.size()).getAreas().get(0));
+                    holder.itemInvestorgField2.setText(datas.get(position - funds.size()).getAreas().get(1));
                     holder.itemInvestorgField3.setVisibility(View.INVISIBLE);
                 } else {
-                    holder.itemInvestorgField1.setText(datas.get(position - 3).getAreas().get(0));
-                    holder.itemInvestorgField2.setText(datas.get(position - 3).getAreas().get(1));
-                    holder.itemInvestorgField3.setText(datas.get(position - 3).getAreas().get(2));
+                    holder.itemInvestorgField1.setText(datas.get(position - funds.size()).getAreas().get(0));
+                    holder.itemInvestorgField2.setText(datas.get(position - funds.size()).getAreas().get(1));
+                    holder.itemInvestorgField3.setText(datas.get(position - funds.size()).getAreas().get(2));
                 }
-                if (datas.get(position - 3).isCollected()) {
+                if (datas.get(position - funds.size()).isCollected()) {
                     holder.itemInvestorgBtnCollect.setBackgroundResource(R.drawable.bg_code_gray);
                     holder.itemInvestorgTvCollect.setText("已关注");
                 } else {
                     holder.itemInvestorgBtnCollect.setBackgroundResource(R.drawable.bg_btn_green);
-                    if (datas.get(position - 3).getCollectCount() >= 1000) {
+                    if (datas.get(position - funds.size()).getCollectCount() >= 1000) {
                         holder.itemInvestorgTvCollect.setText("关注(999...)");
                     } else {
-                        holder.itemInvestorgTvCollect.setText("关注(" + datas.get(position - 3).getCollectCount() + ")");
+                        holder.itemInvestorgTvCollect.setText("关注(" + datas.get(position - funds.size()).getCollectCount() + ")");
                     }
                 }
-                if (datas.get(position - 3).isCommited()) {
+                if (datas.get(position - funds.size()).isCommited()) {
                     holder.itemInvestorgBtnSubmit.setBackgroundResource(R.drawable.bg_code_gray);
                     holder.itemInvestorgBtnSubmit.setClickable(false);
                     holder.itemInvestorgTvSubmit.setText("已提交");
@@ -188,11 +187,11 @@ public class Investor2Fragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         POSITION = position;
-                        if (datas.get(position - 3).isCollected()) {
-                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - 3).getUser().getUserId(), 2);
+                        if (datas.get(position - funds.size()).isCollected()) {
+                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - funds.size()).getUser().getUserId(), 2);
                             collectInvestorTask.execute();
                         } else {
-                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - 3).getUser().getUserId(), 1);
+                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - funds.size()).getUser().getUserId(), 1);
                             collectInvestorTask.execute();
                         }
                     }
@@ -201,12 +200,12 @@ public class Investor2Fragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, SubmitProjectActivity.class);
-                        intent.putExtra("id", String.valueOf(datas.get(position - 3).getUser().getUserId()));
-                        intent.putExtra("favicon", datas.get(position - 3).getUser().getHeadSculpture());
-                        intent.putExtra("name", datas.get(position - 3).getUser().getName());
-                        intent.putExtra("position", datas.get(position - 3).getUser().getAuthentics().get(0).getPosition());
-                        intent.putExtra("compName", datas.get(position - 3).getUser().getAuthentics().get(0).getCompanyName());
-                        intent.putExtra("addr", datas.get(position - 3).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position - 3).getUser().getAuthentics().get(0).getCity().getName());
+                        intent.putExtra("id", String.valueOf(datas.get(position - funds.size()).getUser().getUserId()));
+                        intent.putExtra("favicon", datas.get(position - funds.size()).getUser().getHeadSculpture());
+                        intent.putExtra("name", datas.get(position - funds.size()).getUser().getName());
+                        intent.putExtra("position", datas.get(position - funds.size()).getUser().getAuthentics().get(0).getPosition());
+                        intent.putExtra("compName", datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCompanyName());
+                        intent.putExtra("addr", datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCity().getName());
                         startActivity(intent);
                     }
                 });
@@ -246,10 +245,10 @@ public class Investor2Fragment extends BaseFragment {
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETINVESOTORLIST)),
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETINVESTORLIST)),
                             "type", "3",
                             "page", String.valueOf(page),
-                            Constant.BASE_URL + Constant.GETINVESOTORLIST,
+                            Constant.BASE_URL + Constant.GETINVESTORLIST,
                             mContext
                     );
                 } catch (Exception e) {
@@ -277,7 +276,7 @@ public class Investor2Fragment extends BaseFragment {
                     if (page == 0) {
                         funds = investorgListBean.getData().getFounddations();
                         datas = investorgListBean.getData().getInvestors();
-                        if (datas != null && datas.size() != 0) {
+                        if (funds != null && datas != null && datas.size() != 0) {
                             listview.setAdapter(myAdapter);
                         }
                     } else {
@@ -359,11 +358,11 @@ public class Investor2Fragment extends BaseFragment {
             } else {
                 if (commonBean.getStatus() == 200) {
                     if (flag == 1) {
-                        datas.get(POSITION - 3).setCollected(true);
-                        datas.get(POSITION - 3).setCollectCount(datas.get(POSITION - 3).getCollectCount() + 1);
+                        datas.get(POSITION - funds.size()).setCollected(true);
+                        datas.get(POSITION - funds.size()).setCollectCount(datas.get(POSITION - funds.size()).getCollectCount() + 1);
                     } else if (flag == 2) {
-                        datas.get(POSITION - 3).setCollected(false);
-                        datas.get(POSITION - 3).setCollectCount(datas.get(POSITION - 3).getCollectCount() - 1);
+                        datas.get(POSITION - funds.size()).setCollected(false);
+                        datas.get(POSITION - funds.size()).setCollectCount(datas.get(POSITION - funds.size()).getCollectCount() - 1);
                     }
                     myAdapter.notifyDataSetChanged();
                 } else {
@@ -378,11 +377,14 @@ public class Investor2Fragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && data != null) {
             if (resultCode == InvestorgDetailActivity.RESULT_CODE) {
-                if (data.getBooleanExtra("needRefresh", false)) {// 在详情中进行了交互
-                    pages = 0;
-                    GetInvestorListTask getInvestorListTask = new GetInvestorListTask(0);
-                    getInvestorListTask.execute();
+                if (data.getIntExtra("FLAG", 0) == 1) {// 在详情中关注了
+                    datas.get(POSITION).setCollected(true);
+                    datas.get(POSITION).setCollectCount(datas.get(POSITION).getCollectCount() + 1);
+                } else if (data.getIntExtra("FLAG", 0) == 2) {// 在详情中取消了关注
+                    datas.get(POSITION).setCollected(false);
+                    datas.get(POSITION).setCollectCount(datas.get(POSITION).getCollectCount() - 1);
                 }
+                myAdapter.notifyDataSetChanged();
             }
         }
     }

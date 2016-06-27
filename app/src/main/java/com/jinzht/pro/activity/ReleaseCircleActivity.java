@@ -43,7 +43,7 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
     ReleasePhotosAdapter adapter;// RecyclerView数据填充器
     List<String> photos = new ArrayList<>();// 要发布的图片地址
 
-    public final static int RESULT_CODE = 0;// 返回到圈子列表
+    public static final int RESULT_CODE = 1;// 返回到圈子列表
     public static final int REQUEST_CODE_GALLERY = 2;// 跳转到图片选择器
 
     @Override

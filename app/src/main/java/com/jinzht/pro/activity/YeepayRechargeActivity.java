@@ -31,7 +31,11 @@ public class YeepayRechargeActivity extends YeepayWebViewActivity {
 
         double amount_totle;
         if (getIntent().getDoubleExtra("recharge", 0) == 0) {
-            amount_totle = Double.parseDouble(getIntent().getStringExtra("amount")) * 10000;
+            if (getIntent().getBooleanExtra("isRecharge", false)) {
+                amount_totle = Double.parseDouble(getIntent().getStringExtra("amount"));
+            } else {
+                amount_totle = Double.parseDouble(getIntent().getStringExtra("amount")) * 10000;
+            }
         } else {
             amount_totle = getIntent().getDoubleExtra("recharge", 0);
         }
@@ -70,20 +74,28 @@ public class YeepayRechargeActivity extends YeepayWebViewActivity {
     protected void saveSign(String signResult) {
         backSign = signResult;
         if (callBackBean != null && "1".equals(callBackBean.getCode())) {
-            // 跳转到投标界面
-            Intent intent = new Intent(mContext, YeepayTenderActivity.class);
-            intent.putExtra("userId", getIntent().getStringExtra("userId"));
-            intent.putExtra("amount", getIntent().getStringExtra("amount"));
-            intent.putExtra("profit", getIntent().getStringExtra("profit"));
-            intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
-            intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
-            intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
-            intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
-            intent.putExtra("type", getIntent().getStringExtra("type"));
-            intent.putExtra("img", getIntent().getStringExtra("img"));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+            if (getIntent().getBooleanExtra("isRecharge", false)) {
+                Intent intent = new Intent(mContext, AccountActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("TAG", "充值");
+                startActivity(intent);
+            } else {
+                // 跳转到投标界面
+                Intent intent = new Intent(mContext, YeepayTenderActivity.class);
+                intent.putExtra("userId", getIntent().getStringExtra("userId"));
+                intent.putExtra("amount", getIntent().getStringExtra("amount"));
+                intent.putExtra("profit", getIntent().getStringExtra("profit"));
+                intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
+                intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
+                intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
+                intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
+                intent.putExtra("type", getIntent().getStringExtra("type"));
+                intent.putExtra("img", getIntent().getStringExtra("img"));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 }

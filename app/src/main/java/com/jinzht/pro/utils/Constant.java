@@ -148,9 +148,13 @@ public class Constant {
      */
     public static final String SHAREACTIVITY = "requestShareAction.action";
     /**
-     * 投资人列表
+     * 获取投资人列表
      */
-    public static final String GETINVESOTORLIST = "requestInvestorList.action";
+    public static final String GETINVESTORLIST = "requestInvestorList.action";
+    /**
+     * 获取投资人详情
+     */
+    public static final String GETINVESTORDETAIL = "requestInvestorDetail.action";
     /**
      * 提交项目
      */
@@ -255,6 +259,9 @@ public class Constant {
      * 获取我的关注列表
      */
     public static final String GETMYCOLLECT = "requestMineCollection.action";
+    /**
+     *
+     */
 
     /**
      * ==============================以下为易宝支付接口=======================================
@@ -264,7 +271,7 @@ public class Constant {
      * 平台编号platformNo
      */
     public static final String PLATFORMNO = "10013200657";
-//    public static final String PLATFORMNO = "10013200658";
+//    public static final String PLATFORMNO = "10013200660";
     /**
      * 签名接口，type = 0表示网关，type = 1表示直连。
      */
@@ -304,4 +311,16 @@ public class Constant {
      * 易宝投标
      */
     public static final String YEEPAY_TENDE = "toCpTransaction";
+    /**
+     * 易宝绑卡
+     */
+    public static final String YEEPAY_BIND = "toBindBankCard";
+    /**
+     * 易宝解绑
+     */
+    public static final String YEEPAY_UNBIND = "UNBIND_CARD";
+    /**
+     * 易宝提现
+     */
+    public static final String YEEPAY_WITHDRAW = "toWithdraw";
 }

@@ -113,7 +113,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
     private List<ProjectCommentBean.DataBean> commentsData = new ArrayList<>();// 评论列表
     private int FLAG = 0;// 关注或取消关注的标识
     private int needRefresh = 0;// 是否需要在项目列表中刷新
-    public final static int RESULT_CODE = 0;
+    public final static int RESULT_CODE = 3;
     private final static int REQUEST_CODE = 1;
 
     private String comment = "";// 输入的评论内容

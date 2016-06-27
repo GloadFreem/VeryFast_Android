@@ -404,7 +404,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     case "待路演":
                         holder.itemProjectTag.setImageResource(R.mipmap.tag_dailuyan);
                         break;
-                    case "路演中":
+                    case "融资中":
                         holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzizhong);
                         break;
                     case "融资成功":

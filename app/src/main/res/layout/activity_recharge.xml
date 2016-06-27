@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_back" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_jine"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="金额"
+            android:textColor="#111111"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/tv_yuan"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="元"
+            android:textColor="#111111"
+            android:textSize="17sp" />
+
+        <EditText
+            android:id="@+id/ed_amount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/tv_yuan"
+            android:layout_toRightOf="@id/tv_jine"
+            android:background="@null"
+            android:hint="请输入充值金额"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textColorHint="#747474"
+            android:textSize="17sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/bg_code_orange"
+        android:gravity="center"
+        android:paddingBottom="7dp"
+        android:paddingTop="7dp"
+        android:text="下一步"
+        android:textColor="@android:color/white"
+        android:textSize="25sp" />
+</LinearLayout>

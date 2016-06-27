@@ -151,14 +151,12 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             Log.i("要开始的URL", url);
-            if (url.endsWith("swiftRecharge")) {
-            }
             super.onPageStarted(view, url, favicon);
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            if (url.endsWith("swiftRecharge")) {
+            if (url.endsWith("swiftRecharge") || url.endsWith("swiftBindCardAndRecharge")) {
                 view.loadUrl("javascript:submit()");
             }
             super.onPageFinished(view, url);

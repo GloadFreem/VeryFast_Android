@@ -411,7 +411,9 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
     // 加载全部评论
     private void initComments() {
-        praiseNames.setText(prises.toString().substring(1, prises.toString().length() - 1));
+        if (prises != null && prises.size() != 0) {
+            praiseNames.setText(prises.toString().substring(1, prises.toString().length() - 1));
+        }
 
         if (comments.size() == 0) {
             comment1.setText("暂无评论");
@@ -881,7 +883,9 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             } else {
                 if (activityAllApplysBean.getStatus() == 200) {
                     applys = activityAllApplysBean.getData();
-                    initApplys();
+                    if (applys != null && applys.size() != 0) {
+                        initApplys();
+                    }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, activityAllApplysBean.getMessage());
                 }

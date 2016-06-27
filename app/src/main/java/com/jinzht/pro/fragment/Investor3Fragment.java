@@ -1,6 +1,5 @@
 package com.jinzht.pro.fragment;
 
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -64,10 +63,9 @@ public class Investor3Fragment extends BaseFragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                POSITION = position - 1;
                 Intent intent = new Intent(mContext, BrainDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("detail", datas.get(position - 1));
-                intent.putExtras(bundle);
+                intent.putExtra("id", String.valueOf(datas.get(position - 1).getUser().getUserId()));
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
@@ -169,10 +167,10 @@ public class Investor3Fragment extends BaseFragment {
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETINVESOTORLIST)),
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETINVESTORLIST)),
                             "type", "4",
                             "page", String.valueOf(page),
-                            Constant.BASE_URL + Constant.GETINVESOTORLIST,
+                            Constant.BASE_URL + Constant.GETINVESTORLIST,
                             mContext
                     );
                 } catch (Exception e) {
@@ -300,11 +298,14 @@ public class Investor3Fragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && data != null) {
             if (resultCode == BrainDetailActivity.RESULT_CODE) {
-                if (data.getBooleanExtra("needRefresh", false)) {// 在详情中进行了交互
-                    pages = 0;
-                    GetInvestorListTask getInvestorListTask = new GetInvestorListTask(0);
-                    getInvestorListTask.execute();
+                if (data.getIntExtra("FLAG", 0) == 1) {// 在详情中关注了
+                    datas.get(POSITION).setCollected(true);
+                    datas.get(POSITION).setCollectCount(datas.get(POSITION).getCollectCount() + 1);
+                } else if (data.getIntExtra("FLAG", 0) == 2) {// 在详情中取消了关注
+                    datas.get(POSITION).setCollected(false);
+                    datas.get(POSITION).setCollectCount(datas.get(POSITION).getCollectCount() - 1);
                 }
+                myAdapter.notifyDataSetChanged();
             }
         }
     }

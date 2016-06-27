@@ -87,16 +87,16 @@ public class DialogUtils {
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         Window window = dialog.getWindow();
-        window.setContentView(R.layout.dialog_ingore_project);
-        ImageView btnIngore = (ImageView) window.findViewById(R.id.dialog_ingore_pro_btn_ingore);
-        ImageView btnLook = (ImageView) window.findViewById(R.id.dialog_ingore_pro_btn_look);
-        btnIngore.setOnClickListener(new View.OnClickListener() {
+        window.setContentView(R.layout.dialog_two_btn);
+        TextView btnCancel = (TextView) window.findViewById(R.id.btn_cancel);
+        TextView btnConfirm = (TextView) window.findViewById(R.id.btn_confirm);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SuperToastUtils.showSuperToast(activity, 2, "忽略");
             }
         });
-        btnLook.setOnClickListener(new View.OnClickListener() {
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SuperToastUtils.showSuperToast(activity, 2, "看一下");

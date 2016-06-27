@@ -12,9 +12,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.FullBaseActivity;
-import com.jinzht.pro.bean.ShareBean;
 import com.jinzht.pro.bean.CommonBean;
-import com.jinzht.pro.bean.InvestorgListBean;
+import com.jinzht.pro.bean.InvestorDetailBean;
+import com.jinzht.pro.bean.ShareBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.DialogUtils;
@@ -48,10 +48,11 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
     private TextView tvSubmit;// 提交
     private TextView tvCollect;// 关注
 
-    private InvestorgListBean.DataBean.InvestorsBean data;
+    private InvestorDetailBean.DataBean data;
 
-    public final static int RESULT_CODE = 0;
-    public boolean needRefresh = false;// 是否进行了交互，返回时是否刷新
+    public final static int RESULT_CODE = 3;
+    private int FLAG = 0;// 关注或取消关注的标识
+    public int needRefresh = 0;// 是否进行了关注交互，返回时是否刷新
 
     @Override
     protected int getResourcesId() {
@@ -84,8 +85,8 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
         tvSubmit = (TextView) findViewById(R.id.investor_detail_tv_submit);// 提交
         tvCollect = (TextView) findViewById(R.id.investor_detail_tv_collect);// 关注
 
-        data = (InvestorgListBean.DataBean.InvestorsBean) getIntent().getSerializableExtra("detail");
-        initData();
+        GetInvestorDetail getInvestorDetail = new GetInvestorDetail();
+        getInvestorDetail.execute();
     }
 
     // 填充数据
@@ -165,12 +166,53 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
 
     @Override
     public void onBackPressed() {
-        if (needRefresh) {
+        if (needRefresh % 2 != 0 && FLAG != 0) {
             Intent intent = new Intent();
-            intent.putExtra("needRefresh", needRefresh);
+            intent.putExtra("FLAG", FLAG);
             setResult(RESULT_CODE, intent);
         }
         finish();
+    }
+
+    // 获取投资人详情
+    private class GetInvestorDetail extends AsyncTask<Void, Void, InvestorDetailBean> {
+        @Override
+        protected InvestorDetailBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETINVESTORDETAIL)),
+                            "investorId", getIntent().getStringExtra("id"),
+                            Constant.BASE_URL + Constant.GETINVESTORDETAIL,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("投资机构详情", body);
+                return FastJsonTools.getBean(body, InvestorDetailBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(InvestorDetailBean investorDetailBean) {
+            super.onPostExecute(investorDetailBean);
+            if (investorDetailBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (investorDetailBean.getStatus() == 200) {
+                    data = investorDetailBean.getData();
+                    if (data != null) {
+                        initData();
+                    }
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, investorDetailBean.getMessage());
+                }
+            }
+        }
     }
 
     // 关注投资人
@@ -213,12 +255,14 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
                     if (flag == 1) {
                         data.setCollected(true);
                         data.setCollectCount(data.getCollectCount() + 1);
+                        FLAG = 1;
                     } else if (flag == 2) {
                         data.setCollected(false);
                         data.setCollectCount(data.getCollectCount() - 1);
+                        FLAG = 2;
                     }
+                    needRefresh++;
                     initData();
-                    needRefresh = true;
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
                 }

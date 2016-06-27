@@ -228,7 +228,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                 public void onClick(View v) {
                     POSITION = position;
                     Intent intent = new Intent(mContext, CircleDetailActivity.class);
-                    intent.putExtra("id", datas.get(position).getPublicContentId());
+                    intent.putExtra("id", String.valueOf(datas.get(position).getPublicContentId()));
                     startActivityForResult(intent, REQUEST_CODE);
                 }
             });
