@@ -204,7 +204,7 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
         return insertObj;
     }
 
-    private void saveResult(String respResult) {
+    protected void saveResult(String respResult) {
         xStream.processAnnotations(YeepayCallBackBean.class);// 指定要解析到的Bean
         if (respResult != null) {
             respResult = respResult.replaceAll("&lt;", "<" + "");

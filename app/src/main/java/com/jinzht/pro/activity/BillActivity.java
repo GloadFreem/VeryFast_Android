@@ -67,7 +67,6 @@ public class BillActivity extends BaseActivity implements View.OnClickListener {
 
         refreshView.setOnRefreshListener(new PullListener());
         myAdapter = new MyAdapter();
-        listview.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_24dp, null), null, false);
 
         GetBillList getBillList = new GetBillList(0);
         getBillList.execute();
@@ -96,6 +95,7 @@ public class BillActivity extends BaseActivity implements View.OnClickListener {
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_bill, null);
+                holder.emptyView = convertView.findViewById(R.id.empty_view);
                 holder.itemLlYear = (LinearLayout) convertView.findViewById(R.id.item_ll_year);
                 holder.itemBillYear = (TextView) convertView.findViewById(R.id.item_bill_year);
                 holder.itemBillLine = (ImageView) convertView.findViewById(R.id.item_bill_line);
@@ -115,6 +115,12 @@ public class BillActivity extends BaseActivity implements View.OnClickListener {
                 holder = (ViewHolder) convertView.getTag();
             }
 
+            if (position == 0) {
+                holder.emptyView.setVisibility(View.VISIBLE);
+            } else {
+                holder.emptyView.setVisibility(View.GONE);
+            }
+
             String str;// 转换字体的临时字符串
             SpannableString span;// 设置TextView不同字体
 
@@ -132,7 +138,7 @@ public class BillActivity extends BaseActivity implements View.OnClickListener {
                 holder.itemLlYear.setVisibility(View.VISIBLE);
                 holder.itemBillYear.setText(year);
             } else {
-                if (year.equals(datas.get(position).getRecord().getTradeDate().substring(0, 4) + "年")) {
+                if (year.equals(datas.get(position - 1).getRecord().getTradeDate().substring(0, 4) + "年")) {
                     holder.itemLlYear.setVisibility(View.GONE);
                 } else {
                     holder.itemLlYear.setVisibility(View.VISIBLE);
@@ -189,6 +195,7 @@ public class BillActivity extends BaseActivity implements View.OnClickListener {
         }
 
         class ViewHolder {
+            private View emptyView;// 空填充块
             private LinearLayout itemLlYear;// 年份布局
             private TextView itemBillYear;// 年
             private ImageView itemBillLine;// 蓝线

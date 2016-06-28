@@ -1,11 +1,18 @@
 package com.jinzht.pro.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.jinzht.pro.base.YeepayWebViewActivity;
+import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.bean.ToRechargeBean;
+import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.FastJsonTools;
+import com.jinzht.pro.utils.MD5Utils;
+import com.jinzht.pro.utils.NetWorkUtils;
+import com.jinzht.pro.utils.OkHttpUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,6 +22,8 @@ import java.util.Date;
  * 易宝充值
  */
 public class YeepayRechargeActivity extends YeepayWebViewActivity {
+
+    private double amount_totle;
 
     @Override
     protected void setWebTitle() {
@@ -29,7 +38,7 @@ public class YeepayRechargeActivity extends YeepayWebViewActivity {
         time = time.replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
         String requestNo = time + getIntent().getStringExtra("userId");
 
-        double amount_totle;
+
         if (getIntent().getDoubleExtra("recharge", 0) == 0) {
             if (getIntent().getBooleanExtra("isRecharge", false)) {
                 amount_totle = Double.parseDouble(getIntent().getStringExtra("amount"));
@@ -71,6 +80,14 @@ public class YeepayRechargeActivity extends YeepayWebViewActivity {
     }
 
     @Override
+    protected void saveResult(String respResult) {
+        super.saveResult(respResult);
+        // 将充值信息提交到服务器
+        RechargeTask rechargeTask = new RechargeTask();
+        rechargeTask.execute();
+    }
+
+    @Override
     protected void saveSign(String signResult) {
         backSign = signResult;
         if (callBackBean != null && "1".equals(callBackBean.getCode())) {
@@ -95,6 +112,31 @@ public class YeepayRechargeActivity extends YeepayWebViewActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
+            }
+        }
+    }
+
+    // 将充值信息提交到服务器
+    private class RechargeTask extends AsyncTask<Void, Void, CommonBean> {
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.RECHARGE)),
+                            "amount", String.valueOf(amount_totle),
+                            "tradeCode", callBackBean.getRequestNo(),
+                            Constant.BASE_URL + Constant.RECHARGE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("投资完成返回信息", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
             }
         }
     }

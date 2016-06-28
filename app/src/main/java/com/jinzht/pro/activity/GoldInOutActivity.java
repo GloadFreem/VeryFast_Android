@@ -1,21 +1,30 @@
 package com.jinzht.pro.activity;
 
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
-import com.jinzht.pro.utils.StringUtils;
+import com.jinzht.pro.bean.GoldInOutListBean;
+import com.jinzht.pro.utils.AESUtils;
+import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.FastJsonTools;
+import com.jinzht.pro.utils.MD5Utils;
+import com.jinzht.pro.utils.NetWorkUtils;
+import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.utils.UiUtils;
+import com.jinzht.pro.view.PullToRefreshLayout;
+import com.jinzht.pro.view.PullableListView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,13 +34,12 @@ public class GoldInOutActivity extends BaseActivity implements View.OnClickListe
 
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
-    private ListView myListView;// 列表
+    private PullToRefreshLayout refreshView;// 刷新布局
+    private PullableListView listview;// 列表
 
-    private List<String> yearmonths;// 年月
-    private List<String> types;// 类型
-    private List<String> amount;// 数量
-    private List<String> descs;// 描述
-    private List<String> days;// 日
+    private MyAdapter myAdapter;
+    private int pages = 0;
+    private List<GoldInOutListBean.DataBean> datas = new ArrayList<>();
 
     @Override
     protected int getResourcesId() {
@@ -46,8 +54,14 @@ public class GoldInOutActivity extends BaseActivity implements View.OnClickListe
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
         tvTitle.setText("收支明细");
-        myListView = (ListView) findViewById(R.id.gold_inout_list);// 列表
-        initList();
+        refreshView = (PullToRefreshLayout) findViewById(R.id.refresh_view);
+        listview = (PullableListView) findViewById(R.id.listview);
+
+        refreshView.setOnRefreshListener(new PullListener());
+        myAdapter = new MyAdapter();
+
+        GetInOutList getInOutList = new GetInOutList(0);
+        getInOutList.execute();
     }
 
     @Override
@@ -59,25 +73,16 @@ public class GoldInOutActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void initList() {
-        yearmonths = new ArrayList<>(Arrays.asList("2016年6月", "", "", "", "", "", "2016年5月", "", "", "", "", "", "2016年4月", "", ""));
-        types = new ArrayList<>(Arrays.asList("登录奖励", "注册奖励", "身份认证", "邀请好友", "商城消费", "邀请好友", "金条理财", "登录奖励", "登录奖励", "商城消费", "投资抵现", "登录奖励", "商城消费", "登录奖励", "邀请好友"));
-        amount = new ArrayList<>(Arrays.asList("+6", "+10", "+10", "+10", "-50", "+10", "-30", "+12", "+13", "-46", "-200", "+12", "-66", "+14", "+10"));
-        descs = new ArrayList<>(Arrays.asList("每日登录奖励金条", "新用户成功注册奖励金条", "实名认证赠送金条", "成功邀请136****1234用户", "商城消费", "成功邀请136****1234用户", "购买理财产品", "每日登录奖励金条", "每日登录奖励金条", "商城消费", "投资抵扣现金", "每日登录奖励金条", "商城消费", "每日登录奖励金条", "成功邀请136****1234用户"));
-        days = new ArrayList<>(Arrays.asList("21日", "20日", "18日", "16日", "15日", "14日", "12日", "11日", "10日", "09日", "04日", "01日", "31日", "28日", "24日"));
-        myListView.setAdapter(new MyAdapter());
-    }
-
     private class MyAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return types.size();
+            return datas.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return position;
+            return datas.get(position);
         }
 
         @Override
@@ -108,28 +113,45 @@ public class GoldInOutActivity extends BaseActivity implements View.OnClickListe
             } else {
                 holder.emptyView.setVisibility(View.GONE);
             }
-            if (StringUtils.isBlank(yearmonths.get(position))) {
-                holder.itemLlYear.setVisibility(View.GONE);
-            } else {
-                holder.itemLlYear.setVisibility(View.VISIBLE);
-                holder.itemYearmonth.setText(yearmonths.get(position));
+
+            String year = datas.get(position).getTradeDate().substring(0, 4) + "年";
+            String month = datas.get(position).getTradeDate().substring(5, 7) + "月";
+            if ('0' == month.charAt(0)) {
+                month = month.substring(1);
             }
+            String day = datas.get(position).getTradeDate().substring(8, 10) + "日";
+            if ('0' == day.charAt(0)) {
+                day = day.substring(1);
+            }
+
+            // 年月
+            if (position == 0) {
+                holder.itemLlYear.setVisibility(View.VISIBLE);
+                holder.itemYearmonth.setText(year + month);
+            } else {
+                if (datas.get(position).getTradeDate().substring(5, 7).equals(datas.get(position - 1).getTradeDate().substring(5, 7))) {
+                    holder.itemLlYear.setVisibility(View.GONE);
+                } else {
+                    holder.itemYearmonth.setText(year + month);
+                }
+            }
+            holder.itemDay.setText(day);// 日
+            holder.itemType.setText(datas.get(position).getRewardtradetype().getName());// 标题
+            if (String.valueOf(datas.get(position).getCount()).contains("-")) {
+                holder.itemAmount.setText(String.valueOf(datas.get(position).getCount()));
+                holder.itemType.setTextColor(0xff48ae58);
+                holder.itemAmount.setTextColor(0xff48ae58);
+            } else {
+                holder.itemAmount.setText("+" + String.valueOf(datas.get(position).getCount()));
+                holder.itemType.setTextColor(UiUtils.getColor(R.color.custom_orange));
+                holder.itemAmount.setTextColor(UiUtils.getColor(R.color.custom_orange));
+            }
+            holder.itemDecs.setText(datas.get(position).getDesc());
             if (position == getCount() - 1) {
                 holder.itemEndtag.setVisibility(View.VISIBLE);
             } else {
                 holder.itemEndtag.setVisibility(View.GONE);
             }
-            holder.itemType.setText(types.get(position));
-            holder.itemAmount.setText(amount.get(position));
-            if (amount.get(position).contains("+")) {
-                holder.itemType.setTextColor(UiUtils.getColor(R.color.custom_orange));
-                holder.itemAmount.setTextColor(UiUtils.getColor(R.color.custom_orange));
-            } else {
-                holder.itemType.setTextColor(0xff48ae58);
-                holder.itemAmount.setTextColor(0xff48ae58);
-            }
-            holder.itemDecs.setText(descs.get(position));
-            holder.itemDay.setText(days.get(position));
             return convertView;
         }
 
@@ -142,6 +164,91 @@ public class GoldInOutActivity extends BaseActivity implements View.OnClickListe
             public TextView itemDecs;// 描述
             public TextView itemDay;// 日
             public View emptyView;
+        }
+    }
+
+    // 获取交易账单列表
+    private class GetInOutList extends AsyncTask<Void, Void, GoldInOutListBean> {
+        private int page;
+
+        public GetInOutList(int page) {
+            this.page = page;
+        }
+
+        @Override
+        protected GoldInOutListBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETGOLDINOUTLIST)),
+                            "page", String.valueOf(page),
+                            Constant.BASE_URL + Constant.GETGOLDINOUTLIST,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("金条收支明细", body);
+                return FastJsonTools.getBean(body, GoldInOutListBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(GoldInOutListBean goldInOutListBean) {
+            super.onPostExecute(goldInOutListBean);
+            if (goldInOutListBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
+                refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
+                return;
+            } else {
+                if (goldInOutListBean.getStatus() == 200) {
+                    refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
+                    refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
+                    if (page == 0) {
+                        datas = goldInOutListBean.getData();
+                        if (datas != null && datas.size() != 0) {
+                            listview.setAdapter(myAdapter);
+                        }
+                    } else {
+                        for (GoldInOutListBean.DataBean dataBean : goldInOutListBean.getData()) {
+                            datas.add(dataBean);
+                        }
+                        myAdapter.notifyDataSetChanged();
+                    }
+                } else if (goldInOutListBean.getStatus() == 201) {
+                    pages--;
+                    refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
+                } else {
+                    refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
+                    refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
+                    SuperToastUtils.showSuperToast(mContext, 2, goldInOutListBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 下拉刷新和上拉加载
+    private class PullListener implements PullToRefreshLayout.OnRefreshListener {
+
+        @Override
+        public void onRefresh(final PullToRefreshLayout pullToRefreshLayout) {
+            // 下拉刷新
+            pages = 0;
+            GetInOutList getInOutList = new GetInOutList(0);
+            getInOutList.execute();
+        }
+
+        @Override
+        public void onLoadMore(final PullToRefreshLayout pullToRefreshLayout) {
+            // 上拉加载
+            pages++;
+            Log.i("页码", String.valueOf(pages));
+            GetInOutList getInOutList = new GetInOutList(pages);
+            getInOutList.execute();
         }
     }
 

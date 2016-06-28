@@ -418,7 +418,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         }
     }
 
-    // 分享
+    // 分享圈子
     private class ShareTask extends AsyncTask<Void, Void, ShareBean> {
         @Override
         protected ShareBean doInBackground(Void... params) {
@@ -451,7 +451,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(getActivity());
-                    DialogUtils.shareDialog(getActivity(), refreshView, shareUtils, "金指投圈子", datas.get(POSITION).getContent(), datas.get(POSITION).getUsers().getHeadSculpture(), shareBean.getData().getUrl());
+                    DialogUtils.shareDialog(getActivity(), refreshView, shareUtils, "金指投投融资", datas.get(POSITION).getContent(), shareBean.getData().getImage(), shareBean.getData().getUrl());
                     isShared = true;
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());

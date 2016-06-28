@@ -98,6 +98,7 @@
             android:layout_marginTop="9dp"
             android:text="1.2km"
             android:textColor="#747474"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="invisible" />
     </RelativeLayout>
 </LinearLayout>

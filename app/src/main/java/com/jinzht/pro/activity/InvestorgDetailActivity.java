@@ -270,7 +270,7 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
         }
     }
 
-    // 分享
+    // 分享投资机构
     private class ShareTask extends AsyncTask<Void, Void, ShareBean> {
         @Override
         protected ShareBean doInBackground(Void... params) {

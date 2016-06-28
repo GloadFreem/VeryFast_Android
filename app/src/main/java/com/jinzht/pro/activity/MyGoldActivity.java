@@ -1,6 +1,9 @@
 package com.jinzht.pro.activity;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -9,7 +12,19 @@ import com.jinzht.pro.R;
 import com.jinzht.pro.adapter.AccountAdapter;
 import com.jinzht.pro.adapter.RecyclerViewData;
 import com.jinzht.pro.base.BaseActivity;
+import com.jinzht.pro.bean.GoldAccount;
+import com.jinzht.pro.bean.ShareBean;
+import com.jinzht.pro.bean.WebBean;
 import com.jinzht.pro.callback.ItemClickListener;
+import com.jinzht.pro.utils.AESUtils;
+import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.DialogUtils;
+import com.jinzht.pro.utils.FastJsonTools;
+import com.jinzht.pro.utils.MD5Utils;
+import com.jinzht.pro.utils.NetWorkUtils;
+import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.ShareUtils;
+import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 
@@ -23,7 +38,7 @@ import java.util.List;
 public class MyGoldActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout btnBack;// 返回
-    private TextView goldAmount;// 金条数量
+    private TextView tvGoldAmount;// 金条数量
     private RecyclerView recyclerView;// 条目网格
 
     private List<Integer> icons;// 填充的item图标
@@ -41,11 +56,14 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
 
         btnBack = (LinearLayout) findViewById(R.id.gold_btn_back);// 返回
         btnBack.setOnClickListener(this);
-        goldAmount = (TextView) findViewById(R.id.gold_tv_amount);// 金条数量
+        tvGoldAmount = (TextView) findViewById(R.id.gold_tv_amount);// 金条数量
         recyclerView = (RecyclerView) findViewById(R.id.gold_rv_items);// 条目网格
 
         // 填充RecyclerView
         initItems();
+
+        GetGoldCount getGoldCount = new GetGoldCount();
+        getGoldCount.execute();
     }
 
     private void initItems() {
@@ -59,7 +77,25 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
         mAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                SuperToastUtils.showSuperToast(mContext, 2, names.get(position));
+                Intent intent = new Intent();
+                switch (position) {
+                    case 0:// 收支明细
+                        intent.setClass(mContext, GoldInOutActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 1:// 邀请送金条
+                        ShareTask shareTask = new ShareTask();
+                        shareTask.execute();
+                        break;
+                    case 2:// 金条积累规则
+                        GoldGetRule goldGetRule = new GoldGetRule();
+                        goldGetRule.execute();
+                        break;
+                    case 3:// 金条使用规则
+                        GoldUseRule goldUseRule = new GoldUseRule();
+                        goldUseRule.execute();
+                        break;
+                }
             }
 
             @Override
@@ -80,6 +116,167 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
             case R.id.gold_btn_back:// 返回上一页
                 finish();
                 break;
+        }
+    }
+
+    // 获取金条数量
+    private class GetGoldCount extends AsyncTask<Void, Void, GoldAccount> {
+        @Override
+        protected GoldAccount doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETGOLDACCOUNT)),
+                            Constant.BASE_URL + Constant.GETGOLDACCOUNT,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("金条账户", body);
+                return FastJsonTools.getBean(body, GoldAccount.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(GoldAccount goldAccount) {
+            super.onPostExecute(goldAccount);
+            if (goldAccount == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (goldAccount.getStatus() == 200) {
+                    tvGoldAmount.setText(String.valueOf(goldAccount.getData().getCount()));
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, goldAccount.getMessage());
+                }
+            }
+        }
+    }
+
+    // 分享APP
+    private class ShareTask extends AsyncTask<Void, Void, ShareBean> {
+        @Override
+        protected ShareBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SHAREAPP)),
+                            "type", "3",
+                            Constant.BASE_URL + Constant.SHAREAPP,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("分享返回信息", body);
+                return FastJsonTools.getBean(body, ShareBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ShareBean shareBean) {
+            super.onPostExecute(shareBean);
+            if (shareBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (shareBean.getStatus() == 200) {
+                    ShareUtils shareUtils = new ShareUtils(MyGoldActivity.this);
+                    DialogUtils.shareDialog(MyGoldActivity.this, tvGoldAmount, shareUtils, shareBean.getData().getTitle(), shareBean.getData().getContent(), shareBean.getData().getImage(), shareBean.getData().getUrl());
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 金条积累规则
+    private class GoldGetRule extends AsyncTask<Void, Void, WebBean> {
+        @Override
+        protected WebBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GOLDGETRULE)),
+                            Constant.BASE_URL + Constant.GOLDGETRULE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("金条积累规则", body);
+                return FastJsonTools.getBean(body, WebBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(WebBean webBean) {
+            super.onPostExecute(webBean);
+            if (webBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (webBean.getStatus() == 200) {
+                    if (webBean.getData() != null && !StringUtils.isBlank(webBean.getData().getUrl())) {
+                        Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                        intent.putExtra("title", "金条积累规则");
+                        intent.putExtra("url", webBean.getData().getUrl());
+                        startActivity(intent);
+                    }
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, webBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 金条使用规则
+    private class GoldUseRule extends AsyncTask<Void, Void, WebBean> {
+        @Override
+        protected WebBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GOLDUSERULE)),
+                            Constant.BASE_URL + Constant.GOLDUSERULE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("金条使用规则", body);
+                return FastJsonTools.getBean(body, WebBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(WebBean webBean) {
+            super.onPostExecute(webBean);
+            if (webBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (webBean.getStatus() == 200) {
+                    if (webBean.getData() != null && !StringUtils.isBlank(webBean.getData().getUrl())) {
+                        Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                        intent.putExtra("title", "金条使用规则");
+                        intent.putExtra("url", webBean.getData().getUrl());
+                        startActivity(intent);
+                    }
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, webBean.getMessage());
+                }
+            }
         }
     }
 

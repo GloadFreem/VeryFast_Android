@@ -9,10 +9,10 @@
         android:layout_height="19dp" />
 
     <LinearLayout
-        android:layout_below="@id/item_gold_inout_empty"
         android:id="@+id/item_ll_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/item_gold_inout_empty"
         android:layout_marginLeft="40dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"

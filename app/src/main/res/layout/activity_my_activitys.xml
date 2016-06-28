@@ -9,12 +9,22 @@
 
     <include layout="@layout/title_back" />
 
-    <ListView
-        android:id="@+id/listview"
+    <com.jinzht.pro.view.PullToRefreshLayout
+        android:id="@+id/refresh_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bg_main"
-        android:divider="@null"
-        android:dividerHeight="19dp"
-        android:scrollbars="none" />
+        android:layout_height="match_parent">
+
+        <include layout="@layout/refresh_head" />
+
+        <com.jinzht.pro.view.PullableListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_main"
+            android:divider="@null"
+            android:dividerHeight="19dp"
+            android:scrollbars="none" />
+
+        <include layout="@layout/load_more" />
+    </com.jinzht.pro.view.PullToRefreshLayout>
 </LinearLayout>

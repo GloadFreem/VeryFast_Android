@@ -1,11 +1,18 @@
 package com.jinzht.pro.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.jinzht.pro.base.YeepayWebViewActivity;
+import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.bean.ToWithdrawBean;
+import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.FastJsonTools;
+import com.jinzht.pro.utils.MD5Utils;
+import com.jinzht.pro.utils.NetWorkUtils;
+import com.jinzht.pro.utils.OkHttpUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -59,6 +66,14 @@ public class YeepayWithdrawActivity extends YeepayWebViewActivity {
     }
 
     @Override
+    protected void saveResult(String respResult) {
+        super.saveResult(respResult);
+        // 将提现信息提交到服务器
+        WithdrawTask withdrawTask = new WithdrawTask();
+        withdrawTask.execute();
+    }
+
+    @Override
     protected void saveSign(String signResult) {
         backSign = signResult;
         if (callBackBean != null && "1".equals(callBackBean.getCode())) {
@@ -67,6 +82,30 @@ public class YeepayWithdrawActivity extends YeepayWebViewActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra("TAG", "提现");
             startActivity(intent);
+        }
+    }
+
+    // 将充值信息提交到服务器
+    private class WithdrawTask extends AsyncTask<Void, Void, CommonBean> {
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.WITHDRAW)),
+                            "tradeCode", callBackBean.getRequestNo(),
+                            Constant.BASE_URL + Constant.WITHDRAW,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("投资完成返回信息", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
         }
     }
 }

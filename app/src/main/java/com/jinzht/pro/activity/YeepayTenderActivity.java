@@ -15,7 +15,6 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
-import com.jinzht.pro.utils.SuperToastUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -104,11 +103,25 @@ public class YeepayTenderActivity extends YeepayWebViewActivity {
     }
 
     @Override
+    protected void saveResult(String respResult) {
+        super.saveResult(respResult);
+        InvestTask investTask = new InvestTask();
+        investTask.execute();
+    }
+
+    @Override
     protected void saveSign(String signResult) {
         backSign = signResult;
         if (callBackBean != null && "1".equals(callBackBean.getCode())) {
-            InvestTask investTask = new InvestTask();
-            investTask.execute();
+            // 进入投资成功界面
+            Intent intent = new Intent(mContext, PaySecceedActivity.class);
+            intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
+            intent.putExtra("amount", getIntent().getStringExtra("amount"));
+            intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
+            intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
+            intent.putExtra("img", getIntent().getStringExtra("img"));
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -135,28 +148,6 @@ public class YeepayTenderActivity extends YeepayWebViewActivity {
                 return FastJsonTools.getBean(body, CommonBean.class);
             } else {
                 return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(CommonBean commonBean) {
-            super.onPostExecute(commonBean);
-            if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-            } else {
-                if (commonBean.getStatus() == 200) {
-                    // 进入投资成功界面
-                    Intent intent = new Intent(mContext, PaySecceedActivity.class);
-                    intent.putExtra("projectId", getIntent().getStringExtra("projectId"));
-                    intent.putExtra("amount", getIntent().getStringExtra("amount"));
-                    intent.putExtra("abbrevName", getIntent().getStringExtra("abbrevName"));
-                    intent.putExtra("fullName", getIntent().getStringExtra("fullName"));
-                    intent.putExtra("img", getIntent().getStringExtra("img"));
-                    startActivity(intent);
-                    finish();
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
-                }
             }
         }
     }

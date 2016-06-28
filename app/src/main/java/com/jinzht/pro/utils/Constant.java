@@ -260,8 +260,41 @@ public class Constant {
      */
     public static final String GETMYCOLLECT = "requestMineCollection.action";
     /**
-     *
+     * 充值
      */
+    public static final String RECHARGE = "requestAccountCharge.action";
+    /**
+     * 提现
+     */
+    public static final String WITHDRAW = "requestWithDraw.action";
+    /**
+     * 获取我的活动列表
+     */
+    public static final String GETMYACTIVITYLIST = "requestMineAction.action";
+    /**
+     * 查询金条账户
+     */
+    public static final String GETGOLDACCOUNT = "requestGoldAccount.action";
+    /**
+     * 获取金条收支明细列表
+     */
+    public static final String GETGOLDINOUTLIST = "requestGoldTradeList.action";
+    /**
+     * 邀请好友送金条
+     */
+    public static final String SHAREAPP = "requestInviteFriends.action";
+    /**
+     * 金条使用规则
+     */
+    public static final String GOLDGETRULE = "requestGoldGetRule.action";
+    /**
+     * 金条使用规则
+     */
+    public static final String GOLDUSERULE = "requestGoldUseRule.action";
+    /**
+     * 获取项目中心的项目列表
+     */
+    public static final String GETPROCENTERLIST = "requestProjectCenter.action";
 
     /**
      * ==============================以下为易宝支付接口=======================================
@@ -279,13 +312,13 @@ public class Constant {
     /**
      * 易宝网关接口
      */
-    public static final String YEEPAY_GATEWAY = "http://220.181.25.233:8081/member/bhawireless/";
-//    public static final String YEEPAY_GATEWAY = "https://member.yeepay.com/member/bhawireless/";
+//    public static final String YEEPAY_GATEWAY = "http://220.181.25.233:8081/member/bhawireless/";
+    public static final String YEEPAY_GATEWAY = "https://member.yeepay.com/member/bhawireless/";
     /**
      * 易宝直连接口
      */
-    public static final String YEEPAY_DIRECT = "http://220.181.25.233:8081/member/bhaexter/bhaController";
-//    public static final String YEEPAY_DIRECT = "https://member.yeepay.com/member/bhaexter/bhaController";
+//    public static final String YEEPAY_DIRECT = "http://220.181.25.233:8081/member/bhaexter/bhaController";
+    public static final String YEEPAY_DIRECT = "https://member.yeepay.com/member/bhaexter/bhaController";
     /**
      * 易宝回跳页面
      */

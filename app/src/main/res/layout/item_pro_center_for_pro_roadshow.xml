@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
-        android:background="@mipmap/tag_dailuyan" />
+        android:src="@mipmap/tag_dailuyan" />
 
     <TextView
         android:id="@+id/item_project_compname"
@@ -237,5 +237,36 @@
                 app:textColor="#747474"
                 app:textSize="10sp" />
         </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_bottom_data_roadshwo"
+        android:background="@mipmap/line_item" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="13dp"
+        android:paddingTop="13dp">
+
+        <ImageView
+            android:id="@+id/item_btn_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="14dp"
+            android:background="@mipmap/icon_submit_record" />
+
+        <ImageView
+            android:id="@+id/item_btn_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:background="@mipmap/icon_pro_detail" />
     </LinearLayout>
 </RelativeLayout>

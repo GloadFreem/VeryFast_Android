@@ -584,7 +584,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         }
     }
 
-    // 分享
+    // 分享项目
     private class ShareTask extends AsyncTask<Void, Void, ShareBean> {
         @Override
         protected ShareBean doInBackground(Void... params) {

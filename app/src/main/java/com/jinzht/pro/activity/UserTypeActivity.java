@@ -85,15 +85,15 @@ public class UserTypeActivity extends BaseActivity implements View.OnClickListen
                 tvDesc1.setText("项目方描述");
                 break;
             case "个人投资者":
-                ivType1.setBackgroundResource(R.mipmap.icon_investor);
+                ivType1.setBackgroundResource(R.mipmap.icon_investor_big);
                 tvDesc1.setText("个人投资者描述");
                 break;
             case "机构投资者":
-                ivType1.setBackgroundResource(R.mipmap.icon_investorg);
+                ivType1.setBackgroundResource(R.mipmap.icon_investorg_big);
                 tvDesc1.setText("个人投资者描述");
                 break;
             case "智囊团":
-                ivType1.setBackgroundResource(R.mipmap.icon_brain);
+                ivType1.setBackgroundResource(R.mipmap.icon_brain_big);
                 tvDesc1.setText("智囊团描述");
                 break;
         }

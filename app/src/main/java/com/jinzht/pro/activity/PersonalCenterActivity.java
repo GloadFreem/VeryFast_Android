@@ -93,13 +93,15 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
         } else {
             Glide.with(mContext).load(R.drawable.ic_launcher).into(ivFavicon);
         }
-        if (data.getAuthentics().size() == 1) {
-            Glide.with(mContext).load(R.mipmap.icon_v).into(ivLevel);
-        } else if (data.getAuthentics().size() == 2) {
-            Glide.with(mContext).load(R.mipmap.icon_v2).into(ivLevel);
+        if (data.getAuthentics() != null && data.getAuthentics().size() != 0) {
+            if (data.getAuthentics().size() == 1) {
+                Glide.with(mContext).load(R.mipmap.icon_v).into(ivLevel);
+            } else if (data.getAuthentics().size() == 2) {
+                Glide.with(mContext).load(R.mipmap.icon_v2).into(ivLevel);
+            }
+            tvName.setText(data.getAuthentics().get(0).getName());
+            tvPosition.setText(data.getAuthentics().get(0).getCompanyName() + " | " + data.getAuthentics().get(0).getPosition());
         }
-        tvName.setText(data.getAuthentics().get(0).getName());
-        tvPosition.setText(data.getAuthentics().get(0).getCompanyName() + " | " + data.getAuthentics().get(0).getPosition());
     }
 
     @Override
@@ -131,8 +133,10 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent();
                 switch (position) {
-                    case 0:
-                        if ("已认证".equals(data.getAuthentics().get(0).getAuthenticstatus().getName())) {
+                    case 0:// 资金账户
+                        if (data == null) {
+                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                        } else if ("已认证".equals(data.getAuthentics().get(0).getAuthenticstatus().getName())) {
                             intent.setClass(mContext, AccountActivity.class);
                             if (data != null) {
                                 EventBus.getDefault().postSticky(data);
@@ -147,9 +151,58 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                             startActivity(intent);
                         }
                         break;
-                    case 1:
-                        intent.setClass(mContext, MyCollectActivity.class);
+                    case 1:// 我的关注
+                        if (data == null) {
+                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                        } else if ("已认证".equals(data.getAuthentics().get(0).getAuthenticstatus().getName())) {
+                            intent.setClass(mContext, MyCollectActivity.class);
+                            startActivity(intent);
+                        } else {
+                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                            intent.setClass(mContext, CertificationIDCardActivity.class);
+                            intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                        break;
+                    case 2:// 我的活动
+                        if (data == null) {
+                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                        } else if ("已认证".equals(data.getAuthentics().get(0).getAuthenticstatus().getName())) {
+                            intent.setClass(mContext, MyActivitysActivity.class);
+                            startActivity(intent);
+                        } else {
+                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                            intent.setClass(mContext, CertificationIDCardActivity.class);
+                            intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                        break;
+                    case 3:// 我的金条
+                        intent.setClass(mContext, MyGoldActivity.class);
                         startActivity(intent);
+                        break;
+                    case 4:// 项目中心
+                        if (data == null) {
+                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                        } else if ("已认证".equals(data.getAuthentics().get(0).getAuthenticstatus().getName())) {
+                            intent.setClass(mContext, ProCenterActivity.class);
+                            intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
+                            startActivity(intent);
+                        } else {
+                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                            intent.setClass(mContext, CertificationIDCardActivity.class);
+                            intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                        break;
+                    case 5:// 软件设置
+                        break;
+                    case 6:// 关于平台
+                        break;
+                    case 7:// 推荐好友
                         break;
                 }
             }

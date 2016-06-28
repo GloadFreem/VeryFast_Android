@@ -43,7 +43,7 @@ public class MyCollectProjectFragment extends BaseFragment {
 
     private MyAdapter myAdapter;
     private int pages = 0;
-    List<RoadshowProjectListBean.DataBean> datas = new ArrayList<>();// 数据集合
+    private List<RoadshowProjectListBean.DataBean> datas = new ArrayList<>();// 数据集合
     private int POSITION = 0;
     private final static int REQUEST_CODE = 1;
 
@@ -117,7 +117,7 @@ public class MyCollectProjectFragment extends BaseFragment {
             ViewHolder holder = null;
             if (convertView == null) {
                 holder = new ViewHolder();
-                if (getItemViewType(position) == 0) {
+                if (getItemViewType(position) == 0) {// 预选项目
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.item_project_preselect, null);
                     holder.itemProjectImg = (CircleImageView) convertView.findViewById(R.id.item_project_img);
                     holder.itemProjectTitle = (TextView) convertView.findViewById(R.id.item_project_title);
@@ -128,7 +128,7 @@ public class MyCollectProjectFragment extends BaseFragment {
                     holder.itemProjectField3 = (TextView) convertView.findViewById(R.id.item_project_field3);
                     holder.itemProjectPopularity = (TextView) convertView.findViewById(R.id.item_project_popularity);
                     holder.itemProjectAmount = (TextView) convertView.findViewById(R.id.item_project_amount);
-                } else {
+                } else {// 路演项目
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.item_project_roadshow, null);
                     holder.itemProjectImg = (CircleImageView) convertView.findViewById(R.id.item_project_img);
                     holder.itemProjectTitle = (TextView) convertView.findViewById(R.id.item_project_title);

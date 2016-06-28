@@ -1192,7 +1192,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         }
     }
 
-    // 分享
+    // 分享活动
     private class ShareTask extends AsyncTask<Void, Void, ShareBean> {
         @Override
         protected ShareBean doInBackground(Void... params) {
@@ -1225,7 +1225,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(ActivityDetailActivity.this);
-                    DialogUtils.shareDialog(ActivityDetailActivity.this, btnShare, shareUtils, data.getName(), data.getDescription(), "", shareBean.getData().getUrl());
+                    DialogUtils.shareDialog(ActivityDetailActivity.this, btnShare, shareUtils, data.getName(), data.getDescription(), shareBean.getData().getImage(), shareBean.getData().getUrl());
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
                 }

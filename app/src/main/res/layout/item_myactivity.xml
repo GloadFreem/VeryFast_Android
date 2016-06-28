@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#00a0e9"
@@ -12,7 +13,7 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:singleLine="true"
-        android:text="创业公司吸引投资人前应做哪些准备"
+        android:text=""
         android:textColor="@android:color/white"
         android:textSize="17sp" />
 
@@ -22,60 +23,60 @@
         android:background="@android:color/white">
 
         <TextView
-            android:id="@+id/item_activity_time"
+            android:id="@+id/item_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:layout_marginTop="13dp"
             android:drawableLeft="@mipmap/icon_time"
             android:drawablePadding="5dp"
-            android:text="2016.3.20  星期天  10:00"
+            android:text=""
             android:textColor="#747474"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/item_activity_num"
+            android:id="@+id/item_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_activity_time"
+            android:layout_below="@id/item_time"
             android:layout_marginLeft="14dp"
             android:layout_marginTop="9dp"
             android:drawableLeft="@mipmap/icon_num"
             android:drawablePadding="5dp"
-            android:text="20-50人"
+            android:text=""
             android:textColor="#747474"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/item_activity_free"
+            android:id="@+id/tv_free"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_activity_time"
+            android:layout_below="@id/item_time"
             android:layout_marginLeft="9dp"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/item_activity_num"
+            android:layout_toRightOf="@id/item_num"
             android:background="@drawable/bg_btn_blue"
             android:padding="2dp"
-            android:text="免费"
+            android:text=""
             android:textColor="@android:color/white"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/item_activity_addr"
+            android:id="@+id/item_addr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_activity_num"
+            android:layout_below="@id/item_num"
             android:layout_marginBottom="13dp"
             android:layout_marginLeft="14dp"
             android:layout_marginTop="9dp"
             android:drawableLeft="@mipmap/icon_location"
             android:drawablePadding="5dp"
-            android:text="陕西省西安市雁塔区锦业路"
+            android:text=""
             android:textColor="#747474"
             android:textSize="12sp" />
 
         <ImageView
-            android:id="@+id/item_activity_tag"
+            android:id="@+id/iv_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -84,15 +85,16 @@
             android:background="@mipmap/icon_expire" />
 
         <TextView
-            android:id="@+id/item_activity_distance"
+            android:id="@+id/item_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/item_activity_num"
+            android:layout_below="@id/item_num"
             android:layout_marginRight="9dp"
             android:layout_marginTop="9dp"
             android:text="1.2km"
             android:textColor="#747474"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="invisible" />
     </RelativeLayout>
 </LinearLayout>

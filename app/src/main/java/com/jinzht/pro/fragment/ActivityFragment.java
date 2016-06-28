@@ -206,7 +206,6 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                return;
             } else {
                 if (activityListBean.getStatus() == 200) {
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
