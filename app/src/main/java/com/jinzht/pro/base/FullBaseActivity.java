@@ -1,6 +1,7 @@
 package com.jinzht.pro.base;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -41,6 +42,9 @@ public abstract class FullBaseActivity extends Activity implements ProgressBarCa
     LoadingProssbar dialog;// 加载进度条
     OkHttpException okHttpException = new OkHttpException(this);// okHttp的异常
 
+    private ExitReceiver exitReceiver = new ExitReceiver();// 退出应用的广播接收者
+    public static final String EXITACTION = "action.exit";// 退出应用的广播接收者的action
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +67,14 @@ public abstract class FullBaseActivity extends Activity implements ProgressBarCa
     protected abstract int getResourcesId();
 
     protected abstract void init();
+
+    // 退出应用的广播接收者
+    class ExitReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            FullBaseActivity.this.finish();
+        }
+    }
 
     // 正在运行的activity名
     private String getRunningActivityName() {

@@ -10,193 +10,207 @@
 
     <include layout="@layout/title_back" />
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:paddingLeft="17dp"
-        android:text="安全设置"
-        android:textColor="#747474"
-        android:textSize="14sp" />
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
-    <RelativeLayout
-        android:id="@+id/setting_btn_change_pwd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4.5dp"
-        android:background="@android:color/white"
-        android:paddingBottom="13dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="13dp">
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="修改登录密码"
-            android:textColor="#474747"
-            android:textSize="17sp" />
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@mipmap/iconfont_right_arrow" />
-    </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/line_partition" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:paddingLeft="17dp"
+                android:text="安全设置"
+                android:textColor="#747474"
+                android:textSize="14sp" />
 
-    <RelativeLayout
-        android:id="@+id/setting_btn_change_tel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingBottom="13dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="13dp">
+            <RelativeLayout
+                android:id="@+id/setting_btn_change_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4.5dp"
+                android:background="@android:color/white"
+                android:paddingBottom="13dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="13dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="更换绑定手机"
-            android:textColor="#474747"
-            android:textSize="17sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="修改登录密码"
+                    android:textColor="#474747"
+                    android:textSize="17sp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@mipmap/iconfont_right_arrow" />
-    </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@mipmap/iconfont_right_arrow" />
+            </RelativeLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:paddingLeft="17dp"
-        android:text="管理通知"
-        android:textColor="#747474"
-        android:textSize="14sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/line_partition" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4.5dp"
-        android:background="@android:color/white"
-        android:paddingBottom="6dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="6dp">
+            <RelativeLayout
+                android:id="@+id/setting_btn_change_tel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingBottom="13dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="13dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="声音提醒"
-            android:textColor="#474747"
-            android:textSize="17sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="更换绑定手机"
+                    android:textColor="#474747"
+                    android:textSize="17sp" />
 
-        <ToggleButton
-            android:id="@+id/setting_toggle_voice"
-            android:layout_width="49dp"
-            android:layout_height="31dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/selector_setting_toggle"
-            android:button="@null"
-            android:checked="true"
-            android:text=""
-            android:textOff=""
-            android:textOn="" />
-    </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@mipmap/iconfont_right_arrow" />
+            </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/line_partition" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:paddingLeft="17dp"
+                android:text="管理通知"
+                android:textColor="#747474"
+                android:textSize="14sp" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingBottom="6dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="6dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4.5dp"
+                android:background="@android:color/white"
+                android:paddingBottom="6dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="6dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="震动提醒"
-            android:textColor="#474747"
-            android:textSize="17sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="声音提醒"
+                    android:textColor="#474747"
+                    android:textSize="17sp" />
 
-        <ToggleButton
-            android:id="@+id/setting_toggle_shark"
-            android:layout_width="49dp"
-            android:layout_height="31dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/selector_setting_toggle"
-            android:button="@null"
-            android:checked="true"
-            android:text=""
-            android:textOff=""
-            android:textOn="" />
+                <ToggleButton
+                    android:id="@+id/setting_toggle_voice"
+                    android:layout_width="49dp"
+                    android:layout_height="31dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/selector_setting_toggle"
+                    android:button="@null"
+                    android:checked="true"
+                    android:text=""
+                    android:textOff=""
+                    android:textOn="" />
+            </RelativeLayout>
 
-    </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/line_partition" />
 
-    <TextView
-        android:id="@+id/setting_btn_clean_cache"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:background="@android:color/white"
-        android:paddingBottom="13dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="13dp"
-        android:text="清理缓存"
-        android:textColor="#474747"
-        android:textSize="17sp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingBottom="6dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="6dp">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/line_partition" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="震动提醒"
+                    android:textColor="#474747"
+                    android:textSize="17sp" />
 
-    <TextView
-        android:id="@+id/setting_btn_update"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingBottom="13dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="13dp"
-        android:text="版本更新"
-        android:textColor="#474747"
-        android:textSize="17sp" />
+                <ToggleButton
+                    android:id="@+id/setting_toggle_shark"
+                    android:layout_width="49dp"
+                    android:layout_height="31dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/selector_setting_toggle"
+                    android:button="@null"
+                    android:checked="true"
+                    android:text=""
+                    android:textOff=""
+                    android:textOn="" />
 
-    <TextView
-        android:id="@+id/setting_btn_exit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/bg_code_orange"
-        android:gravity="center"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:text="退出登录"
-        android:textColor="@android:color/white"
-        android:textSize="17sp" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/setting_btn_clean_cache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:background="@android:color/white"
+                android:paddingBottom="13dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="13dp"
+                android:text="清理缓存"
+                android:textColor="#474747"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/line_partition" />
+
+            <TextView
+                android:id="@+id/setting_btn_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingBottom="13dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="13dp"
+                android:text="版本更新"
+                android:textColor="#474747"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/setting_btn_exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/bg_code_orange"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="注销登录"
+                android:textColor="@android:color/white"
+                android:textSize="17sp" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

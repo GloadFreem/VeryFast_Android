@@ -199,6 +199,8 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                         }
                         break;
                     case 5:// 软件设置
+                        intent.setClass(mContext, SettingActivity.class);
+                        startActivity(intent);
                         break;
                     case 6:// 关于平台
                         break;

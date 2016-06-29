@@ -106,19 +106,19 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
                 return;
             } else {
                 if (commonBean.getStatus() == 200) {
-                    String pwd = null;
                     try {
-                        pwd = MD5Utils.encode(setEdPassword1.getText().toString() + getIntent().getStringExtra("telephone").trim() + "lindyang");
+                        String pwd = MD5Utils.encode(setEdPassword1.getText().toString() + getIntent().getStringExtra("telephone").trim() + "lindyang");
+                        SharedPreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    SharedPreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
 //                    SharedPreferencesUtils.setIsLogin(mContext, true);
 //                    SharedPreferencesUtils.setChoseUserType(mContext, false);
 //                    SharedPreferencesUtils.setAuth(mContext, false);
                     Intent intent = new Intent(mContext, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
+                    finish();
                 } else {
 //                    SharedPreferencesUtils.setIsLogin(mContext, false);
                     SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());

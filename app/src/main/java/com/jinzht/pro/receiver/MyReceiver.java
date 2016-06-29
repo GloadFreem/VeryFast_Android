@@ -28,9 +28,9 @@ public class MyReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
         Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
+
         // 指定定制的 Notification Layout
-        CustomPushNotificationBuilder builder = new
-                CustomPushNotificationBuilder(context,
+        CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(context,
                 R.layout.customer_notitfication_layout,
                 R.id.icon,
                 R.id.title,
@@ -43,6 +43,7 @@ public class MyReceiver extends BroadcastReceiver {
         builder.notificationDefaults = Notification.DEFAULT_ALL;
         // 设置builder的样式编号为3，发送时指定编号发送
         JPushInterface.setPushNotificationBuilder(3, builder);
+
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);

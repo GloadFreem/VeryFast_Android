@@ -10,34 +10,16 @@
 
     <include layout="@layout/title_back" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="19dp"
-        android:paddingLeft="52dp"
-        android:text="188****2236"
-        android:textColor="@color/bg_text"
-        android:textSize="16sp" />
-
-    <EditText
-        android:id="@+id/change_tel_ed_tel_old"
-        android:layout_width="288dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_ed_wechat_verify"
-        android:hint="请补全原手机号码"
-        android:paddingLeft="15dp"
-        android:textColorHint="#b5b5b5"
-        android:textSize="16sp" />
-
     <EditText
         android:id="@+id/change_tel_ed_tel_new"
         android:layout_width="288dp"
         android:layout_height="44dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/bg_ed_wechat_verify"
         android:hint="请输入新手机号码"
+        android:inputType="number"
         android:paddingLeft="15dp"
+        android:singleLine="true"
         android:textColorHint="#b5b5b5"
         android:textSize="16sp" />
 
@@ -53,6 +35,7 @@
             android:background="@drawable/bg_ed_wechat_verify_left"
             android:hint="@string/input_code"
             android:paddingLeft="15dp"
+            android:singleLine="true"
             android:textColorHint="#b5b5b5"
             android:textSize="16sp" />
 
@@ -75,6 +58,20 @@
         android:background="@drawable/bg_ed_wechat_verify"
         android:hint="请输入身份证号"
         android:paddingLeft="15dp"
+        android:singleLine="true"
+        android:textColorHint="#b5b5b5"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/change_tel_ed_pwd"
+        android:layout_width="288dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_ed_wechat_verify"
+        android:hint="请输入密码"
+        android:inputType="textPassword"
+        android:paddingLeft="15dp"
+        android:singleLine="true"
         android:textColorHint="#b5b5b5"
         android:textSize="16sp" />
 

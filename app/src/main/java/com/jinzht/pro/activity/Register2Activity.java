@@ -27,7 +27,7 @@ import com.jinzht.pro.utils.UiHelp;
 import cn.jpush.android.api.JPushInterface;
 
 /**
- * 注册的第二个页面
+ * 注册的第二个页面，设置密码
  */
 public class Register2Activity extends BaseActivity implements View.OnClickListener {
 

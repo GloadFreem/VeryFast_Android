@@ -11,7 +11,10 @@ import android.widget.RadioGroup;
 
 import com.jinzht.pro.R;
 import com.jinzht.pro.adapter.MainFragmentAdapter;
+import com.jinzht.pro.application.MyApplication;
+import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.base.BaseFragmentActivity;
+import com.jinzht.pro.base.FullBaseActivity;
 import com.jinzht.pro.bean.BannerInfoBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
@@ -22,6 +25,7 @@ import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.view.NoScrollViewPager;
+import com.umeng.analytics.MobclickAgent;
 
 import de.greenrobot.event.EventBus;
 
@@ -99,6 +103,33 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 Intent intent = new Intent(this, PersonalCenterActivity.class);
                 startActivity(intent);
                 break;
+        }
+    }
+
+    private long exitTime = 0;
+
+    // 点击两次后退出应用
+    @Override
+    public void onBackPressed() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            SuperToastUtils.showSuperToast(mContext, 2, "再按一次退出应用");
+            exitTime = System.currentTimeMillis();
+        } else {
+            Intent intent1 = new Intent();
+            intent1.setAction(BaseActivity.EXITACTION);
+            sendBroadcast(intent1);// 发送退出广播
+            Intent intent2 = new Intent();
+            intent1.setAction(FullBaseActivity.EXITACTION);
+            sendBroadcast(intent2);// 发送退出广播
+            Intent intent3 = new Intent();
+            intent1.setAction(BaseFragmentActivity.EXITACTION);
+            sendBroadcast(intent3);// 发送退出广播
+
+            MobclickAgent.onKillProcess(MainActivity.this);
+            MyApplication.getInstance().exit();//遍历所有Activity 并finish
+
+            finish();
+            System.exit(0);
         }
     }
 

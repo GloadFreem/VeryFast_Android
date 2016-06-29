@@ -103,7 +103,7 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
                     body = OkHttpUtils.post(
                             MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETVERIFYCODE)),
                             "telephone", findPasswordEdTel.getText().toString(),
-                            "type", "0",
+                            "type", "1",
                             Constant.BASE_URL + Constant.GETVERIFYCODE,
                             mContext
                     );

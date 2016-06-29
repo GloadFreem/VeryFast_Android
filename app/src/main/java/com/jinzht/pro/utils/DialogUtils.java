@@ -81,7 +81,7 @@ public class DialogUtils {
         });
     }
 
-    // 项目中心中投资人忽略收到的项目是弹窗
+    // 项目中心中投资人忽略收到的项目时弹窗
     public static void ingorePro(final Activity activity) {
         final AlertDialog dialog = new AlertDialog.Builder(activity).create();
         dialog.setCanceledOnTouchOutside(true);
@@ -343,4 +343,23 @@ public class DialogUtils {
         popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
     }
 
+    // 一个确定按钮的弹窗
+    public static void confirmDialog(Activity activity, String content, String confirm) {
+        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_confirm);
+        ImageView ivTag = (ImageView) window.findViewById(R.id.iv_tag);
+        TextView tvContent = (TextView) window.findViewById(R.id.tv_content);
+        TextView btnConfirm = (TextView) window.findViewById(R.id.btn_confirm);
+        tvContent.setText(content);
+        btnConfirm.setText(confirm);
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
 }

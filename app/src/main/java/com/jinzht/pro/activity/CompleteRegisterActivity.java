@@ -48,6 +48,7 @@ public class CompleteRegisterActivity extends BaseActivity implements View.OnCli
             case R.id.complete_register_btn_goto_try:// 试用模式，进入主页
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
         }
     }

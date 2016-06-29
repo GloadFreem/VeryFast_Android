@@ -28,7 +28,7 @@ import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.utils.UiUtils;
 
 /**
- * 注册的第一个页面
+ * 注册的第一个页面，输入手机号和验证码
  */
 public class Register1Activity extends BaseActivity implements View.OnClickListener {
 
@@ -93,7 +93,7 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.register1_tv_getcode:// 点击获取验证码
                 if (StringUtils.isBlank(register1EdTel.getText().toString())) {
-                    SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的手机号码");
+                    SuperToastUtils.showSuperToast(mContext, 2, "手机号码不能为空");
                 } else if (!StringUtils.isTel(register1EdTel.getText().toString())) {
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的手机号码");
                 } else {
@@ -108,11 +108,11 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
             case R.id.register1_bt_register:// 点击注册，跳转到注册的第二个页面
                 if (register1_cb_agreement.isChecked()) {
                     if (StringUtils.isBlank(register1EdTel.getText().toString())) {
-                        SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的手机号码");
+                        SuperToastUtils.showSuperToast(mContext, 2, "手机号码不能为空");
                     } else if (!StringUtils.isTel(register1EdTel.getText().toString())) {
                         SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的手机号码");
                     } else if (StringUtils.isBlank(register1EdCode.getText().toString())) {
-                        SuperToastUtils.showSuperToast(mContext, 2, "请输入正确的验证码");
+                        SuperToastUtils.showSuperToast(mContext, 2, "验证码不能为空");
                     } else {
                         Intent intent = new Intent(this, Register2Activity.class);
                         intent.putExtra("telephone", register1EdTel.getText().toString());
@@ -123,8 +123,6 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
                 } else {
                     SuperToastUtils.showSuperToast(this, 2, "您必须同意《金指投用户协议》才可以注册");
                 }
-//                Intent intent = new Intent(this, Register2Activity.class);
-//                startActivity(intent);
                 break;
             case R.id.register1_tv_user_agreement:// 点击查看用户协议，跳转到用户协议界面
                 SuperToastUtils.showSuperToast(this, 2, "点击了用户协议");

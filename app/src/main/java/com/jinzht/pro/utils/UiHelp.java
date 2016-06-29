@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.view.View;
@@ -124,5 +125,13 @@ public class UiHelp {
         // listView.getDividerHeight()获取子项间分隔符占用的高度
         // params.height最后得到整个ListView完整显示需要的高度
         listView.setLayoutParams(params);
+    }
+
+    public static String getVersionName(Activity activity) throws Exception {
+        //获取packagemanager的实例
+        PackageManager packageManager = activity.getPackageManager();
+        //getPackageName()是你当前类的包名，0代表是获取版本信息
+        PackageInfo packInfo = packageManager.getPackageInfo(activity.getPackageName(), 0);
+        return packInfo.versionName;
     }
 }

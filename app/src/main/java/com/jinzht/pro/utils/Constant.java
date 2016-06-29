@@ -295,6 +295,26 @@ public class Constant {
      * 获取项目中心的项目列表
      */
     public static final String GETPROCENTERLIST = "requestProjectCenter.action";
+    /**
+     * 项目方查看提交记录
+     */
+    public static final String GETCOMMITRECORDS = "requestProjectCommitRecords.action";
+    /**
+     * 忽略项目
+     */
+    public static final String IGNOREPROJECT = "requestIgorneProjectCommit.action";
+    /**
+     * 修改密码
+     */
+    public static final String CHANGEPASSWORD = "requestModifyPassword.action";
+    /**
+     * 更换手机号码
+     */
+    public static final String CHANGETEL = "requestChangeBindTelephone.action";
+    /**
+     * 版本更新
+     */
+    public static final String UPDATA = "versionInfoSystem.action";
 
     /**
      * ==============================以下为易宝支付接口=======================================
@@ -312,13 +332,13 @@ public class Constant {
     /**
      * 易宝网关接口
      */
-//    public static final String YEEPAY_GATEWAY = "http://220.181.25.233:8081/member/bhawireless/";
-    public static final String YEEPAY_GATEWAY = "https://member.yeepay.com/member/bhawireless/";
+    public static final String YEEPAY_GATEWAY = "http://220.181.25.233:8081/member/bhawireless/";
+//    public static final String YEEPAY_GATEWAY = "https://member.yeepay.com/member/bhawireless/";
     /**
      * 易宝直连接口
      */
-//    public static final String YEEPAY_DIRECT = "http://220.181.25.233:8081/member/bhaexter/bhaController";
-    public static final String YEEPAY_DIRECT = "https://member.yeepay.com/member/bhaexter/bhaController";
+    public static final String YEEPAY_DIRECT = "http://220.181.25.233:8081/member/bhaexter/bhaController";
+//    public static final String YEEPAY_DIRECT = "https://member.yeepay.com/member/bhaexter/bhaController";
     /**
      * 易宝回跳页面
      */

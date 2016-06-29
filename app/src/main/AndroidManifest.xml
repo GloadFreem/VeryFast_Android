@@ -248,7 +248,8 @@
         <activity android:name=".activity.YeepayBindCardActivity" />
         <activity android:name=".activity.RechargeActivity" />
         <activity android:name=".activity.YeepayWithdrawActivity" />
-        <activity android:name=".activity.CommonWebViewActivity"></activity>
+        <activity android:name=".activity.CommonWebViewActivity" />
+        <activity android:name=".activity.CommitRecordsActivity"></activity>
     </application>
 
 </manifest>
