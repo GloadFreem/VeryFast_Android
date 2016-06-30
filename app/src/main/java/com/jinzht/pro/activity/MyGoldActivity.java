@@ -188,7 +188,7 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(MyGoldActivity.this);
-                    DialogUtils.shareDialog(MyGoldActivity.this, tvGoldAmount, shareUtils, shareBean.getData().getTitle(), shareBean.getData().getContent(), shareBean.getData().getImage(), shareBean.getData().getUrl());
+                    DialogUtils.newShareDialog(MyGoldActivity.this, shareUtils, shareBean.getData().getTitle(), shareBean.getData().getContent(), shareBean.getData().getImage(), shareBean.getData().getUrl());
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
                 }

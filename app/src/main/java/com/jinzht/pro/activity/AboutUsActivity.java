@@ -1,5 +1,8 @@
 package com.jinzht.pro.activity;
 
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -7,6 +10,14 @@ import android.widget.TextView;
 
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
+import com.jinzht.pro.bean.WebBean;
+import com.jinzht.pro.utils.AESUtils;
+import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.FastJsonTools;
+import com.jinzht.pro.utils.MD5Utils;
+import com.jinzht.pro.utils.NetWorkUtils;
+import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 
@@ -48,6 +59,11 @@ public class AboutUsActivity extends BaseActivity implements View.OnClickListene
         btnStatement.setOnClickListener(this);
         btnFeedback = (RelativeLayout) findViewById(R.id.about_us_btn_feedback);// 意见反馈
         btnFeedback.setOnClickListener(this);
+        try {
+            tvVerson.setText("金指投" + UiHelp.getVersionName(this));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -57,20 +73,75 @@ public class AboutUsActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.about_us_btn_introduce:// 进入平台介绍
-                SuperToastUtils.showSuperToast(this, 2, "平台介绍");
+                WebViewTask webViewTask1 = new WebViewTask(Constant.PLATFORMINTRODUCE, "平台介绍");
+                webViewTask1.execute();
                 break;
             case R.id.about_us_btn_gudie:// 进入新手指南
-                SuperToastUtils.showSuperToast(this, 2, "新手指南");
+                WebViewTask webViewTask2 = new WebViewTask(Constant.NEWUSERGUIDE, "新手指南");
+                webViewTask2.execute();
                 break;
             case R.id.about_us_btn_agreement:// 进入用户协议
-                SuperToastUtils.showSuperToast(this, 2, "用户协议");
+                WebViewTask webViewTask3 = new WebViewTask(Constant.USERPROTOCOL, "用户协议");
+                webViewTask3.execute();
                 break;
             case R.id.about_us_btn_statement:// 进入免责声明
-                SuperToastUtils.showSuperToast(this, 2, "免责声明");
+                WebViewTask webViewTask4 = new WebViewTask(Constant.DISCLAIMER, "免责声明");
+                webViewTask4.execute();
                 break;
             case R.id.about_us_btn_feedback:// 进入意见反馈
-                SuperToastUtils.showSuperToast(this, 2, "意见反馈");
+                Intent intent = new Intent(this, FeedbackActivity.class);
+                startActivity(intent);
                 break;
+        }
+    }
+
+    // 各个webview
+    private class WebViewTask extends AsyncTask<Void, Void, WebBean> {
+        private String url;
+        private String title;
+
+        public WebViewTask(String url, String title) {
+            this.url = url;
+            this.title = title;
+        }
+
+        @Override
+        protected WebBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, url)),
+                            Constant.BASE_URL + url,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i(title, body);
+                return FastJsonTools.getBean(body, WebBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(WebBean webBean) {
+            super.onPostExecute(webBean);
+            if (webBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (webBean.getStatus() == 200) {
+                    if (!StringUtils.isBlank(webBean.getData().getUrl())) {
+                        Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                        intent.putExtra("title", title);
+                        intent.putExtra("url", webBean.getData().getUrl());
+                        startActivity(intent);
+                    }
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, webBean.getMessage());
+                }
+            }
         }
     }
 

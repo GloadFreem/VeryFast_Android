@@ -31,7 +31,7 @@ public class MyReceiver extends BroadcastReceiver {
 
         // 指定定制的 Notification Layout
         CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(context,
-                R.layout.customer_notitfication_layout,
+                R.layout.notitfication_jpush,
                 R.id.icon,
                 R.id.title,
                 R.id.text);

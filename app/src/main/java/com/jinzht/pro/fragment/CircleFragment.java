@@ -451,7 +451,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(getActivity());
-                    DialogUtils.shareDialog(getActivity(), refreshView, shareUtils, "金指投投融资", datas.get(POSITION).getContent(), shareBean.getData().getImage(), shareBean.getData().getUrl());
+                    DialogUtils.newShareDialog(getActivity(), shareUtils, "金指投投融资", datas.get(POSITION).getContent(), shareBean.getData().getImage(), shareBean.getData().getUrl());
                     isShared = true;
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());

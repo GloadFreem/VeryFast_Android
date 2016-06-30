@@ -255,7 +255,7 @@ public class BrainDetailActivity extends FullBaseActivity implements View.OnClic
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(BrainDetailActivity.this);
-                    DialogUtils.shareDialog(BrainDetailActivity.this, btnShare, shareUtils, data.getUser().getName(), data.getUser().getAuthentics().get(0).getCompanyIntroduce(), data.getUser().getHeadSculpture(), shareBean.getData().getUrl());
+                    DialogUtils.newShareDialog(BrainDetailActivity.this, shareUtils, data.getUser().getName(), data.getUser().getAuthentics().get(0).getCompanyIntroduce(), data.getUser().getHeadSculpture(), shareBean.getData().getUrl());
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
                 }

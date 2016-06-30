@@ -579,7 +579,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(RoadshowDetailsActivity.this);
-                    DialogUtils.shareDialog(RoadshowDetailsActivity.this, btnShare, shareUtils, data.getAbbrevName(), data.getDescription(), data.getStartPageImage(), shareBean.getData().getUrl());
+                    DialogUtils.newShareDialog(RoadshowDetailsActivity.this, shareUtils, data.getAbbrevName(), data.getDescription(), data.getStartPageImage(), shareBean.getData().getUrl());
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
                 }

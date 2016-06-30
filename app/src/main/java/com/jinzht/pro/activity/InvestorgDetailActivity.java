@@ -303,7 +303,7 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(InvestorgDetailActivity.this);
-                    DialogUtils.shareDialog(InvestorgDetailActivity.this, btnShare, shareUtils, data.getUser().getName(), data.getUser().getAuthentics().get(0).getCompanyIntroduce(), data.getUser().getHeadSculpture(), shareBean.getData().getUrl());
+                    DialogUtils.newShareDialog(InvestorgDetailActivity.this, shareUtils, data.getUser().getName(), data.getUser().getAuthentics().get(0).getCompanyIntroduce(), data.getUser().getHeadSculpture(), shareBean.getData().getUrl());
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
                 }

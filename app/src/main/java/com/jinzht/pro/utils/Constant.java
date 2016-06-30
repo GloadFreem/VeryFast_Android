@@ -314,7 +314,39 @@ public class Constant {
     /**
      * 版本更新
      */
-    public static final String UPDATA = "versionInfoSystem.action";
+    public static final String UPDATE = "versionInfoSystem.action";
+    /**
+     * 注销登录
+     */
+    public static final String LOGOUT = "signupUser.action";
+    /**
+     * 平台介绍
+     */
+    public static final String PLATFORMINTRODUCE = "requestPlatformIntroduce.action";
+    /**
+     * 新手指南
+     */
+    public static final String NEWUSERGUIDE = "requestNewUseIntroduce.action";
+    /**
+     * 用户协议
+     */
+    public static final String USERPROTOCOL = "requestUserProtocol.action";
+    /**
+     * 免责声明
+     */
+    public static final String DISCLAIMER = "requestLawerIntroduce.action";
+    /**
+     * 意见反馈
+     */
+    public static final String FEEDBACK = "requestFeedBack.action";
+    /**
+     * 获取站内信列表
+     */
+    public static final String GETMESSAGELIST = "requestInnerMessageList.action";
+    /**
+     * 标记站内信为已读
+     */
+    public static final String SETISREAD = "requestHasReadMessage.action";
 
     /**
      * ==============================以下为易宝支付接口=======================================

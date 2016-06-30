@@ -3,7 +3,7 @@ package com.jinzht.pro.bean;
 /**
  * 检查更新
  */
-public class UpdataBean {
+public class UpdateBean {
 
     /**
      * message :

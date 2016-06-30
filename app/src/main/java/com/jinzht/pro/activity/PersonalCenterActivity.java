@@ -14,14 +14,17 @@ import com.jinzht.pro.R;
 import com.jinzht.pro.adapter.PersonalCenterRVAdapter;
 import com.jinzht.pro.adapter.RecyclerViewData;
 import com.jinzht.pro.base.BaseActivity;
+import com.jinzht.pro.bean.ShareBean;
 import com.jinzht.pro.bean.UserInfoBean;
 import com.jinzht.pro.callback.ItemClickListener;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.DialogUtils;
 import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.ShareUtils;
 import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
@@ -203,8 +206,12 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                         startActivity(intent);
                         break;
                     case 6:// 关于平台
+                        intent.setClass(mContext, AboutUsActivity.class);
+                        startActivity(intent);
                         break;
                     case 7:// 推荐好友
+                        ShareTask shareTask = new ShareTask();
+                        shareTask.execute();
                         break;
                 }
             }
@@ -255,6 +262,46 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                     initData();
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, userInfoBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 分享APP
+    private class ShareTask extends AsyncTask<Void, Void, ShareBean> {
+        @Override
+        protected ShareBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SHAREAPP)),
+                            "type", "3",
+                            Constant.BASE_URL + Constant.SHAREAPP,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("分享返回信息", body);
+                return FastJsonTools.getBean(body, ShareBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ShareBean shareBean) {
+            super.onPostExecute(shareBean);
+            if (shareBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                return;
+            } else {
+                if (shareBean.getStatus() == 200) {
+                    ShareUtils shareUtils = new ShareUtils(PersonalCenterActivity.this);
+                    DialogUtils.newShareDialog(PersonalCenterActivity.this, shareUtils, shareBean.getData().getTitle(), shareBean.getData().getContent(), shareBean.getData().getImage(), shareBean.getData().getUrl());
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
                 }
             }
         }

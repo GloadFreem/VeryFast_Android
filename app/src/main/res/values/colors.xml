@@ -15,7 +15,7 @@
     <!-- 验证码倒计时时字体的颜色-->
     <color name="custom_orange">#ff6700</color>
     <!-- 实名认证的背景颜色-->
-    <color name="bg_certification">#EDEDED</color>
+    <color name="bg_certification">#e6e6e6</color>
     <!-- 实名认证添加照片的背景颜色-->
     <color name="bg_add_photo">#e5e5e5</color>
     <!-- 实名认证的线条颜色-->

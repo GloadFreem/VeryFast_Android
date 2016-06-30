@@ -114,7 +114,7 @@ public class SharedPreferencesUtils {
         return sp.getBoolean("isNotFirst", false);
     }
 
-    // 保存userId
+    // 保存userId，仅作为支付时使用
     public static void saveUserId(Context context, String userId) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -122,7 +122,7 @@ public class SharedPreferencesUtils {
         editor.commit();
     }
 
-    // 获取userId
+    // 获取userId，仅作为支付时使用
     public static String getUserId(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         return sp.getString("userId", "");

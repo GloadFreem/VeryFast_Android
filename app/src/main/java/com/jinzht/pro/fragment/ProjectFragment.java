@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
+import com.jinzht.pro.activity.MessageActivity;
 import com.jinzht.pro.activity.PreselectionDetailsActivity;
 import com.jinzht.pro.activity.RoadshowDetailsActivity;
 import com.jinzht.pro.base.BaseFragment;
@@ -47,10 +48,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import de.greenrobot.event.EventBus;
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
 
 /**
  * 项目界面
@@ -101,7 +98,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
         refreshView.setOnRefreshListener(new PullListener());
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -119,21 +116,23 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         });
+        GetBannerInfo getBannerInfo = new GetBannerInfo();
+        getBannerInfo.execute();
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread, sticky = true)
-    public void getBannerInfo(BannerInfoBean bean) {
-        bannerData = bean.getData();
-        if (bannerData != null && bannerData.size() != 0) {
-            // 处理banner
-            initListHeader();
-//            listview.setAdapter(myAdapter);
-            GetRoadshowProjectListTask getRoadshowProjectListTask = new GetRoadshowProjectListTask(0);
-            getRoadshowProjectListTask.execute();
-            GetPreselectionProjectListTask getPreselectionProjectListTask = new GetPreselectionProjectListTask(0);
-            getPreselectionProjectListTask.execute();
-        }
-    }
+//    // 接收banner资源后
+//    @Subscribe(threadMode = ThreadMode.MainThread, sticky = true)
+//    public void getBannerInfo(BannerInfoBean bean) {
+//        bannerData = bean.getData();
+//        if (bannerData != null && bannerData.size() != 0) {
+//            // 处理banner
+//            initListHeader();
+//            GetRoadshowProjectListTask getRoadshowProjectListTask = new GetRoadshowProjectListTask(0);
+//            getRoadshowProjectListTask.execute();
+//            GetPreselectionProjectListTask getPreselectionProjectListTask = new GetPreselectionProjectListTask(0);
+//            getPreselectionProjectListTask.execute();
+//        }
+//    }
 
     // 添加banner头布局
     private void initListHeader() {
@@ -515,8 +514,55 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.title_btn_left:// 点击进入站内信
-                SuperToastUtils.showSuperToast(mContext, 2, "站内信");
+                Intent intent = new Intent(mContext, MessageActivity.class);
+                startActivity(intent);
                 break;
+        }
+    }
+
+    // 获取banner数据
+    private class GetBannerInfo extends AsyncTask<Void, Void, BannerInfoBean> {
+        @Override
+        protected BannerInfoBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETBANNERINFO)),
+                            Constant.BASE_URL + Constant.GETBANNERINFO,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("banner数据", body);
+                return FastJsonTools.getBean(body, BannerInfoBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(BannerInfoBean bannerInfoBean) {
+            super.onPostExecute(bannerInfoBean);
+            if (bannerInfoBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (bannerInfoBean.getStatus() == 200) {
+//                    EventBus.getDefault().postSticky(bannerInfoBean);
+//                    initData();
+                    bannerData = bannerInfoBean.getData();
+                    if (bannerData != null && bannerData.size() != 0) {
+                        initListHeader();
+                        GetRoadshowProjectListTask getRoadshowProjectListTask = new GetRoadshowProjectListTask(0);
+                        getRoadshowProjectListTask.execute();
+                        GetPreselectionProjectListTask getPreselectionProjectListTask = new GetPreselectionProjectListTask(0);
+                        getPreselectionProjectListTask.execute();
+                    }
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, bannerInfoBean.getMessage());
+                }
+            }
         }
     }
 
@@ -730,7 +776,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         if (thread != null) {// 停止进度条
             thread.stopThread();
         }
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -742,6 +788,6 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         if (thread != null) {// 停止进度条
             thread.stopThread();
         }
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
 }

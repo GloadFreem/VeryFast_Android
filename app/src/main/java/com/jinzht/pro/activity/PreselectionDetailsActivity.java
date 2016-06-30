@@ -617,7 +617,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(PreselectionDetailsActivity.this);
-                    DialogUtils.shareDialog(PreselectionDetailsActivity.this, btnBottomCollect, shareUtils, data.getAbbrevName(), data.getDescription(), data.getStartPageImage(), shareBean.getData().getUrl());
+                    DialogUtils.newShareDialog(PreselectionDetailsActivity.this, shareUtils, data.getAbbrevName(), data.getDescription(), data.getStartPageImage(), shareBean.getData().getUrl());
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, shareBean.getMessage());
                 }

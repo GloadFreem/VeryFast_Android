@@ -32,7 +32,6 @@ import java.util.TimerTask;
  * 各种弹框
  */
 public class DialogUtils {
-
     // 活动列表中立即点击立即报名弹窗
     public static void activityApplyDialog(final Activity activity) {
         final AlertDialog dialog = new AlertDialog.Builder(activity).create();
@@ -290,7 +289,7 @@ public class DialogUtils {
     }
 
     // 弹出分享
-    public static void shareDialog(Activity activity, final View parent, final ShareUtils shareUtils, final String title, final String content, final String imgurl, final String url) {
+    public static void shareDialog(final Activity activity, final View parent, final ShareUtils shareUtils, final String title, final String content, final String imgurl, final String url) {
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_share, null);
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         TextView btnQq = (TextView) view.findViewById(R.id.btn_qq);
@@ -356,6 +355,59 @@ public class DialogUtils {
         tvContent.setText(content);
         btnConfirm.setText(confirm);
         btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    // dialog形式弹出分享
+    public static void newShareDialog(final Activity activity, final ShareUtils shareUtils, final String title, final String content, final String imgurl, final String url) {
+        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        final Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_share);
+        window.setGravity(Gravity.BOTTOM);//此处可以设置dialog显示的位置
+        TextView btnQq = (TextView) window.findViewById(R.id.btn_qq);
+        TextView btnWechat = (TextView) window.findViewById(R.id.btn_wechat);
+        TextView btnWechatCircle = (TextView) window.findViewById(R.id.btn_wechat_circle);
+        TextView btnMsg = (TextView) window.findViewById(R.id.btn_msg);
+        ImageView btnExit = (ImageView) window.findViewById(R.id.btn_exit);
+        // QQ
+        btnQq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareUtils.qq(title, content, imgurl, url);
+                dialog.dismiss();
+            }
+        });
+        // 微信
+        btnWechat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareUtils.wechat(title, content, imgurl, url);
+                dialog.dismiss();
+            }
+        });
+        // 朋友圈
+        btnWechatCircle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareUtils.wechatcircle(title, content, imgurl, url);
+                dialog.dismiss();
+            }
+        });
+        // 短信
+        btnMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareUtils.msg(title, content, imgurl, url);
+                dialog.dismiss();
+            }
+        });
+        btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();

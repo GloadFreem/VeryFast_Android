@@ -1,10 +1,11 @@
 package com.jinzht.pro.activity;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -12,11 +13,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jinzht.pro.R;
-import com.jinzht.pro.adapter.RecyclerViewData;
 import com.jinzht.pro.base.BaseActivity;
-import com.jinzht.pro.callback.ItemClickListener;
+import com.jinzht.pro.bean.CommonBean;
+import com.jinzht.pro.bean.MessageListBean;
+import com.jinzht.pro.utils.AESUtils;
+import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.DateUtils;
+import com.jinzht.pro.utils.FastJsonTools;
+import com.jinzht.pro.utils.MD5Utils;
+import com.jinzht.pro.utils.NetWorkUtils;
+import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
+import com.jinzht.pro.utils.UiUtils;
+import com.jinzht.pro.view.PullToRefreshLayout;
+import com.jinzht.pro.view.PullableListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,18 +38,20 @@ import java.util.List;
 public class MessageActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout btnBack;// 返回
-    private TextView tvTitle;// 标题
     private LinearLayout btnEdit;// 编辑按钮
     private TextView tvEdit;// 编辑文字
     private RelativeLayout messageRlBottom;// 底部编辑栏
     private CheckBox messageCbAll;// 全选按钮
     private TextView messageBtnDel;// 删除按钮
-    private RecyclerView lvMessage;// 站内信列表
+    private PullToRefreshLayout refreshView;// 刷新布局
+    private PullableListView listview;// 列表
 
     private boolean clickable;// 是否可编辑标识
     private boolean clickedAll;// 是否全选标识
+    private List<MessageListBean.DataBean> datas = new ArrayList<>();
     private List<Boolean> boolList = new ArrayList<>();// 选中item的列表
-    private List<Integer> datas = new ArrayList<>();// 模拟数据
+    private List<String> deleteList = new ArrayList<>();// 要删除的messageId集合
+    private int pages = 0;
     private MyAdapter myAdapter;
 
     @Override
@@ -52,8 +65,6 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
 
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);
-        tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
-        tvTitle.setOnClickListener(this);
         btnEdit = (LinearLayout) findViewById(R.id.btn_edit);// 编辑按钮
         btnEdit.setOnClickListener(this);
         tvEdit = (TextView) findViewById(R.id.tv_edit);// 编辑文字
@@ -63,59 +74,14 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         messageCbAll.setChecked(false);
         messageBtnDel = (TextView) findViewById(R.id.message_btn_del);// 删除按钮
         messageBtnDel.setOnClickListener(this);
-        lvMessage = (RecyclerView) findViewById(R.id.lv_message);// 站内信列表
+        refreshView = (PullToRefreshLayout) findViewById(R.id.refresh_view);// 刷新布局
+        refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
+        listview = (PullableListView) findViewById(R.id.listview);// 列表
 
-        // 初始化站内信列表
-        initList();
-    }
-
-    private void initList() {
-        // 填充数据
-        for (int i = 0; i < 10; i++) {
-            datas.add(i);
-            boolList.add(false);
-        }
         myAdapter = new MyAdapter();
-        RecyclerViewData.setVertical(lvMessage, mContext, myAdapter);
-        myAdapter.setItemClickListener(new ItemClickListener() {
-            // 点击条目选中
-            @Override
-            public void onItemClick(View view, int position) {
-                if (clickable) {
-                    MyAdapter.MViewHolder holder = (MyAdapter.MViewHolder) view.getTag();
-                    holder.cb.setTag(position);
-                    holder.cb.toggle();
-                    if (holder.cb.isChecked()) {
-                        boolList.set(position, true);
-                    } else {
-                        boolList.set(position, false);
-                    }
-                }
-            }
 
-            // 长按可编辑
-            @Override
-            public void onItemLongClick(View view, int position) {
-                if (!clickable) {
-                    tvEdit.setText("完成");
-                    messageRlBottom.setVisibility(View.VISIBLE);
-                    clickable = true;
-                    // 将所有item都变为未选中状态
-                    if (myAdapter.getItemCount() > 0) {
-                        for (int i = 0; i < myAdapter.getItemCount(); i++) {
-                            boolList.set(i, false);
-                        }
-                    }
-                    messageCbAll.setChecked(false);
-                    myAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onItemSubViewClick(View view, int position) {
-
-            }
-        });
+        GetMessageListTask getMessageListTask = new GetMessageListTask(0);
+        getMessageListTask.execute();
     }
 
     @Override
@@ -123,9 +89,6 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.btn_back:// 返回上一页
                 finish();
-                break;
-            case R.id.tv_title:// 点击标题，进行筛选
-                SuperToastUtils.showSuperToast(this, 2, "筛选");
                 break;
             case R.id.btn_edit:// 点击编辑，可批量删除
                 if (clickable) {
@@ -138,8 +101,8 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                     clickable = true;
                 }
                 // 将所有item都变为未选中状态
-                if (myAdapter.getItemCount() > 0) {
-                    for (int i = 0; i < myAdapter.getItemCount(); i++) {
+                if (myAdapter.getCount() > 0) {
+                    for (int i = 0; i < myAdapter.getCount(); i++) {
                         boolList.set(i, false);
                     }
                 }
@@ -147,15 +110,15 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                 myAdapter.notifyDataSetChanged();
                 break;
             case R.id.message_cb_all:// 全选
-                if (clickable && myAdapter.getItemCount() > 0) {
+                if (clickable && myAdapter.getCount() > 0) {
                     if (clickedAll) {
-                        for (int i = 0; i < myAdapter.getItemCount(); i++) {
+                        for (int i = 0; i < myAdapter.getCount(); i++) {
                             boolList.set(i, false);
                         }
                         messageCbAll.setChecked(false);
                         clickedAll = false;
                     } else {
-                        for (int i = 0; i < myAdapter.getItemCount(); i++) {
+                        for (int i = 0; i < myAdapter.getCount(); i++) {
                             boolList.set(i, true);
                             Log.i("全选", boolList.toString());
                         }
@@ -166,48 +129,89 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                 }
                 break;
             case R.id.message_btn_del:// 删除选中的条目
-                if (clickable && myAdapter.getItemCount() > 0) {
-                    for (int i = 0; i < myAdapter.getItemCount(); ) {
+                if (clickable && myAdapter.getCount() > 0) {
+                    for (int i = 0; i < myAdapter.getCount(); ) {
                         if (boolList.get(i)) {
-                            Log.i("删除", datas.get(i).toString());
+                            Log.i("删除", datas.get(i).getTitle());
                             datas.remove(i);
                             Log.i("数据", datas.toString());
                             boolList.remove(i);
-                            myAdapter.notifyItemRemoved(i);
+//                            recyclerAdapter.notifyItemRemoved(i);
                             continue;
                         }
                         i++;
                     }
+                    myAdapter.notifyDataSetChanged();
                 }
                 break;
         }
     }
 
-    // 站内信列表数据填充器
-    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.MViewHolder> {
-
-        private ItemClickListener mItemClickListener;
-        private MViewHolder holder;
-
-        public void setItemClickListener(ItemClickListener mItemClickListener) {
-            this.mItemClickListener = mItemClickListener;
+    @Override
+    public void onBackPressed() {
+        if (clickable) {// 编辑状态时退出编辑
+            tvEdit.setText("编辑");
+            messageRlBottom.setVisibility(View.GONE);
+            clickable = false;
+            // 将所有item都变为未选中状态
+            if (myAdapter.getCount() > 0) {
+                for (int i = 0; i < myAdapter.getCount(); i++) {
+                    boolList.set(i, false);
+                }
+            }
+            messageCbAll.setChecked(false);
+            myAdapter.notifyDataSetChanged();
+        } else {// 非编辑状态退出站内信
+            finish();
         }
+    }
 
+    private class MyAdapter extends BaseAdapter {
         @Override
-        public int getItemCount() {
+        public int getCount() {
             return datas.size();
         }
 
         @Override
-        public MyAdapter.MViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.item_message, parent, false);
-            holder = new MViewHolder(view);
-            return holder;
+        public Object getItem(int position) {
+            return datas.get(position);
         }
 
         @Override
-        public void onBindViewHolder(MyAdapter.MViewHolder holder, int position) {
-            holder.tv.setText("金指投平台" + position);
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = UiUtils.inflateView(R.layout.item_message);
+                holder.cb = (CheckBox) convertView.findViewById(R.id.item_message_cb_select);
+                holder.tv_name = (TextView) convertView.findViewById(R.id.item_message_name);
+                holder.tv_title = (TextView) convertView.findViewById(R.id.item_message_title);
+                holder.tv_content = (TextView) convertView.findViewById(R.id.item_message_content);
+                holder.tv_time = (TextView) convertView.findViewById(R.id.item_message_time);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.tv_name.setText(datas.get(position).getTitle());
+            holder.tv_title.setText(datas.get(position).getMessagetype().getName());
+            holder.tv_content.setText(datas.get(position).getContent());
+            holder.tv_time.setText(DateUtils.timeLogic(datas.get(position).getMessageDate()));
+            if (datas.get(position).isIsRead()) {// 已读
+                holder.tv_name.setTextColor(0xff747474);
+                holder.tv_title.setTextColor(0xff747474);
+                holder.tv_content.setTextColor(0xff747474);
+                holder.tv_time.setTextColor(0xff747474);
+            } else {// 未读
+                holder.tv_name.setTextColor(UiUtils.getColor(R.color.bg_text));
+                holder.tv_title.setTextColor(UiUtils.getColor(R.color.bg_text));
+                holder.tv_content.setTextColor(UiUtils.getColor(R.color.bg_text));
+                holder.tv_time.setTextColor(UiUtils.getColor(R.color.bg_text));
+            }
             if (clickable) {
                 holder.cb.setVisibility(View.VISIBLE);
             } else {
@@ -221,41 +225,55 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                 holder.cb.setChecked(false);
             }
             // checkBox的选中事件
-            onChecked(holder, position);
+            onChecked(holder);
+            final ViewHolder finalHolder = holder;
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (clickable) {// 编辑状态下选中
+                        finalHolder.cb.setTag(position);
+                        finalHolder.cb.toggle();
+                        if (finalHolder.cb.isChecked()) {
+                            boolList.set(position, true);
+                        } else {
+                            boolList.set(position, false);
+                        }
+                    } else {// 常规状态下跳转至详情
+                        Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                        intent.putExtra("title", "站内信");
+                        intent.putExtra("url", datas.get(position).getUrl());
+                        startActivity(intent);
+                        datas.get(position).setIsRead(true);
+                        myAdapter.notifyDataSetChanged();
+                        SetIsRead setIsRead = new SetIsRead(datas.get(position).getMessageId());
+                        setIsRead.execute();
+                    }
+                }
+            });
+            // 长按可编辑，批量删除
+            convertView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (!clickable) {
+                        tvEdit.setText("完成");
+                        messageRlBottom.setVisibility(View.VISIBLE);
+                        clickable = true;
+                        // 将所有item都变为未选中状态
+                        if (myAdapter.getCount() > 0) {
+                            for (int i = 0; i < myAdapter.getCount(); i++) {
+                                boolList.set(i, false);
+                            }
+                        }
+                        messageCbAll.setChecked(false);
+                        myAdapter.notifyDataSetChanged();
+                    }
+                    return true;
+                }
+            });
+            return convertView;
         }
 
-        public class MViewHolder extends RecyclerView.ViewHolder {
-            public TextView tv;
-            public CheckBox cb;
-
-            public MViewHolder(final View itemView) {
-                super(itemView);
-                itemView.setTag(this);
-                tv = (TextView) itemView.findViewById(R.id.item_message_name);
-                cb = (CheckBox) itemView.findViewById(R.id.item_message_cb_select);
-                // 为item添加点击事件回调
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mItemClickListener != null) {
-                            mItemClickListener.onItemClick(itemView, getPosition());
-                        }
-                    }
-                });
-                // 为item添加长按事件回调
-                itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        if (mItemClickListener != null) {
-                            mItemClickListener.onItemLongClick(itemView, getPosition());
-                        }
-                        return true;
-                    }
-                });
-            }
-        }
-
-        public void onChecked(final MViewHolder holder, final int position) {
+        public void onChecked(final ViewHolder holder) {
             holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -268,6 +286,134 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                     }
                 }
             });
+        }
+
+        public class ViewHolder {
+            private CheckBox cb;
+            private TextView tv_name;
+            private TextView tv_title;
+            private TextView tv_content;
+            private TextView tv_time;
+        }
+    }
+
+    // 获取站内信列表
+    private class GetMessageListTask extends AsyncTask<Void, Void, MessageListBean> {
+        private int page;
+
+        public GetMessageListTask(int page) {
+            this.page = page;
+        }
+
+        @Override
+        protected MessageListBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETMESSAGELIST)),
+                            "page", String.valueOf(page),
+                            Constant.BASE_URL + Constant.GETMESSAGELIST,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("站内信列表", body);
+                return FastJsonTools.getBean(body, MessageListBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(MessageListBean messageListBean) {
+            super.onPostExecute(messageListBean);
+            if (messageListBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
+                refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
+            } else {
+                if (messageListBean.getStatus() == 200) {
+                    refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
+                    refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
+                    if (page == 0) {
+                        datas = messageListBean.getData();
+                        boolList.clear();
+                        if (datas != null) {
+                            for (int i = 0; i < datas.size(); i++) {
+                                boolList.add(false);
+                            }
+                            listview.setAdapter(myAdapter);
+                        }
+                    } else {
+                        for (MessageListBean.DataBean dataBean : messageListBean.getData()) {
+                            datas.add(dataBean);
+                        }
+                        for (int i = 0; i < messageListBean.getData().size(); i++) {
+                            boolList.add(false);
+                        }
+                        myAdapter.notifyDataSetChanged();
+                    }
+                } else if (messageListBean.getStatus() == 201) {
+                    pages--;
+                    refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
+                } else {
+                    refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
+                    refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
+                    SuperToastUtils.showSuperToast(mContext, 2, messageListBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 下拉刷新与上拉加载
+    private class PullListener implements PullToRefreshLayout.OnRefreshListener {
+        @Override
+        public void onRefresh(final PullToRefreshLayout pullToRefreshLayout) {
+            // 下拉刷新
+            pages = 0;
+            GetMessageListTask getMessageListTask = new GetMessageListTask(0);
+            getMessageListTask.execute();
+        }
+
+        @Override
+        public void onLoadMore(final PullToRefreshLayout pullToRefreshLayout) {
+            // 上拉加载
+            pages++;
+            Log.i("页码", String.valueOf(pages));
+            GetMessageListTask getMessageListTask = new GetMessageListTask(pages);
+            getMessageListTask.execute();
+        }
+    }
+
+    // 标记为已读
+    private class SetIsRead extends AsyncTask<Void, Void, CommonBean> {
+        private int messageId;
+
+        public SetIsRead(int messageId) {
+            this.messageId = messageId;
+        }
+
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SETISREAD)),
+                            "messageId", String.valueOf(messageId),
+                            Constant.BASE_URL + Constant.SETISREAD,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("标记为已读", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
         }
     }
 

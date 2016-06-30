@@ -249,7 +249,11 @@
         <activity android:name=".activity.RechargeActivity" />
         <activity android:name=".activity.YeepayWithdrawActivity" />
         <activity android:name=".activity.CommonWebViewActivity" />
-        <activity android:name=".activity.CommitRecordsActivity"></activity>
+        <activity android:name=".activity.CommitRecordsActivity" />
+
+        <service android:name=".service.DownloadAppService" />
+
+        <activity android:name=".activity.FeedbackActivity"></activity>
     </application>
 
 </manifest>

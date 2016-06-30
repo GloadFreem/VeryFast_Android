@@ -51,8 +51,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     protected void init() {
         UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
         initView();
-        GetBannerInfo getBannerInfo = new GetBannerInfo();
-        getBannerInfo.execute();
+//        GetBannerInfo getBannerInfo = new GetBannerInfo();
+//        getBannerInfo.execute();
+        initData();
     }
 
     private void initView() {
