@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.CommonBean;
+import com.jinzht.pro.bean.LoginBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.FastJsonTools;
@@ -73,9 +74,9 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
     }
 
     // 重置密码
-    private class ResetPwdTask extends AsyncTask<Void, Void, CommonBean> {
+    private class ResetPwdTask extends AsyncTask<Void, Void, LoginBean> {
         @Override
-        protected CommonBean doInBackground(Void... params) {
+        protected LoginBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
@@ -91,37 +92,45 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.i("注册信息", body);
-                return FastJsonTools.getBean(body, CommonBean.class);
+                Log.i("找回密码", body);
+                return FastJsonTools.getBean(body, LoginBean.class);
             } else {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(CommonBean commonBean) {
-            super.onPostExecute(commonBean);
-            if (commonBean == null) {
+        protected void onPostExecute(LoginBean loginBean) {
+            super.onPostExecute(loginBean);
+            if (loginBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
-                if (commonBean.getStatus() == 200) {
+                if (loginBean.getStatus() == 200) {
+                    // 保存用户名和密码
                     try {
                         String pwd = MD5Utils.encode(setEdPassword1.getText().toString() + getIntent().getStringExtra("telephone").trim() + "lindyang");
                         SharedPreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-//                    SharedPreferencesUtils.setIsLogin(mContext, true);
-//                    SharedPreferencesUtils.setChoseUserType(mContext, false);
-//                    SharedPreferencesUtils.setAuth(mContext, false);
-                    Intent intent = new Intent(mContext, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
+                    // 保存userId
+                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
+                    if (loginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
+                        // 去选择身份类型
+                        Intent intent = new Intent(mContext, SetUserTypeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        //保存userType，进入主页
+                        SharedPreferencesUtils.saveUserType(mContext, loginBean.getData().getIdentityType().getIdentiyTypeId());
+                        Intent intent = new Intent(mContext, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
-//                    SharedPreferencesUtils.setIsLogin(mContext, false);
-                    SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
+                    SuperToastUtils.showSuperToast(mContext, 2, loginBean.getMessage());
                 }
             }
         }

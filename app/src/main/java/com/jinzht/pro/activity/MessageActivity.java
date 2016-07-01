@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.utils.UiUtils;
@@ -130,6 +132,8 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.message_btn_del:// 删除选中的条目
                 if (clickable && myAdapter.getCount() > 0) {
+                    DeleteChecked deleteChecked = new DeleteChecked();
+                    deleteChecked.execute();
                     for (int i = 0; i < myAdapter.getCount(); ) {
                         if (boolList.get(i)) {
                             Log.i("删除", datas.get(i).getTitle());
@@ -188,6 +192,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = UiUtils.inflateView(R.layout.item_message);
+                holder.ivIsread = (ImageView) convertView.findViewById(R.id.iv_isread);
                 holder.cb = (CheckBox) convertView.findViewById(R.id.item_message_cb_select);
                 holder.tv_name = (TextView) convertView.findViewById(R.id.item_message_name);
                 holder.tv_title = (TextView) convertView.findViewById(R.id.item_message_title);
@@ -202,15 +207,9 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
             holder.tv_content.setText(datas.get(position).getContent());
             holder.tv_time.setText(DateUtils.timeLogic(datas.get(position).getMessageDate()));
             if (datas.get(position).isIsRead()) {// 已读
-                holder.tv_name.setTextColor(0xff747474);
-                holder.tv_title.setTextColor(0xff747474);
-                holder.tv_content.setTextColor(0xff747474);
-                holder.tv_time.setTextColor(0xff747474);
+                holder.ivIsread.setVisibility(View.INVISIBLE);
             } else {// 未读
-                holder.tv_name.setTextColor(UiUtils.getColor(R.color.bg_text));
-                holder.tv_title.setTextColor(UiUtils.getColor(R.color.bg_text));
-                holder.tv_content.setTextColor(UiUtils.getColor(R.color.bg_text));
-                holder.tv_time.setTextColor(UiUtils.getColor(R.color.bg_text));
+                holder.ivIsread.setVisibility(View.VISIBLE);
             }
             if (clickable) {
                 holder.cb.setVisibility(View.VISIBLE);
@@ -239,10 +238,22 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                             boolList.set(position, false);
                         }
                     } else {// 常规状态下跳转至详情
-                        Intent intent = new Intent(mContext, CommonWebViewActivity.class);
-                        intent.putExtra("title", "站内信");
-                        intent.putExtra("url", datas.get(position).getUrl());
-                        startActivity(intent);
+                        if (datas.get(position).getMessagetype().getMessageTypeId() == 1) {
+                            if (!StringUtils.isBlank(datas.get(position).getUrl())) {
+                                Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                                intent.putExtra("title", datas.get(position).getMessagetype().getName());
+                                intent.putExtra("url", datas.get(position).getUrl());
+                                startActivity(intent);
+                            }
+                        } else {
+                            Intent intent = new Intent(mContext, MessageDetail.class);
+                            intent.putExtra("title", datas.get(position).getMessagetype().getName());
+                            intent.putExtra("name", datas.get(position).getTitle());
+                            intent.putExtra("time", datas.get(position).getMessageDate());
+                            intent.putExtra("content", datas.get(position).getContent());
+                            startActivity(intent);
+                        }
+
                         datas.get(position).setIsRead(true);
                         myAdapter.notifyDataSetChanged();
                         SetIsRead setIsRead = new SetIsRead(datas.get(position).getMessageId());
@@ -290,6 +301,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
 
         public class ViewHolder {
             private CheckBox cb;
+            private ImageView ivIsread;
             private TextView tv_name;
             private TextView tv_title;
             private TextView tv_content;
@@ -384,6 +396,49 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
             Log.i("页码", String.valueOf(pages));
             GetMessageListTask getMessageListTask = new GetMessageListTask(pages);
             getMessageListTask.execute();
+        }
+    }
+
+    // 删除已选
+    private class DeleteChecked extends AsyncTask<Void, Void, CommonBean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            for (int i = 0; i < boolList.size(); i++) {
+                if (boolList.get(i)) {
+                    deleteList.add(String.valueOf(datas.get(i).getMessageId()));
+                }
+            }
+            Log.i("要删除的id", deleteList.toString());
+        }
+
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    String messageId = deleteList.toString();
+                    messageId = messageId.substring(1, messageId.length() - 1);
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.DELETECHECKED)),
+                            "messageId", messageId,
+                            Constant.BASE_URL + Constant.DELETECHECKED,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("删除已选", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            deleteList.clear();
         }
     }
 

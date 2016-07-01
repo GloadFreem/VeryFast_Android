@@ -5,11 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.FullBaseActivity;
-import com.jinzht.pro.bean.CommonBean;
+import com.jinzht.pro.bean.IsLoginBean;
 import com.jinzht.pro.bean.LoginBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
@@ -19,7 +20,6 @@ import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.StringUtils;
-import com.jinzht.pro.utils.SuperToastUtils;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
@@ -39,6 +39,10 @@ public class WelcomeActivity extends FullBaseActivity {
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_EXTRAS = "extras";
 
+    private long startTime = 0;// 访问网络开始时间
+    private long endTime = 0;// 结束时间
+    private long dTime = 0;// 时间差，小于3s则等待至3s后继续执行
+
     @Override
     protected int getResourcesId() {
         return R.layout.activity_welcome;
@@ -51,27 +55,27 @@ public class WelcomeActivity extends FullBaseActivity {
         api = WXAPIFactory.createWXAPI(this, Constant.APP_ID, false);
         api.registerApp(Constant.APP_ID);
         MobclickAgent.updateOnlineConfig(mContext);// 友盟
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-//                SystemClock.sleep(2500);// 延迟2.5秒
-//                if (!SharedPreferencesUtils.getIsNotFirst(mContext)) {
-//                    第一次打开应用，进入引导页
-//                            intent = new Intent(mContext, GuideActivity.class);
-//                    startActivity(intent);
-//                    finish();
-//                } else {
-                IsLoginTask isLoginTask = new IsLoginTask();
-                isLoginTask.execute();
-//                }
-            }
-        }).start();
+
+        if (!SharedPreferencesUtils.getIsNotFirst(mContext)) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    intent = new Intent(mContext, GuideActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, 2000);
+        } else {
+            startTime = System.currentTimeMillis();
+            IsLoginTask isLoginTask = new IsLoginTask();
+            isLoginTask.execute();
+        }
     }
 
     // 检查用户是否已登录
-    private class IsLoginTask extends AsyncTask<Void, Void, CommonBean> {
+    private class IsLoginTask extends AsyncTask<Void, Void, IsLoginBean> {
         @Override
-        protected CommonBean doInBackground(Void... params) {
+        protected IsLoginBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
@@ -84,22 +88,55 @@ public class WelcomeActivity extends FullBaseActivity {
                     e.printStackTrace();
                 }
                 Log.i("登录状态", body);
-                return FastJsonTools.getBean(body, CommonBean.class);
+                return FastJsonTools.getBean(body, IsLoginBean.class);
             } else {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(CommonBean commonBean) {
-            super.onPostExecute(commonBean);
-            if (commonBean != null && commonBean.getStatus() == 200) {
-                // 已登录，进入主页
-                intent = new Intent(mContext, MainActivity.class);
-                startActivity(intent);
-                finish();
+        protected void onPostExecute(IsLoginBean isLoginBean) {
+            super.onPostExecute(isLoginBean);
+            if (isLoginBean != null && isLoginBean.getStatus() == 200) {
+                endTime = System.currentTimeMillis();
+                dTime = endTime - startTime;
+                Log.i("时间差", String.valueOf(dTime));
+                if (isLoginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
+                    // 已登录，但未选择身份类型，进入选择身份类型
+                    intent = new Intent(mContext, SetUserTypeActivity.class);
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.putExtra("isWechatLogin", 1);
+                    }
+                    if (dTime < 3000) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(intent);
+                                finish();
+                            }
+                        }, 3000 - dTime);
+                    } else {
+                        startActivity(intent);
+                        finish();
+                    }
+                } else {
+                    // 已登录，且已选择身份类型，进入主页
+                    intent = new Intent(mContext, MainActivity.class);
+                    if (dTime < 3000) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(intent);
+                                finish();
+                            }
+                        }, 3000 - dTime);
+                    } else {
+                        startActivity(intent);
+                        finish();
+                    }
+                }
             } else {
-                // 自动登录
+                // 未登录，自动登录
                 AutoLoginTask autoLoginTask = new AutoLoginTask();
                 autoLoginTask.execute();
             }
@@ -111,7 +148,7 @@ public class WelcomeActivity extends FullBaseActivity {
         @Override
         protected LoginBean doInBackground(Void... params) {
             String body = "";
-            Log.i("极光推送",JPushInterface.getRegistrationID(mContext)+" ");
+            Log.i("极光推送", JPushInterface.getRegistrationID(mContext) + " ");
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.loginPost(
@@ -124,7 +161,7 @@ public class WelcomeActivity extends FullBaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.i("登录返回信息", body);
+                Log.i("自动登录返回信息", body);
                 return FastJsonTools.getBean(body, LoginBean.class);
             } else {
                 return null;
@@ -134,18 +171,59 @@ public class WelcomeActivity extends FullBaseActivity {
         @Override
         protected void onPostExecute(LoginBean loginBean) {
             super.onPostExecute(loginBean);
-            if (loginBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
-            } else {
-                if (loginBean.getStatus() == 200) {
-                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
-                    intent = new Intent(mContext, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+            endTime = System.currentTimeMillis();
+            dTime = endTime - startTime;
+            Log.i("时间差", String.valueOf(dTime));
+            if (loginBean != null && loginBean.getStatus() == 200) {
+                // 保存userId
+                SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
+                if (loginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
+                    // 未选择身份类型，进入选择身份类型
+                    intent = new Intent(mContext, SetUserTypeActivity.class);
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.putExtra("isWechatLogin", 1);
+                    }
+                    if (dTime < 3000) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(intent);
+                                finish();
+                            }
+                        }, 3000 - dTime);
+                    } else {
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
-                    // 自动登录未成功，进入登录页
-                    intent = new Intent(mContext, LoginActivity.class);
+                    // 保存userType，进入主页
+                    SharedPreferencesUtils.saveUserType(mContext, loginBean.getData().getIdentityType().getIdentiyTypeId());
+                    intent = new Intent(mContext, MainActivity.class);
+                    if (dTime < 3000) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(intent);
+                                finish();
+                            }
+                        }, 3000 - dTime);
+                    } else {
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            } else {
+                // 自动登录未成功，进入登录页
+                intent = new Intent(mContext, LoginActivity.class);
+                if (dTime < 3000) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, 3000 - dTime);
+                } else {
                     startActivity(intent);
                     finish();
                 }
@@ -158,10 +236,10 @@ public class WelcomeActivity extends FullBaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
-                String messge = intent.getStringExtra(KEY_MESSAGE);
+                String message = intent.getStringExtra(KEY_MESSAGE);
                 String extras = intent.getStringExtra(KEY_EXTRAS);
                 StringBuilder showMsg = new StringBuilder();
-                showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
+                showMsg.append(KEY_MESSAGE + " : " + message + "\n");
                 if (!StringUtils.isBlank(extras)) {
                     showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
                 }

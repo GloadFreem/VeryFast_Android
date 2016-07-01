@@ -233,7 +233,9 @@
         <activity android:name=".activity.MyActivitysActivity" />
         <activity android:name=".activity.ReleaseCircleActivity" />
         <activity android:name=".activity.TranspondCircleActivity" />
-        <activity android:name=".activity.CircleDetailActivity" />
+        <activity
+            android:name=".activity.CircleDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activity.ImagePagerActivity" />
         <activity android:name=".activity.ActivityAllApplys" />
         <activity android:name=".activity.ActivityAllComments" />
@@ -253,7 +255,9 @@
 
         <service android:name=".service.DownloadAppService" />
 
-        <activity android:name=".activity.FeedbackActivity"></activity>
+        <activity android:name=".activity.FeedbackActivity" />
+        <activity android:name=".activity.MessageDetail" />
+        <activity android:name=".activity.GuideActivity"></activity>
     </application>
 
 </manifest>

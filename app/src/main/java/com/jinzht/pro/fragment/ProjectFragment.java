@@ -27,6 +27,7 @@ import com.jinzht.pro.activity.PreselectionDetailsActivity;
 import com.jinzht.pro.activity.RoadshowDetailsActivity;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.BannerInfoBean;
+import com.jinzht.pro.bean.HaveNotReadMessageBean;
 import com.jinzht.pro.bean.PreselectionProjectListBean;
 import com.jinzht.pro.bean.RoadshowProjectListBean;
 import com.jinzht.pro.utils.AESUtils;
@@ -45,21 +46,18 @@ import com.jinzht.pro.view.RoundProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 项目界面
  */
 public class ProjectFragment extends BaseFragment implements View.OnClickListener {
 
-    private LinearLayout titleBtnLeft;// title的左侧按钮
+    private LinearLayout titleBtnLeft;// title的左侧按钮，站内信
+    private ImageView titleIvLeft;// 站内信图标
     private PullToRefreshLayout refreshView;// 刷新布局
     private PullableListView listview;// 项目列表
     private MyAdapter myAdapter = new MyAdapter();
 
-    private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();// 定时任务
     private Runnable bannerRunnable;// banner自动轮播
     private Handler handler;// 用于自动轮播
     private boolean isAuto = true;
@@ -90,6 +88,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         View view = inflater.inflate(R.layout.fragment_project, container, false);
         titleBtnLeft = (LinearLayout) view.findViewById(R.id.title_btn_left);// title的左侧按钮
         titleBtnLeft.setOnClickListener(this);
+        titleIvLeft = (ImageView) view.findViewById(R.id.title_iv_left);// 站内信图标
         refreshView = (PullToRefreshLayout) view.findViewById(R.id.refresh_view);// 刷新布局
         listview = (PullableListView) view.findViewById(R.id.listview);// 项目列表
         return view;
@@ -116,8 +115,17 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         });
+        isAuto = true;
         GetBannerInfo getBannerInfo = new GetBannerInfo();
         getBannerInfo.execute();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                HaveNotReadMessageTask haveNotReadMessageTask = new HaveNotReadMessageTask();
+                haveNotReadMessageTask.execute();
+            }
+        }, 10000);
     }
 
 //    // 接收banner资源后
@@ -136,7 +144,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 
     // 添加banner头布局
     private void initListHeader() {
-        View header = LayoutInflater.from(mContext).inflate(R.layout.item_banner_and_tab, null);
+        final View header = LayoutInflater.from(mContext).inflate(R.layout.item_banner_and_tab, null);
         final ViewPager projectVpBanner = (ViewPager) header.findViewById(R.id.project_vp_banner);// banner轮播条
         final LinearLayout projectBannerBottombg = (LinearLayout) header.findViewById(R.id.project_banner_bottombg);// banner底部的阴影
         final TextView projectBannerTitle = (TextView) header.findViewById(R.id.project_banner_title);// banner标题
@@ -264,25 +272,17 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 
         // 自动轮播
         if (isAuto) {
-            if (handler == null) {
-                handler = new Handler() {
-                    @Override
-                    public void handleMessage(Message msg) {
+            handler = new Handler();
+            bannerRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (projectVpBanner) {
                         projectVpBanner.setCurrentItem(projectVpBanner.getCurrentItem() + 1);
+                        header.postDelayed(this, 4000);
                     }
-                };
-            }
-            if (bannerRunnable == null) {
-                bannerRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        synchronized (projectVpBanner) {
-                            handler.obtainMessage().sendToTarget();
-                        }
-                    }
-                };
-            }
-            scheduledExecutorService.scheduleAtFixedRate(bannerRunnable, 4, 4, TimeUnit.SECONDS);
+                }
+            };
+            header.postDelayed(bannerRunnable, 4000);
         }
 
         // 设置tab的单选事件
@@ -516,6 +516,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             case R.id.title_btn_left:// 点击进入站内信
                 Intent intent = new Intent(mContext, MessageActivity.class);
                 startActivity(intent);
+                titleIvLeft.setImageResource(R.mipmap.message_empty);
                 break;
         }
     }
@@ -549,8 +550,6 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (bannerInfoBean.getStatus() == 200) {
-//                    EventBus.getDefault().postSticky(bannerInfoBean);
-//                    initData();
                     bannerData = bannerInfoBean.getData();
                     if (bannerData != null && bannerData.size() != 0) {
                         initListHeader();
@@ -734,6 +733,37 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
+    // 是否有未读的站内信
+    private class HaveNotReadMessageTask extends AsyncTask<Void, Void, HaveNotReadMessageBean> {
+        @Override
+        protected HaveNotReadMessageBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.HAVENOTREADMESSAGE)),
+                            Constant.BASE_URL + Constant.HAVENOTREADMESSAGE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("是否有未读站内信", body);
+                return FastJsonTools.getBean(body, HaveNotReadMessageBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(HaveNotReadMessageBean haveNotReadMessageBean) {
+            super.onPostExecute(haveNotReadMessageBean);
+            if (haveNotReadMessageBean != null && haveNotReadMessageBean.getStatus() == 200 && haveNotReadMessageBean.getData().isFlag()) {
+                titleIvLeft.setImageResource(R.mipmap.message_full);
+            }
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -770,9 +800,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (scheduledExecutorService != null) {
-            scheduledExecutorService.shutdown();// banner停止自动轮播
-        }
+        isAuto = false;
         if (thread != null) {// 停止进度条
             thread.stopThread();
         }
@@ -782,9 +810,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (scheduledExecutorService != null) {
-            scheduledExecutorService.shutdown();// banner停止自动轮播
-        }
+        isAuto = false;
         if (thread != null) {// 停止进度条
             thread.stopThread();
         }

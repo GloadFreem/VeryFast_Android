@@ -3,6 +3,7 @@ package com.jinzht.pro.fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -85,8 +86,13 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
 
         EventBus.getDefault().register(this);
 
-        GetCircleListTask getCircleList = new GetCircleListTask(0);
-        getCircleList.execute();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                GetCircleListTask getCircleList = new GetCircleListTask(0);
+                getCircleList.execute();
+            }
+        }, 2000);
     }
 
     @Override

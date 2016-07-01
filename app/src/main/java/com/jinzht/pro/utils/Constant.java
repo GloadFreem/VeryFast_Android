@@ -347,6 +347,14 @@ public class Constant {
      * 标记站内信为已读
      */
     public static final String SETISREAD = "requestHasReadMessage.action";
+    /**
+     * 删除所选项
+     */
+    public static final String DELETECHECKED = "requestDeleteInnerMessage.action";
+    /**
+     * 是否有未读站内信
+     */
+    public static final String HAVENOTREADMESSAGE = "requestHasMessageInfo.action";
 
     /**
      * ==============================以下为易宝支付接口=======================================

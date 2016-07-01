@@ -275,7 +275,7 @@ public class CertificationCompActivity extends BaseActivity implements View.OnCl
                 return;
             } else {
                 if (authenticateBean.getStatus() == 200) {
-                    SharedPreferencesUtils.setAuth(mContext, true);
+//                    SharedPreferencesUtils.setAuth(mContext, true);
                     // TODO: 2016/6/6 弹出认证成功提示
                     SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
                 } else {

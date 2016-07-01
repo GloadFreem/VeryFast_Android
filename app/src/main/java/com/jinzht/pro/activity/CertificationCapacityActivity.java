@@ -26,7 +26,6 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
-import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 
@@ -268,7 +267,7 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
                 return;
             } else {
                 if (authenticateBean.getStatus() == 200) {
-                    SharedPreferencesUtils.setAuth(mContext, true);
+//                    SharedPreferencesUtils.setAuth(mContext, true);
                     // TODO: 2016/6/6 弹出认证成功提示
                     SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
                 } else {

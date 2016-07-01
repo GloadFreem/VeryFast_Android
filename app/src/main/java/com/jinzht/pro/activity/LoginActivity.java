@@ -55,7 +55,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private static final int MSG_AUTH_ERROR = 4;
     private static final int MSG_AUTH_COMPLETE = 5;
 
-    private Intent intent;
+    private Intent intent = new Intent();
 
     @Override
     protected int getResourcesId() {
@@ -83,7 +83,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
             Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).into(loginIvUserimage);
         } else {
-            Glide.with(mContext).load(R.drawable.ic_launcher).into(loginIvUserimage);
+            loginIvUserimage.setImageResource(R.drawable.ic_launcher);
         }
     }
 
@@ -91,7 +91,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_tv_forget_password:// 点击忘记密码，进入找回密码页面
-                intent = new Intent(this, FindPasswordActivity.class);
+                intent.setClass(this, FindPasswordActivity.class);
                 startActivity(intent);
                 break;
             case R.id.login_rl_login:// 点击登录，进入主页
@@ -109,7 +109,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.login_rl_register:// 点击没有账号，进入注册页面
-                intent = new Intent(this, Register1Activity.class);
+                intent.setClass(this, Register1Activity.class);
                 startActivity(intent);
                 break;
             case R.id.login_tv_wechat:// 点击微信登录，进入微信授权界面
@@ -155,6 +155,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
                 Platform platform = (Platform) msg.obj;
                 WechatLoginTask wechatLoginTask = new WechatLoginTask(platform);
+                wechatLoginTask.execute();
             }
             break;
             case MSG_AUTH_CANCEL: {
@@ -234,13 +235,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             super.onPostExecute(loginBean);
             if (loginBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (loginBean.getStatus() == 200) {
                     SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
-                    intent = new Intent(mContext, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    SharedPreferencesUtils.setIsWechatLogin(mContext, true);
+                    if (loginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
+                        intent.setClass(mContext, SetUserTypeActivity.class);
+                        intent.putExtra("isWechatLogin", 1);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        SharedPreferencesUtils.saveUserType(mContext, loginBean.getData().getIdentityType().getIdentiyTypeId());
+                        intent.setClass(mContext, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, loginBean.getMessage());
                 }
@@ -278,7 +287,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             super.onPostExecute(loginBean);
             if (loginBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (loginBean.getStatus() == 200) {
                     String pwd = null;
@@ -287,16 +295,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    // 保存用户名、密码、userId
                     SharedPreferencesUtils.saveInformation(mContext, loginEdTel.getText().toString(), pwd);
                     SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
-//                    SharedPreferencesUtils.setIsLogin(mContext, true);
-//                    SharedPreferencesUtils.setChoseUserType(mContext, false);
-//                    SharedPreferencesUtils.setAuth(mContext, false);
-                    intent = new Intent(mContext, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    SharedPreferencesUtils.setIsWechatLogin(mContext, false);
+                    if (loginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
+                        intent.setClass(mContext, SetUserTypeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        SharedPreferencesUtils.saveUserType(mContext, loginBean.getData().getIdentityType().getIdentiyTypeId());
+                        intent.setClass(mContext, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
-//                    SharedPreferencesUtils.setIsLogin(mContext, false);
                     SuperToastUtils.showSuperToast(mContext, 2, loginBean.getMessage());
                 }
             }

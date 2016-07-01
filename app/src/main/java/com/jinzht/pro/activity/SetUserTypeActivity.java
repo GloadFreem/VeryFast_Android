@@ -20,8 +20,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
-import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.bean.CustomerServiceBean;
+import com.jinzht.pro.bean.SetUserTypeBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.FastJsonTools;
@@ -132,14 +132,11 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
     // 返回到登录页
     @Override
     public void onBackPressed() {
-        if ("addType".equals(getIntent().getStringExtra("TAG"))) {
-            finish();
-        } else {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
     }
 
     // 选择头像
@@ -244,18 +241,22 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
     }
 
     // 提交身份类型
-    private class SetUserTypeTask extends AsyncTask<Void, Void, CommonBean> {
+    private class SetUserTypeTask extends AsyncTask<Void, Void, SetUserTypeBean> {
         @Override
-        protected CommonBean doInBackground(Void... params) {
+        protected SetUserTypeBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
+                    String isWechatLogin = "0";
+                    if (getIntent().getIntExtra("isWechatLogin", 0) == 1) {
+                        isWechatLogin = "1";
+                    }
                     File file = new File(photo_path);
                     if (file.exists()) {
                         body = OkHttpUtils.usertypePost(
                                 MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SETUSERTYPE)),
                                 "ideniyType", String.valueOf(usertype),
-                                "isWebchatLogin", "false",
+                                "isWechatLogin", isWechatLogin,
                                 "file", photo_path,
                                 Constant.BASE_URL + Constant.SETUSERTYPE,
                                 mContext
@@ -265,7 +266,7 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                         body = OkHttpUtils.usertypePost(
                                 MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SETUSERTYPE)),
                                 "ideniyType", String.valueOf(usertype),
-                                "isWebchatLogin", "false",
+                                "isWechatLogin", isWechatLogin,
                                 Constant.BASE_URL + Constant.SETUSERTYPE,
                                 mContext
                         );
@@ -274,29 +275,29 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                     e.printStackTrace();
                 }
                 Log.i("身份信息", body);
-                return FastJsonTools.getBean(body, CommonBean.class);
+                return FastJsonTools.getBean(body, SetUserTypeBean.class);
             } else {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(CommonBean commonBean) {
-            super.onPostExecute(commonBean);
-            if (commonBean == null) {
+        protected void onPostExecute(SetUserTypeBean setUserTypeBean) {
+            super.onPostExecute(setUserTypeBean);
+            if (setUserTypeBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
-                if (commonBean.getStatus() == 200) {
-                    SharedPreferencesUtils.setChoseUserType(mContext, true);
+                if (setUserTypeBean.getStatus() == 200) {
                     SharedPreferencesUtils.saveUserType(mContext, usertype);
                     SharedPreferencesUtils.saveLocalFavicon(mContext, photo_path);
                     Intent intent = new Intent(mContext, CompleteRegisterActivity.class);// 跳转至完成完成注册送指环码界面
                     intent.putExtra("usertype", usertype);
+                    intent.putExtra("inviteCode", setUserTypeBean.getData().getInviteCode());
+                    intent.putExtra("isWechatLogin", getIntent().getIntExtra("isWechatLogin", 0));
                     startActivity(intent);
                     finish();
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
+                    SuperToastUtils.showSuperToast(mContext, 2, setUserTypeBean.getMessage());
                 }
             }
         }
@@ -329,7 +330,6 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
             super.onPostExecute(customerServiceBean);
             if (customerServiceBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);

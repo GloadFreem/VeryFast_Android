@@ -80,8 +80,6 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
                     RegisterTask registerTask = new RegisterTask();
                     registerTask.execute();
                 }
-//                Intent intent = new Intent(this, SetUserTypeActivity.class);
-//                startActivity(intent);
                 break;
         }
     }
@@ -119,7 +117,6 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
             super.onPostExecute(registerBean);
             if (registerBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (registerBean.getStatus() == 200) {
                     String pwd = null;
@@ -129,14 +126,12 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                     SharedPreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
-//                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(registerBean.getData().getUserId()));
-//                    SharedPreferencesUtils.setIsLogin(mContext, true);
-                    SharedPreferencesUtils.setChoseUserType(mContext, false);
-                    SharedPreferencesUtils.setAuth(mContext, false);
+                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(registerBean.getData().getUserId()));
+                    SharedPreferencesUtils.setIsWechatLogin(mContext, false);
                     Intent intent = new Intent(mContext, SetUserTypeActivity.class);
                     startActivity(intent);
+                    finish();
                 } else {
-//                    SharedPreferencesUtils.setIsLogin(mContext, false);
                     SuperToastUtils.showSuperToast(mContext, 2, registerBean.getMessage());
                 }
             }
@@ -170,7 +165,6 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
             super.onPostExecute(customerServiceBean);
             if (customerServiceBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);

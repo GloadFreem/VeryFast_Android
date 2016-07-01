@@ -23,7 +23,7 @@ public class SharedPreferencesUtils {
         return sp.getString("session", "");
     }
 
-    // 保存用户名电话和密码
+    // 保存用户名(即电话号码)和密码
     public static void saveInformation(Context context, String telephone, String passwd) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -32,7 +32,7 @@ public class SharedPreferencesUtils {
         editor.commit();
     }
 
-    // 获取用户名电话
+    // 获取用户电话号码
     public static String getTelephone(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         return sp.getString("telephone", "");
@@ -56,6 +56,20 @@ public class SharedPreferencesUtils {
     public static boolean getIsLogin(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         return sp.getBoolean("isLogin", false);
+    }
+
+    // 保存是否微信登录
+    public static void setIsWechatLogin(Context context, boolean isAuto) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("isWechatLogin", isAuto);
+        editor.commit();
+    }
+
+    // 获取是否微信登录
+    public static boolean getIsWechatLogin(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        return sp.getBoolean("isWechatLogin", false);
     }
 
     // 保存是否实名认证的状态
@@ -128,7 +142,7 @@ public class SharedPreferencesUtils {
         return sp.getString("userId", "");
     }
 
-    // 保存用户头像
+    // 保存本地用户头像
     public static void saveLocalFavicon(Context context, String favicon) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -136,13 +150,13 @@ public class SharedPreferencesUtils {
         editor.commit();
     }
 
-    // 获取用户头像
+    // 获取本地用户头像
     public static String getLocalFavicon(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         return sp.getString("localFavicon", "");
     }
 
-    // 保存用户头像
+    // 保存用网络户头像
     public static void saveOnlineFavicon(Context context, String favicon) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -150,7 +164,7 @@ public class SharedPreferencesUtils {
         editor.commit();
     }
 
-    // 获取用户头像
+    // 获取网络用户头像
     public static String getOnlineFavicon(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         return sp.getString("onlineFavicon", "");

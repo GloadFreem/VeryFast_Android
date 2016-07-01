@@ -368,6 +368,12 @@ public class DialogUtils {
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         final Window window = dialog.getWindow();
+        // 设置无边距的弹窗
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+//        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
         window.setContentView(R.layout.dialog_share);
         window.setGravity(Gravity.BOTTOM);//此处可以设置dialog显示的位置
         TextView btnQq = (TextView) window.findViewById(R.id.btn_qq);

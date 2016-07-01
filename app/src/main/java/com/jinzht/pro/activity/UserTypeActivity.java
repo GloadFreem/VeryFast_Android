@@ -1,6 +1,5 @@
 package com.jinzht.pro.activity;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -132,11 +131,6 @@ public class UserTypeActivity extends BaseActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.btn_back:// 返回上一页
                 finish();
-                break;
-            case R.id.btn_add:// 新增用户身份类型
-                Intent intent = new Intent(this, SetUserTypeActivity.class);
-                intent.putExtra("TAG", "addType");
-                startActivity(intent);
                 break;
         }
     }

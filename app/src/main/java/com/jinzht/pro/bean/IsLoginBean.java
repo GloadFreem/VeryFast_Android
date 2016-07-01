@@ -1,12 +1,12 @@
 package com.jinzht.pro.bean;
 
 /**
- * 登录接口的返回信息
+ * 是否已登录返回值
  */
-public class LoginBean {
+public class IsLoginBean {
     /**
-     * data : {"identityType":{"identiyTypeId":3,"name":"机构投资者"},"userId":645}
-     * message : 登录成功！
+     * data : {"identityType":{"identiyTypeId":1,"name":"项目方"}}
+     * message : 用戶已登录！
      * status : 200
      */
     private DataBean data;
@@ -39,11 +39,9 @@ public class LoginBean {
 
     public static class DataBean {
         /**
-         * identityType : {"identiyTypeId":3,"name":"机构投资者"}
-         * userId : 645
+         * identityType : {"identiyTypeId":1,"name":"项目方"}
          */
         private IdentityTypeBean identityType;
-        private int userId;
 
         public IdentityTypeBean getIdentityType() {
             return identityType;
@@ -53,18 +51,11 @@ public class LoginBean {
             this.identityType = identityType;
         }
 
-        public int getUserId() {
-            return userId;
-        }
-
-        public void setUserId(int userId) {
-            this.userId = userId;
-        }
-
         public static class IdentityTypeBean {
+
             /**
-             * identiyTypeId : 3
-             * name : 机构投资者
+             * identiyTypeId : 1
+             * name : 项目方
              */
             private int identiyTypeId;
             private String name;

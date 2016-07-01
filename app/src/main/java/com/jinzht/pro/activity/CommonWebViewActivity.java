@@ -68,10 +68,7 @@ public class CommonWebViewActivity extends BaseActivity {
         });
         webview.setWebViewClient(new MyWebViewClient());
         webview.setWebChromeClient(new MyWebChromeClient());
-
-        if (!StringUtils.isBlank(getIntent().getStringExtra("url"))) {
-            webview.loadUrl(getIntent().getStringExtra("url"));
-        }
+        webview.loadUrl(getIntent().getStringExtra("url"));
     }
 
     private class MyWebViewClient extends WebViewClient {

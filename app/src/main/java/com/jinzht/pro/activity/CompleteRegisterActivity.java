@@ -15,9 +15,9 @@ import com.jinzht.pro.utils.UiHelp;
  */
 public class CompleteRegisterActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView completeRegisterCode;// 指环码
-    private ImageButton completeRegisterBtnGotoIdentification;// 去认证按钮
-    private Button completeRegisterBtnGotoTry;// 试用按钮
+    private TextView tvInviteCode;// 指环码
+    private ImageButton btnGotoIdentification;// 去认证按钮
+    private Button btnGotoTry;// 试用按钮
 
     private Intent intent;
 
@@ -30,20 +30,28 @@ public class CompleteRegisterActivity extends BaseActivity implements View.OnCli
     protected void init() {
         UiHelp.setFullScreenStatus(this);// 设置系统状态栏跟随应用背景
 
-        completeRegisterCode = (TextView) findViewById(R.id.complete_register_code);// 指环码
-        completeRegisterBtnGotoIdentification = (ImageButton) findViewById(R.id.complete_register_btn_goto_identification);// 去认证按钮
-        completeRegisterBtnGotoIdentification.setOnClickListener(this);
-        completeRegisterBtnGotoTry = (Button) findViewById(R.id.complete_register_btn_goto_try);// 试用按钮
-        completeRegisterBtnGotoTry.setOnClickListener(this);
+        tvInviteCode = (TextView) findViewById(R.id.complete_register_code);// 指环码
+        btnGotoIdentification = (ImageButton) findViewById(R.id.complete_register_btn_goto_identification);// 去认证按钮
+        btnGotoIdentification.setOnClickListener(this);
+        btnGotoTry = (Button) findViewById(R.id.complete_register_btn_goto_try);// 试用按钮
+        btnGotoTry.setOnClickListener(this);
+
+        tvInviteCode.setText(getIntent().getStringExtra("inviteCode"));
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.complete_register_btn_goto_identification:// 去认证
-                intent = new Intent(this, CertificationIDCardActivity.class);
-                intent.putExtra("usertype", getIntent().getIntExtra("usertype", 0));
-                startActivity(intent);
+                if (getIntent().getIntExtra("isWechatLogin", 0) == 1) {
+                    intent = new Intent(this, WechatVerifyActivity.class);
+                    intent.putExtra("usertype", getIntent().getIntExtra("usertype", -1));
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(this, CertificationIDCardActivity.class);
+                    intent.putExtra("usertype", getIntent().getIntExtra("usertype", -1));
+                    startActivity(intent);
+                }
                 break;
             case R.id.complete_register_btn_goto_try:// 试用模式，进入主页
                 intent = new Intent(this, MainActivity.class);

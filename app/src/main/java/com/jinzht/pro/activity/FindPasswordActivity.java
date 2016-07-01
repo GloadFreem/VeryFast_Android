@@ -110,7 +110,7 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.i("验证码信息", body);
+                Log.i("找回密码的验证码信息", body);
                 return FastJsonTools.getBean(body, CommonBean.class);
             } else {
                 return null;
@@ -122,13 +122,8 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
             super.onPostExecute(commonBean);
             if (commonBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
-                if (commonBean.getStatus() == 200) {
-                    SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
-                }
+                SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
             }
         }
     }

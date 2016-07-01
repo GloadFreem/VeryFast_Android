@@ -39,6 +39,7 @@ public class WechatVerifyActivity extends BaseActivity implements View.OnClickLi
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
+        tvTitle.setText("手机验证");
         wechatVerifyEdTel = (EditText) findViewById(R.id.wechat_verify_ed_tel);// 手机号码输入框
         wechatVerifyEdCode = (EditText) findViewById(R.id.wechat_verify_ed_code);// 验证码输入框
         wechatVerifyTvCode = (TextView) findViewById(R.id.wechat_verify_tv_code);// 获取验证码按钮
@@ -49,8 +50,6 @@ public class WechatVerifyActivity extends BaseActivity implements View.OnClickLi
         wechatVerifyCbAgree = (CheckBox) findViewById(R.id.wechat_verify_cb_agree);// 同意用户协议选择框
         wechatVerifyTvUserAgreement = (TextView) findViewById(R.id.wechat_verify_tv_user_agreement);// 用户协议
         wechatVerifyTvUserAgreement.setOnClickListener(this);
-
-        tvTitle.setText("手机验证");
     }
 
     @Override

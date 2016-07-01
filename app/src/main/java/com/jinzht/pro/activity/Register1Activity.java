@@ -16,6 +16,7 @@ import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.bean.CustomerServiceBean;
+import com.jinzht.pro.bean.WebBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.FastJsonTools;
@@ -126,7 +127,8 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.register1_tv_user_agreement:// 点击查看用户协议，跳转到用户协议界面
                 SuperToastUtils.showSuperToast(this, 2, "点击了用户协议");
-                // TODO: 2016/6/2 查看用户协议
+                UserProtocolTask userProtocolTask = new UserProtocolTask();
+                userProtocolTask.execute();
                 break;
         }
     }
@@ -160,7 +162,6 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
             super.onPostExecute(commonBean);
             if (commonBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (commonBean.getStatus() == 200) {
                     SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
@@ -217,7 +218,6 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
             super.onPostExecute(customerServiceBean);
             if (customerServiceBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -226,6 +226,48 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
                     startActivity(intent);
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, customerServiceBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 用户协议
+    private class UserProtocolTask extends AsyncTask<Void, Void, WebBean> {
+        @Override
+        protected WebBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.USERPROTOCOL)),
+                            Constant.BASE_URL + Constant.USERPROTOCOL,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("用户协议", body);
+                return FastJsonTools.getBean(body, WebBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(WebBean webBean) {
+            super.onPostExecute(webBean);
+            if (webBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (webBean.getStatus() == 200) {
+                    if (!StringUtils.isBlank(webBean.getData().getUrl())) {
+                        Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                        intent.putExtra("title", "用户协议");
+                        intent.putExtra("url", webBean.getData().getUrl());
+                        startActivity(intent);
+                    }
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, webBean.getMessage());
                 }
             }
         }
