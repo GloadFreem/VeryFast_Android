@@ -34,9 +34,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="说点什么吧"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:hint="说点什么吧"
                 android:textColorHint="#747474"
                 android:textSize="14sp" />
         </RelativeLayout>
@@ -48,19 +48,25 @@
 
             <Button
                 android:id="@+id/dialog_activity_btn_cancel"
-                android:layout_width="145dp"
+                android:layout_width="wrap_content"
                 android:layout_height="38.5dp"
                 android:background="@drawable/bg_btn_dialog_cancel"
+                android:gravity="center"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
                 android:text="取消"
                 android:textColor="#747474"
                 android:textSize="17sp" />
 
             <Button
                 android:id="@+id/dialog_activity_btn_confirm"
-                android:layout_width="145dp"
+                android:layout_width="wrap_content"
                 android:layout_height="38.5dp"
                 android:layout_alignParentRight="true"
                 android:background="@drawable/bg_tv_investor_orange"
+                android:gravity="center"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
                 android:text="确定"
                 android:textColor="@android:color/white"
                 android:textSize="17sp" />

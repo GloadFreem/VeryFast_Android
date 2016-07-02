@@ -22,6 +22,7 @@ import com.jinzht.pro.bean.AuthenticateBean;
 import com.jinzht.pro.bean.CapacityListBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.DialogUtils;
 import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
@@ -65,7 +66,7 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
         certificationBtnComplete = (Button) findViewById(R.id.certification_btn_complete);// 完成按钮
         certificationBtnComplete.setOnClickListener(this);
 
-        usertype = getIntent().getIntExtra("usertype", 0);
+        usertype = getIntent().getIntExtra("usertype", -1);
         setMytitle();
 
         GetCapacityListTask getCapacityListTask = new GetCapacityListTask();
@@ -267,9 +268,7 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
                 return;
             } else {
                 if (authenticateBean.getStatus() == 200) {
-//                    SharedPreferencesUtils.setAuth(mContext, true);
-                    // TODO: 2016/6/6 弹出认证成功提示
-                    SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
+                    DialogUtils.confirmToMainDialog(CertificationCapacityActivity.this, authenticateBean.getMessage());
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
                 }

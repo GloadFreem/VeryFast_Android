@@ -1,13 +1,20 @@
 package com.jinzht.pro.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.jinzht.pro.R;
 import com.jinzht.pro.adapter.MainFragmentAdapter;
@@ -16,16 +23,34 @@ import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.base.BaseFragmentActivity;
 import com.jinzht.pro.base.FullBaseActivity;
 import com.jinzht.pro.bean.BannerInfoBean;
+import com.jinzht.pro.bean.GoldAward;
+import com.jinzht.pro.bean.UpdateBean;
+import com.jinzht.pro.service.DownloadAppService;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.DialogUtils;
 import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
+import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.view.NoScrollViewPager;
+import com.jinzht.pro.view.numberprogressbar.NumberProgressBar;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import com.umeng.analytics.MobclickAgent;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 
@@ -42,6 +67,10 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private RadioButton mainBtnCircle;// 圈子按钮
     private RadioButton mainBtnActivity;// 活动按钮
 
+    private UpdateBean.DataBean updateData;// 新版更新信息
+    private NumberProgressBar progressBar;// 跟新时的进度条
+    public static int downloading_progress = 0;// 下载进度
+
     @Override
     protected int getResourcesId() {
         return R.layout.activity_main;
@@ -54,6 +83,21 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        GetBannerInfo getBannerInfo = new GetBannerInfo();
 //        getBannerInfo.execute();
         initData();
+
+        // 当天首次登录，送金条
+        if (isTodayFirstLaunch()) {
+            GetLoginGoldAward getLoginGoldAward = new GetLoginGoldAward();
+            getLoginGoldAward.execute();
+        }
+
+        // 5s后检查更新
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                UpdateTask updateTask = new UpdateTask();
+                updateTask.execute();
+            }
+        }, 5000);
     }
 
     private void initView() {
@@ -100,7 +144,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_btn_me:// 跳转到个人中心界面
-//                DialogUtils.goldAnim(this, 8, 9);
                 Intent intent = new Intent(this, PersonalCenterActivity.class);
                 startActivity(intent);
                 break;
@@ -153,6 +196,53 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         }
     }
 
+    // 判断是否当日首次启动
+    private boolean isTodayFirstLaunch() {
+        String savedDate = SharedPreferencesUtils.getTodayFirstDate(mContext);
+        Date date = new Date();
+        SimpleDateFormat formate = new SimpleDateFormat("yyyyMMdd", Locale.SIMPLIFIED_CHINESE);
+        String currentDate = formate.format(date);
+        Log.i("保存的时期", savedDate);
+        Log.i("当前时期", currentDate);
+        if (!currentDate.equals(savedDate)) {
+            SharedPreferencesUtils.saveTodayFirstDate(mContext, currentDate);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // 获取当日登录金条奖励
+    private class GetLoginGoldAward extends AsyncTask<Void, Void, GoldAward> {
+        @Override
+        protected GoldAward doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETGOLDAWARD)),
+                            Constant.BASE_URL + Constant.GETGOLDAWARD,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("今日登录奖励金条", body);
+                return FastJsonTools.getBean(body, GoldAward.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(GoldAward goldAward) {
+            super.onPostExecute(goldAward);
+            if (goldAward != null && goldAward.getStatus() == 200) {
+                DialogUtils.goldAnim(MainActivity.this, goldAward.getData().getCount(), goldAward.getData().getCountTomorrow());
+            }
+        }
+    }
+
     // 获取banner数据
     private class GetBannerInfo extends AsyncTask<Void, Void, BannerInfoBean> {
         @Override
@@ -190,6 +280,201 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             }
         }
     }
+
+    // 检查版本更新
+    private class UpdateTask extends AsyncTask<Void, Void, UpdateBean> {
+        @Override
+        protected UpdateBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.UPDATE)),
+                            Constant.BASE_URL + Constant.UPDATE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("检查更新", body);
+                return FastJsonTools.getBean(body, UpdateBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(UpdateBean updateBean) {
+            super.onPostExecute(updateBean);
+            if (updateBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (updateBean.getStatus() == 200) {
+                    updateData = updateBean.getData();
+                    try {
+                        if (!StringUtils.isEquals(UiHelp.getVersionName(MainActivity.this), updateData.getVersionStr())) {
+                            if (updateData.isForce()) {
+                                // 强制更新
+                                coerceUpdateDialog(updateData.getContent());
+                            } else {
+                                // 提示更新
+                                remindUpdateDialog(updateData.getContent());
+                            }
+                        } else {
+                            DialogUtils.confirmDialog(MainActivity.this, "已是最新版本", "确定");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, updateBean.getMessage());
+                }
+            }
+        }
+    }
+
+    // 强制更新对话框
+    private void coerceUpdateDialog(String content) {
+        final AlertDialog dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_coerce_update);
+        TextView tvContent = (TextView) window.findViewById(R.id.tv_content);
+        TextView btnUpdate = (TextView) window.findViewById(R.id.btn_update);
+        tvContent.setText(content);
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDownloadProgress();// 显示进度
+                new Thread() {
+                    @Override
+                    public void run() {
+                        downloadNewApp();
+                    }
+                }.start();
+                dialog.dismiss();
+            }
+        });
+    }
+
+    // 提示更新对话框
+    private void remindUpdateDialog(String content) {
+        final AlertDialog dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_remind_update);
+        TextView tvContent = (TextView) window.findViewById(R.id.tv_content);
+        TextView btnUpdate = (TextView) window.findViewById(R.id.btn_update);
+        TextView btnGiveup = (TextView) window.findViewById(R.id.btn_giveup);
+        tvContent.setText(content);
+        btnGiveup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDownloadProgress();// 显示进度
+                new Thread() {
+                    @Override
+                    public void run() {
+                        downloadNewApp();
+                    }
+                }.start();
+                dialog.dismiss();
+            }
+        });
+    }
+
+    // 显示更新进度对话框
+    private void showDownloadProgress() {
+        final AlertDialog dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_update_progress);
+        progressBar = (NumberProgressBar) window.findViewById(R.id.progress_bar);
+        TextView btnBackstage = (TextView) window.findViewById(R.id.btn_backstage);
+        progressBar.setMax(100);
+        btnBackstage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DownloadAppService.class);
+                startService(intent);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    // 下载新版APP
+    private void downloadNewApp() {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {// 有读写权限
+            Log.i("更新地址", updateData.getUrl());
+            Request request = new Request.Builder().url(updateData.getUrl()).build();
+            try {
+                Response response = MyApplication.getInstance().okHttpClient.newCall(request).execute();
+                InputStream inputStream = response.body().byteStream();
+                float size = response.body().contentLength();
+                File file = new File(Environment.getExternalStorageDirectory(), "jinzht_new.apk");
+                FileOutputStream fos = new FileOutputStream(file);
+                BufferedInputStream bis = new BufferedInputStream(inputStream);
+                byte[] bytes = new byte[1024];
+                int length = -1;
+                float count = 0;
+                while ((length = bis.read(bytes)) != -1) {
+                    fos.write(bytes, 0, length);
+                    count += length;
+                    sendMsg(0, (int) (count * 100 / size));// 正在下载
+                }
+                sendMsg(1, 0);
+                fos.close();
+                bis.close();
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                sendMsg(-1, 0);
+            }
+        }
+    }
+
+    // 更新时handler发送msg，0是进度，1是成功，-1是失败
+    private void sendMsg(int flag, int progress) {
+        Message msg = Message.obtain();
+        msg.what = flag;
+        msg.arg1 = progress;
+        handler.sendMessage(msg);
+    }
+
+    // 显示下载进度，成功后直接安装，失败则提示
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (!Thread.currentThread().isInterrupted()) {
+                switch (msg.what) {
+                    case 0:// 正在下载，显示进度
+                        downloading_progress = msg.arg1;
+                        progressBar.setProgress(downloading_progress);
+                        break;
+                    case 1:// 下载成功，安装
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "jinzht_new.apk")), "application/vnd.android.package-archive");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        break;
+                    case -1:// 下载失败，提示用户
+                        String error = msg.getData().getString("error");
+                        SuperToastUtils.showSuperToast(mContext, 2, error);
+                        break;
+                }
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     public void errorPage() {

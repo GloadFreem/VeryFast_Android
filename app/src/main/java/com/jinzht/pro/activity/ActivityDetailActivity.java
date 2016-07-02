@@ -1096,7 +1096,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
     // 报名弹框
     private void applyDialog() {
-        dialog = new AlertDialog.Builder(ActivityDetailActivity.this).create();
+        dialog = new AlertDialog.Builder(ActivityDetailActivity.this, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(true);
         dialog.setView(new EditText(mContext));
         dialog.show();

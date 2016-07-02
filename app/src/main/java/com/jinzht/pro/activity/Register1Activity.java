@@ -126,7 +126,6 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
                 }
                 break;
             case R.id.register1_tv_user_agreement:// 点击查看用户协议，跳转到用户协议界面
-                SuperToastUtils.showSuperToast(this, 2, "点击了用户协议");
                 UserProtocolTask userProtocolTask = new UserProtocolTask();
                 userProtocolTask.execute();
                 break;
@@ -163,11 +162,7 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
             if (commonBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
-                if (commonBean.getStatus() == 200) {
-                    SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
-                }
+                SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
             }
         }
     }

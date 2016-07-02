@@ -207,7 +207,9 @@
         <activity android:name=".activity.SelectCityActivity" />
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.UploadActivity" />
-        <activity android:name=".activity.RoadshowDetailsActivity" />
+        <activity
+            android:name=".activity.RoadshowDetailsActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activity.PreselectionDetailsActivity" />
         <activity android:name=".activity.InvestActivity" />
         <activity android:name=".activity.InvestorDetailActivity" />
@@ -257,7 +259,7 @@
 
         <activity android:name=".activity.FeedbackActivity" />
         <activity android:name=".activity.MessageDetail" />
-        <activity android:name=".activity.GuideActivity"></activity>
+        <activity android:name=".activity.GuideActivity" />
     </application>
 
 </manifest>

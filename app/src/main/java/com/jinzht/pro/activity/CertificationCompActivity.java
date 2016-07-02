@@ -28,6 +28,7 @@ import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.AuthenticateBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.DialogUtils;
 import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
@@ -88,7 +89,7 @@ public class CertificationCompActivity extends BaseActivity implements View.OnCl
         btnNext = (Button) findViewById(R.id.btn_next);// 下一步按钮
         btnNext.setOnClickListener(this);
 
-        usertype = getIntent().getIntExtra("usertype", 0);
+        usertype = getIntent().getIntExtra("usertype", -1);
         setMytitle();
         photoPath = getCacheDir() + "/" + "buinessLicence.jpg";// 头像保存地址
         photoFile = new File(Environment.getExternalStorageDirectory() + "/" + "buinessLicence.jpg");
@@ -275,9 +276,7 @@ public class CertificationCompActivity extends BaseActivity implements View.OnCl
                 return;
             } else {
                 if (authenticateBean.getStatus() == 200) {
-//                    SharedPreferencesUtils.setAuth(mContext, true);
-                    // TODO: 2016/6/6 弹出认证成功提示
-                    SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
+                    DialogUtils.confirmToMainDialog(CertificationCompActivity.this,authenticateBean.getMessage());
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
                 }

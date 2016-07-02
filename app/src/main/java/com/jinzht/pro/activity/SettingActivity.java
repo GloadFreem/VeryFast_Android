@@ -235,7 +235,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     // 强制更新对话框
     private void coerceUpdateDialog(String content) {
-        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        final AlertDialog dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
         dialog.show();
@@ -261,7 +261,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     // 提示更新对话框
     private void remindUpdateDialog(String content) {
-        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        final AlertDialog dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         Window window = dialog.getWindow();
@@ -293,7 +293,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     // 显示更新进度对话框
     private void showDownloadProgress() {
-        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        final AlertDialog dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
         Window window = dialog.getWindow();

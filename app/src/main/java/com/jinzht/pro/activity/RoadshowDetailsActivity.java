@@ -143,7 +143,6 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 postSize = 0;
             }
         });
-
     }
 
     private void findView() {

@@ -6,8 +6,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jinzht.pro.R;
+import com.jinzht.pro.activity.MainActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,7 +37,7 @@ import java.util.TimerTask;
 public class DialogUtils {
     // 活动列表中立即点击立即报名弹窗
     public static void activityApplyDialog(final Activity activity) {
-        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(true);
         dialog.setView(new EditText(activity));
         dialog.show();
@@ -82,7 +85,7 @@ public class DialogUtils {
 
     // 项目中心中投资人忽略收到的项目时弹窗
     public static void ingorePro(final Activity activity) {
-        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         Window window = dialog.getWindow();
@@ -105,7 +108,7 @@ public class DialogUtils {
 
     // 弹出金条下落动画
     public static void goldAnim(final Activity activity, int quantityToday, int quantityTomrrow) {
-        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
         Window window = dialog.getWindow();
@@ -117,9 +120,9 @@ public class DialogUtils {
         window.setContentView(R.layout.dialog_gold_anim);
         final TextView second = (TextView) window.findViewById(R.id.tv_second);// 倒计时
         TextView today = (TextView) window.findViewById(R.id.tv_today);// 今天获得金条数
-        today.setText(" " + quantityToday);
+        today.setText(String.valueOf(quantityToday));
         TextView tomorrow = (TextView) window.findViewById(R.id.tv_tomorrow);// 明天获得金条数
-        tomorrow.setText("" + quantityTomrrow);
+        tomorrow.setText(String.valueOf(quantityTomrrow));
         TextView btnConfirm = (TextView) window.findViewById(R.id.btn_confirm);// 确定按钮
         ImageView golds = (ImageView) window.findViewById(R.id.iv_golds);// 一堆金条
         ImageView gold1 = (ImageView) window.findViewById(R.id.iv_gold_1);// 每根金条
@@ -131,6 +134,15 @@ public class DialogUtils {
         ImageView gold7 = (ImageView) window.findViewById(R.id.iv_gold_7);
         ImageView gold8 = (ImageView) window.findViewById(R.id.iv_gold_8);
         ImageView gold9 = (ImageView) window.findViewById(R.id.iv_gold_9);
+
+        // 重置一堆金条的位置
+        int height = activity.getWindowManager().getDefaultDisplay().getHeight();
+        int y = (int) (height * 0.4) - UiUtils.dip2px(100);// 屏幕高的0.4倍-200，因为一堆金条高400px
+        Log.i("控件Y值", String.valueOf(y));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, y, 0, 0);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        golds.setLayoutParams(layoutParams);
 
         // 倒计时
         final int[] i = {3};
@@ -157,8 +169,9 @@ public class DialogUtils {
         animSet.play(goldsAnim2).after(goldsAnim1);
         animSet.start();
 
+        float h = (float) (height * 0.4);
         // 每根金条掉落动画
-        ObjectAnimator gold1Anim1 = ObjectAnimator.ofFloat(gold1, "y", -200f, 500f);
+        ObjectAnimator gold1Anim1 = ObjectAnimator.ofFloat(gold1, "y", -200f, h);
         ObjectAnimator gold1Anim2 = ObjectAnimator.ofFloat(gold1, "scaleX", 0f, 1f);
         ObjectAnimator gold1Anim3 = ObjectAnimator.ofFloat(gold1, "scaleY", 0f, 1f);
         ObjectAnimator gold1Anim4 = ObjectAnimator.ofFloat(gold1, "alpha", 0f, 1f);
@@ -168,7 +181,7 @@ public class DialogUtils {
         animSetGold1.playTogether(gold1Anim1, gold1Anim2, gold1Anim3, gold1Anim4);
         animSetGold1.start();
 
-        ObjectAnimator gold2Anim1 = ObjectAnimator.ofFloat(gold2, "y", -200f, 500f);
+        ObjectAnimator gold2Anim1 = ObjectAnimator.ofFloat(gold2, "y", -200f, h);
         ObjectAnimator gold2Anim2 = ObjectAnimator.ofFloat(gold2, "scaleX", 0.5f, 1f);
         ObjectAnimator gold2Anim3 = ObjectAnimator.ofFloat(gold2, "scaleY", 0.5f, 1f);
         ObjectAnimator gold2Anim4 = ObjectAnimator.ofFloat(gold2, "alpha", 0f, 1f);
@@ -182,7 +195,7 @@ public class DialogUtils {
         animSetGold2.setStartDelay(100);
         animSetGold2.start();
 
-        ObjectAnimator gold3Anim1 = ObjectAnimator.ofFloat(gold3, "y", -200f, 500f);
+        ObjectAnimator gold3Anim1 = ObjectAnimator.ofFloat(gold3, "y", -200f, h);
         ObjectAnimator gold3Anim2 = ObjectAnimator.ofFloat(gold3, "scaleX", 0.5f, 1f);
         ObjectAnimator gold3Anim3 = ObjectAnimator.ofFloat(gold3, "scaleY", 0.5f, 1f);
         ObjectAnimator gold3Anim4 = ObjectAnimator.ofFloat(gold3, "alpha", 0f, 1f);
@@ -196,7 +209,7 @@ public class DialogUtils {
         animSetGold3.setStartDelay(200);
         animSetGold3.start();
 
-        ObjectAnimator gold4Anim1 = ObjectAnimator.ofFloat(gold4, "y", -200f, 500f);
+        ObjectAnimator gold4Anim1 = ObjectAnimator.ofFloat(gold4, "y", -200f, h);
         ObjectAnimator gold4Anim2 = ObjectAnimator.ofFloat(gold4, "scaleX", 0.5f, 1f);
         ObjectAnimator gold4Anim3 = ObjectAnimator.ofFloat(gold4, "scaleY", 0.5f, 1f);
         ObjectAnimator gold4Anim4 = ObjectAnimator.ofFloat(gold4, "alpha", 0f, 1f);
@@ -210,7 +223,7 @@ public class DialogUtils {
         animSetGold4.setStartDelay(300);
         animSetGold4.start();
 
-        ObjectAnimator gold5Anim1 = ObjectAnimator.ofFloat(gold5, "y", -200f, 500f);
+        ObjectAnimator gold5Anim1 = ObjectAnimator.ofFloat(gold5, "y", -200f, h);
         ObjectAnimator gold5Anim2 = ObjectAnimator.ofFloat(gold5, "scaleX", 0.5f, 1f);
         ObjectAnimator gold5Anim3 = ObjectAnimator.ofFloat(gold5, "scaleY", 0.5f, 1f);
         ObjectAnimator gold5Anim4 = ObjectAnimator.ofFloat(gold5, "alpha", 0f, 1f);
@@ -224,7 +237,7 @@ public class DialogUtils {
         animSetGold5.setStartDelay(400);
         animSetGold5.start();
 
-        ObjectAnimator gold6Anim1 = ObjectAnimator.ofFloat(gold6, "y", -200f, 500f);
+        ObjectAnimator gold6Anim1 = ObjectAnimator.ofFloat(gold6, "y", -200f, h);
         ObjectAnimator gold6Anim2 = ObjectAnimator.ofFloat(gold6, "scaleX", 0.5f, 1f);
         ObjectAnimator gold6Anim3 = ObjectAnimator.ofFloat(gold6, "scaleY", 0.5f, 1f);
         ObjectAnimator gold6Anim4 = ObjectAnimator.ofFloat(gold6, "alpha", 0f, 1f);
@@ -238,7 +251,7 @@ public class DialogUtils {
         animSetGold6.setStartDelay(500);
         animSetGold6.start();
 
-        ObjectAnimator gold7Anim1 = ObjectAnimator.ofFloat(gold7, "y", -200f, 500f);
+        ObjectAnimator gold7Anim1 = ObjectAnimator.ofFloat(gold7, "y", -200f, h);
         ObjectAnimator gold7Anim2 = ObjectAnimator.ofFloat(gold7, "scaleX", 0.5f, 1f);
         ObjectAnimator gold7Anim3 = ObjectAnimator.ofFloat(gold7, "scaleY", 0.5f, 1f);
         ObjectAnimator gold7Anim4 = ObjectAnimator.ofFloat(gold7, "alpha", 0f, 1f);
@@ -252,7 +265,7 @@ public class DialogUtils {
         animSetGold7.setStartDelay(600);
         animSetGold7.start();
 
-        ObjectAnimator gold8Anim1 = ObjectAnimator.ofFloat(gold8, "y", -200f, 500f);
+        ObjectAnimator gold8Anim1 = ObjectAnimator.ofFloat(gold8, "y", -200f, h);
         ObjectAnimator gold8Anim2 = ObjectAnimator.ofFloat(gold8, "scaleX", 0.5f, 1f);
         ObjectAnimator gold8Anim3 = ObjectAnimator.ofFloat(gold8, "scaleY", 0.5f, 1f);
         ObjectAnimator gold8Anim4 = ObjectAnimator.ofFloat(gold8, "alpha", 0f, 1f);
@@ -266,7 +279,7 @@ public class DialogUtils {
         animSetGold8.setStartDelay(700);
         animSetGold8.start();
 
-        ObjectAnimator gold9Anim1 = ObjectAnimator.ofFloat(gold9, "y", -200f, 500f);
+        ObjectAnimator gold9Anim1 = ObjectAnimator.ofFloat(gold9, "y", -200f, h);
         ObjectAnimator gold9Anim2 = ObjectAnimator.ofFloat(gold9, "scaleX", 0.5f, 1f);
         ObjectAnimator gold9Anim3 = ObjectAnimator.ofFloat(gold9, "scaleY", 0.5f, 1f);
         ObjectAnimator gold9Anim4 = ObjectAnimator.ofFloat(gold9, "alpha", 0f, 1f);
@@ -344,7 +357,7 @@ public class DialogUtils {
 
     // 一个确定按钮的弹窗
     public static void confirmDialog(Activity activity, String content, String confirm) {
-        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         Window window = dialog.getWindow();
@@ -364,7 +377,7 @@ public class DialogUtils {
 
     // dialog形式弹出分享
     public static void newShareDialog(final Activity activity, final ShareUtils shareUtils, final String title, final String content, final String imgurl, final String url) {
-        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         final Window window = dialog.getWindow();
@@ -420,4 +433,28 @@ public class DialogUtils {
             }
         });
     }
+
+    // 确定后进入主页的弹窗
+    public static void confirmToMainDialog(final Activity activity, String content) {
+        final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.Custom_Dialog).create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_confirm);
+        ImageView ivTag = (ImageView) window.findViewById(R.id.iv_tag);
+        TextView tvContent = (TextView) window.findViewById(R.id.tv_content);
+        TextView btnConfirm = (TextView) window.findViewById(R.id.btn_confirm);
+        tvContent.setText(content);
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+    }
+
 }

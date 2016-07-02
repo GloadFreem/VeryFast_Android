@@ -17,6 +17,7 @@ import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.AuthenticateBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.DialogUtils;
 import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
@@ -64,7 +65,7 @@ public class CertificationDescActivity extends BaseActivity implements View.OnCl
         btnNext = (Button) findViewById(R.id.btn_next);// 下一步
         btnNext.setOnClickListener(this);
 
-        usertype = getIntent().getIntExtra("usertype", 0);
+        usertype = getIntent().getIntExtra("usertype", -1);
         setMytitle();
     }
 
@@ -192,9 +193,7 @@ public class CertificationDescActivity extends BaseActivity implements View.OnCl
                 return;
             } else {
                 if (authenticateBean.getStatus() == 200) {
-//                    SharedPreferencesUtils.setAuth(mContext, true);
-                    // TODO: 2016/6/6 弹出认证成功提示
-                    SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
+                    DialogUtils.confirmToMainDialog(CertificationDescActivity.this, authenticateBean.getMessage());
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
                 }

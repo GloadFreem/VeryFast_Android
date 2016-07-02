@@ -197,6 +197,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         SuperToastUtils.showSuperToast(mContext, 2, "点击了第" + newPosition + "张图片");
                     }
                 });

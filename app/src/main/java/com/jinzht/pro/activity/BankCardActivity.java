@@ -451,7 +451,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
 
     // 提示用户资金到账前不要解绑
     private void confirmUnbind() {
-        dialog = new AlertDialog.Builder(this).create();
+        dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         Window window = dialog.getWindow();

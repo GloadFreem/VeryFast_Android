@@ -216,7 +216,7 @@ public class ChangeTelActivity extends BaseActivity implements View.OnClickListe
 
     // 弹窗确认
     private void confirmDialog(final boolean succeed, String content) {
-        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        final AlertDialog dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         Window window = dialog.getWindow();

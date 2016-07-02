@@ -120,7 +120,7 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void confirmDialog(String content) {
-        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        final AlertDialog dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         Window window = dialog.getWindow();

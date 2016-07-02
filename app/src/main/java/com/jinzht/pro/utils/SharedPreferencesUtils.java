@@ -169,4 +169,18 @@ public class SharedPreferencesUtils {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         return sp.getString("onlineFavicon", "");
     }
+
+    // 保存当日登录日期
+    public static void saveTodayFirstDate(Context context, String date) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("todayDate", date);
+        editor.commit();
+    }
+
+    // 获取当日登录日期
+    public static String getTodayFirstDate(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        return sp.getString("todayDate", "");
+    }
 }

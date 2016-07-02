@@ -109,7 +109,7 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
         btnNext = (Button) findViewById(R.id.certification_btn_next);// 下一步按钮
         btnNext.setOnClickListener(this);
 
-        usertype = getIntent().getIntExtra("usertype", 0);
+        usertype = getIntent().getIntExtra("usertype", -1);
         setMytitle();
         initDifferent();
         initData();
