@@ -613,7 +613,6 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             super.onPostExecute(shareBean);
             if (shareBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(PreselectionDetailsActivity.this);
@@ -745,7 +744,6 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             super.onPostExecute(customerServiceBean);
             if (customerServiceBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);

@@ -574,7 +574,6 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             super.onPostExecute(shareBean);
             if (shareBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(RoadshowDetailsActivity.this);
@@ -613,7 +612,6 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             super.onPostExecute(customerServiceBean);
             if (customerServiceBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);

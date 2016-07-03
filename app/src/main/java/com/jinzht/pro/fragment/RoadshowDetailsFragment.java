@@ -123,11 +123,9 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
                 if (isOpen) {// 打开状态，点击关闭
                     descClose();
                     isOpen = false;
-//                    emptyView.setVisibility(View.GONE);
                 } else {// 关闭状态，点击打开
                     descOpen();
                     isOpen = true;
-//                    emptyView.setVisibility(View.VISIBLE);
                 }
                 break;
         }

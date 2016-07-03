@@ -182,6 +182,7 @@ public class RoadshowChatActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    // TODO: 2016/7/3 要写个5秒的循环
     // 获取聊天内容
     private class GetCommentsListTask extends AsyncTask<Void, Void, CommentsListBean> {
         private int page;
@@ -219,7 +220,6 @@ public class RoadshowChatActivity extends BaseActivity implements View.OnClickLi
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                return;
             } else {
                 if (commentsListBean.getStatus() == 200) {
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
@@ -305,7 +305,6 @@ public class RoadshowChatActivity extends BaseActivity implements View.OnClickLi
             super.onPostExecute(commonBean);
             if (commonBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (commonBean.getStatus() == 200) {
                     needRefresh = true;
