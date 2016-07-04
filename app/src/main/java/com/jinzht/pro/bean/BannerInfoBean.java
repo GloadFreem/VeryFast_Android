@@ -8,9 +8,9 @@ import java.util.List;
 public class BannerInfoBean {
 
     /**
+     * data : [{"body":{"bannerId":2,"name":"投资建议","description":"投资建议","image":"http://www.jinzht.com/media/banner/img/2016/06/d003d371ac8942f9a0c3406a53b3166e.jpg","url":"http://www.jinzht.com"},"type":"Project","extr":{"projectId":1,"borrowerUserNumber":"jinzht_0000_3677","financestatus":{"name":"融资中"},"industoryType":"金融，互联网","roadshows":[{"roadshowplan":{"profit":"0.2","limitAmount":1,"financeTotal":200,"financedMount":100}}]}}]
      * message :
      * status : 200
-     * data : [{"extr":{"projectId":1,"industoryType":"金融，互联网，","roadshows":[{"roadshowplan":{"financeTotal":200,"financedMount":100}}]},"body":{"bannerId":1,"name":"信息","description":"新三板上市","image":"http://www.jinzht.com/image/app.png","url":"http://www.jinzht.com"},"type":"Project"},{"body":{"bannerId":2,"name":"项目","description":"国联质检上市","image":"http://www.jinzht.com/image/app.png","url":"http://www.jinzht.com"},"type":"Web"},{"body":{"bannerId":3,"name":"项目","description":"杰邦科技上市","image":"http://www.jinzht.com/image/app.png","url":"http://www.jinzht.com"},"type":"Web"},{"body":{"bannerId":4,"name":"重磅新闻","description":"金指投app3.0上线","image":"http://www.jinzht.com/image/app.png","url":"http://www.jinzht.com"},"type":"Web"}]
      */
 
     private String message;
@@ -43,21 +43,13 @@ public class BannerInfoBean {
 
     public static class DataBean {
         /**
-         * extr : {"projectId":1,"industoryType":"金融，互联网，","roadshows":[{"roadshowplan":{"financeTotal":200,"financedMount":100}}]}
-         * body : {"bannerId":1,"name":"信息","description":"新三板上市","image":"http://www.jinzht.com/image/app.png","url":"http://www.jinzht.com"}
+         * body : {"bannerId":2,"name":"投资建议","description":"投资建议","image":"http://www.jinzht.com/media/banner/img/2016/06/d003d371ac8942f9a0c3406a53b3166e.jpg","url":"http://www.jinzht.com"}
          * type : Project
+         * extr : {"projectId":1,"borrowerUserNumber":"jinzht_0000_3677","financestatus":{"name":"融资中"},"industoryType":"金融，互联网","roadshows":[{"roadshowplan":{"profit":"0.2","limitAmount":1,"financeTotal":200,"financedMount":100}}]}
          */
-        private ExtrBean extr;
         private BodyBean body;
         private String type;
-
-        public ExtrBean getExtr() {
-            return extr;
-        }
-
-        public void setExtr(ExtrBean extr) {
-            this.extr = extr;
-        }
+        private ExtrBean extr;
 
         public BodyBean getBody() {
             return body;
@@ -75,87 +67,20 @@ public class BannerInfoBean {
             this.type = type;
         }
 
-        public static class ExtrBean {
-            /**
-             * projectId : 1
-             * industoryType : 金融，互联网，
-             * roadshows : [{"roadshowplan":{"financeTotal":200,"financedMount":100}}]
-             */
-            private int projectId;
-            private String industoryType;
-            private List<RoadshowsBean> roadshows;
+        public ExtrBean getExtr() {
+            return extr;
+        }
 
-            public int getProjectId() {
-                return projectId;
-            }
-
-            public void setProjectId(int projectId) {
-                this.projectId = projectId;
-            }
-
-            public String getIndustoryType() {
-                return industoryType;
-            }
-
-            public void setIndustoryType(String industoryType) {
-                this.industoryType = industoryType;
-            }
-
-            public List<RoadshowsBean> getRoadshows() {
-                return roadshows;
-            }
-
-            public void setRoadshows(List<RoadshowsBean> roadshows) {
-                this.roadshows = roadshows;
-            }
-
-            public static class RoadshowsBean {
-                /**
-                 * roadshowplan : {"financeTotal":200,"financedMount":100}
-                 */
-                private RoadshowplanBean roadshowplan;
-
-                public RoadshowplanBean getRoadshowplan() {
-                    return roadshowplan;
-                }
-
-                public void setRoadshowplan(RoadshowplanBean roadshowplan) {
-                    this.roadshowplan = roadshowplan;
-                }
-
-                public static class RoadshowplanBean {
-                    /**
-                     * financeTotal : 200
-                     * financedMount : 100
-                     */
-                    private int financeTotal;
-                    private int financedMount;
-
-                    public int getFinanceTotal() {
-                        return financeTotal;
-                    }
-
-                    public void setFinanceTotal(int financeTotal) {
-                        this.financeTotal = financeTotal;
-                    }
-
-                    public int getFinancedMount() {
-                        return financedMount;
-                    }
-
-                    public void setFinancedMount(int financedMount) {
-                        this.financedMount = financedMount;
-                    }
-                }
-            }
+        public void setExtr(ExtrBean extr) {
+            this.extr = extr;
         }
 
         public static class BodyBean {
             /**
-             * bannerId : 1
-             * name : 信息
-             * description : 新三板上市
-             * image : http://www.jinzht.com/image/app.png
+             * bannerId : 2
+             * name : 投资建议
+             * description : 投资建议
+             * image : http://www.jinzht.com/media/banner/img/2016/06/d003d371ac8942f9a0c3406a53b3166e.jpg
              * url : http://www.jinzht.com
              */
             private int bannerId;
@@ -202,6 +127,136 @@ public class BannerInfoBean {
 
             public void setUrl(String url) {
                 this.url = url;
+            }
+        }
+
+        public static class ExtrBean {
+            /**
+             * projectId : 1
+             * borrowerUserNumber : jinzht_0000_3677
+             * financestatus : {"name":"融资中"}
+             * industoryType : 金融，互联网
+             * roadshows : [{"roadshowplan":{"profit":"0.2","limitAmount":1,"financeTotal":200,"financedMount":100}}]
+             */
+            private int projectId;
+            private String borrowerUserNumber;
+            private FinancestatusBean financestatus;
+            private String industoryType;
+            private List<RoadshowsBean> roadshows;
+
+            public int getProjectId() {
+                return projectId;
+            }
+
+            public void setProjectId(int projectId) {
+                this.projectId = projectId;
+            }
+
+            public String getBorrowerUserNumber() {
+                return borrowerUserNumber;
+            }
+
+            public void setBorrowerUserNumber(String borrowerUserNumber) {
+                this.borrowerUserNumber = borrowerUserNumber;
+            }
+
+            public FinancestatusBean getFinancestatus() {
+                return financestatus;
+            }
+
+            public void setFinancestatus(FinancestatusBean financestatus) {
+                this.financestatus = financestatus;
+            }
+
+            public String getIndustoryType() {
+                return industoryType;
+            }
+
+            public void setIndustoryType(String industoryType) {
+                this.industoryType = industoryType;
+            }
+
+            public List<RoadshowsBean> getRoadshows() {
+                return roadshows;
+            }
+
+            public void setRoadshows(List<RoadshowsBean> roadshows) {
+                this.roadshows = roadshows;
+            }
+
+            public static class FinancestatusBean {
+                /**
+                 * name : 融资中
+                 */
+                private String name;
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
+            }
+
+            public static class RoadshowsBean {
+                /**
+                 * roadshowplan : {"profit":"0.2","limitAmount":1,"financeTotal":200,"financedMount":100}
+                 */
+                private RoadshowplanBean roadshowplan;
+
+                public RoadshowplanBean getRoadshowplan() {
+                    return roadshowplan;
+                }
+
+                public void setRoadshowplan(RoadshowplanBean roadshowplan) {
+                    this.roadshowplan = roadshowplan;
+                }
+
+                public static class RoadshowplanBean {
+                    /**
+                     * profit : 0.2
+                     * limitAmount : 1
+                     * financeTotal : 200
+                     * financedMount : 100
+                     */
+                    private String profit;
+                    private int limitAmount;
+                    private int financeTotal;
+                    private int financedMount;
+
+                    public String getProfit() {
+                        return profit;
+                    }
+
+                    public void setProfit(String profit) {
+                        this.profit = profit;
+                    }
+
+                    public int getLimitAmount() {
+                        return limitAmount;
+                    }
+
+                    public void setLimitAmount(int limitAmount) {
+                        this.limitAmount = limitAmount;
+                    }
+
+                    public int getFinanceTotal() {
+                        return financeTotal;
+                    }
+
+                    public void setFinanceTotal(int financeTotal) {
+                        this.financeTotal = financeTotal;
+                    }
+
+                    public int getFinancedMount() {
+                        return financedMount;
+                    }
+
+                    public void setFinancedMount(int financedMount) {
+                        this.financedMount = financedMount;
+                    }
+                }
             }
         }
     }

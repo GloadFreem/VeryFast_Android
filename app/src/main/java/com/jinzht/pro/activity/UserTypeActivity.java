@@ -10,6 +10,7 @@ import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.UserInfoBean;
 import com.jinzht.pro.utils.UiHelp;
+import com.jinzht.pro.utils.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,49 +82,49 @@ public class UserTypeActivity extends BaseActivity implements View.OnClickListen
         switch (datas.get(0).getIdentiytype().getName()) {
             case "项目方":
                 ivType1.setBackgroundResource(R.mipmap.icon_project_selected);
-                tvDesc1.setText("项目方描述");
+                tvDesc1.setText(UiUtils.getString(R.string.desc_xiangmufang));
                 break;
             case "个人投资者":
                 ivType1.setBackgroundResource(R.mipmap.icon_investor_big);
-                tvDesc1.setText("个人投资者描述");
+                tvDesc1.setText(UiUtils.getString(R.string.desc_touziren));
                 break;
             case "机构投资者":
                 ivType1.setBackgroundResource(R.mipmap.icon_investorg_big);
-                tvDesc1.setText("个人投资者描述");
+                tvDesc1.setText(UiUtils.getString(R.string.desc_touzijigou));
                 break;
             case "智囊团":
                 ivType1.setBackgroundResource(R.mipmap.icon_brain_big);
-                tvDesc1.setText("智囊团描述");
+                tvDesc1.setText(UiUtils.getString(R.string.desc_zhinangruan));
                 break;
         }
-        if (datas.size() > 1) {
-            llType2.setVisibility(View.VISIBLE);
-            hint.setVisibility(View.GONE);
-            rlAdd.setVisibility(View.GONE);
-            tvType2.setText(datas.get(1).getIdentiytype().getName());
-            switch (datas.get(1).getIdentiytype().getName()) {
-                case "项目方":
-                    ivType2.setBackgroundResource(R.mipmap.icon_project_selected);
-                    tvDesc2.setText("项目方描述");
-                    break;
-                case "个人投资者":
-                    ivType2.setBackgroundResource(R.mipmap.icon_investor);
-                    tvDesc2.setText("个人投资者描述");
-                    break;
-                case "机构投资者":
-                    ivType2.setBackgroundResource(R.mipmap.icon_investorg);
-                    tvDesc2.setText("个人投资者描述");
-                    break;
-                case "智囊团":
-                    ivType2.setBackgroundResource(R.mipmap.icon_brain);
-                    tvDesc2.setText("智囊团描述");
-                    break;
-            }
-        } else {
-            llType2.setVisibility(View.GONE);
-            hint.setVisibility(View.VISIBLE);
-            rlAdd.setVisibility(View.VISIBLE);
-        }
+//        if (datas.size() > 1) {
+//            llType2.setVisibility(View.VISIBLE);
+//            hint.setVisibility(View.GONE);
+//            rlAdd.setVisibility(View.GONE);
+//            tvType2.setText(datas.get(1).getIdentiytype().getName());
+//            switch (datas.get(1).getIdentiytype().getName()) {
+//                case "项目方":
+//                    ivType2.setBackgroundResource(R.mipmap.icon_project_selected);
+//                    tvDesc2.setText("项目方描述");
+//                    break;
+//                case "个人投资者":
+//                    ivType2.setBackgroundResource(R.mipmap.icon_investor);
+//                    tvDesc2.setText("个人投资者描述");
+//                    break;
+//                case "机构投资者":
+//                    ivType2.setBackgroundResource(R.mipmap.icon_investorg);
+//                    tvDesc2.setText("个人投资者描述");
+//                    break;
+//                case "智囊团":
+//                    ivType2.setBackgroundResource(R.mipmap.icon_brain);
+//                    tvDesc2.setText("智囊团描述");
+//                    break;
+//            }
+//        } else {
+//            llType2.setVisibility(View.GONE);
+//            hint.setVisibility(View.VISIBLE);
+//            rlAdd.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override

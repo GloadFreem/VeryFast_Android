@@ -66,7 +66,7 @@ public class MyApplication extends Application {
                 .setEnableCrop(false)// 关闭剪裁
                 .setEnableRotate(false)// 关闭旋转
                 .setCropSquare(false)// 剪裁正方形
-                .setEnablePreview(false)// 开启预览
+                .setEnablePreview(false)// 关闭预览
                 .setMutiSelectMaxSize(9)// 最多9张
                 .build();
         CoreConfig coreConfig = new CoreConfig.Builder(this, new GlideImageLoader(), theme)

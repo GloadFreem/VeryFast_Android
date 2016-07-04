@@ -88,6 +88,7 @@
             android:layout_centerInParent="true"
             android:background="@mipmap/bg_tv_desc_xiangmufang"
             android:padding="10dp"
+            android:text="@string/desc_xiangmufang"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:visibility="gone" />
@@ -99,6 +100,7 @@
             android:layout_centerInParent="true"
             android:background="@mipmap/bg_tv_desc_touziren"
             android:padding="10dp"
+            android:text="@string/desc_touziren"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:visibility="gone" />
@@ -110,6 +112,7 @@
             android:layout_centerInParent="true"
             android:background="@mipmap/bg_tv_desc_touzijigou"
             android:padding="10dp"
+            android:text="@string/desc_touzijigou"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:visibility="gone" />
@@ -121,6 +124,7 @@
             android:layout_centerInParent="true"
             android:background="@mipmap/bg_tv_desc_zhinangtuan"
             android:padding="10dp"
+            android:text="@string/desc_zhinangruan"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:visibility="gone" />

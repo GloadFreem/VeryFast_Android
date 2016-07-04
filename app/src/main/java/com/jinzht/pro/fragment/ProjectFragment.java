@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
+import com.jinzht.pro.activity.CommonWebViewActivity;
 import com.jinzht.pro.activity.MessageActivity;
 import com.jinzht.pro.activity.PreselectionDetailsActivity;
 import com.jinzht.pro.activity.RoadshowDetailsActivity;
@@ -197,8 +198,22 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: 2016/7/3 跳转至banner详情
-                        SuperToastUtils.showSuperToast(mContext, 2, "点击了第" + newPosition + "张图片");
+                        if (bannerData.get(newPosition).getType().equals("Project")) {
+                            if (bannerData.get(newPosition).getExtr().getFinancestatus().getName().equals("预选项目")) {
+                                Intent intent = new Intent(mContext, PreselectionDetailsActivity.class);
+                                intent.putExtra("id", String.valueOf(bannerData.get(newPosition).getExtr().getProjectId()));
+                                startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(mContext, RoadshowDetailsActivity.class);
+                                intent.putExtra("id", String.valueOf(bannerData.get(newPosition).getExtr().getProjectId()));
+                                startActivity(intent);
+                            }
+                        } else {
+                            Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                            intent.putExtra("title", bannerData.get(newPosition).getBody().getName());
+                            intent.putExtra("url", bannerData.get(newPosition).getBody().getUrl());
+                            startActivity(intent);
+                        }
                     }
                 });
                 return imageView;
@@ -609,7 +624,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         rDatas = roadshowProjectListBean.getData();
-                        if (rDatas != null && rDatas.size() != 0) {
+                        if (rDatas != null) {
                             listview.setAdapter(myAdapter);
                         }
                     } else {
@@ -676,7 +691,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         pDatas = preselectionProjectListBean.getData();
-                        if (pDatas != null && pDatas.size() != 0) {
+                        if (pDatas != null) {
                             listview.setAdapter(myAdapter);
                         }
                     } else {

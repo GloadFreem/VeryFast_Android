@@ -133,6 +133,8 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
                 imm.showSoftInput(edComment, 0);
                 edComment.setHint("回复 " + comments.get(position - 1).getUsersByUserId().getName());
                 edComment.setTag(position);
@@ -234,7 +236,9 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 Glide.with(mContext).load(datas.getUsers().getHeadSculpture()).into(holder.ivDetailFavicon);
                 holder.tvDetailName.setText(datas.getUsers().getName());
                 holder.tvDetailAddr.setText(datas.getUsers().getAuthentics().get(0).getCity().getName());
-                holder.tvDetailCompPosition.setText(datas.getUsers().getAuthentics().get(0).getCompanyName() + " | " + datas.getUsers().getAuthentics().get(0).getPosition());
+                if (!StringUtils.isBlank(datas.getUsers().getAuthentics().get(0).getCompanyName()) && !StringUtils.isBlank(datas.getUsers().getAuthentics().get(0).getPosition())) {
+                    holder.tvDetailCompPosition.setText(datas.getUsers().getAuthentics().get(0).getCompanyName() + " | " + datas.getUsers().getAuthentics().get(0).getPosition());
+                }
                 holder.tvDetailTime.setText(DateUtils.timeLogic(datas.getPublicDate()));
                 holder.tvDetailContent.setText(datas.getContent());
 
@@ -394,7 +398,6 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                return;
             } else {
                 if (circleDetailBean.getStatus() == 200) {
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
@@ -449,7 +452,6 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                return;
             } else {
                 if (circleMoreCommentsBean.getStatus() == 200) {
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
@@ -557,7 +559,6 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
             super.onPostExecute(circlePriseBean);
             if (circlePriseBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (circlePriseBean.getStatus() == 200) {
                     List<CircleDetailBean.DataBean.ContentprisesBean> contentprises = datas.getContentprises();
@@ -629,7 +630,6 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
             super.onPostExecute(circleCommentBean);
             if (circleCommentBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (circleCommentBean.getStatus() == 200) {
                     imm.hideSoftInputFromWindow(edComment.getWindowToken(), 0);

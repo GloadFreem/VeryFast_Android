@@ -3,6 +3,7 @@ package com.jinzht.pro.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,7 @@ public class RoadshowChatActivity extends BaseActivity implements View.OnClickLi
     private int pages = 0;
     private List<CommentsListBean.DataBean> datas = new ArrayList<>();// 聊天内容数据
     private ChatMsgAdapter msgAdapter;// 聊天内容适配器
+    private Handler handler;// 用于循环获取聊天内容
 
     private InputMethodManager imm;// 控制键盘
 
@@ -80,10 +82,13 @@ public class RoadshowChatActivity extends BaseActivity implements View.OnClickLi
         msgAdapter = new ChatMsgAdapter();
         listview.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null), null, false);
 
+        handler = new Handler();
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         GetCommentsListTask getCommentsListTask = new GetCommentsListTask(0);
         getCommentsListTask.execute();
+
+        handler.postDelayed(runnable, 5000);
     }
 
     @Override
@@ -182,7 +187,16 @@ public class RoadshowChatActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    // TODO: 2016/7/3 要写个5秒的循环
+    // 5秒获取一次聊天内容
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            GetCommentsListTask getCommentsListTask = new GetCommentsListTask(0);
+            getCommentsListTask.execute();
+            handler.postDelayed(this, 5000);
+        }
+    };
+
     // 获取聊天内容
     private class GetCommentsListTask extends AsyncTask<Void, Void, CommentsListBean> {
         private int page;
@@ -330,6 +344,12 @@ public class RoadshowChatActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void blankPage() {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
     }
 
 }

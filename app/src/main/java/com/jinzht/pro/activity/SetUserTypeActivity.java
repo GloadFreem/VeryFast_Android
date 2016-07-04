@@ -18,6 +18,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.CustomerServiceBean;
@@ -96,12 +97,19 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
         photo_path = getCacheDir() + "/" + "favicon.jpg";// 头像保存地址
         photoFile = new File(Environment.getExternalStorageDirectory() + "/" + "favicon.jpg");
 
-        if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
-            Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).into(improveInfoIvUserimage);
-        } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
-            Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).into(improveInfoIvUserimage);
+        if (getIntent().getIntExtra("isWechatLogin", 0) == 1) {
+            // 微信登录，下载微信头像
+            Glide.with(mContext).load(getIntent().getStringExtra("favicon")).into(improveInfoIvUserimage);
+            SaveWechatFavicon saveWechatFavicon = new SaveWechatFavicon();
+            saveWechatFavicon.execute();
         } else {
-            Glide.with(mContext).load(R.drawable.ic_launcher).into(improveInfoIvUserimage);
+            if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
+                Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).into(improveInfoIvUserimage);
+            } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
+                Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).into(improveInfoIvUserimage);
+            } else {
+                improveInfoIvUserimage.setImageResource(R.drawable.ic_launcher);
+            }
         }
     }
 
@@ -240,6 +248,31 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    // 下载微信头像
+    private class SaveWechatFavicon extends AsyncTask<Void, Void, File> {
+        @Override
+        protected File doInBackground(Void... params) {
+            try {
+                return Glide
+                        .with(mContext)
+                        .load(getIntent().getStringExtra("favicon"))
+                        .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                        .get();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(File file) {
+            super.onPostExecute(file);
+            if (file != null) {
+                photo_path = file.getPath();
+            }
+        }
+    }
+
     // 提交身份类型
     private class SetUserTypeTask extends AsyncTask<Void, Void, SetUserTypeBean> {
         @Override
@@ -289,7 +322,9 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
             } else {
                 if (setUserTypeBean.getStatus() == 200) {
                     SharedPreferencesUtils.saveUserType(mContext, usertype);
-                    SharedPreferencesUtils.saveLocalFavicon(mContext, photo_path);
+                    if (getIntent().getIntExtra("isWechatLogin", 0) != 1) {
+                        SharedPreferencesUtils.saveLocalFavicon(mContext, photo_path);
+                    }
                     Intent intent = new Intent(mContext, CompleteRegisterActivity.class);// 跳转至完成完成注册送指环码界面
                     intent.putExtra("usertype", usertype);
                     intent.putExtra("inviteCode", setUserTypeBean.getData().getInviteCode());

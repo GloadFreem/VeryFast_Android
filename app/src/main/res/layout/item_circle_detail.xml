@@ -15,8 +15,7 @@
         <com.jinzht.pro.view.CircleImageView
             android:id="@+id/iv_favicon"
             android:layout_width="39dp"
-            android:layout_height="39dp"
-            android:src="@mipmap/favicon_test" />
+            android:layout_height="39dp" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -24,7 +23,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="9dp"
             android:layout_toRightOf="@id/iv_favicon"
-            android:text="王大锤"
             android:textColor="#474747"
             android:textSize="17sp" />
 
@@ -36,7 +34,6 @@
             android:layout_marginBottom="1dp"
             android:layout_marginLeft="13dp"
             android:layout_toRightOf="@id/tv_name"
-            android:text="北京"
             android:textColor="#474747"
             android:textSize="12sp" />
 
@@ -48,7 +45,6 @@
             android:layout_marginLeft="9dp"
             android:layout_marginTop="4dp"
             android:layout_toRightOf="@id/iv_favicon"
-            android:text="金指投科技 | 产品经理"
             android:textColor="#747474"
             android:textSize="12sp" />
 
@@ -59,7 +55,6 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/tv_name"
             android:layout_marginTop="4dp"
-            android:text="40分钟前"
             android:textColor="#747474"
             android:textSize="12sp" />
 
@@ -71,7 +66,6 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:lineSpacingExtra="4dp"
-            android:text="世界上现在除了中国文字的象形文字，其他都是拼音文字，拼音文字是语言的记录，但象形文字不是语言的记录，而是事件的记录。世界上现在除了中国文字的象形文字，其他都是拼"
             android:textColor="#474747"
             android:textSize="15sp" />
 
@@ -102,7 +96,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/btn_good"
-            android:text="胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁，胡丫郁"
             android:textColor="#474747"
             android:textSize="12sp" />
 

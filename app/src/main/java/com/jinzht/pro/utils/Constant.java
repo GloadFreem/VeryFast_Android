@@ -168,10 +168,6 @@ public class Constant {
      */
     public static final String COLLECTINVESTOR = "requestInvestorCollect.action";
     /**
-     * 项目中心
-     */
-    public static final String GETPROJECTCENTER = "requestProjectCenter.action";
-    /**
      * 分享投资人
      */
     public static final String SHAREINVESTOR = "requestShareInvestor.action";
@@ -363,6 +359,18 @@ public class Constant {
      * 获取当日登录金条奖励
      */
     public static final String GETGOLDAWARD = "requestUserGoldGetInfo.action";
+    /**
+     * 催一催
+     */
+    public static final String URGE = "requestAuthenticQuick.action";
+    /**
+     * 上传项目的邮箱和电话
+     */
+    public static final String GETUPLOADPROJECTINFO = "requestuploadProjectInfo.action";
+    /**
+     * 活动搜索
+     */
+    public static final String ACTIVITYSEARCH = "requestSearchAction.action";
 
     /**
      * ==============================以下为易宝支付接口=======================================

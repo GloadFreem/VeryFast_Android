@@ -258,14 +258,13 @@ public class BillActivity extends BaseActivity implements View.OnClickListener {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                return;
             } else {
                 if (billListBean.getStatus() == 200) {
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         datas = billListBean.getData();
-                        if (datas != null && datas.size() != 0) {
+                        if (datas != null) {
                             listview.setAdapter(myAdapter);
                         }
                     } else {

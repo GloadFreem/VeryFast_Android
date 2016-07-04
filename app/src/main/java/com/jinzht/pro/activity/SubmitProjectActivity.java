@@ -24,7 +24,7 @@ import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.bean.CustomerServiceBean;
-import com.jinzht.pro.bean.ProCenter4XMF;
+import com.jinzht.pro.bean.ProCenter4ProBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.FastJsonTools;
@@ -65,7 +65,7 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
     private RoundProgressBar submitFinancingProgress;// 圆形进度条
     private TextView btnSubmit;// 确认按钮
 
-    private ProCenter4XMF.DataBean proData;// 项目数据
+    private ProCenter4ProBean.DataBean proData;// 项目数据
     private boolean progressStop = false;// 圆形进度条正在滑动的标识
     private ProThread progressThread;// 圆形进度条的线程
     private int proTotal = 0;// 要显示的全部进度 = 已融资/需融资*100
@@ -128,13 +128,19 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
         tvProTitle.setText(proData.getAbbrevName());
         switch (proData.getFinancestatus().getName()) {
             case "融资中":
-                Glide.with(this).load(R.mipmap.tag_rongzizhong).into(tvProTag);
+                tvProTag.setImageResource(R.mipmap.tag_rongzizhong);
                 break;
             case "待路演":
-                Glide.with(this).load(R.mipmap.tag_dailuyan).into(tvProTag);
+                tvProTag.setImageResource(R.mipmap.tag_dailuyan);
                 break;
-            case "预选":
-                Glide.with(this).load(R.mipmap.tag_yuxuan).into(tvProTag);
+            case "融资完成":
+                tvProTag.setImageResource(R.mipmap.tag_rongziwancheng);
+                break;
+            case "融资失败":
+                tvProTag.setImageResource(R.mipmap.tag_rongzishibai);
+                break;
+            case "预选项目":
+                tvProTag.setImageResource(R.mipmap.tag_yuxuan);
                 break;
         }
         tvProName.setText(proData.getFullName());
@@ -211,45 +217,44 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
     }
 
     // 获取项目数据
-    private class GetProjectTask extends AsyncTask<Void, Void, ProCenter4XMF> {
+    private class GetProjectTask extends AsyncTask<Void, Void, ProCenter4ProBean> {
         @Override
-        protected ProCenter4XMF doInBackground(Void... params) {
+        protected ProCenter4ProBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETPROJECTCENTER)),
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETPROCENTERLIST)),
                             "type", "0",
                             "page", "0",
-                            Constant.BASE_URL + Constant.GETPROJECTCENTER,
+                            Constant.BASE_URL + Constant.GETPROCENTERLIST,
                             mContext
                     );
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 Log.i("项目信息", body);
-                return FastJsonTools.getBean(body, ProCenter4XMF.class);
+                return FastJsonTools.getBean(body, ProCenter4ProBean.class);
             } else {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(ProCenter4XMF proCenter4XMF) {
-            super.onPostExecute(proCenter4XMF);
-            if (proCenter4XMF == null) {
+        protected void onPostExecute(ProCenter4ProBean proCenter4ProBean) {
+            super.onPostExecute(proCenter4ProBean);
+            if (proCenter4ProBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
-                if (proCenter4XMF.getStatus() == 200) {
-                    if (proCenter4XMF.getData() != null && proCenter4XMF.getData().size() != 0) {
-                        proData = proCenter4XMF.getData().get(0);
+                if (proCenter4ProBean.getStatus() == 200) {
+                    if (proCenter4ProBean.getData() != null && proCenter4ProBean.getData().size() != 0) {
+                        proData = proCenter4ProBean.getData().get(0);
                         if (proData != null) {
                             initData();
                         }
                     }
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, proCenter4XMF.getMessage());
+                    SuperToastUtils.showSuperToast(mContext, 2, proCenter4ProBean.getMessage());
                 }
             }
         }
@@ -293,7 +298,10 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (commonBean.getStatus() == 200) {
-                    // TODO: 2016/6/14 跳转至项目中心
+                    Intent intent = new Intent(mContext, ProCenterActivity.class);
+                    intent.putExtra("usertype", 1);
+                    startActivity(intent);
+                    finish();
                 }
                 SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
             }
@@ -327,7 +335,6 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
             super.onPostExecute(customerServiceBean);
             if (customerServiceBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);

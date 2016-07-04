@@ -28,6 +28,7 @@ import com.jinzht.pro.bean.InviteCodeBean;
 import com.jinzht.pro.bean.UserInfoBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.DialogUtils;
 import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
@@ -150,7 +151,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         if (!StringUtils.isBlank(data.getHeadSculpture())) {
             Glide.with(mContext).load(data.getHeadSculpture()).into(ivFavicon);
         } else {
-            Glide.with(mContext).load(R.drawable.ic_launcher).into(ivFavicon);
+            ivFavicon.setImageResource(R.drawable.ic_launcher);
         }
         GetInviteCode getInviteCode = new GetInviteCode();
         getInviteCode.execute();
@@ -242,7 +243,11 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                 startActivity(intent);
                 break;
             case R.id.myinfo_rl_idcard:// 未认证和认证失败时点击认证
-                intent.setClass(this, CertificationIDCardActivity.class);
+                if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                    intent.setClass(this, WechatVerifyActivity.class);
+                } else {
+                    intent.setClass(this, CertificationIDCardActivity.class);
+                }
                 intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
                 startActivity(intent);
                 break;
@@ -261,11 +266,17 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                 intent.putExtra("TAG", "修改");
                 startActivity(intent);
                 break;
-            case R.id.myinfo_btn_bottom:// 提交认证或催一催或者重新认证
+            case R.id.myinfo_btn_bottom:// 立即认证或催一催或者重新认证
                 if ("催一催".equals(btnBottom.getText().toString())) {
-                    SuperToastUtils.showSuperToast(mContext, 2, "催一催");
+                    UrgeTask urgeTask = new UrgeTask();
+                    urgeTask.execute();
+                    DialogUtils.confirmDialog(MyInfoActivity.this, "认证加速申请成功!", "确定");
                 } else {
-                    intent.setClass(this, CertificationIDCardActivity.class);
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(this, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(this, CertificationIDCardActivity.class);
+                    }
                     intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
                     startActivity(intent);
                 }
@@ -477,6 +488,30 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
             super.onPostExecute(commonBean);
             if (commonBean != null && commonBean.getStatus() == 200) {
                 needRefresh = true;
+            }
+        }
+    }
+
+    // 催一催
+    private class UrgeTask extends AsyncTask<Void, Void, CommonBean> {
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.URGE)),
+                            "authId", String.valueOf(data.getAuthentics().get(0).getAuthId()),
+                            Constant.BASE_URL + Constant.URGE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("催一催", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
             }
         }
     }

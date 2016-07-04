@@ -1,5 +1,6 @@
 package com.jinzht.pro.activity;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -8,7 +9,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
-import com.jinzht.pro.utils.SuperToastUtils;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.view.CircleImageView;
 
@@ -45,8 +46,9 @@ public class PaySecceedActivity extends BaseActivity implements View.OnClickList
         btnConfirm = (Button) findViewById(R.id.btn_confirm);// 确定按钮
         btnConfirm.setOnClickListener(this);
 
-        double amount = Double.parseDouble(getIntent().getStringExtra("amount")) * 10000.00;
-        tvMoney.setText(String.valueOf(amount));
+//        double amount = Double.parseDouble(getIntent().getStringExtra("amount")) * 10000.00;
+//        tvMoney.setText(String.valueOf(amount));
+        tvMoney.setText(getIntent().getStringExtra("amount") + "万");
         Glide.with(mContext).load(getIntent().getStringExtra("img")).into(ivImg);
         tvProjectname.setText(getIntent().getStringExtra("abbrevName"));
         tvCompanyname.setText(getIntent().getStringExtra("fullName"));
@@ -56,7 +58,10 @@ public class PaySecceedActivity extends BaseActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_confirm:// 确定后跳转到项目中心
-                SuperToastUtils.showSuperToast(mContext, 2, "去项目中心");
+                Intent intent = new Intent(mContext, ProCenterActivity.class);
+                intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                startActivity(intent);
+                finish();
                 break;
         }
     }

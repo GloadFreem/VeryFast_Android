@@ -32,8 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/personal_center_iv_favicon"
-                android:layout_alignRight="@id/personal_center_iv_favicon"
-                android:src="@mipmap/icon_v" />
+                android:layout_alignRight="@id/personal_center_iv_favicon" />
         </RelativeLayout>
 
         <TextView

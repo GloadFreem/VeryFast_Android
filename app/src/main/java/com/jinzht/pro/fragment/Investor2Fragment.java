@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
+import com.jinzht.pro.activity.CommonWebViewActivity;
 import com.jinzht.pro.activity.InvestorgDetailActivity;
 import com.jinzht.pro.activity.SubmitProjectActivity;
 import com.jinzht.pro.base.BaseFragment;
@@ -68,7 +69,10 @@ public class Investor2Fragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position < funds.size() + 1) {
-                    SuperToastUtils.showSuperToast(mContext, 2, "点击了条目" + position);
+                    Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                    intent.putExtra("title", funds.get(position - 1).getName());
+                    intent.putExtra("url", funds.get(position - 1).getUrl());
+                    startActivity(intent);
                 } else {
                     POSITION = position - funds.size() - 1;
                     Intent intent = new Intent(mContext, InvestorgDetailActivity.class);
@@ -275,7 +279,6 @@ public class Investor2Fragment extends BaseFragment {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                return;
             } else {
                 if (investorgListBean.getStatus() == 200) {
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
@@ -283,7 +286,7 @@ public class Investor2Fragment extends BaseFragment {
                     if (page == 0) {
                         funds = investorgListBean.getData().getFounddations();
                         datas = investorgListBean.getData().getInvestors();
-                        if (funds != null && datas != null && datas.size() != 0) {
+                        if (funds != null && datas != null) {
                             listview.setAdapter(myAdapter);
                         }
                     } else {

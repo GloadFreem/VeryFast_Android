@@ -119,6 +119,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
     private ActivityDetailBean.DataBean data = new ActivityDetailBean.DataBean();// 内容数据
     private List<ActivityDetailBean.DataBean.ActionimagesBean> photos = new ArrayList<>();// 活动照片资源
+    private ArrayList<String> urls = new ArrayList<>();// 点击图片查看大图的URL
     private ActivityPhotosAdapter photosAdapter;// 活动照片的适配器
     private boolean isOpen = false;// 活动描述的开关状态
 
@@ -253,6 +254,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     // 活动照片处理
     private void initPhotos() {
         // 准备数据
+        photos.clear();
         if (data.getActionimages().size() == 0) {
             return;
         } else if (data.getActionimages().size() == 1) {
@@ -268,7 +270,8 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         photosAdapter = new ActivityPhotosAdapter(mContext, photos);
         // 填充数据
         RecyclerViewData.setGrid(activityPhotos, mContext, photosAdapter, 3);
-        final ArrayList<String> urls = new ArrayList<>();
+
+        urls.clear();
         for (ActivityDetailBean.DataBean.ActionimagesBean bean : photos) {
             urls.add(bean.getUrl());
         }
@@ -712,6 +715,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                 startActivity(intent);
                 break;
             case R.id.rl_apply1:// 报名人1
+                // TODO: 2016/7/4 点击报名人
                 SuperToastUtils.showSuperToast(this, 2, "报名人1");
                 break;
             case R.id.rl_apply2:// 报名人2
@@ -792,6 +796,10 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             photos.add(data.getActionimages().get(2));
         }
         photosAdapter.notifyDataSetChanged();
+        urls.clear();
+        for (ActivityDetailBean.DataBean.ActionimagesBean bean : photos) {
+            urls.add(bean.getUrl());
+        }
     }
 
     // 打开TextView
@@ -808,6 +816,10 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             photos.add(bean);
         }
         photosAdapter.notifyDataSetChanged();
+        urls.clear();
+        for (ActivityDetailBean.DataBean.ActionimagesBean bean : photos) {
+            urls.add(bean.getUrl());
+        }
     }
 
     // 获取活动内容详情

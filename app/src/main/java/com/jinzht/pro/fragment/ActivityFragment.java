@@ -32,6 +32,7 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.PullToRefreshLayout;
 import com.jinzht.pro.view.PullableListView;
@@ -53,6 +54,8 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
 
     private MyAdapter myAdapter;
     private int pages = 0;
+    private int searchPages = 0;
+    private boolean isSearch = false;
     private List<ActivityListBean.DataBean> datas = new ArrayList<>();// 数据集合
     private int POSITION = 0;
     private final static int REQUEST_CODE = 1;
@@ -96,7 +99,15 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_btn_search:// 点击搜索
-                SuperToastUtils.showSuperToast(mContext, 2, "搜索");
+                if (StringUtils.isBlank(edSearch.getText().toString())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入搜索内容");
+                } else {
+                    isSearch = true;
+                    ActivitySearch activitySearch = new ActivitySearch(0);
+                    activitySearch.execute();
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(edSearch.getWindowToken(), 0);
+                }
                 break;
         }
     }
@@ -218,7 +229,7 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         datas = activityListBean.getData();
-                        if (datas != null && datas.size() != 0) {
+                        if (datas != null) {
                             listview.setAdapter(myAdapter);
                         }
                     } else {
@@ -245,7 +256,10 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         @Override
         public void onRefresh(final PullToRefreshLayout pullToRefreshLayout) {
             // 下拉刷新
+            isSearch = false;
             pages = 0;
+            searchPages = 0;
+            edSearch.setText("");
             GetActivityListTask getActivityListTask = new GetActivityListTask(0);
             getActivityListTask.execute();
         }
@@ -253,10 +267,16 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         @Override
         public void onLoadMore(final PullToRefreshLayout pullToRefreshLayout) {
             // 上拉加载
-            pages++;
-            Log.i("页码", String.valueOf(pages));
-            GetActivityListTask getActivityListTask = new GetActivityListTask(pages);
-            getActivityListTask.execute();
+            if (isSearch) {
+                searchPages++;
+                ActivitySearch activitySearch = new ActivitySearch(searchPages);
+                activitySearch.execute();
+            } else {
+                pages++;
+                Log.i("页码", String.valueOf(pages));
+                GetActivityListTask getActivityListTask = new GetActivityListTask(pages);
+                getActivityListTask.execute();
+            }
         }
     }
 
@@ -371,6 +391,67 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                 if (data.getBooleanExtra("ISATTENDED", false)) {// 在详情中报了名
                     datas.get(POSITION).setAttended(true);
                     myAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+    }
+
+    // 搜索
+    private class ActivitySearch extends AsyncTask<Void, Void, ActivityListBean> {
+        private int page;
+
+        public ActivitySearch(int page) {
+            this.page = page;
+        }
+
+        @Override
+        protected ActivityListBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.ACTIVITYSEARCH)),
+                            "page", String.valueOf(page),
+                            "keyword", edSearch.getText().toString(),
+                            Constant.BASE_URL + Constant.ACTIVITYSEARCH,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("搜索活动列表", body);
+                return FastJsonTools.getBean(body, ActivityListBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ActivityListBean activityListBean) {
+            super.onPostExecute(activityListBean);
+            if (activityListBean == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
+            } else {
+                if (activityListBean.getStatus() == 200) {
+                    refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
+                    if (page == 0) {
+                        datas = activityListBean.getData();
+                        if (datas != null) {
+                            listview.setAdapter(myAdapter);
+                        }
+                    } else {
+                        for (ActivityListBean.DataBean dataBean : activityListBean.getData()) {
+                            datas.add(dataBean);
+                        }
+                        myAdapter.notifyDataSetChanged();
+                    }
+                } else if (activityListBean.getStatus() == 201) {
+                    searchPages--;
+                    refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
+                } else {
+                    refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
+                    SuperToastUtils.showSuperToast(mContext, 2, activityListBean.getMessage());
                 }
             }
         }

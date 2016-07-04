@@ -145,7 +145,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                 } else if (Double.parseDouble(edInputMoney.getText().toString()) < getIntent().getDoubleExtra("limitAmount", 0)) {
                     SuperToastUtils.showSuperToast(mContext, 2, "本项目最小投资额度不低于" + String.valueOf(getIntent().getDoubleExtra("limitAmount", 0)) + "万");
                 } else {
-                    if (StringUtils.isBlank(SharedPreferencesUtils.getUserId(mContext))) {
+                    if (StringUtils.isBlank(SharedPreferencesUtils.getExtUserId(mContext))) {
                         GetUserInfo getUserInfo = new GetUserInfo();
                         getUserInfo.execute();
                     } else {
@@ -189,7 +189,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            request = "<request platformNo=\"" + Constant.PLATFORMNO + "\"><platformUserNo>" + "jinzht_0000_" + SharedPreferencesUtils.getUserId(mContext) + "</platformUserNo></request>";
+            request = "<request platformNo=\"" + Constant.PLATFORMNO + "\"><platformUserNo>" + "jinzht_0000_" + SharedPreferencesUtils.getExtUserId(mContext) + "</platformUserNo></request>";
         }
 
         @Override
@@ -263,7 +263,8 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (bean.getStatus() == 200) {
-                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(bean.getData().getUserId()));
+                    SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(bean.getData().getExtUserId()));
+                    SharedPreferencesUtils.saveUserType(mContext, bean.getData().getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
                     userInfoBean = bean.getData();
                     if (StringUtils.isBlank(sign)) {
                         GetSignTask getSignTask = new GetSignTask();
@@ -272,7 +273,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                         // 进入易宝注册页面
                         Intent intent = new Intent(mContext, YeepayRegisterActivity.class);
                         intent.putExtra("TAG", "InvestActivity");
-                        intent.putExtra("userId", String.valueOf(userInfoBean.getUserId()));
+                        intent.putExtra("userId", String.valueOf(userInfoBean.getExtUserId()));
                         intent.putExtra("amount", edInputMoney.getText().toString());
                         intent.putExtra("profit", getIntent().getStringExtra("profit"));
                         intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));
@@ -334,7 +335,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                     if (v > Double.parseDouble(bean.getAvailableAmount())) {
                         Log.i("余额不足" + bean.getAvailableAmount(), "去充值");
                         Intent intent = new Intent(mContext, YeepayRechargeActivity.class);
-                        intent.putExtra("userId", SharedPreferencesUtils.getUserId(mContext));
+                        intent.putExtra("userId", SharedPreferencesUtils.getExtUserId(mContext));
                         double recharge = v - Double.parseDouble(bean.getAvailableAmount());
                         intent.putExtra("recharge", recharge);
                         intent.putExtra("amount", edInputMoney.getText().toString());
@@ -351,7 +352,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                     } else {
                         Log.i("余额充足" + bean.getAvailableAmount(), "去投标");
                         Intent intent = new Intent(mContext, YeepayTenderActivity.class);
-                        intent.putExtra("userId", SharedPreferencesUtils.getUserId(mContext));
+                        intent.putExtra("userId", SharedPreferencesUtils.getExtUserId(mContext));
                         intent.putExtra("amount", edInputMoney.getText().toString());
                         intent.putExtra("profit", getIntent().getStringExtra("profit"));
                         intent.putExtra("borrower_user_no", getIntent().getStringExtra("borrower_user_no"));

@@ -96,14 +96,23 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
         } else {
             Glide.with(mContext).load(R.drawable.ic_launcher).into(ivFavicon);
         }
-        if (data.getAuthentics() != null && data.getAuthentics().size() != 0) {
-            if (data.getAuthentics().size() == 1) {
-                Glide.with(mContext).load(R.mipmap.icon_v).into(ivLevel);
-            } else if (data.getAuthentics().size() == 2) {
-                Glide.with(mContext).load(R.mipmap.icon_v2).into(ivLevel);
+        if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+            // 微信登录
+            tvName.setText(SharedPreferencesUtils.getWechatNick(mContext));
+        } else {
+            if (data.getAuthentics() != null && data.getAuthentics().size() != 0) {
+                if (data.getAuthentics().size() == 1) {
+                    ivLevel.setImageResource(R.mipmap.icon_v);
+                } else if (data.getAuthentics().size() == 2) {
+                    ivLevel.setImageResource(R.mipmap.icon_v2);
+                }
+                if (!StringUtils.isBlank(data.getAuthentics().get(0).getName())) {
+                    tvName.setText(data.getAuthentics().get(0).getName());
+                }
+                if (!StringUtils.isBlank(data.getAuthentics().get(0).getCompanyName()) && !StringUtils.isBlank(data.getAuthentics().get(0).getPosition())) {
+                    tvPosition.setText(data.getAuthentics().get(0).getCompanyName() + " | " + data.getAuthentics().get(0).getPosition());
+                }
             }
-            tvName.setText(data.getAuthentics().get(0).getName());
-            tvPosition.setText(data.getAuthentics().get(0).getCompanyName() + " | " + data.getAuthentics().get(0).getPosition());
         }
     }
 
@@ -148,7 +157,11 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                             startActivity(intent);
                         } else {
                             SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                            intent.setClass(mContext, CertificationIDCardActivity.class);
+                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                                intent.setClass(mContext, WechatVerifyActivity.class);
+                            } else {
+                                intent.setClass(mContext, CertificationIDCardActivity.class);
+                            }
                             intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
@@ -162,7 +175,11 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                             startActivity(intent);
                         } else {
                             SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                            intent.setClass(mContext, CertificationIDCardActivity.class);
+                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                                intent.setClass(mContext, WechatVerifyActivity.class);
+                            } else {
+                                intent.setClass(mContext, CertificationIDCardActivity.class);
+                            }
                             intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
@@ -176,7 +193,11 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                             startActivity(intent);
                         } else {
                             SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                            intent.setClass(mContext, CertificationIDCardActivity.class);
+                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                                intent.setClass(mContext, WechatVerifyActivity.class);
+                            } else {
+                                intent.setClass(mContext, CertificationIDCardActivity.class);
+                            }
                             intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
@@ -195,7 +216,11 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                             startActivity(intent);
                         } else {
                             SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                            intent.setClass(mContext, CertificationIDCardActivity.class);
+                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                                intent.setClass(mContext, WechatVerifyActivity.class);
+                            } else {
+                                intent.setClass(mContext, CertificationIDCardActivity.class);
+                            }
                             intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
@@ -258,6 +283,7 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
             } else {
                 if (userInfoBean.getStatus() == 200) {
                     data = userInfoBean.getData();
+                    SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(userInfoBean.getData().getExtUserId()));
                     SharedPreferencesUtils.saveUserId(mContext, String.valueOf(userInfoBean.getData().getUserId()));
                     initData();
                 } else {
@@ -295,7 +321,6 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
             super.onPostExecute(shareBean);
             if (shareBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(PersonalCenterActivity.this);

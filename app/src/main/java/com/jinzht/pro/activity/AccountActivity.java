@@ -126,7 +126,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                         } else if ("101".equals(yeepayUserInfo.getCode())) {// 没注册，去注册
                             intent.setClass(mContext, YeepayRegisterActivity.class);
                             intent.putExtra("TAG", "AccountActivity");
-                            intent.putExtra("userId", String.valueOf(userInfo.getUserId()));
+                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
                             intent.putExtra("name", userInfo.getAuthentics().get(0).getName());
                             intent.putExtra("idNo", userInfo.getAuthentics().get(0).getIdentiyCarNo());
                             intent.putExtra("telephone", userInfo.getTelephone());
@@ -136,7 +136,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                             intent.setClass(mContext, BankCardActivity.class);
                             intent.putExtra("bankNo", yeepayUserInfo.getCardNo());
                             intent.putExtra("bankName", yeepayUserInfo.getBank());
-                            intent.putExtra("userId", String.valueOf(userInfo.getUserId()));
+                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
                             startActivity(intent);
                         } else {// 提示错误
                             SuperToastUtils.showSuperToast(mContext, 2, yeepayUserInfo.getDescription());
@@ -148,7 +148,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                         } else if ("101".equals(yeepayUserInfo.getCode())) {// 没注册，去注册
                             intent.setClass(mContext, YeepayRegisterActivity.class);
                             intent.putExtra("TAG", "AccountActivity");
-                            intent.putExtra("userId", String.valueOf(userInfo.getUserId()));
+                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
                             intent.putExtra("name", userInfo.getAuthentics().get(0).getName());
                             intent.putExtra("idNo", userInfo.getAuthentics().get(0).getIdentiyCarNo());
                             intent.putExtra("telephone", userInfo.getTelephone());
@@ -156,7 +156,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                             startActivityForResult(intent, REQUEST_CODE);
                         } else if ("1".equals(yeepayUserInfo.getCode())) {// 已注册，去充值
                             intent.setClass(mContext, RechargeActivity.class);
-                            intent.putExtra("userId", String.valueOf(userInfo.getUserId()));
+                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
                             startActivity(intent);
                         }
                         break;
@@ -170,7 +170,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                         } else if ("101".equals(yeepayUserInfo.getCode())) {// 没注册，去注册
                             intent.setClass(mContext, YeepayRegisterActivity.class);
                             intent.putExtra("TAG", "AccountActivity");
-                            intent.putExtra("userId", String.valueOf(userInfo.getUserId()));
+                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
                             intent.putExtra("name", userInfo.getAuthentics().get(0).getName());
                             intent.putExtra("idNo", userInfo.getAuthentics().get(0).getIdentiyCarNo());
                             intent.putExtra("telephone", userInfo.getTelephone());
@@ -178,7 +178,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                             startActivityForResult(intent, REQUEST_CODE);
                         } else if ("1".equals(yeepayUserInfo.getCode())) {// 已注册，去提现
                             intent.setClass(mContext, YeepayWithdrawActivity.class);
-                            intent.putExtra("userId", String.valueOf(userInfo.getUserId()));
+                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivityForResult(intent, REQUEST_CODE);
                         }
@@ -257,7 +257,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            request = "<request platformNo=\"" + Constant.PLATFORMNO + "\"><platformUserNo>" + "jinzht_0000_" + userInfo.getUserId() + "</platformUserNo></request>";
+            request = "<request platformNo=\"" + Constant.PLATFORMNO + "\"><platformUserNo>" + "jinzht_0000_" + userInfo.getExtUserId() + "</platformUserNo></request>";
         }
 
         @Override
@@ -342,7 +342,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                     Log.i("返回码101", "去注册");
                     Intent intent = new Intent(mContext, YeepayRegisterActivity.class);
                     intent.putExtra("TAG", "AccountActivity");
-                    intent.putExtra("userId", String.valueOf(userInfo.getUserId()));
+                    intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
                     intent.putExtra("name", userInfo.getAuthentics().get(0).getName());
                     intent.putExtra("idNo", userInfo.getAuthentics().get(0).getIdentiyCarNo());
                     intent.putExtra("telephone", userInfo.getTelephone());

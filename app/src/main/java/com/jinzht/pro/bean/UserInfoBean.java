@@ -43,11 +43,13 @@ public class UserInfoBean {
     public static class DataBean implements Serializable {
         /**
          * userId : 1
+         * extUserId: 645
          * telephone : 13636369898
          * headSculpture : http://img4q.duitang.com/uploads/item/201311/09/20131109003922_JLyhT.jpeg
          * authentics : [{"authId":110,"identiytype":{"identiyTypeId":3,"name":"机构投资人"},"authenticstatus":{"statusId":6,"name":"未认证"},"city":{"cityId":6,"province":{"provinceId":2,"name":"山西省","isInvlid":true},"name":"柳林","isInvlid":true},"name":"QQ群","identiyCarA":"http://192.168.5.108:8080/jinzht/upload/identityImages/jinzht_user_identiy_a_1.jpg","identiyCarB":"http://192.168.5.107:8080/jinzht/upload/identityImages/jinzht_user_identiy_b_1.jpg","identiyCarNo":"123456789123456789","companyName":"梦工厂","companyAddress":"陕西西安","position":"职业经理人","buinessLicence":"http://192.168.5.102:8080/jinzht/upload/identityImages/jinzht_user_identiy_buiness_1.jpg","buinessLicenceNo":"123456","introduce":"","companyIntroduce":"","industoryArea":"1,2,3"}]
          */
         private int userId;
+        private int extUserId;
         private String telephone;
         private String headSculpture;// 头像
         private List<AuthenticsBean> authentics;
@@ -58,6 +60,14 @@ public class UserInfoBean {
 
         public void setUserId(int userId) {
             this.userId = userId;
+        }
+
+        public int getExtUserId() {
+            return extUserId;
+        }
+
+        public void setExtUserId(int extUserId) {
+            this.extUserId = extUserId;
         }
 
         public String getTelephone() {

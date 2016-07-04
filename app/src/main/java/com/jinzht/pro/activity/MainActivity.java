@@ -238,7 +238,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         protected void onPostExecute(GoldAward goldAward) {
             super.onPostExecute(goldAward);
             if (goldAward != null && goldAward.getStatus() == 200) {
-                DialogUtils.goldAnim(MainActivity.this, goldAward.getData().getCount(), goldAward.getData().getCountTomorrow());
+                if (goldAward.getData().getCount() != 0) {
+                    DialogUtils.goldAnim(MainActivity.this, goldAward.getData().getCount(), goldAward.getData().getCountTomorrow());
+                }
             }
         }
     }
@@ -320,8 +322,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                                 // 提示更新
                                 remindUpdateDialog(updateData.getContent());
                             }
-                        } else {
-                            DialogUtils.confirmDialog(MainActivity.this, "已是最新版本", "确定");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

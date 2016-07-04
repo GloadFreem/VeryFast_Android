@@ -1,6 +1,9 @@
 package com.jinzht.pro.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +27,9 @@ import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,8 +129,19 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onHanlderSuccess(int reqeustCode, List<PhotoInfo> resultList) {
             if (resultList != null) {
-                for (PhotoInfo item : resultList) {
-                    photos.add(item.getPhotoPath());
+                for (int i = 0; i < resultList.size(); i++) {
+                    try {
+                        String oldPath = resultList.get(i).getPhotoPath();
+                        File photoFile = new File(oldPath);
+                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Uri.fromFile(photoFile)));
+                        String photo_path = getCacheDir() +  oldPath.substring(oldPath.lastIndexOf('/'));
+                        FileOutputStream fos = new FileOutputStream(photo_path);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);// 压缩另存，100表示不压缩
+                        fos.close();
+                        photos.add(photo_path);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -172,7 +189,6 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
             dismissProgressDialog();
             if (releaseCircleBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (releaseCircleBean.getStatus() == 200) {
                     Intent intent = new Intent();

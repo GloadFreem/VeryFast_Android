@@ -216,7 +216,7 @@ public class MyCollectInvestorFragment extends BaseFragment {
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         datas = myCollectInvestorBean.getData();
-                        if (datas != null && datas.size() != 0) {
+                        if (datas != null) {
                             listview.setAdapter(myAdapter);
                         }
                     } else {

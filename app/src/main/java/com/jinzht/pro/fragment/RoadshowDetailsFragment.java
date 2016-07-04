@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jinzht.pro.R;
+import com.jinzht.pro.activity.CommonWebViewActivity;
 import com.jinzht.pro.activity.ImagePagerActivity;
 import com.jinzht.pro.adapter.ProjectPhotosAdapter;
 import com.jinzht.pro.adapter.ProjectReportsAdapter;
@@ -274,6 +275,7 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         teamsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                // TODO: 2016/7/4 点击团队成员
                 SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张照片");
             }
 
@@ -308,7 +310,10 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         reportsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张图片");
+                Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                intent.putExtra("title", reportDatas.get(position).getContent());
+                intent.putExtra("url", reportDatas.get(position).getUrl());
+                startActivity(intent);
             }
 
             @Override

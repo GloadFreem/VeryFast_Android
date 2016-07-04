@@ -499,7 +499,7 @@ public class ProjectDetailBean {
             /**
              * buinessPlanId : 1
              * url : http://www.jinzht.com/jinzht
-             * content : 商业/n计划
+             * content : 商业计划
              * icon : http://s2.nuomi.bdimg.com/upload/deal/2014/1/V_L/623682-1391756281052.jpg
              */
             private int buinessPlanId;

@@ -107,6 +107,7 @@
                 android:paddingLeft="13dp"
                 android:text="注：如有更多需求可新增身份"
                 android:textColor="#a9a9a9"
+                android:visibility="gone"
                 android:textSize="14sp" />
 
             <RelativeLayout
@@ -114,6 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
+                android:visibility="gone"
                 android:background="@android:color/white">
 
                 <TextView

@@ -299,7 +299,6 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
             super.onPostExecute(shareBean);
             if (shareBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(InvestorgDetailActivity.this);

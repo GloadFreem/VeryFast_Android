@@ -313,6 +313,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
     // 项目照片处理
     private void initPhotos() {
         // 准备数据
+        photos.clear();
         if (data.getProjectimageses().size() == 0) {
             return;
         } else if (data.getProjectimageses().size() == 1) {
@@ -374,6 +375,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         teamsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                // TODO: 2016/7/4 点击团队成员
                 SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张照片");
             }
 
@@ -406,7 +408,10 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         reportsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张图片");
+                Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                intent.putExtra("title", reportDatas.get(position).getContent());
+                intent.putExtra("url", reportDatas.get(position).getUrl());
+                startActivity(intent);
             }
 
             @Override

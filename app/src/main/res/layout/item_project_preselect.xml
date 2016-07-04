@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="165dp"
-    android:background="@android:color/white"
-    android:minHeight="165dp">
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
 
     <com.jinzht.pro.view.CircleImageView
         android:id="@+id/item_project_img"
@@ -34,7 +33,7 @@
         android:layout_marginTop="19dp"
         android:layout_toRightOf="@id/item_project_title"
         android:singleLine="true"
-        android:text="陕西|西安"
+        android:text="陕西 | 西安"
         android:textColor="#474747"
         android:textSize="14sp" />
 
@@ -115,6 +114,7 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_project_fields"
@@ -125,10 +125,9 @@
         android:id="@+id/item_bottom_data_preselection"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/line"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="visible">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"

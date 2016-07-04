@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
-import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.bean.LoginBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
@@ -114,6 +113,7 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
                         e.printStackTrace();
                     }
                     // 保存userId
+                    SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(loginBean.getData().getExtUserId()));
                     SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
                     if (loginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
                         // 去选择身份类型

@@ -41,9 +41,11 @@ public class LoginBean {
         /**
          * identityType : {"identiyTypeId":3,"name":"机构投资者"}
          * userId : 645
+         * extUserId: 645
          */
         private IdentityTypeBean identityType;
         private int userId;
+        private int extUserId;
 
         public IdentityTypeBean getIdentityType() {
             return identityType;
@@ -59,6 +61,14 @@ public class LoginBean {
 
         public void setUserId(int userId) {
             this.userId = userId;
+        }
+
+        public int getExtUserId() {
+            return extUserId;
+        }
+
+        public void setExtUserId(int extUserId) {
+            this.extUserId = extUserId;
         }
 
         public static class IdentityTypeBean {

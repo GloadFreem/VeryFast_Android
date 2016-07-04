@@ -1,12 +1,21 @@
 package com.jinzht.pro.activity;
 
 import android.graphics.Paint;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
+import com.jinzht.pro.bean.UploadProjectInfo;
+import com.jinzht.pro.utils.AESUtils;
+import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.FastJsonTools;
+import com.jinzht.pro.utils.MD5Utils;
+import com.jinzht.pro.utils.NetWorkUtils;
+import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 
@@ -37,6 +46,9 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
         uploadEmail.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
         uploadTel = (TextView) findViewById(R.id.upload_tel);// 点击拨打电话
         uploadTel.setOnClickListener(this);
+
+        GetUploadInfo getUploadInfo = new GetUploadInfo();
+        getUploadInfo.execute();
     }
 
     @Override
@@ -48,6 +60,44 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
             case R.id.upload_tel:// 点击拨打电话
                 SuperToastUtils.showSuperToast(this, 2, "打电话");
                 break;
+        }
+    }
+
+    // 获取上传项目的邮箱和电话号码
+    private class GetUploadInfo extends AsyncTask<Void, Void, UploadProjectInfo> {
+        @Override
+        protected UploadProjectInfo doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.GETUPLOADPROJECTINFO)),
+                            Constant.BASE_URL + Constant.GETUPLOADPROJECTINFO,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("上传项目信息", body);
+                return FastJsonTools.getBean(body, UploadProjectInfo.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(UploadProjectInfo uploadProjectInfo) {
+            super.onPostExecute(uploadProjectInfo);
+            if (uploadProjectInfo == null) {
+                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+            } else {
+                if (uploadProjectInfo.getStatus() == 200) {
+                    uploadEmail.setText(uploadProjectInfo.getData().getEmail());
+                    uploadTel.setText(uploadProjectInfo.getData().getTel());
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, uploadProjectInfo.getMessage());
+                }
+            }
         }
     }
 

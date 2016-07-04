@@ -121,6 +121,7 @@ public class WechatSetPwdActivity extends BaseActivity implements View.OnClickLi
                         e.printStackTrace();
                     }
                     SharedPreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
+                    SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(registerBean.getData().getUserId()));
                     SharedPreferencesUtils.saveUserId(mContext, String.valueOf(registerBean.getData().getUserId()));
                     SharedPreferencesUtils.setIsWechatLogin(mContext, false);
                     Intent intent = new Intent(mContext, CertificationIDCardActivity.class);

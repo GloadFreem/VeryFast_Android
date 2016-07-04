@@ -72,6 +72,20 @@ public class SharedPreferencesUtils {
         return sp.getBoolean("isWechatLogin", false);
     }
 
+    // 保存微信昵称
+    public static void saveWechatNick(Context context, String nick) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("nick", nick);
+        editor.commit();
+    }
+
+    // 获取微信昵称
+    public static String getWechatNick(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        return sp.getString("nick", "");
+    }
+
     // 保存是否实名认证的状态
     public static void setAuth(Context context, boolean isAuto) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
@@ -111,7 +125,7 @@ public class SharedPreferencesUtils {
     // 获取用户身份类型
     public static int getUserType(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
-        return sp.getInt("usertype", 0);
+        return sp.getInt("usertype", -1);
     }
 
     // 保存是否是首次使用应用
@@ -126,6 +140,20 @@ public class SharedPreferencesUtils {
     public static boolean getIsNotFirst(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         return sp.getBoolean("isNotFirst", false);
+    }
+
+    // 保存extUserId，仅作为支付时使用
+    public static void saveExtUserId(Context context, String userId) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("extUserId", userId);
+        editor.commit();
+    }
+
+    // 获取extUserId，仅作为支付时使用
+    public static String getExtUserId(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
+        return sp.getString("extUserId", "");
     }
 
     // 保存userId，仅作为支付时使用
