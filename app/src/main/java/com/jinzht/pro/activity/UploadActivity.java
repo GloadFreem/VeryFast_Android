@@ -1,6 +1,10 @@
 package com.jinzht.pro.activity;
 
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -43,6 +47,7 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
         tvTitle.setText("上传项目");
         uploadEmail = (TextView) findViewById(R.id.upload_email);// 复制邮箱地址
+        uploadEmail.setOnClickListener(this);
         uploadEmail.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
         uploadTel = (TextView) findViewById(R.id.upload_tel);// 点击拨打电话
         uploadTel.setOnClickListener(this);
@@ -57,8 +62,16 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
             case R.id.btn_back:// 返回上一页
                 finish();
                 break;
+            case R.id.upload_email:// 点击复制邮箱地址
+                ClipboardManager cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                cmb.setText(uploadEmail.getText().toString());
+                SuperToastUtils.showSuperToast(mContext, 2, "已复制到剪贴板");
+                break;
             case R.id.upload_tel:// 点击拨打电话
-                SuperToastUtils.showSuperToast(this, 2, "打电话");
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                Uri data = Uri.parse("tel:" + uploadTel.getText().toString());
+                intent.setData(data);
+                startActivity(intent);
                 break;
         }
     }

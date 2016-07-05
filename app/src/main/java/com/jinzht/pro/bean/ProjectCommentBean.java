@@ -89,9 +89,11 @@ public class ProjectCommentBean {
             /**
              * name : QQ群
              * headSculpture : http://img4q.duitang.com/uploads/item/201311/09/20131109003922_JLyhT.jpeg
+             * userId : 123
              */
             private String name;
             private String headSculpture;
+            private int userId;
 
             public String getName() {
                 return name;
@@ -107,6 +109,14 @@ public class ProjectCommentBean {
 
             public void setHeadSculpture(String headSculpture) {
                 this.headSculpture = headSculpture;
+            }
+
+            public int getUserId() {
+                return userId;
+            }
+
+            public void setUserId(int userId) {
+                this.userId = userId;
             }
         }
     }

@@ -284,7 +284,7 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                 if (userInfoBean.getStatus() == 200) {
                     data = userInfoBean.getData();
                     SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(userInfoBean.getData().getExtUserId()));
-                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(userInfoBean.getData().getUserId()));
+                    SharedPreferencesUtils.saveUserId(mContext, userInfoBean.getData().getUserId());
                     initData();
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, userInfoBean.getMessage());

@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -61,12 +60,12 @@ public class ActivityAllApplys extends BaseActivity implements View.OnClickListe
         refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
         listview = (PullableListView) findViewById(R.id.listview);// 列表
         myAdapter = new MyAdapter();
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SuperToastUtils.showSuperToast(mContext, 2, applys.get(position).getUsers().getAuthentics().get(0).getName());
-            }
-        });
+//        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//            }
+//        });
         GetAllApplysTask getAllApplysTask = new GetAllApplysTask(0);
         getAllApplysTask.execute();
     }

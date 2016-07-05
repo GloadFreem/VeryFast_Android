@@ -1,17 +1,21 @@
 package com.jinzht.pro.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,6 +29,7 @@ import com.jinzht.pro.adapter.RecyclerViewData;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.CircleListBean;
 import com.jinzht.pro.bean.CirclePriseBean;
+import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.bean.EventMsg;
 import com.jinzht.pro.bean.ShareBean;
 import com.jinzht.pro.callback.ItemClickListener;
@@ -36,6 +41,7 @@ import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.ShareUtils;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiUtils;
@@ -235,6 +241,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                     POSITION = position;
                     Intent intent = new Intent(mContext, CircleDetailActivity.class);
                     intent.putExtra("id", String.valueOf(datas.get(position).getPublicContentId()));
+                    intent.putExtra("TAG", 1);
                     startActivityForResult(intent, REQUEST_CODE);
                 }
             });
@@ -246,10 +253,23 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                     POSITION = position;
                     Intent intent = new Intent(mContext, CircleDetailActivity.class);
                     intent.putExtra("id", String.valueOf(datas.get(position).getPublicContentId()));
+                    intent.putExtra("TAG", 0);
                     startActivityForResult(intent, REQUEST_CODE);
                 }
             });
             holder.tvComment.setText(String.valueOf(datas.get(position).getCommentCount()));
+
+            // 长按删除
+            convertView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (datas.get(position).getUsers().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                        // 弹框提示删除
+                        showDeleteWindow(v, position);
+                    }
+                    return true;
+                }
+            });
 
             // 点赞
             holder.btnGood.setOnClickListener(new View.OnClickListener() {
@@ -473,6 +493,15 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void getReleaseStatus(EventMsg msg) {
+        if ("发布成功".equals(msg.getMsg())) {
+            pages = 0;
+            GetCircleListTask getCircleList = new GetCircleListTask(0);
+            getCircleList.execute();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -488,8 +517,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                 myAdapter.notifyDataSetChanged();
             }
             if (resultCode == ReleaseCircleActivity.RESULT_CODE) {// 发表了状态
-                GetCircleListTask getCircleList = new GetCircleListTask(0);
-                getCircleList.execute();
+
             }
         }
     }
@@ -514,5 +542,66 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    // 删除圈子弹窗
+    private void showDeleteWindow(View view, final int position) {
+        ImageButton button = new ImageButton(mContext);
+        button.setBackgroundResource(R.mipmap.icon_delete);
+        final PopupWindow popupWindow = new PopupWindow(button, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteCommentTask deleteCommentTask = new DeleteCommentTask(datas.get(position).getPublicContentId());
+                deleteCommentTask.execute();
+                datas.remove(position);
+                myAdapter.notifyDataSetChanged();
+                popupWindow.dismiss();
+            }
+        });
+        popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0] + view.getWidth() / 2 - UiUtils.dip2px(34), location[1] - UiUtils.dip2px(22));
+    }
+
+    // 删除圈子评论
+    private class DeleteCommentTask extends AsyncTask<Void, Void, CommonBean> {
+        private int contentId;
+
+        public DeleteCommentTask(int contentId) {
+            this.contentId = contentId;
+        }
+
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.DELETECIRCLE)),
+                            "contentId", String.valueOf(contentId),
+                            Constant.BASE_URL + Constant.DELETECIRCLE,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("删除圈子", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            if (commonBean != null) {
+                Log.i("删除圈子完成", commonBean.getMessage());
+            }
+        }
     }
 }

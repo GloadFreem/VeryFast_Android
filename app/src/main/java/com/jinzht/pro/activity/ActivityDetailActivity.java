@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -38,6 +39,7 @@ import com.jinzht.pro.bean.ActivityApplyBean;
 import com.jinzht.pro.bean.ActivityCommentBean;
 import com.jinzht.pro.bean.ActivityDetailBean;
 import com.jinzht.pro.bean.ActivityPriseBean;
+import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.bean.ShareBean;
 import com.jinzht.pro.callback.ItemClickListener;
 import com.jinzht.pro.utils.AESUtils;
@@ -49,6 +51,7 @@ import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.ShareUtils;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
@@ -73,7 +76,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     private TextView activityDesc;// 活动描述
     private RecyclerView activityPhotos;// 活动照片
     private RelativeLayout btnMore;// 展开更多描述和照片
-    private ImageButton imgMore;// 展开更多描述和照片的图标
+    private ImageView imgMore;// 展开更多描述和照片的图标
     private TextView activityTime;// 活动时间
     private TextView activityNum;// 活动人数
     private TextView isFree;// 是否免费
@@ -166,7 +169,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         activityPhotos = (RecyclerView) findViewById(R.id.activity_rv_photos);// 活动照片
         btnMore = (RelativeLayout) findViewById(R.id.activity_btn_more);// 展开更多内容
         btnMore.setOnClickListener(this);
-        imgMore = (ImageButton) findViewById(R.id.activity_img_more);// 展开更多图标
+        imgMore = (ImageView) findViewById(R.id.activity_img_more);// 展开更多图标
         activityTime = (TextView) findViewById(R.id.activity_tv_time);// 活动时间
         activityNum = (TextView) findViewById(R.id.activity_tv_num);// 活动人数
         isFree = (TextView) findViewById(R.id.activity_tv_free);// 是否免费
@@ -176,31 +179,31 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         btnQuantityTotle = (TextView) findViewById(R.id.activity_btn_quantity_totle);// 查看全部报名人数按钮
         btnQuantityTotle.setOnClickListener(this);
         rlApply1 = (RelativeLayout) findViewById(R.id.rl_apply1);// 报名人整体布局
-        rlApply1.setOnClickListener(this);
+//        rlApply1.setOnClickListener(this);
         favicon1 = (CircleImageView) findViewById(R.id.activity_iv_favicon1);// 报名人头像
         name1 = (TextView) findViewById(R.id.activity_tv_name1);// 报名人姓名
         position1 = (TextView) findViewById(R.id.activity_tv_position1);// 报名人职位
         time1 = (TextView) findViewById(R.id.activity_tv_time1);// 报名时间
         rlApply2 = (RelativeLayout) findViewById(R.id.rl_apply2);
-        rlApply2.setOnClickListener(this);
+//        rlApply2.setOnClickListener(this);
         favicon2 = (CircleImageView) findViewById(R.id.activity_iv_favicon2);
         name2 = (TextView) findViewById(R.id.activity_tv_name2);
         position2 = (TextView) findViewById(R.id.activity_tv_position2);
         time2 = (TextView) findViewById(R.id.activity_tv_time2);
         rlApply3 = (RelativeLayout) findViewById(R.id.rl_apply3);
-        rlApply3.setOnClickListener(this);
+//        rlApply3.setOnClickListener(this);
         favicon3 = (CircleImageView) findViewById(R.id.activity_iv_favicon3);
         name3 = (TextView) findViewById(R.id.activity_tv_name3);
         position3 = (TextView) findViewById(R.id.activity_tv_position3);
         time3 = (TextView) findViewById(R.id.activity_tv_time3);
         rlApply4 = (RelativeLayout) findViewById(R.id.rl_apply4);
-        rlApply4.setOnClickListener(this);
+//        rlApply4.setOnClickListener(this);
         favicon4 = (CircleImageView) findViewById(R.id.activity_iv_favicon4);
         name4 = (TextView) findViewById(R.id.activity_tv_name4);
         position4 = (TextView) findViewById(R.id.activity_tv_position4);
         time4 = (TextView) findViewById(R.id.activity_tv_time4);
         rlApply5 = (RelativeLayout) findViewById(R.id.rl_apply5);
-        rlApply5.setOnClickListener(this);
+//        rlApply5.setOnClickListener(this);
         favicon5 = (CircleImageView) findViewById(R.id.activity_iv_favicon5);
         name5 = (TextView) findViewById(R.id.activity_tv_name5);
         position5 = (TextView) findViewById(R.id.activity_tv_position5);
@@ -714,22 +717,21 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                 intent.putExtra("id", data.getActionId());
                 startActivity(intent);
                 break;
-            case R.id.rl_apply1:// 报名人1
-                // TODO: 2016/7/4 点击报名人
-                SuperToastUtils.showSuperToast(this, 2, "报名人1");
-                break;
-            case R.id.rl_apply2:// 报名人2
-                SuperToastUtils.showSuperToast(this, 2, "报名人2");
-                break;
-            case R.id.rl_apply3:// 报名人3
-                SuperToastUtils.showSuperToast(this, 2, "报名人3");
-                break;
-            case R.id.rl_apply4:// 报名人4
-                SuperToastUtils.showSuperToast(this, 2, "报名人4");
-                break;
-            case R.id.rl_apply5:// 报名人5
-                SuperToastUtils.showSuperToast(this, 2, "报名人5");
-                break;
+//            case R.id.rl_apply1:// 报名人1
+//                SuperToastUtils.showSuperToast(this, 2, "报名人1");
+//                break;
+//            case R.id.rl_apply2:// 报名人2
+//                SuperToastUtils.showSuperToast(this, 2, "报名人2");
+//                break;
+//            case R.id.rl_apply3:// 报名人3
+//                SuperToastUtils.showSuperToast(this, 2, "报名人3");
+//                break;
+//            case R.id.rl_apply4:// 报名人4
+//                SuperToastUtils.showSuperToast(this, 2, "报名人4");
+//                break;
+//            case R.id.rl_apply5:// 报名人5
+//                SuperToastUtils.showSuperToast(this, 2, "报名人5");
+//                break;
             case R.id.activity_btn_comment_totle:// 查看全部点赞和评论
                 Intent intent1 = new Intent(this, ActivityAllComments.class);
                 intent1.putExtra("id", data.getActionId());
@@ -737,19 +739,44 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                 startActivityForResult(intent1, REQUEST_CODE);
                 break;
             case R.id.activity_tv_comment1:// 回复评论1
-                CommentDialog(String.valueOf(comments.get(0).getUsersByUserId().getUserId()), comments.get(0).getUserName());
+                if (comments.get(0).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                    // 弹框提示删除
+                    showDeleteWindow(comment1, 0);
+                } else {
+                    CommentDialog(String.valueOf(comments.get(0).getUsersByUserId().getUserId()), comments.get(0).getUserName());
+                }
                 break;
             case R.id.activity_tv_comment2:// 回复评论2
-                CommentDialog(String.valueOf(comments.get(1).getUsersByUserId().getUserId()), comments.get(1).getUserName());
+                if (comments.get(1).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                    // 弹框提示删除
+                    showDeleteWindow(comment2, 1);
+                } else {
+                    CommentDialog(String.valueOf(comments.get(1).getUsersByUserId().getUserId()), comments.get(1).getUserName());
+                }
                 break;
             case R.id.activity_tv_comment3:// 回复评论3
-                CommentDialog(String.valueOf(comments.get(2).getUsersByUserId().getUserId()), comments.get(2).getUserName());
+                if (comments.get(2).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                    // 弹框提示删除
+                    showDeleteWindow(comment3, 2);
+                } else {
+                    CommentDialog(String.valueOf(comments.get(2).getUsersByUserId().getUserId()), comments.get(2).getUserName());
+                }
                 break;
             case R.id.activity_tv_comment4:// 回复评论4
-                CommentDialog(String.valueOf(comments.get(3).getUsersByUserId().getUserId()), comments.get(3).getUserName());
+                if (comments.get(3).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                    // 弹框提示删除
+                    showDeleteWindow(comment4, 3);
+                } else {
+                    CommentDialog(String.valueOf(comments.get(3).getUsersByUserId().getUserId()), comments.get(3).getUserName());
+                }
                 break;
             case R.id.activity_tv_comment5:// 回复评论5
-                CommentDialog(String.valueOf(comments.get(4).getUsersByUserId().getUserId()), comments.get(4).getUserName());
+                if (comments.get(4).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                    // 弹框提示删除
+                    showDeleteWindow(comment5, 4);
+                } else {
+                    CommentDialog(String.valueOf(comments.get(4).getUsersByUserId().getUserId()), comments.get(4).getUserName());
+                }
                 break;
             case R.id.activity_btn_praise:// 点赞
                 if (data.isFlag()) {
@@ -1044,7 +1071,6 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             super.onPostExecute(activityCommentBean);
             if (activityCommentBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (activityCommentBean.getStatus() == 200) {
                     popupWindow.dismiss();
@@ -1266,5 +1292,66 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     @Override
     public void blankPage() {
 
+    }
+
+    // 删除评论弹窗
+    private void showDeleteWindow(View view, final int position) {
+        ImageButton button = new ImageButton(mContext);
+        button.setBackgroundResource(R.mipmap.icon_delete);
+        final PopupWindow popupWindow = new PopupWindow(button, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteCommentTask deleteCommentTask = new DeleteCommentTask(comments.get(position).getCommentId());
+                deleteCommentTask.execute();
+                comments.remove(position);
+                initComments();
+                popupWindow.dismiss();
+            }
+        });
+        popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0] + view.getWidth() / 2 - UiUtils.dip2px(34), location[1] - UiUtils.dip2px(33));
+    }
+
+    // 删除活动评论
+    private class DeleteCommentTask extends AsyncTask<Void, Void, CommonBean> {
+        private int commentId;
+
+        public DeleteCommentTask(int commentId) {
+            this.commentId = commentId;
+        }
+
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.DELETEACTIVITYCOMMENT)),
+                            "commentId", String.valueOf(commentId),
+                            Constant.BASE_URL + Constant.DELETEACTIVITYCOMMENT,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("删除评论", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            if (commonBean != null) {
+                Log.i("删除评论完成", commonBean.getMessage());
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.jinzht.pro.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -113,17 +115,17 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
         btnSubmit = (TextView) findViewById(R.id.submit_btn_confirm);// 确认按钮
         btnSubmit.setOnClickListener(this);
 
-        GetProjectTask getProjectTask = new GetProjectTask();
-        getProjectTask.execute();
-    }
-
-    private void initData() {
         Glide.with(this).load(getIntent().getStringExtra("favicon")).into(ivfavicon);
         tvName.setText(getIntent().getStringExtra("name"));
         tvPosition.setText(getIntent().getStringExtra("position"));
         tvCompName.setText(getIntent().getStringExtra("compName"));
         tvAddr.setText(getIntent().getStringExtra("addr"));
 
+        GetProjectTask getProjectTask = new GetProjectTask();
+        getProjectTask.execute();
+    }
+
+    private void initData() {
         Glide.with(this).load(proData.getStartPageImage()).into(ivProLogo);
         tvProTitle.setText(proData.getAbbrevName());
         switch (proData.getFinancestatus().getName()) {
@@ -247,10 +249,14 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (proCenter4ProBean.getStatus() == 200) {
-                    if (proCenter4ProBean.getData() != null && proCenter4ProBean.getData().size() != 0) {
-                        proData = proCenter4ProBean.getData().get(0);
-                        if (proData != null) {
-                            initData();
+                    if (proCenter4ProBean.getData() != null) {
+                        if (proCenter4ProBean.getData().size() == 0) {
+                            confirmDialog();
+                        } else {
+                            proData = proCenter4ProBean.getData().get(0);
+                            if (proData != null) {
+                                initData();
+                            }
                         }
                     }
                 } else {
@@ -346,6 +352,29 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
                 }
             }
         }
+    }
+
+    // 弹窗确认
+    private void confirmDialog() {
+        final AlertDialog dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_confirm);
+        ImageView ivTag = (ImageView) window.findViewById(R.id.iv_tag);
+        TextView tvContent = (TextView) window.findViewById(R.id.tv_content);
+        TextView btnConfirm = (TextView) window.findViewById(R.id.btn_confirm);
+        ivTag.setImageResource(R.mipmap.icon_exclamation);
+        tvContent.setText("您还没有上传项目，请先上传项目");
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, UploadActivity.class);
+                startActivity(intent);
+                dialog.dismiss();
+                finish();
+            }
+        });
     }
 
     @Override

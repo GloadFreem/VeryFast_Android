@@ -91,13 +91,13 @@ public class CommonWebViewActivity extends BaseActivity {
             dismissProgressDialog();
         }
 
-        //        @Override
-//        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-//            super.onReceivedError(view, errorCode, description, failingUrl);
-//            String imgPath = "file:///android_asset/error_pages.png";
-//            String data = "<HTML><Div align=\"center\"  margin=\"0px\"><IMG src=\"" + imgPath + "\" margin=\"0px\"/></Div>";
-//            view.loadDataWithBaseURL(imgPath, data, "text/html", "utf-8", null);
-//        }
+                @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            super.onReceivedError(view, errorCode, description, failingUrl);
+            String imgPath = "file:///android_asset/bg_empty.png";
+            String data = "<HTML><Div align=\"center\"  margin=\"0px\"><IMG src=\"" + imgPath + "\" margin=\"0px\"/></Div>";
+            view.loadDataWithBaseURL(imgPath, data, "text/html", "utf-8", null);
+        }
     }
 
     private class MyWebChromeClient extends WebChromeClient {

@@ -44,6 +44,7 @@ import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.ShareUtils;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
@@ -76,7 +77,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
     private TextView tvDesc;// 项目描述
     private RecyclerView rvPhotos;// 项目照片
     private RelativeLayout btnMore;// 查看更多描述和照片按钮
-    private ImageButton btnMoreImg;// 查看更多的图标
+    private ImageView btnMoreImg;// 查看更多的图标
     private RecyclerView rvTeams;// 团队成员照片
     private RecyclerView rvReports;// 各类报表图标
     private TextView tvCommentsQuantity;// 评论数量
@@ -158,7 +159,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         rvPhotos = (RecyclerView) findViewById(R.id.pre_rv_photos);// 项目照片
         btnMore = (RelativeLayout) findViewById(R.id.pre_btn_more);// 查看更多描述和照片按钮
         btnMore.setOnClickListener(this);
-        btnMoreImg = (ImageButton) findViewById(R.id.pre_btn_more_img);// 查看更多的图标
+        btnMoreImg = (ImageView) findViewById(R.id.pre_btn_more_img);// 查看更多的图标
         rvTeams = (RecyclerView) findViewById(R.id.project_rv_teams);// 团队成员照片
         rvReports = (RecyclerView) findViewById(R.id.project_rv_reports);// 各类报表图标
         tvCommentsQuantity = (TextView) findViewById(R.id.pre_tv_comment_quantity);// 评论数量
@@ -375,8 +376,10 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         teamsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                // TODO: 2016/7/4 点击团队成员
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张照片");
+                Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                intent.putExtra("title", "团队成员");
+                intent.putExtra("url", data.getTeams().get(position).getUrl());
+                startActivity(intent);
             }
 
             @Override
@@ -440,6 +443,15 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             tvCommentTime1.setText(DateUtils.timeLogic(commentsData.get(0).getCommentDate()));
             tvCommentContent1.setText(commentsData.get(0).getContent());
             rlComment2.setVisibility(View.GONE);
+            rlComment1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (commentsData.get(0).getUsers().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                        // 弹框提示删除
+                        showDeleteWindow(rlComment1, 0);
+                    }
+                }
+            });
         } else if (commentsData.size() >= 2) {
             rlComment1.setVisibility(View.VISIBLE);
             Glide.with(mContext).load(commentsData.get(0).getUsers().getHeadSculpture()).into(ivCommentFavicon1);
@@ -451,6 +463,15 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             tvCommentName2.setText(commentsData.get(1).getUsers().getName());
             tvCommentTime2.setText(DateUtils.timeLogic(commentsData.get(1).getCommentDate()));
             tvCommentContent2.setText(commentsData.get(1).getContent());
+            rlComment2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (commentsData.get(1).getUsers().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                        // 弹框提示删除
+                        showDeleteWindow(rlComment2, 1);
+                    }
+                }
+            });
         }
     }
 
@@ -783,5 +804,66 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
     @Override
     public void blankPage() {
 
+    }
+
+    // 删除评论弹窗
+    private void showDeleteWindow(View view, final int position) {
+        ImageButton button = new ImageButton(mContext);
+        button.setBackgroundResource(R.mipmap.icon_delete);
+        final PopupWindow popupWindow = new PopupWindow(button, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteCommentTask deleteCommentTask = new DeleteCommentTask(commentsData.get(position).getCommentId());
+                deleteCommentTask.execute();
+                commentsData.remove(position);
+                initComment();
+                popupWindow.dismiss();
+            }
+        });
+        popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0] + view.getWidth() / 2 - UiUtils.dip2px(34), location[1] - UiUtils.dip2px(22));
+    }
+
+    // 删除项目评论
+    private class DeleteCommentTask extends AsyncTask<Void, Void, CommonBean> {
+        private int commentId;
+
+        public DeleteCommentTask(int commentId) {
+            this.commentId = commentId;
+        }
+
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.DELETEPROJECTCOMMENT)),
+                            "commentId", String.valueOf(commentId),
+                            Constant.BASE_URL + Constant.DELETEPROJECTCOMMENT,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("删除评论", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            if (commonBean != null) {
+                Log.i("删除评论完成", commonBean.getMessage());
+            }
+        }
     }
 }

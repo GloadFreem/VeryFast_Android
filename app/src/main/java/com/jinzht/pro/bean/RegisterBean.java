@@ -48,7 +48,7 @@ public class RegisterBean {
     public static class DataBean {
         private String telePhone;
         private int platform;
-        private long userId;
+        private int userId;
 
         public String getTelePhone() {
             return telePhone;
@@ -66,11 +66,11 @@ public class RegisterBean {
             this.platform = platform;
         }
 
-        public long getUserId() {
+        public int getUserId() {
             return userId;
         }
 
-        public void setUserId(long userId) {
+        public void setUserId(int userId) {
             this.userId = userId;
         }
 

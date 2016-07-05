@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,7 +24,6 @@ import com.jinzht.pro.adapter.RecyclerViewData;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.ProjectDetailBean;
 import com.jinzht.pro.callback.ItemClickListener;
-import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.RoundProgressBar;
 
 import java.util.ArrayList;
@@ -50,7 +48,7 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
     private TextView tvDesc;// 项目描述
     private RecyclerView rvPhotos;// 项目照片
     private RelativeLayout btnMore;// 更多按钮
-    private ImageButton ivMore;// 更多按钮图标
+    private ImageView ivMore;// 更多按钮图标
     private RecyclerView rvTeams;// 团队成员表
     private RecyclerView rvReports;// 项目报表
 
@@ -92,7 +90,7 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         rvPhotos = (RecyclerView) view.findViewById(R.id.roadshow_rv_photos);// 项目照片
         btnMore = (RelativeLayout) view.findViewById(R.id.roadshow_btn_more);// 更多按钮
         btnMore.setOnClickListener(this);
-        ivMore = (ImageButton) view.findViewById(R.id.roadshow_img_more);// 更多按钮图标
+        ivMore = (ImageView) view.findViewById(R.id.roadshow_img_more);// 更多按钮图标
         rvTeams = (RecyclerView) view.findViewById(R.id.project_rv_teams);// 团队成员表
         rvReports = (RecyclerView) view.findViewById(R.id.project_rv_reports);// 项目报表
         return view;
@@ -275,8 +273,10 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         teamsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                // TODO: 2016/7/4 点击团队成员
-                SuperToastUtils.showSuperToast(mContext, 2, "点击了" + position + "张照片");
+                Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                intent.putExtra("title", "团队成员");
+                intent.putExtra("url", data.getTeams().get(position).getUrl());
+                startActivity(intent);
             }
 
             @Override

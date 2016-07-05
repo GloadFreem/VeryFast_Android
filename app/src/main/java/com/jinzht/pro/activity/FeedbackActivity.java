@@ -1,6 +1,5 @@
 package com.jinzht.pro.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,7 +16,6 @@ import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
-import com.jinzht.pro.utils.DialogUtils;
 import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;

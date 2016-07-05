@@ -79,6 +79,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         proAdapter = new ProAdapter();// 项目方的数据列表填充器
         investorAdapter = new InvestorAdapter();// 投资人的数据列表填充器
         brainAdapter = new BrainAdapter();// 智囊团的数据列表填充器
+
         listview.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null), null, false);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -156,18 +156,18 @@ public class SharedPreferencesUtils {
         return sp.getString("extUserId", "");
     }
 
-    // 保存userId，仅作为支付时使用
-    public static void saveUserId(Context context, String userId) {
+    // 保存userId
+    public static void saveUserId(Context context, int userId) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString("userId", userId);
+        editor.putInt("userId", userId);
         editor.commit();
     }
 
-    // 获取userId，仅作为支付时使用
-    public static String getUserId(Context context) {
+    // 获取userId
+    public static int getUserId(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
-        return sp.getString("userId", "");
+        return sp.getInt("userId", -1);
     }
 
     // 保存本地用户头像

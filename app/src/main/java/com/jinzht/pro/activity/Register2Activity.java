@@ -127,7 +127,7 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
                     }
                     SharedPreferencesUtils.saveInformation(mContext, getIntent().getStringExtra("telephone"), pwd);
                     SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(registerBean.getData().getUserId()));
-                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(registerBean.getData().getUserId()));
+                    SharedPreferencesUtils.saveUserId(mContext, registerBean.getData().getUserId());
                     SharedPreferencesUtils.setIsWechatLogin(mContext, false);
                     Intent intent = new Intent(mContext, SetUserTypeActivity.class);
                     startActivity(intent);

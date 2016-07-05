@@ -15,6 +15,7 @@ import com.jinzht.pro.R;
 import com.jinzht.pro.adapter.RecyclerViewData;
 import com.jinzht.pro.adapter.ReleasePhotosAdapter;
 import com.jinzht.pro.base.BaseActivity;
+import com.jinzht.pro.bean.EventMsg;
 import com.jinzht.pro.bean.ReleaseCircleBean;
 import com.jinzht.pro.callback.ItemClickListener;
 import com.jinzht.pro.utils.AESUtils;
@@ -26,15 +27,18 @@ import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
+import com.jinzht.pro.utils.UiUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.finalteam.galleryfinal.GalleryFinal;
 import cn.finalteam.galleryfinal.model.PhotoInfo;
+import de.greenrobot.event.EventBus;
 
 /**
  * 在圈子发布话题界面
@@ -46,8 +50,9 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
     private EditText edContent;// 发布的内容
     private RecyclerView recyclerview;// 图片
 
-    ReleasePhotosAdapter adapter;// RecyclerView数据填充器
-    List<String> photos = new ArrayList<>();// 要发布的图片地址
+    private ReleasePhotosAdapter adapter;// RecyclerView数据填充器
+    public List<String> photos = new ArrayList<>();// 要展示的图片地址
+    private List<String> photos_paths = new ArrayList<>();// 要发布的图片地址
 
     public static final int RESULT_CODE = 1;// 返回到圈子列表
     public static final int REQUEST_CODE_GALLERY = 2;// 跳转到图片选择器
@@ -71,7 +76,6 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
         initRecyclerView();
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -79,7 +83,6 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.title_btn_right:// 发布
-                Log.i("选择的图片路径", photos.toString());
                 if (!StringUtils.isBlank(edContent.getText().toString()) || photos.size() != 0) {
                     ReleaseCircleTask releaseCircleTask = new ReleaseCircleTask();
                     releaseCircleTask.execute();
@@ -92,6 +95,7 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
 
     private void initRecyclerView() {
         // 准备数据
+        photos.clear();
         adapter = new ReleasePhotosAdapter(this, photos);
         // 填充数据
         RecyclerViewData.setGrid(recyclerview, mContext, adapter, 3);
@@ -129,19 +133,8 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onHanlderSuccess(int reqeustCode, List<PhotoInfo> resultList) {
             if (resultList != null) {
-                for (int i = 0; i < resultList.size(); i++) {
-                    try {
-                        String oldPath = resultList.get(i).getPhotoPath();
-                        File photoFile = new File(oldPath);
-                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Uri.fromFile(photoFile)));
-                        String photo_path = getCacheDir() +  oldPath.substring(oldPath.lastIndexOf('/'));
-                        FileOutputStream fos = new FileOutputStream(photo_path);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);// 压缩另存，100表示不压缩
-                        fos.close();
-                        photos.add(photo_path);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                for (PhotoInfo photoInfo : resultList) {
+                    photos.add(photoInfo.getPhotoPath());
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -158,7 +151,10 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showProgressDialog("");
+            SuperToastUtils.showSuperToast(mContext, 2, "发表中...");
+            Intent intent = new Intent();
+            setResult(RESULT_CODE, intent);
+            finish();
         }
 
         @Override
@@ -166,10 +162,34 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
+                    for (String oldPath : photos) {
+                        File photoFile = new File(oldPath);
+                        InputStream inputStream = getContentResolver().openInputStream(Uri.fromFile(photoFile));
+                        int available = inputStream.available();
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        String photo_path = getCacheDir() + oldPath.substring(oldPath.lastIndexOf('/'));
+                        FileOutputStream fos = new FileOutputStream(photo_path);
+                        if (available / 1024 >= 1536 && available / 1024 < 2048) {// 大于1.5MB就压缩
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, fos);// 压缩另存，100表示不压缩
+                            photos_paths.add(photo_path);
+                        } else if (available / 1024 >= 2048 && available / 1024 < 2560) {
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);// 压缩另存，100表示不压缩
+                            photos_paths.add(photo_path);
+                        } else if (available / 1024 >= 2560) {
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 30, fos);// 压缩另存，100表示不压缩
+                            photos_paths.add(photo_path);
+                        } else {
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            photos_paths.add(photo_path);
+                        }
+                        bitmap.recycle();
+                        fos.close();
+                    }
+
                     body = OkHttpUtils.releaseCirclePost(
                             MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.RELEASECIRCLE)),
                             "content", edContent.getText().toString(),
-                            "images", photos,
+                            "images", photos_paths,
                             Constant.BASE_URL + Constant.RELEASECIRCLE,
                             mContext
                     );
@@ -186,17 +206,8 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
         @Override
         protected void onPostExecute(ReleaseCircleBean releaseCircleBean) {
             super.onPostExecute(releaseCircleBean);
-            dismissProgressDialog();
-            if (releaseCircleBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-            } else {
-                if (releaseCircleBean.getStatus() == 200) {
-                    Intent intent = new Intent();
-                    setResult(RESULT_CODE, intent);
-                    finish();
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, releaseCircleBean.getMessage());
-                }
+            if (releaseCircleBean != null && releaseCircleBean.getStatus() == 200) {
+                EventBus.getDefault().post(new EventMsg("发布成功"));
             }
         }
     }

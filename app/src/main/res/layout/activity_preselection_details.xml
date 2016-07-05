@@ -189,7 +189,7 @@
                         android:layout_marginLeft="24dp"
                         android:layout_marginRight="24dp">
 
-                        <ImageButton
+                        <ImageView
                             android:id="@+id/pre_btn_more_img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

@@ -29,12 +29,14 @@ import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.ActivityAllCommentsBean;
 import com.jinzht.pro.bean.ActivityCommentBean;
 import com.jinzht.pro.bean.ActivityPriseBean;
+import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.utils.AESUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
@@ -119,7 +121,12 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 0) {
-                    CommentDialog(String.valueOf(comments.get(position - 1).getUsersByUserId().getUserId()), comments.get(position - 1).getUserName());
+                    if (comments.get(position - 1).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                        // 弹框提示删除
+                        showDeleteWindow(view, position - 1);
+                    } else {
+                        CommentDialog(String.valueOf(comments.get(position - 1).getUsersByUserId().getUserId()), comments.get(position - 1).getUserName());
+                    }
                 }
             }
         });
@@ -368,7 +375,7 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
                 if (activityPriseBean.getStatus() == 200) {
                     if (flag == 1) {
                         FLAG = true;
-                        prises.add(0,activityPriseBean.getData().getName());
+                        prises.add(0, activityPriseBean.getData().getName());
                     } else {
                         FLAG = false;
                         prises.remove(activityPriseBean.getData().getName());
@@ -427,12 +434,12 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
             super.onPostExecute(activityCommentBean);
             if (activityCommentBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (activityCommentBean.getStatus() == 200) {
                     popupWindow.dismiss();
                     comment = "";
                     needRefresh = true;
+                    pages = 0;
                     GetAllCommentsTask getAllCommentsTask = new GetAllCommentsTask(0);
                     getAllCommentsTask.execute();
                 } else {
@@ -500,4 +507,67 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
 
     }
 
+    // 删除评论弹窗
+    private void showDeleteWindow(View view, final int position) {
+        ImageButton button = new ImageButton(mContext);
+        button.setBackgroundResource(R.mipmap.icon_delete);
+        final PopupWindow popupWindow = new PopupWindow(button, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteCommentTask deleteCommentTask = new DeleteCommentTask(comments.get(position).getCommentId());
+                deleteCommentTask.execute();
+                comments.remove(position);
+                myAdapter.notifyDataSetChanged();
+                popupWindow.dismiss();
+            }
+        });
+        popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0] + view.getWidth() / 2 - UiUtils.dip2px(34), location[1] - UiUtils.dip2px(33));
+    }
+
+    // 删除活动评论
+    private class DeleteCommentTask extends AsyncTask<Void, Void, CommonBean> {
+        private int commentId;
+
+        public DeleteCommentTask(int commentId) {
+            this.commentId = commentId;
+        }
+
+        @Override
+        protected CommonBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.DELETEACTIVITYCOMMENT)),
+                            "commentId", String.valueOf(commentId),
+                            Constant.BASE_URL + Constant.DELETEACTIVITYCOMMENT,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("删除评论", body);
+                return FastJsonTools.getBean(body, CommonBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            if (commonBean != null) {
+                Log.i("删除评论完成", commonBean.getMessage());
+                if (commonBean.getStatus() == 200) {
+                    needRefresh = true;
+                }
+            }
+        }
+    }
 }

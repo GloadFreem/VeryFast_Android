@@ -184,7 +184,7 @@
                 android:layout_marginLeft="24dp"
                 android:layout_marginRight="24dp">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/roadshow_img_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

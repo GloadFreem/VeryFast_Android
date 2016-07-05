@@ -238,7 +238,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             } else {
                 if (loginBean.getStatus() == 200) {
                     SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(loginBean.getData().getExtUserId()));
-                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
+                    SharedPreferencesUtils.saveUserId(mContext, loginBean.getData().getUserId());
                     SharedPreferencesUtils.setIsWechatLogin(mContext, true);
                     SharedPreferencesUtils.saveWechatNick(mContext, platform.getDb().getUserName());
                     if (loginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
@@ -301,7 +301,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     // 保存用户名、密码、userId
                     SharedPreferencesUtils.saveInformation(mContext, loginEdTel.getText().toString(), pwd);
                     SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(loginBean.getData().getExtUserId()));
-                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
+                    SharedPreferencesUtils.saveUserId(mContext, loginBean.getData().getUserId());
                     SharedPreferencesUtils.setIsWechatLogin(mContext, false);
                     if (loginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
                         intent.setClass(mContext, SetUserTypeActivity.class);

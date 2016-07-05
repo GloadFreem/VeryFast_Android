@@ -177,7 +177,7 @@ public class WelcomeActivity extends FullBaseActivity {
             if (loginBean != null && loginBean.getStatus() == 200) {
                 // 保存userId
                 SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(loginBean.getData().getExtUserId()));
-                SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
+                SharedPreferencesUtils.saveUserId(mContext, loginBean.getData().getUserId());
                 if (loginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
                     // 未选择身份类型，进入选择身份类型
                     intent = new Intent(mContext, SetUserTypeActivity.class);

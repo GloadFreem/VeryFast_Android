@@ -114,7 +114,7 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
                     }
                     // 保存userId
                     SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(loginBean.getData().getExtUserId()));
-                    SharedPreferencesUtils.saveUserId(mContext, String.valueOf(loginBean.getData().getUserId()));
+                    SharedPreferencesUtils.saveUserId(mContext, loginBean.getData().getUserId());
                     if (loginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
                         // 去选择身份类型
                         Intent intent = new Intent(mContext, SetUserTypeActivity.class);
