@@ -40,8 +40,10 @@
         android:layout_below="@id/item_investor_name"
         android:layout_marginLeft="11dp"
         android:layout_marginTop="6dp"
+        android:maxWidth="180dp"
+        android:singleLine="true"
         android:layout_toRightOf="@id/item_investor_favicon"
-        android:text=""
+        android:text="发的福利上飞机的律师费激烈的数据分来到极光"
         android:textColor="#747474"
         android:textSize="15sp" />
 
@@ -134,6 +136,7 @@
             android:id="@+id/item_investor_tv_collect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:drawableLeft="@mipmap/icon_collect_investor"
             android:drawablePadding="5dp"
             android:text="关注(308)"
@@ -157,6 +160,7 @@
             android:id="@+id/item_investor_tv_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:drawableLeft="@mipmap/icon_submit_project"
             android:drawablePadding="5dp"
             android:text="提交项目"

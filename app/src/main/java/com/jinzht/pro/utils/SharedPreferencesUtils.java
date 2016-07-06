@@ -44,20 +44,6 @@ public class SharedPreferencesUtils {
         return sp.getString("password", "");
     }
 
-    // 保存是否登录的状态
-    public static void setIsLogin(Context context, boolean isAuto) {
-        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("isLogin", isAuto);
-        editor.commit();
-    }
-
-    // 获取是否登录的状态
-    public static boolean getIsLogin(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
-        return sp.getBoolean("isLogin", false);
-    }
-
     // 保存是否微信登录
     public static void setIsWechatLogin(Context context, boolean isAuto) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
@@ -87,31 +73,17 @@ public class SharedPreferencesUtils {
     }
 
     // 保存是否实名认证的状态
-    public static void setAuth(Context context, boolean isAuto) {
+    public static void saveIsAuthentic(Context context, String isAuthentic) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("isAuth", isAuto);
+        editor.putString("isAuthentic", isAuthentic);
         editor.commit();
     }
 
     // 获取是否实名认证的状态
-    public static boolean getAuth(Context context) {
+    public static String getIsAuthentic(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
-        return sp.getBoolean("isAuth", false);
-    }
-
-    // 保存是否选择身份
-    public static void setChoseUserType(Context context, boolean isAuto) {
-        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("choseUsertype", isAuto);
-        editor.commit();
-    }
-
-    // 获取是否选择身份
-    public static boolean getChoseUserType(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("userconfs", Activity.MODE_PRIVATE);
-        return sp.getBoolean("choseUsertype", false);
+        return sp.getString("isAuthentic", "");
     }
 
     // 保存用户身份类型

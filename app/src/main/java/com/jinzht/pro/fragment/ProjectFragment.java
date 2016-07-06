@@ -210,7 +210,10 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                             }
                         } else {
                             Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                            intent.putExtra("TAG", "banner");
                             intent.putExtra("title", bannerData.get(newPosition).getBody().getName());
+                            intent.putExtra("content", bannerData.get(newPosition).getBody().getDescription());
+                            intent.putExtra("imgUrl", bannerData.get(newPosition).getBody().getImage());
                             intent.putExtra("url", bannerData.get(newPosition).getBody().getUrl());
                             startActivity(intent);
                         }
@@ -564,18 +567,23 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             super.onPostExecute(bannerInfoBean);
             if (bannerInfoBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                listview.setBackgroundResource(R.mipmap.bg_empty);
             } else {
                 if (bannerInfoBean.getStatus() == 200) {
                     bannerData = bannerInfoBean.getData();
                     if (bannerData != null && bannerData.size() != 0) {
+                        listview.setBackgroundResource(R.color.bg_main);
                         initListHeader();
                         GetRoadshowProjectListTask getRoadshowProjectListTask = new GetRoadshowProjectListTask(0);
                         getRoadshowProjectListTask.execute();
                         GetPreselectionProjectListTask getPreselectionProjectListTask = new GetPreselectionProjectListTask(0);
                         getPreselectionProjectListTask.execute();
+                    } else {
+                        listview.setBackgroundResource(R.mipmap.bg_empty);
                     }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, bannerInfoBean.getMessage());
+                    listview.setBackgroundResource(R.mipmap.bg_empty);
                 }
             }
         }

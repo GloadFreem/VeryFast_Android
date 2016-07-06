@@ -56,7 +56,11 @@ public class CommitRecordsActivity extends BaseActivity implements View.OnClickL
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
+        if ("项目中心".equals(getIntent().getStringExtra("TAG"))) {
+            tvTitle.setText("提交记录");
+        }
         tvTitle.setText("已报名人");
+
         refreshView = (PullToRefreshLayout) findViewById(R.id.refresh_view);// 刷新布局
         refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
         listview = (PullableListView) findViewById(R.id.listview);// 列表
@@ -118,7 +122,7 @@ public class CommitRecordsActivity extends BaseActivity implements View.OnClickL
             holder.tvPosition.setText(datas.get(position).getUser().getAuthentics().get(0).getCompanyName() + datas.get(position).getUser().getAuthentics().get(0).getPosition());
             holder.tvTime.setText(DateUtils.timeLogic(datas.get(position).getRecord().getRecordDate()));
             holder.tvIsRead.setText(datas.get(position).getRecord().getStatus().getName());
-            if ("未查看".equals(datas.get(position).getRecord().getStatus().getName())) {
+            if ("忽略".equals(datas.get(position).getRecord().getStatus().getName())) {
                 holder.tvIsRead.setTextColor(Color.RED);
             } else {
                 holder.tvIsRead.setTextColor(0xff747474);
@@ -169,6 +173,7 @@ public class CommitRecordsActivity extends BaseActivity implements View.OnClickL
         protected void onPostExecute(CommitRecordsBean commitRecordsBean) {
             super.onPostExecute(commitRecordsBean);
             if (commitRecordsBean == null) {
+                listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
@@ -178,6 +183,11 @@ public class CommitRecordsActivity extends BaseActivity implements View.OnClickL
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         datas = commitRecordsBean.getData();
+                        if (datas != null && datas.size() != 0) {
+                            listview.setBackgroundResource(R.color.white);
+                        } else {
+                            listview.setBackgroundResource(R.mipmap.bg_empty);
+                        }
                         if (datas != null) {
                             listview.setAdapter(myAdapter);
                         }
@@ -191,6 +201,7 @@ public class CommitRecordsActivity extends BaseActivity implements View.OnClickL
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
+                    listview.setBackgroundResource(R.mipmap.bg_empty);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                     SuperToastUtils.showSuperToast(mContext, 2, commitRecordsBean.getMessage());

@@ -90,6 +90,10 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             getLoginGoldAward.execute();
         }
 
+        // 保存是否认证的状态
+        IsAuthenticTask isAuthenticTask = new IsAuthenticTask();
+        isAuthenticTask.execute();
+
         // 5s后检查更新
         new Handler().postDelayed(new Runnable() {
             @Override

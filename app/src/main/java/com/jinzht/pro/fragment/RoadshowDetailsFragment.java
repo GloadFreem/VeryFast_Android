@@ -15,8 +15,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jinzht.pro.R;
+import com.jinzht.pro.activity.CertificationIDCardActivity;
 import com.jinzht.pro.activity.CommonWebViewActivity;
 import com.jinzht.pro.activity.ImagePagerActivity;
+import com.jinzht.pro.activity.WechatVerifyActivity;
 import com.jinzht.pro.adapter.ProjectPhotosAdapter;
 import com.jinzht.pro.adapter.ProjectReportsAdapter;
 import com.jinzht.pro.adapter.ProjectTeamsAdapter;
@@ -24,6 +26,9 @@ import com.jinzht.pro.adapter.RecyclerViewData;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.ProjectDetailBean;
 import com.jinzht.pro.callback.ItemClickListener;
+import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
+import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.RoundProgressBar;
 
 import java.util.ArrayList;
@@ -310,10 +315,25 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         reportsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(mContext, CommonWebViewActivity.class);
-                intent.putExtra("title", reportDatas.get(position).getContent());
-                intent.putExtra("url", reportDatas.get(position).getUrl());
-                startActivity(intent);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (SharedPreferencesUtils.getUserType(mContext) != Constant.USERTYPE_XMF) {
+                        Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                        intent.putExtra("title", reportDatas.get(position).getContent());
+                        intent.putExtra("url", reportDatas.get(position).getUrl());
+                        startActivity(intent);
+                    }
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    Intent intent = new Intent();
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
             }
 
             @Override

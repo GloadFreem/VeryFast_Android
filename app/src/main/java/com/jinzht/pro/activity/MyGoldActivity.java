@@ -84,8 +84,8 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
                         startActivity(intent);
                         break;
                     case 1:// 邀请送金条
-                        ShareTask shareTask = new ShareTask();
-                        shareTask.execute();
+                        InviteFriendTask inviteFriendTask = new InviteFriendTask();
+                        inviteFriendTask.execute();
                         break;
                     case 2:// 金条积累规则
                         GoldGetRule goldGetRule = new GoldGetRule();
@@ -156,23 +156,22 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    // 分享APP
-    private class ShareTask extends AsyncTask<Void, Void, ShareBean> {
+    // 邀请好友送金条
+    private class InviteFriendTask extends AsyncTask<Void, Void, ShareBean> {
         @Override
         protected ShareBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
                 try {
                     body = OkHttpUtils.post(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.SHAREAPP)),
-                            "type", "3",
-                            Constant.BASE_URL + Constant.SHAREAPP,
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.INVITEFRIEND)),
+                            Constant.BASE_URL + Constant.INVITEFRIEND,
                             mContext
                     );
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.i("分享返回信息", body);
+                Log.i("邀请好友送金条", body);
                 return FastJsonTools.getBean(body, ShareBean.class);
             } else {
                 return null;
@@ -184,7 +183,6 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
             super.onPostExecute(shareBean);
             if (shareBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(MyGoldActivity.this);

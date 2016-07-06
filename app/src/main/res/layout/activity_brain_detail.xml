@@ -49,7 +49,8 @@
                     android:layout_width="55dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="wrap_content"

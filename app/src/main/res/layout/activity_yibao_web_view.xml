@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/title_back" />
+    <include layout="@layout/title_3btn" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

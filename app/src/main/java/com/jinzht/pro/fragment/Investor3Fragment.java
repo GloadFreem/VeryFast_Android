@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
 import com.jinzht.pro.activity.BrainDetailActivity;
+import com.jinzht.pro.activity.CertificationIDCardActivity;
+import com.jinzht.pro.activity.WechatVerifyActivity;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.bean.InvestorListBean;
@@ -25,6 +27,7 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.CircleImageView;
 import com.jinzht.pro.view.PullToRefreshLayout;
@@ -131,16 +134,30 @@ public class Investor3Fragment extends BaseFragment {
                     holder.itemBrainTvCollect.setText("关注(" + datas.get(position).getCollectCount() + ")");
                 }
             }
+            // 关注
             holder.itemBrainBtnCollect.setOnClickListener(new View.OnClickListener() {// 关注
                 @Override
                 public void onClick(View v) {
-                    POSITION = position;
-                    if (datas.get(position).isCollected()) {
-                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position).getUser().getUserId(), 2);
-                        collectInvestorTask.execute();
+                    if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                        POSITION = position;
+                        if (datas.get(position).isCollected()) {
+                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position).getUser().getUserId(), 2);
+                            collectInvestorTask.execute();
+                        } else {
+                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position).getUser().getUserId(), 1);
+                            collectInvestorTask.execute();
+                        }
                     } else {
-                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position).getUser().getUserId(), 1);
-                        collectInvestorTask.execute();
+                        SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                        Intent intent = new Intent();
+                        if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                            intent.setClass(mContext, WechatVerifyActivity.class);
+                        } else {
+                            intent.setClass(mContext, CertificationIDCardActivity.class);
+                        }
+                        intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                     }
                 }
             });
@@ -193,6 +210,7 @@ public class Investor3Fragment extends BaseFragment {
         protected void onPostExecute(InvestorListBean investorListBean) {
             super.onPostExecute(investorListBean);
             if (investorListBean == null) {
+                listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
@@ -202,6 +220,11 @@ public class Investor3Fragment extends BaseFragment {
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         datas = investorListBean.getData();
+                        if (datas != null && datas.size() != 0) {
+                            listview.setBackgroundResource(R.color.bg_main);
+                        } else {
+                            listview.setBackgroundResource(R.mipmap.bg_empty);
+                        }
                         if (datas != null) {
                             listview.setAdapter(myAdapter);
                         }
@@ -215,6 +238,7 @@ public class Investor3Fragment extends BaseFragment {
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
+                    listview.setBackgroundResource(R.mipmap.bg_empty);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                     SuperToastUtils.showSuperToast(mContext, 2, investorListBean.getMessage());

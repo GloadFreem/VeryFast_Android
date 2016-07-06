@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
+import com.jinzht.pro.utils.DialogUtils;
+import com.jinzht.pro.utils.ShareUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.UiHelp;
 
@@ -21,10 +23,14 @@ import com.jinzht.pro.utils.UiHelp;
  */
 public class CommonWebViewActivity extends BaseActivity {
 
+
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
+    private LinearLayout titleBtnRight2;// 收藏按钮
+    private LinearLayout btnShare;// 分享
     private ProgressBar progressBar;// 进度条
     private WebView webview;// 网页
+
 
     @Override
     protected int getResourcesId() {
@@ -34,7 +40,8 @@ public class CommonWebViewActivity extends BaseActivity {
     @Override
     protected void init() {
         UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
-        btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
+
+        btnBack = (LinearLayout) findViewById(R.id.title_btn_left);// 返回
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,6 +56,27 @@ public class CommonWebViewActivity extends BaseActivity {
         if (!StringUtils.isBlank(getIntent().getStringExtra("title"))) {
             tvTitle.setText(getIntent().getStringExtra("title"));
         }
+        titleBtnRight2 = (LinearLayout) findViewById(R.id.title_btn_right2);// 收藏按钮
+        titleBtnRight2.setVisibility(View.GONE);
+        btnShare = (LinearLayout) findViewById(R.id.title_btn_right);// 分享
+        if ("banner".equals(getIntent().getStringExtra("TAG"))) {
+            btnShare.setVisibility(View.VISIBLE);// banner显示分享按钮
+        } else {
+            btnShare.setVisibility(View.GONE);
+        }
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareUtils shareUtils = new ShareUtils(CommonWebViewActivity.this);
+                DialogUtils.newShareDialog(
+                        CommonWebViewActivity.this,
+                        shareUtils,
+                        getIntent().getStringExtra("title"),
+                        getIntent().getStringExtra("content"),
+                        getIntent().getStringExtra("imgUrl"),
+                        getIntent().getStringExtra("url"));
+            }
+        });
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);// 进度条
         webview = (WebView) findViewById(R.id.webview);// 网页
 
@@ -91,7 +119,7 @@ public class CommonWebViewActivity extends BaseActivity {
             dismissProgressDialog();
         }
 
-                @Override
+        @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
             super.onReceivedError(view, errorCode, description, failingUrl);
             String imgPath = "file:///android_asset/bg_empty.png";

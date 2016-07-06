@@ -44,6 +44,7 @@ import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.ShareUtils;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.utils.UiUtils;
@@ -134,11 +135,29 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         GetMemberTask getMemberTask = new GetMemberTask();
         getMemberTask.execute();
 
+        if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+            if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext)) {
+                vpPPt.setScrollable(false);
+            } else {
+                vpPPt.setScrollable(true);
+            }
+        } else {
+            vpPPt.setScrollable(false);
+        }
+
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() { //音频播放完成
             @Override
             public void onCompletion(MediaPlayer mp) {
                 isPlaying = false;
-                vpPPt.setScrollable(true);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext)) {
+                        vpPPt.setScrollable(false);
+                    } else {
+                        vpPPt.setScrollable(true);
+                    }
+                } else {
+                    vpPPt.setScrollable(false);
+                }
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
                 postSize = 0;
             }
@@ -171,37 +190,74 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.title_btn_left:// 返回上一页
                 onBackPressed();
                 break;
             case R.id.title_btn_right2:// 收藏
-                if (data.isCollected()) {
-                    CollectTask collectTask = new CollectTask(2);
-                    collectTask.execute();
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (data.isCollected()) {
+                        CollectTask collectTask = new CollectTask(2);
+                        collectTask.execute();
+                    } else {
+                        CollectTask collectTask = new CollectTask(1);
+                        collectTask.execute();
+                    }
                 } else {
-                    CollectTask collectTask = new CollectTask(1);
-                    collectTask.execute();
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
                 break;
             case R.id.title_btn_right:// 分享
-                ShareTask shareTask = new ShareTask();
-                shareTask.execute();
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    ShareTask shareTask = new ShareTask();
+                    shareTask.execute();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 break;
             case R.id.details_btn_service:// 给客服打电话
                 CustomerServiceTask customerServiceTask = new CustomerServiceTask();
                 customerServiceTask.execute();
                 break;
             case R.id.details_btn_invest:// 认投
-                Intent intent = new Intent(mContext, InvestActivity.class);
-                intent.putExtra("projectId", String.valueOf(data.getProjectId()));
-                intent.putExtra("limitAmount", data.getRoadshows().get(0).getRoadshowplan().getLimitAmount());
-                intent.putExtra("profit", data.getRoadshows().get(0).getRoadshowplan().getProfit());
-                intent.putExtra("borrower_user_no", data.getBorrowerUserNumber());
-                intent.putExtra("abbrevName", data.getAbbrevName());
-                intent.putExtra("fullName", data.getFullName());
-                intent.putExtra("img", data.getStartPageImage());
-                startActivity(intent);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    Intent intent1 = new Intent(mContext, InvestActivity.class);
+                    intent1.putExtra("projectId", String.valueOf(data.getProjectId()));
+                    intent1.putExtra("limitAmount", data.getRoadshows().get(0).getRoadshowplan().getLimitAmount());
+                    intent1.putExtra("profit", data.getRoadshows().get(0).getRoadshowplan().getProfit());
+                    intent1.putExtra("borrower_user_no", data.getBorrowerUserNumber());
+                    intent1.putExtra("abbrevName", data.getAbbrevName());
+                    intent1.putExtra("fullName", data.getFullName());
+                    intent1.putExtra("img", data.getStartPageImage());
+                    startActivity(intent1);
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 break;
         }
     }
@@ -713,7 +769,15 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 case VIDEO_FILE_ERROR:// 错误信息
                     SuperToastUtils.showSuperToast(UiUtils.getContext(), 2, "网络连接异常");
                     isPlaying = false;
-                    vpPPt.setScrollable(true);
+                    if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(UiUtils.getContext()))) {
+                        if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(UiUtils.getContext())) {
+                            vpPPt.setScrollable(false);
+                        } else {
+                            vpPPt.setScrollable(true);
+                        }
+                    } else {
+                        vpPPt.setScrollable(false);
+                    }
                     RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
                     break;
                 case VIDEO_UPDATE_SEEKBAR:// 更新播放进度条
@@ -756,7 +820,15 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             if (player != null && isPlaying) {
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
-                vpPPt.setScrollable(true);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext)) {
+                        vpPPt.setScrollable(false);
+                    } else {
+                        vpPPt.setScrollable(true);
+                    }
+                } else {
+                    vpPPt.setScrollable(false);
+                }
                 player.pause();
                 postSize = player.getCurrentPosition();
             }
@@ -770,7 +842,15 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             if (player != null && isPlaying) {
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
-                vpPPt.setScrollable(true);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext)) {
+                        vpPPt.setScrollable(false);
+                    } else {
+                        vpPPt.setScrollable(true);
+                    }
+                } else {
+                    vpPPt.setScrollable(false);
+                }
                 player.pause();
                 postSize = player.getCurrentPosition();
             }
@@ -784,7 +864,15 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             if (isPlaying) {
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
-                vpPPt.setScrollable(true);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext)) {
+                        vpPPt.setScrollable(false);
+                    } else {
+                        vpPPt.setScrollable(true);
+                    }
+                } else {
+                    vpPPt.setScrollable(false);
+                }
                 player.stop();
             }
             player.release();

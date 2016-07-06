@@ -23,6 +23,7 @@ import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.ShareUtils;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.CircleImageView;
 
@@ -80,6 +81,12 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
         btnCollect.setOnClickListener(this);
         tvSubmit = (TextView) findViewById(R.id.investor_detail_tv_submit);// 提交
         tvCollect = (TextView) findViewById(R.id.investor_detail_tv_collect);// 关注
+        // 只有项目方才显示提交项目按钮
+        if (SharedPreferencesUtils.getUserType(mContext) == Constant.USERTYPE_XMF) {
+            btnSubmit.setVisibility(View.VISIBLE);
+        } else {
+            btnSubmit.setVisibility(View.GONE);
+        }
 
         GetInvestorDetail getInvestorDetail = new GetInvestorDetail();
         getInvestorDetail.execute();
@@ -134,31 +141,68 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.title_btn_back:// 返回上一页
                 onBackPressed();
                 break;
             case R.id.title_btn_share:// 分享
-                ShareTask shareTask = new ShareTask();
-                shareTask.execute();
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    ShareTask shareTask = new ShareTask();
+                    shareTask.execute();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 break;
             case R.id.investor_detail_btn_submit:// 提交项目
-                Intent intent = new Intent(mContext, SubmitProjectActivity.class);
-                intent.putExtra("id", String.valueOf(data.getUser().getUserId()));
-                intent.putExtra("favicon", data.getUser().getHeadSculpture());
-                intent.putExtra("name", data.getUser().getName());
-                intent.putExtra("position", data.getUser().getAuthentics().get(0).getPosition());
-                intent.putExtra("compName", data.getUser().getAuthentics().get(0).getCompanyName());
-                intent.putExtra("addr", data.getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + data.getUser().getAuthentics().get(0).getCity().getName());
-                startActivity(intent);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    Intent intent1 = new Intent(mContext, SubmitProjectActivity.class);
+                    intent1.putExtra("id", String.valueOf(data.getUser().getUserId()));
+                    intent1.putExtra("favicon", data.getUser().getHeadSculpture());
+                    intent1.putExtra("name", data.getUser().getName());
+                    intent1.putExtra("position", data.getUser().getAuthentics().get(0).getPosition());
+                    intent1.putExtra("compName", data.getUser().getAuthentics().get(0).getCompanyName());
+                    intent1.putExtra("addr", data.getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + data.getUser().getAuthentics().get(0).getCity().getName());
+                    startActivity(intent1);
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 break;
             case R.id.investor_detail_btn_collect:// 关注
-                if (data.isCollected()) {
-                    CollectInvestorTask collectInvestorTask = new CollectInvestorTask(2);
-                    collectInvestorTask.execute();
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (data.isCollected()) {
+                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(2);
+                        collectInvestorTask.execute();
+                    } else {
+                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(1);
+                        collectInvestorTask.execute();
+                    }
                 } else {
-                    CollectInvestorTask collectInvestorTask = new CollectInvestorTask(1);
-                    collectInvestorTask.execute();
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
                 break;
         }

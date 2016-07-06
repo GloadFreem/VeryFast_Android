@@ -16,7 +16,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -122,16 +121,29 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 onBackPressed();
                 break;
             case R.id.btn_comment:// 发表评论
-                if (StringUtils.isBlank(edComment.getText().toString())) {
-                    SuperToastUtils.showSuperToast(this, 2, "请输入评论内容");
-                } else {
-                    if ("评论本条状态".equals(edComment.getHint())) {
-                        CircleCommentTask circleCommentTask = new CircleCommentTask("");
-                        circleCommentTask.execute();
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (StringUtils.isBlank(edComment.getText().toString())) {
+                        SuperToastUtils.showSuperToast(this, 2, "请输入评论内容");
                     } else {
-                        CircleCommentTask circleCommentTask = new CircleCommentTask(String.valueOf(comments.get((Integer) edComment.getTag() - 1).getUsersByUserId().getUserId()));
-                        circleCommentTask.execute();
+                        if ("评论本条状态".equals(edComment.getHint())) {
+                            CircleCommentTask circleCommentTask = new CircleCommentTask("");
+                            circleCommentTask.execute();
+                        } else {
+                            CircleCommentTask circleCommentTask = new CircleCommentTask(String.valueOf(comments.get((Integer) edComment.getTag() - 1).getUsersByUserId().getUserId()));
+                            circleCommentTask.execute();
+                        }
                     }
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    Intent intent = new Intent();
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
                 break;
         }
@@ -293,16 +305,29 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 holder.btnGood.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (datas.isFlag()) {
-                            finalHolder.btnGood.setImageResource(R.mipmap.icon_good);
-                            datas.setFlag(false);
-                            CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 2);
-                            circlePriseTask.execute();
+                        if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                            if (datas.isFlag()) {
+                                finalHolder.btnGood.setImageResource(R.mipmap.icon_good);
+                                datas.setFlag(false);
+                                CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 2);
+                                circlePriseTask.execute();
+                            } else {
+                                finalHolder.btnGood.setImageResource(R.mipmap.icon_good_checked);
+                                datas.setFlag(true);
+                                CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 1);
+                                circlePriseTask.execute();
+                            }
                         } else {
-                            finalHolder.btnGood.setImageResource(R.mipmap.icon_good_checked);
-                            datas.setFlag(true);
-                            CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 1);
-                            circlePriseTask.execute();
+                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                            Intent intent = new Intent();
+                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                                intent.setClass(mContext, WechatVerifyActivity.class);
+                            } else {
+                                intent.setClass(mContext, CertificationIDCardActivity.class);
+                            }
+                            intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                         }
                     }
                 });
@@ -417,6 +442,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         protected void onPostExecute(CircleDetailBean circleDetailBean) {
             super.onPostExecute(circleDetailBean);
             if (circleDetailBean == null) {
+                listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
@@ -424,11 +450,16 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 if (circleDetailBean.getStatus() == 200) {
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
-
                     datas = circleDetailBean.getData();
                     comments = datas.getComments();
+                    if (datas != null) {
+                        listview.setBackgroundResource(R.color.bg_main);
+                    } else {
+                        listview.setBackgroundResource(R.mipmap.bg_empty);
+                    }
                     listview.setAdapter(listAdapter);
                 } else {
+                    listview.setBackgroundResource(R.mipmap.bg_empty);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                     SuperToastUtils.showSuperToast(mContext, 2, circleDetailBean.getMessage());

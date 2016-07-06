@@ -190,7 +190,6 @@ public class CertificationDescActivity extends BaseActivity implements View.OnCl
             dismissProgressDialog();
             if (authenticateBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (authenticateBean.getStatus() == 200) {
                     DialogUtils.confirmToMainDialog(CertificationDescActivity.this, authenticateBean.getMessage());

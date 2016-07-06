@@ -183,7 +183,6 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
             super.onPostExecute(capacityListBean);
             if (capacityListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (capacityListBean.getStatus() == 200) {
                     capacitys = capacityListBean.getData();
@@ -265,7 +264,6 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
             dismissProgressDialog();
             if (authenticateBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (authenticateBean.getStatus() == 200) {
                     DialogUtils.confirmToMainDialog(CertificationCapacityActivity.this, authenticateBean.getMessage());

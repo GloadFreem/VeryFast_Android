@@ -161,6 +161,7 @@ public class ActivityAllApplys extends BaseActivity implements View.OnClickListe
         protected void onPostExecute(ActivityAllApplysBean activityAllApplysBean) {
             super.onPostExecute(activityAllApplysBean);
             if (activityAllApplysBean == null) {
+                listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
@@ -170,7 +171,14 @@ public class ActivityAllApplys extends BaseActivity implements View.OnClickListe
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         applys = activityAllApplysBean.getData();
-                        listview.setAdapter(myAdapter);
+                        if (applys != null && applys.size() != 0) {
+                            listview.setBackgroundResource(R.color.white);
+                        } else {
+                            listview.setBackgroundResource(R.mipmap.bg_empty);
+                        }
+                        if (applys != null) {
+                            listview.setAdapter(myAdapter);
+                        }
                     } else {
                         for (ActivityAllApplysBean.DataBean dataBean : activityAllApplysBean.getData()) {
                             Log.i("内容", dataBean.toString());
@@ -182,6 +190,7 @@ public class ActivityAllApplys extends BaseActivity implements View.OnClickListe
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
+                    listview.setBackgroundResource(R.mipmap.bg_empty);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                     SuperToastUtils.showSuperToast(mContext, 2, activityAllApplysBean.getMessage());

@@ -296,7 +296,9 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
                     if (page == 0) {
                         prises = activityAllCommentsBean.getData().getPrises();// 点赞数据
                         comments = activityAllCommentsBean.getData().getComments();// 评论数据
-                        listview.setAdapter(myAdapter);
+                        if (comments != null && prises != null) {
+                            listview.setAdapter(myAdapter);
+                        }
                     } else {
                         for (ActivityAllCommentsBean.DataBean.CommentsBean bean : activityAllCommentsBean.getData().getComments()) {
                             comments.add(bean);

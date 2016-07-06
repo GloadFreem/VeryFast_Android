@@ -41,6 +41,8 @@
         android:layout_marginLeft="11dp"
         android:layout_marginTop="6dp"
         android:layout_toRightOf="@id/item_brain_favicon"
+        android:maxWidth="180dp"
+        android:singleLine="true"
         android:text=""
         android:textColor="#747474"
         android:textSize="15sp" />

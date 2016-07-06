@@ -5,8 +5,8 @@ package com.jinzht.pro.utils;
  */
 public class Constant {
 
-    public static final String BASE_URL = "http://192.168.5.153:8080/jinzht/";
-//    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
+//    public static final String BASE_URL = "http://192.168.5.153:8080/jinzht/";
+    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 微信APP_ID
      */
@@ -387,6 +387,14 @@ public class Constant {
      * 删除圈子
      */
     public static final String DELETECIRCLE = "requestPublicContentDelete.action";
+    /**
+     * 邀请好友送金条
+     */
+    public static final String INVITEFRIEND = "requestGoldInviteFriends.action";
+    /**
+     * 是否已认证
+     */
+    public static final String ISAUTHENTIC = "checkAuthenticStatusUser.action";
 
     /**
      * ==============================以下为易宝支付接口=======================================

@@ -342,6 +342,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         protected void onPostExecute(MessageListBean messageListBean) {
             super.onPostExecute(messageListBean);
             if (messageListBean == null) {
+                listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
@@ -352,6 +353,11 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                     if (page == 0) {
                         datas = messageListBean.getData();
                         boolList.clear();
+                        if (datas != null && datas.size() != 0) {
+                            listview.setBackgroundResource(R.color.white);
+                        } else {
+                            listview.setBackgroundResource(R.mipmap.bg_empty);
+                        }
                         if (datas != null) {
                             for (int i = 0; i < datas.size(); i++) {
                                 boolList.add(false);
@@ -371,6 +377,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
+                    listview.setBackgroundResource(R.mipmap.bg_empty);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                     SuperToastUtils.showSuperToast(mContext, 2, messageListBean.getMessage());

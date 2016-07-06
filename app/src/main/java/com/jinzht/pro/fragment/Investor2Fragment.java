@@ -16,9 +16,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
+import com.jinzht.pro.activity.CertificationIDCardActivity;
 import com.jinzht.pro.activity.CommonWebViewActivity;
 import com.jinzht.pro.activity.InvestorgDetailActivity;
 import com.jinzht.pro.activity.SubmitProjectActivity;
+import com.jinzht.pro.activity.WechatVerifyActivity;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.bean.InvestorgListBean;
@@ -28,6 +30,7 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.CircleImageView;
 import com.jinzht.pro.view.PullToRefreshLayout;
@@ -185,6 +188,12 @@ public class Investor2Fragment extends BaseFragment {
                         holder.itemInvestorgTvCollect.setText("关注(" + datas.get(position - funds.size()).getCollectCount() + ")");
                     }
                 }
+                // 只有项目方才显示提交项目按钮
+                if (SharedPreferencesUtils.getUserType(mContext) == Constant.USERTYPE_XMF) {
+                    holder.itemInvestorgBtnSubmit.setVisibility(View.VISIBLE);
+                } else {
+                    holder.itemInvestorgBtnSubmit.setVisibility(View.GONE);
+                }
                 if (datas.get(position - funds.size()).isCommited()) {
                     holder.itemInvestorgBtnSubmit.setBackgroundResource(R.drawable.bg_code_gray);
                     holder.itemInvestorgBtnSubmit.setClickable(false);
@@ -194,30 +203,58 @@ public class Investor2Fragment extends BaseFragment {
                     holder.itemInvestorgBtnSubmit.setClickable(true);
                     holder.itemInvestorgTvSubmit.setText("提交项目");
                 }
+                // 关注
                 holder.itemInvestorgBtnCollect.setOnClickListener(new View.OnClickListener() {// 关注
                     @Override
                     public void onClick(View v) {
-                        POSITION = position;
-                        if (datas.get(position - funds.size()).isCollected()) {
-                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - funds.size()).getUser().getUserId(), 2);
-                            collectInvestorTask.execute();
+                        if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                            POSITION = position;
+                            if (datas.get(position - funds.size()).isCollected()) {
+                                CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - funds.size()).getUser().getUserId(), 2);
+                                collectInvestorTask.execute();
+                            } else {
+                                CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - funds.size()).getUser().getUserId(), 1);
+                                collectInvestorTask.execute();
+                            }
                         } else {
-                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - funds.size()).getUser().getUserId(), 1);
-                            collectInvestorTask.execute();
+                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                            Intent intent = new Intent();
+                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                                intent.setClass(mContext, WechatVerifyActivity.class);
+                            } else {
+                                intent.setClass(mContext, CertificationIDCardActivity.class);
+                            }
+                            intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                         }
                     }
                 });
+                // 提交项目
                 holder.itemInvestorgBtnSubmit.setOnClickListener(new View.OnClickListener() {// 提交项目
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(mContext, SubmitProjectActivity.class);
-                        intent.putExtra("id", String.valueOf(datas.get(position - funds.size()).getUser().getUserId()));
-                        intent.putExtra("favicon", datas.get(position - funds.size()).getUser().getHeadSculpture());
-                        intent.putExtra("name", datas.get(position - funds.size()).getUser().getName());
-                        intent.putExtra("position", datas.get(position - funds.size()).getUser().getAuthentics().get(0).getPosition());
-                        intent.putExtra("compName", datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCompanyName());
-                        intent.putExtra("addr", datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCity().getName());
-                        startActivity(intent);
+                        if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                            Intent intent = new Intent(mContext, SubmitProjectActivity.class);
+                            intent.putExtra("id", String.valueOf(datas.get(position - funds.size()).getUser().getUserId()));
+                            intent.putExtra("favicon", datas.get(position - funds.size()).getUser().getHeadSculpture());
+                            intent.putExtra("name", datas.get(position - funds.size()).getUser().getName());
+                            intent.putExtra("position", datas.get(position - funds.size()).getUser().getAuthentics().get(0).getPosition());
+                            intent.putExtra("compName", datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCompanyName());
+                            intent.putExtra("addr", datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCity().getName());
+                            startActivity(intent);
+                        } else {
+                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                            Intent intent = new Intent();
+                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                                intent.setClass(mContext, WechatVerifyActivity.class);
+                            } else {
+                                intent.setClass(mContext, CertificationIDCardActivity.class);
+                            }
+                            intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
                     }
                 });
             }
@@ -276,6 +313,7 @@ public class Investor2Fragment extends BaseFragment {
         protected void onPostExecute(InvestorgListBean investorgListBean) {
             super.onPostExecute(investorgListBean);
             if (investorgListBean == null) {
+                listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
@@ -286,6 +324,11 @@ public class Investor2Fragment extends BaseFragment {
                     if (page == 0) {
                         funds = investorgListBean.getData().getFounddations();
                         datas = investorgListBean.getData().getInvestors();
+                        if ((funds != null && funds.size() != 0) || (datas != null && datas.size() != 0)) {
+                            listview.setBackgroundResource(R.color.bg_main);
+                        } else {
+                            listview.setBackgroundResource(R.mipmap.bg_empty);
+                        }
                         if (funds != null && datas != null) {
                             listview.setAdapter(myAdapter);
                         }
@@ -299,6 +342,7 @@ public class Investor2Fragment extends BaseFragment {
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
+                    listview.setBackgroundResource(R.mipmap.bg_empty);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                     SuperToastUtils.showSuperToast(mContext, 2, investorgListBean.getMessage());

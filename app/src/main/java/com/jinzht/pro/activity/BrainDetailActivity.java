@@ -21,6 +21,7 @@ import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.ShareUtils;
+import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.CircleImageView;
 
@@ -97,21 +98,46 @@ public class BrainDetailActivity extends FullBaseActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.title_btn_back:// 返回
                 onBackPressed();
                 break;
             case R.id.title_btn_share:// 分享
-                ShareTask shareTask = new ShareTask();
-                shareTask.execute();
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    ShareTask shareTask = new ShareTask();
+                    shareTask.execute();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 break;
             case R.id.brain_btn_collect:// 关注
-                if (data.isCollected()) {
-                    CollectInvestorTask collectInvestorTask = new CollectInvestorTask(2);
-                    collectInvestorTask.execute();
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (data.isCollected()) {
+                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(2);
+                        collectInvestorTask.execute();
+                    } else {
+                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(1);
+                        collectInvestorTask.execute();
+                    }
                 } else {
-                    CollectInvestorTask collectInvestorTask = new CollectInvestorTask(1);
-                    collectInvestorTask.execute();
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
                 break;
         }

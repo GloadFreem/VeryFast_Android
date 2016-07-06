@@ -2,16 +2,13 @@ package com.jinzht.pro.base;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
-import com.jinzht.pro.activity.LoginActivity;
-import com.jinzht.pro.bean.LoginBean;
+import com.jinzht.pro.bean.IsAuthenticBean;
 import com.jinzht.pro.callback.ErrorException;
-import com.jinzht.pro.callback.LoginAgainCallBack;
 import com.jinzht.pro.callback.ProgressBarCallBack;
 import com.jinzht.pro.utils.ACache;
 import com.jinzht.pro.utils.AESUtils;
@@ -25,13 +22,12 @@ import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.view.LoadingProssbar;
 import com.umeng.analytics.MobclickAgent;
 
-import cn.jpush.android.api.JPushInterface;
 import cn.sharesdk.framework.ShareSDK;
 
 /**
  * Fragment的基类
  */
-public abstract class BaseFragment extends Fragment implements ProgressBarCallBack, ErrorException, LoginAgainCallBack {
+public abstract class BaseFragment extends Fragment implements ProgressBarCallBack, ErrorException {
 
     private String className;// 当前类名
     protected String TAG;// 当前类名
@@ -101,63 +97,36 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
         }
     }
 
-    // 异步登录任务，防止用户掉线
-    public class LoginTask extends AsyncTask<Void, Void, LoginBean> {
+    public class IsAuthenticTask extends AsyncTask<Void, Void, IsAuthenticBean> {
         @Override
-        protected LoginBean doInBackground(Void... voids) {
-            String body = "";
-            if (!NetWorkUtils.getNetWorkType(mContext).equals(NetWorkUtils.NETWORK_TYPE_DISCONNECT)) {
+        protected IsAuthenticBean doInBackground(Void... params) {
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                String body = "";
                 try {
-                    body = OkHttpUtils.loginPost(
-                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.LOGIN)),
-                            "telePhone", SharedPreferencesUtils.getTelephone(mContext),
-                            "passWord", SharedPreferencesUtils.getPassword(mContext),
-                            "regId", JPushInterface.getRegistrationID(mContext),
-                            Constant.BASE_URL + Constant.LOGIN,
-                            mContext);
-                    Log.i("登录接口返回值", body);
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.ISAUTHENTIC)),
+                            Constant.BASE_URL + Constant.ISAUTHENTIC,
+                            mContext
+                    );
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return FastJsonTools.getBean(body, LoginBean.class);
+                Log.i("是否已认证", body);
+                return FastJsonTools.getBean(body, IsAuthenticBean.class);
             } else {
                 return null;
             }
         }
 
-        // 从后台拿到用户数据后登录并保存相关数据，登录失败则跳转至登录界面
         @Override
-        protected void onPostExecute(LoginBean loginBean) {
-            super.onPostExecute(loginBean);
-//            if (loginBean == null) {
-//                return;
-//            } else {
-//                if (loginBean.getCode() == 0) {// 登录成功
-//                    UiHelp.printMsg(loginBean.getCode(), loginBean.getMessage(), mContext);// 根据返回码弹出对应toast
-//                    SharedPreferencesUtils.setIsLogin(mContext, true);// 保存登录状态
-////                    SharedPreferencesUtils.setChoseUserType(mContext, loginBean.getData().getInfo());// 保存是否完善信息的状态
-//                    SharedPreferencesUtils.setAuth(mContext, String.valueOf(loginBean.getData().getAuth()));// 保存是否实名认证的状态
-//                    successRefresh();
-//                } else if (loginBean.getCode() == -1) {// 登录失败，跳转至登录页面
-//                    SharedPreferencesUtils.setIsLogin(mContext, false);
-//                    loginAgain();
-//                } else {
-//                    SharedPreferencesUtils.setIsLogin(mContext, false);
-//                    loginAgain();
-//                    UiHelp.printMsg(loginBean.getCode(), loginBean.getMessage(), mContext);
-//                }
-//            }
+        protected void onPostExecute(IsAuthenticBean isAuthenticBean) {
+            super.onPostExecute(isAuthenticBean);
+            if (isAuthenticBean != null && isAuthenticBean.getStatus() == 200) {
+                if (isAuthenticBean.getData() != null) {
+                    String isAuthentic = isAuthenticBean.getData().getName();
+                    SharedPreferencesUtils.saveIsAuthentic(mContext, isAuthentic);
+                }
+            }
         }
-    }
-
-    @Override
-    public void successRefresh() {
-
-    }
-
-    public void loginAgain() {
-        Intent intent = new Intent(mContext, LoginActivity.class);
-        startActivity(intent);
-        getActivity().finish();
     }
 }

@@ -304,6 +304,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     @Override
                     public void onClick(View v) {// 提交记录
                         Intent intent = new Intent(mContext, CommitRecordsActivity.class);
+                        intent.putExtra("TAG", "项目中心");
                         intent.putExtra("id", String.valueOf(proDatas.get(position).getProjectId()));
                         startActivity(intent);
                     }
@@ -346,6 +347,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     @Override
                     public void onClick(View v) {// 提交记录
                         Intent intent = new Intent(mContext, CommitRecordsActivity.class);
+                        intent.putExtra("TAG", "项目中心");
                         intent.putExtra("id", String.valueOf(proDatas.get(position).getProjectId()));
                         startActivity(intent);
                     }
@@ -996,6 +998,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         protected void onPostExecute(ProCenter4InvestorBean proCenter4InvestorBean) {
             super.onPostExecute(proCenter4InvestorBean);
             if (proCenter4InvestorBean == null) {
+                listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
@@ -1006,6 +1009,11 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     if (page == 0) {
                         investorInvestDatas = proCenter4InvestorBean.getData().getInvest();
                         investorCommitDatas = proCenter4InvestorBean.getData().getCommit();
+                        if ((investorInvestDatas != null && investorInvestDatas.size() != 0) || (investorCommitDatas != null && investorCommitDatas.size() != 0)) {
+                            listview.setBackgroundResource(R.color.bg_main);
+                        } else {
+                            listview.setBackgroundResource(R.mipmap.bg_empty);
+                        }
                         if (investorInvestDatas != null && investorCommitDatas != null) {
                             listview.setAdapter(investorAdapter);
                         }
@@ -1022,6 +1030,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
+                    listview.setBackgroundResource(R.mipmap.bg_empty);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                     SuperToastUtils.showSuperToast(mContext, 2, proCenter4InvestorBean.getMessage());
@@ -1064,6 +1073,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         protected void onPostExecute(ProCenter4InvestorBean proCenter4InvestorBean) {
             super.onPostExecute(proCenter4InvestorBean);
             if (proCenter4InvestorBean == null) {
+                listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
@@ -1074,6 +1084,11 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     if (page == 0) {
                         investorInvestDatas = proCenter4InvestorBean.getData().getInvest();
                         investorCommitDatas = proCenter4InvestorBean.getData().getCommit();
+                        if ((investorInvestDatas != null && investorInvestDatas.size() != 0) || (investorCommitDatas != null && investorCommitDatas.size() != 0)) {
+                            listview.setBackgroundResource(R.color.bg_main);
+                        } else {
+                            listview.setBackgroundResource(R.mipmap.bg_empty);
+                        }
                         if (investorInvestDatas != null && investorCommitDatas != null) {
                             listview.setAdapter(investorAdapter);
                         }
@@ -1090,6 +1105,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
+                    listview.setBackgroundResource(R.mipmap.bg_empty);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                     SuperToastUtils.showSuperToast(mContext, 2, proCenter4InvestorBean.getMessage());
@@ -1132,6 +1148,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         protected void onPostExecute(ProCenter4BrainBean proCenter4BrainBean) {
             super.onPostExecute(proCenter4BrainBean);
             if (proCenter4BrainBean == null) {
+                listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
@@ -1142,6 +1159,11 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     if (page == 0) {
                         brainInvestDatas = proCenter4BrainBean.getData().getInvest();
                         brainCommentDatas = proCenter4BrainBean.getData().getComment();
+                        if ((brainInvestDatas != null && brainInvestDatas.size() != 0) || (brainCommentDatas != null && brainCommentDatas.size() != 0)) {
+                            listview.setBackgroundResource(R.color.bg_main);
+                        } else {
+                            listview.setBackgroundResource(R.mipmap.bg_empty);
+                        }
                         if (brainInvestDatas != null && brainCommentDatas != null) {
                             listview.setAdapter(brainAdapter);
                         }
@@ -1158,6 +1180,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
+                    listview.setBackgroundResource(R.mipmap.bg_empty);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                     SuperToastUtils.showSuperToast(mContext, 2, proCenter4BrainBean.getMessage());

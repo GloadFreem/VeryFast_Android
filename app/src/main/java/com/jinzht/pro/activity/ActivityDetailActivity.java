@@ -692,16 +692,41 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.btn_back:// 返回上一页
                 onBackPressed();
                 break;
             case R.id.activity_btn_apply:// 点击报名
-                applyDialog();
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    applyDialog();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 break;
             case R.id.activity_btn_share:// 点击分享
-                ShareTask shareTask = new ShareTask();
-                shareTask.execute();
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    ShareTask shareTask = new ShareTask();
+                    shareTask.execute();
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 break;
             case R.id.activity_btn_more:// 展开更多内容
                 if (isOpen) {// 打开状态，点击关闭
@@ -713,9 +738,9 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                 }
                 break;
             case R.id.activity_btn_quantity_totle:// 查看全部报名人
-                Intent intent = new Intent(this, ActivityAllApplys.class);
-                intent.putExtra("id", data.getActionId());
-                startActivity(intent);
+                Intent intent1 = new Intent(this, ActivityAllApplys.class);
+                intent1.putExtra("id", data.getActionId());
+                startActivity(intent1);
                 break;
 //            case R.id.rl_apply1:// 报名人1
 //                SuperToastUtils.showSuperToast(this, 2, "报名人1");
@@ -733,62 +758,158 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 //                SuperToastUtils.showSuperToast(this, 2, "报名人5");
 //                break;
             case R.id.activity_btn_comment_totle:// 查看全部点赞和评论
-                Intent intent1 = new Intent(this, ActivityAllComments.class);
-                intent1.putExtra("id", data.getActionId());
-                intent1.putExtra("flag", data.isFlag());
-                startActivityForResult(intent1, REQUEST_CODE);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    Intent intent2 = new Intent(this, ActivityAllComments.class);
+                    intent2.putExtra("id", data.getActionId());
+                    intent2.putExtra("flag", data.isFlag());
+                    startActivityForResult(intent2, REQUEST_CODE);
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 break;
             case R.id.activity_tv_comment1:// 回复评论1
-                if (comments.get(0).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
-                    // 弹框提示删除
-                    showDeleteWindow(comment1, 0);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (comments.get(0).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                        // 弹框提示删除
+                        showDeleteWindow(comment1, 0);
+                    } else {
+                        CommentDialog(String.valueOf(comments.get(0).getUsersByUserId().getUserId()), comments.get(0).getUserName());
+                    }
                 } else {
-                    CommentDialog(String.valueOf(comments.get(0).getUsersByUserId().getUserId()), comments.get(0).getUserName());
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
                 break;
             case R.id.activity_tv_comment2:// 回复评论2
-                if (comments.get(1).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
-                    // 弹框提示删除
-                    showDeleteWindow(comment2, 1);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (comments.get(1).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                        // 弹框提示删除
+                        showDeleteWindow(comment2, 1);
+                    } else {
+                        CommentDialog(String.valueOf(comments.get(1).getUsersByUserId().getUserId()), comments.get(1).getUserName());
+                    }
                 } else {
-                    CommentDialog(String.valueOf(comments.get(1).getUsersByUserId().getUserId()), comments.get(1).getUserName());
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
                 break;
             case R.id.activity_tv_comment3:// 回复评论3
-                if (comments.get(2).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
-                    // 弹框提示删除
-                    showDeleteWindow(comment3, 2);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (comments.get(2).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                        // 弹框提示删除
+                        showDeleteWindow(comment3, 2);
+                    } else {
+                        CommentDialog(String.valueOf(comments.get(2).getUsersByUserId().getUserId()), comments.get(2).getUserName());
+                    }
                 } else {
-                    CommentDialog(String.valueOf(comments.get(2).getUsersByUserId().getUserId()), comments.get(2).getUserName());
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
                 break;
             case R.id.activity_tv_comment4:// 回复评论4
-                if (comments.get(3).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
-                    // 弹框提示删除
-                    showDeleteWindow(comment4, 3);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (comments.get(3).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                        // 弹框提示删除
+                        showDeleteWindow(comment4, 3);
+                    } else {
+                        CommentDialog(String.valueOf(comments.get(3).getUsersByUserId().getUserId()), comments.get(3).getUserName());
+                    }
                 } else {
-                    CommentDialog(String.valueOf(comments.get(3).getUsersByUserId().getUserId()), comments.get(3).getUserName());
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
                 break;
             case R.id.activity_tv_comment5:// 回复评论5
-                if (comments.get(4).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
-                    // 弹框提示删除
-                    showDeleteWindow(comment5, 4);
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (comments.get(4).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                        // 弹框提示删除
+                        showDeleteWindow(comment5, 4);
+                    } else {
+                        CommentDialog(String.valueOf(comments.get(4).getUsersByUserId().getUserId()), comments.get(4).getUserName());
+                    }
                 } else {
-                    CommentDialog(String.valueOf(comments.get(4).getUsersByUserId().getUserId()), comments.get(4).getUserName());
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
                 break;
             case R.id.activity_btn_praise:// 点赞
-                if (data.isFlag()) {
-                    ActivityPriseTask activityPriseTask = new ActivityPriseTask(2);
-                    activityPriseTask.execute();
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    if (data.isFlag()) {
+                        ActivityPriseTask activityPriseTask = new ActivityPriseTask(2);
+                        activityPriseTask.execute();
+                    } else {
+                        ActivityPriseTask activityPriseTask = new ActivityPriseTask(1);
+                        activityPriseTask.execute();
+                    }
                 } else {
-                    ActivityPriseTask activityPriseTask = new ActivityPriseTask(1);
-                    activityPriseTask.execute();
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
                 break;
             case R.id.activity_btn_comment:// 评论
-                CommentDialog("", "");
+                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    CommentDialog("", "");
+                } else {
+                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    } else {
+                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    }
+                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 break;
         }
     }

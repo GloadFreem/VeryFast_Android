@@ -49,7 +49,8 @@
                     android:layout_width="55dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -232,6 +233,7 @@
                         android:id="@+id/investor_detail_tv_submit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
                         android:drawableLeft="@mipmap/icon_submit_project"
                         android:drawablePadding="5dp"
                         android:text="提交项目"
@@ -250,6 +252,7 @@
                         android:id="@+id/investor_detail_tv_collect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
                         android:drawableLeft="@mipmap/icon_collect_investor"
                         android:drawablePadding="5dp"
                         android:text="关注(0)"
