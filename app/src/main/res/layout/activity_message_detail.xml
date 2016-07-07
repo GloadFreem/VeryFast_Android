@@ -19,7 +19,7 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="金指投平台"
+            android:text=""
             android:textColor="@color/bg_text"
             android:textSize="17sp" />
 
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="4月22日"
+            android:text=""
             android:textColor="#747474" />
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_below="@id/tv_name"
             android:layout_marginTop="10dp"
             android:lineSpacingExtra="3dp"
-            android:text="APP更新公告"
+            android:text=""
             android:textColor="@color/bg_text"
             android:textSize="14sp" />
     </RelativeLayout>
@@ -56,8 +56,6 @@
         android:layout_marginTop="14dp"
         android:lineSpacingExtra="3dp"
         android:padding="10dp"
-        android:text="新版本v3.0 将于6月30号正式上线，这次是重大更新全新UI、全新交互、功能更加完善，满足不同身份的用户的各种需求，简直吊炸天了，各种炫酷功能和动效，让你嗨翻天，根本停不下来。
-        新版本v3.0 将于6月30号正式上线，这次是重大更新全新UI、全新交互、功能更加完善，满足不同身份的用户的各种需求，简直吊炸天了，各种炫酷功能和动效，让你嗨翻天，根本停不下来。"
         android:textColor="#474747"
         android:textSize="13sp" />
 </LinearLayout>

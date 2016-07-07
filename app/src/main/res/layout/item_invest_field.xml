@@ -9,6 +9,6 @@
     android:gravity="center_vertical"
     android:minHeight="43dp"
     android:paddingRight="17dp"
-    android:text="互联网/电子"
+    android:text=""
     android:textColor="#1b1b1b"
     android:textSize="17sp" />

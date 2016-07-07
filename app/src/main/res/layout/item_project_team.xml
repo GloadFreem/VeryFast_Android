@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="9dp"
-        android:text="张三丰"
+        android:text=""
         android:textColor="#474747"
         android:textSize="13sp" />
 
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:text="总经理"
+        android:text=""
         android:textColor="#747474"
         android:textSize="11sp" />
 </LinearLayout>

@@ -26,7 +26,7 @@
                 android:layout_marginLeft="12dp"
                 android:drawableLeft="@mipmap/icon_team"
                 android:drawablePadding="6dp"
-                android:text="团队"
+                android:text="公司状况"
                 android:textColor="@color/bg_text"
                 android:textSize="18sp" />
 

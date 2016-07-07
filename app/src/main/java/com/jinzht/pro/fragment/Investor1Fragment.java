@@ -164,12 +164,39 @@ public class Investor1Fragment extends BaseFragment {
             }
             if (datas.get(position).isCommited()) {
                 holder.itemInvestorBtnSubmit.setBackgroundResource(R.drawable.bg_code_gray);
-                holder.itemInvestorBtnSubmit.setClickable(false);
                 holder.itemInvestorTvSubmit.setText("已提交");
+                holder.itemInvestorBtnSubmit.setClickable(false);
             } else {
                 holder.itemInvestorBtnSubmit.setBackgroundResource(R.drawable.bg_code_orange);
-                holder.itemInvestorBtnSubmit.setClickable(true);
                 holder.itemInvestorTvSubmit.setText("提交项目");
+                holder.itemInvestorBtnSubmit.setClickable(true);
+                // 提交项目
+                holder.itemInvestorBtnSubmit.setOnClickListener(new View.OnClickListener() {// 提交项目
+                    @Override
+                    public void onClick(View v) {
+                        if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                            Intent intent = new Intent(mContext, SubmitProjectActivity.class);
+                            intent.putExtra("id", String.valueOf(datas.get(position).getUser().getUserId()));
+                            intent.putExtra("favicon", datas.get(position).getUser().getHeadSculpture());
+                            intent.putExtra("name", datas.get(position).getUser().getName());
+                            intent.putExtra("position", datas.get(position).getUser().getAuthentics().get(0).getPosition());
+                            intent.putExtra("compName", datas.get(position).getUser().getAuthentics().get(0).getCompanyName());
+                            intent.putExtra("addr", datas.get(position).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position).getUser().getAuthentics().get(0).getCity().getName());
+                            startActivity(intent);
+                        } else {
+                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                            Intent intent = new Intent();
+                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                                intent.setClass(mContext, WechatVerifyActivity.class);
+                            } else {
+                                intent.setClass(mContext, CertificationIDCardActivity.class);
+                            }
+                            intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    }
+                });
             }
             // 关注
             holder.itemInvestorBtnCollect.setOnClickListener(new View.OnClickListener() {// 关注
@@ -184,33 +211,6 @@ public class Investor1Fragment extends BaseFragment {
                             CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position).getUser().getUserId(), 1);
                             collectInvestorTask.execute();
                         }
-                    } else {
-                        SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                        Intent intent = new Intent();
-                        if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                            intent.setClass(mContext, WechatVerifyActivity.class);
-                        } else {
-                            intent.setClass(mContext, CertificationIDCardActivity.class);
-                        }
-                        intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
-                }
-            });
-            // 提交项目
-            holder.itemInvestorBtnSubmit.setOnClickListener(new View.OnClickListener() {// 提交项目
-                @Override
-                public void onClick(View v) {
-                    if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                        Intent intent = new Intent(mContext, SubmitProjectActivity.class);
-                        intent.putExtra("id", String.valueOf(datas.get(position).getUser().getUserId()));
-                        intent.putExtra("favicon", datas.get(position).getUser().getHeadSculpture());
-                        intent.putExtra("name", datas.get(position).getUser().getName());
-                        intent.putExtra("position", datas.get(position).getUser().getAuthentics().get(0).getPosition());
-                        intent.putExtra("compName", datas.get(position).getUser().getAuthentics().get(0).getCompanyName());
-                        intent.putExtra("addr", datas.get(position).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position).getUser().getAuthentics().get(0).getCity().getName());
-                        startActivity(intent);
                     } else {
                         SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
                         Intent intent = new Intent();

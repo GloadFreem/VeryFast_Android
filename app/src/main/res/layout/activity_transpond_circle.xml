@@ -88,7 +88,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="10dp"
-            android:src="@mipmap/favicon_test"
+            android:src="@mipmap/ic_launcher"
             app:civ_border_color="#20000000"
             app:civ_border_width="1dp" />
 
@@ -99,7 +99,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/iv_favicon"
-            android:text="范跑跑"
+            android:text=""
             android:textColor="@color/bg_text"
             android:textSize="15sp" />
 
@@ -112,7 +112,7 @@
             android:layout_marginTop="7dp"
             android:layout_toRightOf="@id/iv_favicon"
             android:singleLine="true"
-            android:text="世界上现在除了中国文字的象形文字，其他都是拼音文字"
+            android:text=""
             android:textColor="#474747"
             android:textSize="13sp" />
     </RelativeLayout>

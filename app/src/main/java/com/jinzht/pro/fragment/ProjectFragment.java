@@ -28,6 +28,7 @@ import com.jinzht.pro.activity.PreselectionDetailsActivity;
 import com.jinzht.pro.activity.RoadshowDetailsActivity;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.BannerInfoBean;
+import com.jinzht.pro.bean.EventMsg;
 import com.jinzht.pro.bean.HaveNotReadMessageBean;
 import com.jinzht.pro.bean.PreselectionProjectListBean;
 import com.jinzht.pro.bean.RoadshowProjectListBean;
@@ -47,6 +48,10 @@ import com.jinzht.pro.view.RoundProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * 项目界面
@@ -98,7 +103,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
         refreshView.setOnRefreshListener(new PullListener());
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -142,6 +147,17 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 //            getPreselectionProjectListTask.execute();
 //        }
 //    }
+
+    // 接收推送的站内信，改变未读状态
+    @Subscribe(threadMode = ThreadMode.MainThread, sticky = true)
+    public void getReceivedMsg(EventMsg msg) {
+        if ("收到Msg".equals(msg.getMsg())) {
+            titleIvLeft.setImageResource(R.mipmap.message_full);
+        }
+        if ("点击Msg".equals(msg.getMsg())) {
+            titleIvLeft.setImageResource(R.mipmap.message_empty);
+        }
+    }
 
     // 添加banner头布局
     private void initListHeader() {
@@ -828,7 +844,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         if (thread != null) {// 停止进度条
             thread.stopThread();
         }
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -838,6 +854,6 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         if (thread != null) {// 停止进度条
             thread.stopThread();
         }
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
     }
 }

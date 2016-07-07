@@ -22,7 +22,7 @@
         android:ellipsize="end"
         android:lineSpacingExtra="3dp"
         android:maxLines="2"
-        android:text="胡丫郁，陈生珠，段辉，刘延杰，王瑞，刘路，邓毅，王丹，胡丫郁，陈生珠，段辉，刘延杰，王瑞，刘路，邓毅，王丹"
+        android:text=""
         android:textColor="@color/custom_orange"
         android:textSize="14sp" />
 </LinearLayout>

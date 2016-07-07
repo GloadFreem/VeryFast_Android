@@ -5,7 +5,7 @@ package com.jinzht.pro.utils;
  */
 public class Constant {
 
-//    public static final String BASE_URL = "http://192.168.5.153:8080/jinzht/";
+//    public static final String BASE_URL = "http://192.168.5.159:8080/jinzht/";
     public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 微信APP_ID
@@ -412,13 +412,13 @@ public class Constant {
     /**
      * 易宝网关接口
      */
-    public static final String YEEPAY_GATEWAY = "http://220.181.25.233:8081/member/bhawireless/";
-//    public static final String YEEPAY_GATEWAY = "https://member.yeepay.com/member/bhawireless/";
+//    public static final String YEEPAY_GATEWAY = "http://220.181.25.233:8081/member/bhawireless/";
+    public static final String YEEPAY_GATEWAY = "https://member.yeepay.com/member/bhawireless/";
     /**
      * 易宝直连接口
      */
-    public static final String YEEPAY_DIRECT = "http://220.181.25.233:8081/member/bhaexter/bhaController";
-//    public static final String YEEPAY_DIRECT = "https://member.yeepay.com/member/bhaexter/bhaController";
+//    public static final String YEEPAY_DIRECT = "http://220.181.25.233:8081/member/bhaexter/bhaController";
+    public static final String YEEPAY_DIRECT = "https://member.yeepay.com/member/bhaexter/bhaController";
     /**
      * 易宝回跳页面
      */

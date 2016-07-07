@@ -43,7 +43,7 @@
         android:maxWidth="180dp"
         android:singleLine="true"
         android:layout_toRightOf="@id/item_investor_favicon"
-        android:text="发的福利上飞机的律师费激烈的数据分来到极光"
+        android:text=""
         android:textColor="#747474"
         android:textSize="15sp" />
 

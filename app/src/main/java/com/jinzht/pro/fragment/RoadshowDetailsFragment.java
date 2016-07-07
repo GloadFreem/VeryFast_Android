@@ -18,6 +18,7 @@ import com.jinzht.pro.R;
 import com.jinzht.pro.activity.CertificationIDCardActivity;
 import com.jinzht.pro.activity.CommonWebViewActivity;
 import com.jinzht.pro.activity.ImagePagerActivity;
+import com.jinzht.pro.activity.RoadshowDetailsActivity;
 import com.jinzht.pro.activity.WechatVerifyActivity;
 import com.jinzht.pro.adapter.ProjectPhotosAdapter;
 import com.jinzht.pro.adapter.ProjectReportsAdapter;
@@ -316,7 +317,10 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
             @Override
             public void onItemClick(View view, int position) {
                 if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (SharedPreferencesUtils.getUserType(mContext) != Constant.USERTYPE_XMF) {
+                    // 身份类型是项目方又不是自己时不能点开
+                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
+
+                    } else {
                         Intent intent = new Intent(mContext, CommonWebViewActivity.class);
                         intent.putExtra("title", reportDatas.get(position).getContent());
                         intent.putExtra("url", reportDatas.get(position).getUrl());

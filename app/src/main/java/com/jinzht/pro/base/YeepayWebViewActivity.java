@@ -34,9 +34,12 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
 
     protected LinearLayout btnBack;// 返回
     protected TextView tvTitle;// 标题
+    private LinearLayout titleBtnRight2;// 收藏按钮
+    private LinearLayout titleBtnRight;// 分享按钮
     protected ProgressBar progressBar;// 进度条
     protected WebView webview;// 网页
 
+    private String htmlBody = "";
     protected XStream xStream;
     protected String request;// 请求参数
     protected String sign;// 签名
@@ -52,7 +55,7 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
     protected void init() {
         UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
 
-        btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
+        btnBack = (LinearLayout) findViewById(R.id.title_btn_left);// 返回
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +67,10 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
             }
         });
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
+        titleBtnRight2 = (LinearLayout) findViewById(R.id.title_btn_right2);// 收藏按钮
+        titleBtnRight2.setVisibility(View.GONE);
+        titleBtnRight = (LinearLayout) findViewById(R.id.title_btn_right);// 分享按钮
+        titleBtnRight.setVisibility(View.GONE);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);// 进度条
         webview = (WebView) findViewById(R.id.webview);// 网页
 
@@ -156,8 +163,15 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            if (url.endsWith("swiftRecharge") || url.endsWith("swiftBindCardAndRecharge")) {
-                view.loadUrl("javascript:submit()");
+//            if (url.endsWith("swiftRecharge") || url.endsWith("swiftBindCardAndRecharge")) {
+//                view.loadUrl("javascript:submit()");
+//            }
+//            if (url.startsWith("https") && url.contains("pay/success")) {
+//                view.loadUrl("javascript:submit()");
+//            }
+            if (htmlBody.contains("返回商户") || htmlBody.contains("操作成功") || htmlBody.contains("成功")) {
+                Log.i("包含的字段", htmlBody);
+                webview.loadUrl("javascript:submit()");
             }
             super.onPageFinished(view, url);
         }
@@ -183,12 +197,22 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
                 }
                 progressBar.setProgress(newProgress);
             }
+            if (newProgress < 100) {
+                view.loadUrl("javascript:window.fromJS.showSource('<head>'+"
+                        + "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+            }
         }
     }
 
     // 让JS调用Java方法
     private Object getHtmlObject() {
         Object insertObj = new Object() {
+            @JavascriptInterface
+            public void showSource(String html) {
+                htmlBody = html;
+                Log.i("====>html=", html);
+            }
+
             @JavascriptInterface
             public void getResp(final String respResult, final String signResult) {
                 Log.i("返回的XML", respResult);

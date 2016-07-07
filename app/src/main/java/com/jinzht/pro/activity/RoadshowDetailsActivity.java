@@ -83,6 +83,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
 
     private ArrayList<Fragment> fragments = new ArrayList<>();
     private ProjectDetailBean.DataBean.ProjectBean data;// 项目详情数据
+    public static int userId;
 
     private static int pages = 0;// PPT数据页码
     private static List<PPTBean.DataBean> pptData;// PPT数据
@@ -136,7 +137,8 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         getMemberTask.execute();
 
         if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-            if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext)) {
+            // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
+            if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
                 vpPPt.setScrollable(false);
             } else {
                 vpPPt.setScrollable(true);
@@ -150,7 +152,8 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             public void onCompletion(MediaPlayer mp) {
                 isPlaying = false;
                 if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext)) {
+                    // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
+                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
                         vpPPt.setScrollable(false);
                     } else {
                         vpPPt.setScrollable(true);
@@ -396,6 +399,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                     data = projectDetailBean.getData().getProject();
                     if (data != null) {
                         initCollect();
+                        userId = data.getUserId();
                     }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, projectDetailBean.getMessage());
@@ -770,7 +774,8 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                     SuperToastUtils.showSuperToast(UiUtils.getContext(), 2, "网络连接异常");
                     isPlaying = false;
                     if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(UiUtils.getContext()))) {
-                        if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(UiUtils.getContext())) {
+                        // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
+                        if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(UiUtils.getContext()) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(UiUtils.getContext())) {
                             vpPPt.setScrollable(false);
                         } else {
                             vpPPt.setScrollable(true);
@@ -821,7 +826,8 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
                 if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext)) {
+                    // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
+                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
                         vpPPt.setScrollable(false);
                     } else {
                         vpPPt.setScrollable(true);
@@ -843,7 +849,8 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
                 if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext)) {
+                    // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
+                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
                         vpPPt.setScrollable(false);
                     } else {
                         vpPPt.setScrollable(true);
@@ -865,7 +872,8 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
                 if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext)) {
+                    // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
+                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
                         vpPPt.setScrollable(false);
                     } else {
                         vpPPt.setScrollable(true);

@@ -11,7 +11,7 @@
         android:id="@+id/iv_favicon"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:src="@mipmap/favicon_test" />
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/iv_favicon"
-        android:text="王二小"
+        android:text=""
         android:textColor="@color/bg_text"
         android:textSize="14sp" />
 
@@ -31,7 +31,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="2dp"
         android:layout_toRightOf="@id/iv_favicon"
-        android:text="2016.2.26"
+        android:text=""
         android:textColor="#939393"
         android:textSize="10sp" />
 
@@ -43,7 +43,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/iv_favicon"
-        android:text="大王叫我来巡山"
+        android:text=""
         android:textColor="#474747"
         android:textSize="14sp" />
 

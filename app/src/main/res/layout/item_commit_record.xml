@@ -11,7 +11,7 @@
         android:layout_height="49dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:src="@mipmap/favicon_test" />
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -20,7 +20,7 @@
         android:layout_marginLeft="7dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/iv_favicon"
-        android:text="王赛赛"
+        android:text=""
         android:textColor="@color/bg_text"
         android:textSize="17sp" />
 
@@ -32,7 +32,7 @@
         android:layout_marginLeft="7dp"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/iv_favicon"
-        android:text="金山运营总监"
+        android:text=""
         android:textColor="#747474"
         android:textSize="14sp" />
 
@@ -43,7 +43,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:text="已查看"
+        android:text=""
         android:textColor="#747474"
         android:textSize="17sp" />
 
@@ -55,7 +55,7 @@
         android:layout_below="@id/tv_name"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
-        android:text="2016年5月22日 11:55"
+        android:text=""
         android:textColor="#747474"
         android:textSize="14sp" />
 </RelativeLayout>

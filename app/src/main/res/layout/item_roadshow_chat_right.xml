@@ -16,14 +16,14 @@
             android:id="@+id/item_chat_favicon"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:background="@mipmap/favicon_test" />
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/item_chat_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="王大锤"
+            android:text=""
             android:textColor="#474747"
             android:textSize="12sp" />
     </LinearLayout>
@@ -37,7 +37,7 @@
         android:background="@drawable/bg_chat_msg_bulu"
         android:maxWidth="230dp"
         android:padding="5dp"
-        android:text="北京世纪之星系能源科技有限公司100MWp分布北京世纪之星新能源科技有限公司100MWp分布"
+        android:text=""
         android:textColor="@android:color/white"
         android:textSize="14dp" />
 
@@ -51,7 +51,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_chat_time"
         android:padding="4dp"
-        android:text="10:25"
+        android:text=""
         android:textColor="@android:color/white" />
 </RelativeLayout>
 

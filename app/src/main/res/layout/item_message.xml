@@ -40,7 +40,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/item_message_img"
-        android:text="金指投平台"
+        android:text=""
         android:textColor="@color/bg_text"
         android:textSize="17sp" />
 
@@ -52,7 +52,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="9dp"
         android:layout_toRightOf="@id/item_message_img"
-        android:text="APP更新公告"
+        android:text=""
         android:textColor="@color/bg_text"
         android:textSize="14sp" />
 
@@ -68,7 +68,7 @@
         android:layout_toRightOf="@id/item_message_img"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="新版本V3.0将于6月30日正式上线，这次是重大更新全新UI、全新交互、功能更加完善，满足不同用户,全新交互、功能更加完善，满足不同用户"
+        android:text=""
         android:textColor="#474747"
         android:textSize="13sp" />
 
@@ -79,6 +79,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:text="4月22日"
+        android:text=""
         android:textColor="#747474" />
 </RelativeLayout>

@@ -59,7 +59,7 @@
         android:layout_height="99dp"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:src="@mipmap/favicon_test"
+        android:src="@mipmap/ic_launcher"
         app:civ_border_color="#50ffffff"
         app:civ_border_width="5dp" />
 

@@ -61,7 +61,7 @@
                 android:gravity="center"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:text="创业公司吸引投资人前应做哪些准备\n金指投产品学院第六期"
+                android:text=""
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
@@ -82,7 +82,6 @@
                     android:ellipsize="end"
                     android:lineSpacingExtra="3dp"
                     android:maxLines="3"
-                    android:text="这两年，互联网金融行业如火如荼，但也因为发展不成熟，爆发出了一些问题。随之而来的是一系列监管重拳出击，在媒体的舆论中公众的质疑也越来越高。最近潘晓婷、黄晓明等明星也卷入了代言的P2P出事风波，现在舆论的架势，几乎是P2P=骗子的节奏。"
                     android:textColor="#474747"
                     android:textSize="14sp" />
 
@@ -139,7 +138,7 @@
                     android:layout_marginTop="13dp"
                     android:drawableLeft="@mipmap/icon_time"
                     android:drawablePadding="5dp"
-                    android:text="2016.3.20  星期天  10:00"
+                    android:text=""
                     android:textColor="#747474"
                     android:textSize="12sp" />
 
@@ -156,7 +155,7 @@
                         android:layout_height="wrap_content"
                         android:drawableLeft="@mipmap/icon_num"
                         android:drawablePadding="5dp"
-                        android:text="20-50人"
+                        android:text=""
                         android:textColor="#747474"
                         android:textSize="12sp" />
 
@@ -167,7 +166,7 @@
                         android:layout_marginLeft="9dp"
                         android:background="@drawable/bg_btn_blue"
                         android:padding="2dp"
-                        android:text="免费"
+                        android:text=""
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -185,7 +184,7 @@
                         android:layout_marginLeft="14dp"
                         android:drawableLeft="@mipmap/icon_location"
                         android:drawablePadding="5dp"
-                        android:text="陕西省西安市雁塔区锦业路"
+                        android:text=""
                         android:textColor="#747474"
                         android:textSize="12sp" />
 
@@ -195,7 +194,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="9dp"
-                        android:text="1.2km"
+                        android:text=""
                         android:textColor="#747474"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -265,7 +264,7 @@
                         android:layout_height="49dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/favicon_test" />
+                        android:src="@mipmap/ic_launcher" />
 
                     <TextView
                         android:id="@+id/activity_tv_name1"
@@ -274,7 +273,7 @@
                         android:layout_marginLeft="7dp"
                         android:layout_marginTop="13dp"
                         android:layout_toRightOf="@id/activity_iv_favicon1"
-                        android:text="王赛赛"
+                        android:text=""
                         android:textColor="@color/bg_text"
                         android:textSize="17sp" />
 
@@ -286,7 +285,7 @@
                         android:layout_marginLeft="7dp"
                         android:layout_marginTop="5dp"
                         android:layout_toRightOf="@id/activity_iv_favicon1"
-                        android:text="金山运营总监"
+                        android:text=""
                         android:textColor="#747474"
                         android:textSize="14sp" />
 
@@ -317,7 +316,7 @@
                         android:layout_height="49dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/favicon_test" />
+                        android:src="@mipmap/ic_launcher" />
 
                     <TextView
                         android:id="@+id/activity_tv_name2"
@@ -326,7 +325,7 @@
                         android:layout_marginLeft="7dp"
                         android:layout_marginTop="13dp"
                         android:layout_toRightOf="@id/activity_iv_favicon2"
-                        android:text="王赛赛"
+                        android:text=""
                         android:textColor="@color/bg_text"
                         android:textSize="17sp" />
 
@@ -338,7 +337,7 @@
                         android:layout_marginLeft="7dp"
                         android:layout_marginTop="5dp"
                         android:layout_toRightOf="@id/activity_iv_favicon2"
-                        android:text="金山运营总监"
+                        android:text=""
                         android:textColor="#747474"
                         android:textSize="14sp" />
 
@@ -349,7 +348,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="11:55" />
+                        android:text="" />
 
                     <View
                         android:layout_width="match_parent"
@@ -369,7 +368,7 @@
                         android:layout_height="49dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/favicon_test" />
+                        android:src="@mipmap/ic_launcher" />
 
                     <TextView
                         android:id="@+id/activity_tv_name3"
@@ -378,7 +377,7 @@
                         android:layout_marginLeft="7dp"
                         android:layout_marginTop="13dp"
                         android:layout_toRightOf="@id/activity_iv_favicon3"
-                        android:text="王赛赛"
+                        android:text=""
                         android:textColor="@color/bg_text"
                         android:textSize="17sp" />
 
@@ -390,7 +389,7 @@
                         android:layout_marginLeft="7dp"
                         android:layout_marginTop="5dp"
                         android:layout_toRightOf="@id/activity_iv_favicon3"
-                        android:text="金山运营总监"
+                        android:text=""
                         android:textColor="#747474"
                         android:textSize="14sp" />
 
@@ -401,7 +400,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="11:55" />
+                        android:text="" />
 
                     <View
                         android:layout_width="match_parent"
@@ -421,7 +420,7 @@
                         android:layout_height="49dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/favicon_test" />
+                        android:src="@mipmap/ic_launcher" />
 
                     <TextView
                         android:id="@+id/activity_tv_name4"
@@ -430,7 +429,7 @@
                         android:layout_marginLeft="7dp"
                         android:layout_marginTop="13dp"
                         android:layout_toRightOf="@id/activity_iv_favicon4"
-                        android:text="王赛赛"
+                        android:text=""
                         android:textColor="@color/bg_text"
                         android:textSize="17sp" />
 
@@ -442,7 +441,7 @@
                         android:layout_marginLeft="7dp"
                         android:layout_marginTop="5dp"
                         android:layout_toRightOf="@id/activity_iv_favicon4"
-                        android:text="金山运营总监"
+                        android:text=""
                         android:textColor="#747474"
                         android:textSize="14sp" />
 
@@ -453,7 +452,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="11:55" />
+                        android:text="" />
 
                     <View
                         android:layout_width="match_parent"
@@ -473,7 +472,7 @@
                         android:layout_height="49dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/favicon_test" />
+                        android:src="@mipmap/ic_launcher" />
 
                     <TextView
                         android:id="@+id/activity_tv_name5"
@@ -482,7 +481,7 @@
                         android:layout_marginLeft="7dp"
                         android:layout_marginTop="13dp"
                         android:layout_toRightOf="@id/activity_iv_favicon5"
-                        android:text="王赛赛"
+                        android:text=""
                         android:textColor="@color/bg_text"
                         android:textSize="17sp" />
 
@@ -494,7 +493,7 @@
                         android:layout_marginLeft="7dp"
                         android:layout_marginTop="5dp"
                         android:layout_toRightOf="@id/activity_iv_favicon5"
-                        android:text="金山运营总监"
+                        android:text=""
                         android:textColor="#747474"
                         android:textSize="14sp" />
 
@@ -577,7 +576,6 @@
                         android:ellipsize="end"
                         android:lineSpacingExtra="3dp"
                         android:maxLines="2"
-                        android:text="胡丫郁，陈生珠，段辉，刘延杰，王瑞，刘路，邓毅，王丹，胡丫郁，陈生珠，段辉，刘延杰，王瑞，刘路，邓毅，王丹"
                         android:textColor="@color/custom_orange"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -611,7 +609,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
                             android:ellipsize="end"
-                            android:text="陈生珠：好，点个赞！"
+                            android:text=""
                             android:textColor="@color/bg_text"
                             android:textSize="14sp" />
 
@@ -621,7 +619,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:ellipsize="end"
-                            android:text="刘延杰 回复 陈生珠：棒棒哒"
+                            android:text=""
                             android:textColor="@color/bg_text"
                             android:textSize="14sp" />
 
@@ -631,7 +629,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:ellipsize="end"
-                            android:text="胡丫郁：萌萌哒"
+                            android:text=""
                             android:textColor="@color/bg_text"
                             android:textSize="14sp" />
 
@@ -641,7 +639,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:ellipsize="end"
-                            android:text="胡丫郁：萌萌哒"
+                            android:text=""
                             android:textColor="@color/bg_text"
                             android:textSize="14sp" />
 
@@ -651,7 +649,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:ellipsize="end"
-                            android:text="胡丫郁：萌萌哒"
+                            android:text=""
                             android:textColor="@color/bg_text"
                             android:textSize="14sp" />
 

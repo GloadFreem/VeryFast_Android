@@ -8,7 +8,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginTop="15dp"
-        android:src="@mipmap/favicon_test" />
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/item_comment_name"
@@ -17,7 +17,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
         android:layout_toRightOf="@id/item_comment_favicon"
-        android:text="王二小"
+        android:text=""
         android:textColor="@color/bg_text"
         android:textSize="14sp" />
 
@@ -29,7 +29,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/item_comment_favicon"
-        android:text="2016.2.26"
+        android:text=""
         android:textColor="#939393"
         android:textSize="10sp" />
 
@@ -44,7 +44,6 @@
         android:layout_toRightOf="@id/item_comment_favicon"
         android:ellipsize="end"
         android:maxLines="3"
-        android:text="大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山大王叫我来巡山"
         android:textColor="#474747"
         android:textSize="14sp" />
 </RelativeLayout>

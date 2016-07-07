@@ -135,14 +135,13 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
         switch (v.getId()) {
             case R.id.roadshow_btn_play:
                 if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (Constant.USERTYPE_XMF != SharedPreferencesUtils.getUserType(mContext)) {
+                    // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
+                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
+                        RoadshowDetailsActivity.vpPPt.setScrollable(false);
+                    } else {
                         if (RoadshowDetailsActivity.isPlaying) {// 正在播放，点击暂停
                             RoadshowDetailsActivity.isPlaying = false;
-                            if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext)) {
-                                RoadshowDetailsActivity.vpPPt.setScrollable(false);
-                            } else {
-                                RoadshowDetailsActivity.vpPPt.setScrollable(true);
-                            }
+                            RoadshowDetailsActivity.vpPPt.setScrollable(true);
                             ivPlay.setBackgroundResource(R.mipmap.icon_play);
                             RoadshowDetailsActivity.player.pause();
                             RoadshowDetailsActivity.postSize = RoadshowDetailsActivity.player.getCurrentPosition();

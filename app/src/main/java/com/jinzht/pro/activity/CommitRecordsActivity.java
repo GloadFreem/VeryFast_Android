@@ -122,7 +122,7 @@ public class CommitRecordsActivity extends BaseActivity implements View.OnClickL
             holder.tvPosition.setText(datas.get(position).getUser().getAuthentics().get(0).getCompanyName() + datas.get(position).getUser().getAuthentics().get(0).getPosition());
             holder.tvTime.setText(DateUtils.timeLogic(datas.get(position).getRecord().getRecordDate()));
             holder.tvIsRead.setText(datas.get(position).getRecord().getStatus().getName());
-            if ("忽略".equals(datas.get(position).getRecord().getStatus().getName())) {
+            if ("未查看".equals(datas.get(position).getRecord().getStatus().getName())) {
                 holder.tvIsRead.setTextColor(Color.RED);
             } else {
                 holder.tvIsRead.setTextColor(0xff747474);

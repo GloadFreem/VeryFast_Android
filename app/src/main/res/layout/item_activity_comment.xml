@@ -22,7 +22,7 @@
         android:layout_marginLeft="10dp"
         android:ellipsize="end"
         android:lineSpacingExtra="3dp"
-        android:text="陈生珠：好，点个赞！陈生珠：好，点个赞！陈生珠：好，点个赞！"
+        android:text=""
         android:textColor="@color/bg_text"
         android:textSize="14sp" />
 </LinearLayout>

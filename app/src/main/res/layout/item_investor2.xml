@@ -10,7 +10,7 @@
         android:layout_height="58dp"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="15dp"
-        android:src="@mipmap/favicon_test" />
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/item_investorg_name"
@@ -19,7 +19,7 @@
         android:layout_marginLeft="11dp"
         android:layout_marginTop="12dp"
         android:layout_toRightOf="@id/item_investorg_favicon"
-        android:text="红杉资本"
+        android:text=""
         android:textColor="@color/bg_text"
         android:textSize="18sp" />
 
@@ -31,7 +31,7 @@
         android:layout_marginLeft="11dp"
         android:layout_marginTop="6dp"
         android:layout_toRightOf="@id/item_investorg_favicon"
-        android:text="北京 | 海淀"
+        android:text=""
         android:textColor="#747474"
         android:textSize="12sp" />
 
@@ -64,7 +64,7 @@
             android:paddingLeft="2.5dp"
             android:paddingRight="2.5dp"
             android:paddingTop="1.5dp"
-            android:text="体育"
+            android:text=""
             android:textColor="#00a0d9"
             android:textSize="15sp" />
 
@@ -78,7 +78,7 @@
             android:paddingLeft="2.5dp"
             android:paddingRight="2.5dp"
             android:paddingTop="1.5dp"
-            android:text="旅游"
+            android:text=""
             android:textColor="#00a0d9"
             android:textSize="15sp" />
 
@@ -92,7 +92,7 @@
             android:paddingLeft="2.5dp"
             android:paddingRight="2.5dp"
             android:paddingTop="1.5dp"
-            android:text="电影"
+            android:text=""
             android:textColor="#00a0d9"
             android:textSize="15sp" />
     </LinearLayout>

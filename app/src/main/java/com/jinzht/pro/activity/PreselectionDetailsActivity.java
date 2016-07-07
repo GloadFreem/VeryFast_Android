@@ -474,7 +474,10 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             @Override
             public void onItemClick(View view, int position) {
                 if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (SharedPreferencesUtils.getUserType(mContext) != Constant.USERTYPE_XMF) {
+                    // 身份类型是项目方又不是自己时不能点开
+                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
+
+                    } else {
                         Intent intent = new Intent(mContext, CommonWebViewActivity.class);
                         intent.putExtra("title", reportDatas.get(position).getContent());
                         intent.putExtra("url", reportDatas.get(position).getUrl());

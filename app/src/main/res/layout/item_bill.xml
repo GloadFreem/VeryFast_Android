@@ -77,7 +77,7 @@
             android:id="@+id/item_bill_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="项目认投"
+            android:text=""
             android:textColor="@color/bg_text"
             android:textSize="19sp" />
 
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:text="¥ 800万"
+            android:text=""
             android:textColor="@color/bg_text"
             android:textSize="18sp" />
 
@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/item_bill_type"
             android:layout_marginTop="10dp"
-            android:text="rt2016030295523"
+            android:text=""
             android:textColor="#747474"
             android:textSize="14sp" />
 
@@ -108,7 +108,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/item_bill_amount"
             android:layout_marginTop="10dp"
-            android:text="认投成功"
+            android:text=""
             android:textColor="#747474"
             android:textSize="14sp" />
 
@@ -126,14 +126,14 @@
                 android:id="@+id/item_bill_img"
                 android:layout_width="29dp"
                 android:layout_height="29dp"
-                android:src="@mipmap/favicon_test" />
+                android:src="@mipmap/ic_launcher" />
 
             <TextView
                 android:id="@+id/item_bill_comp_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
-                android:text="逸景营地"
+                android:text=""
                 android:textColor="#747474"
                 android:textSize="17sp" />
         </LinearLayout>
@@ -153,7 +153,7 @@
             android:id="@+id/item_bill_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12月20日"
+            android:text=""
             android:textColor="@color/bg_text"
             android:textSize="14sp" />
 
@@ -161,7 +161,7 @@
             android:id="@+id/item_bill_minute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="14:30"
+            android:text=""
             android:textColor="@color/bg_text"
             android:textSize="12sp" />
     </LinearLayout>

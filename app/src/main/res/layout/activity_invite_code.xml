@@ -23,7 +23,7 @@
             android:layout_width="68dp"
             android:layout_height="68dp"
             android:layout_marginTop="19dp"
-            android:src="@mipmap/favicon_test"
+            android:src="@mipmap/ic_launcher"
             app:civ_border_color="#50ffffff"
             app:civ_border_width="0.5dp" />
 
@@ -37,14 +37,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="20160504"
+                android:text=""
                 android:textColor="@android:color/white"
                 android:textSize="24sp" />
 
             <ImageView
                 android:id="@+id/btn_copy"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="50dp"
+                android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
                 android:layout_toRightOf="@id/tv_invite_code"
