@@ -264,7 +264,7 @@
                         android:layout_height="49dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@mipmap/ic_default_favicon" />
 
                     <TextView
                         android:id="@+id/activity_tv_name1"
@@ -316,7 +316,7 @@
                         android:layout_height="49dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@mipmap/ic_default_favicon" />
 
                     <TextView
                         android:id="@+id/activity_tv_name2"
@@ -368,7 +368,7 @@
                         android:layout_height="49dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@mipmap/ic_default_favicon" />
 
                     <TextView
                         android:id="@+id/activity_tv_name3"
@@ -420,7 +420,7 @@
                         android:layout_height="49dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@mipmap/ic_default_favicon" />
 
                     <TextView
                         android:id="@+id/activity_tv_name4"
@@ -472,7 +472,7 @@
                         android:layout_height="49dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@mipmap/ic_default_favicon" />
 
                     <TextView
                         android:id="@+id/activity_tv_name5"

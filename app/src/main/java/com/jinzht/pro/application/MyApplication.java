@@ -51,7 +51,7 @@ public class MyApplication extends Application {
         //哪个方法调用了myTid，myTid返回的就是那个方法所在的线程id
         mainThreadId = android.os.Process.myTid();
 
-        JPushInterface.setDebugMode(true);// 设置开启日志，发布时需关闭
+        JPushInterface.setDebugMode(false);// 设置开启日志，发布时需关闭
         JPushInterface.init(this);// 初始化
 
         okHttpClient.setConnectTimeout(5, TimeUnit.SECONDS);

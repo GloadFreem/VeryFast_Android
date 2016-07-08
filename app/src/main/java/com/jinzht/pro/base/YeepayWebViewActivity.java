@@ -40,6 +40,7 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
     protected WebView webview;// 网页
 
     private String htmlBody = "";
+    private int count = 0;
     protected XStream xStream;
     protected String request;// 请求参数
     protected String sign;// 签名
@@ -157,31 +158,36 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            showProgressDialog("");
             Log.i("要开始的URL", url);
+            if (url.startsWith("https") && url.contains("pay/success")) {
+                count++;
+            }
             super.onPageStarted(view, url, favicon);
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
-//            if (url.endsWith("swiftRecharge") || url.endsWith("swiftBindCardAndRecharge")) {
-//                view.loadUrl("javascript:submit()");
-//            }
-//            if (url.startsWith("https") && url.contains("pay/success")) {
-//                view.loadUrl("javascript:submit()");
-//            }
-            if (htmlBody.contains("返回商户") || htmlBody.contains("操作成功") || htmlBody.contains("成功")) {
-                Log.i("包含的字段", htmlBody);
-                webview.loadUrl("javascript:submit()");
+            dismissProgressDialog();
+            if (url.endsWith("swiftRecharge") || url.endsWith("swiftBindCardAndRecharge")) {
+                view.loadUrl("javascript:submit()");
             }
+            Log.i("要开始的count", String.valueOf(count));
+            if (url.startsWith("https") && url.contains("pay/success") && count == 2) {
+                System.out.println("要开始执行了");
+                view.loadUrl("javascript:window.fromJS.showSource("
+                        + "document.getElementsByTagName('a')[0].href);");
+                System.out.println("要开始结束了");
+            }
+//            view.loadUrl("javascript:window.fromJS.showSource('<head>'+"
+//                    + "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
             super.onPageFinished(view, url);
         }
 
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
             super.onReceivedError(view, errorCode, description, failingUrl);
-            String imgPath = "file:///android_asset/bg_empty.png";
-            String data = "<HTML><Div align=\"center\"  margin=\"0px\"><IMG src=\"" + imgPath + "\" margin=\"0px\"/></Div>";
-            view.loadDataWithBaseURL(imgPath, data, "text/html", "utf-8", null);
+            view.loadUrl("file:///android_asset/error.html");
         }
     }
 
@@ -197,10 +203,6 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
                 }
                 progressBar.setProgress(newProgress);
             }
-            if (newProgress < 100) {
-                view.loadUrl("javascript:window.fromJS.showSource('<head>'+"
-                        + "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
-            }
         }
     }
 
@@ -208,9 +210,14 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
     private Object getHtmlObject() {
         Object insertObj = new Object() {
             @JavascriptInterface
-            public void showSource(String html) {
-                htmlBody = html;
+            public void showSource(final String html) {
                 Log.i("====>html=", html);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        webview.loadUrl(html);
+                    }
+                });
             }
 
             @JavascriptInterface

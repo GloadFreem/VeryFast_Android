@@ -273,7 +273,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                         holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                     case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzishibai);
+                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                 }
                 holder.itemProjectCompname.setText(proDatas.get(position).getFullName());
@@ -496,7 +496,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                         holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                     case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzishibai);
+                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                 }
                 holder.itemProjectCompname.setText(investorInvestDatas.get(position).getFullName());
@@ -545,7 +545,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                         holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                     case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzishibai);
+                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                 }
                 holder.itemProjectCompname.setText(investorCommitDatas.get(newPosition).getFullName());
@@ -770,7 +770,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                         holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                     case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzishibai);
+                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                 }
                 holder.itemProjectCompname.setText(brainInvestDatas.get(position).getFullName());
@@ -819,7 +819,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                         holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                     case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzishibai);
+                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                 }
                 holder.itemProjectCompname.setText(brainCommentDatas.get(newPosition).getFullName());

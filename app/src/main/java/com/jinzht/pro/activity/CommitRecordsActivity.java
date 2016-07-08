@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,21 +55,12 @@ public class CommitRecordsActivity extends BaseActivity implements View.OnClickL
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
-        if ("项目中心".equals(getIntent().getStringExtra("TAG"))) {
-            tvTitle.setText("提交记录");
-        }
-        tvTitle.setText("已报名人");
+        tvTitle.setText("提交记录");
 
         refreshView = (PullToRefreshLayout) findViewById(R.id.refresh_view);// 刷新布局
         refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
         listview = (PullableListView) findViewById(R.id.listview);// 列表
         myAdapter = new MyAdapter();
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SuperToastUtils.showSuperToast(mContext, 2, datas.get(position).getUser().getAuthentics().get(0).getName());
-            }
-        });
 
         GetCommitRecordsTask getCommitRecordsTask = new GetCommitRecordsTask(0);
         getCommitRecordsTask.execute();

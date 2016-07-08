@@ -145,7 +145,6 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
             super.onPostExecute(provinceListBean);
             if (provinceListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (provinceListBean.getStatus() == 200) {
                     provinces = provinceListBean.getData();

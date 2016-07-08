@@ -108,10 +108,14 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                 }
                 if (!StringUtils.isBlank(data.getAuthentics().get(0).getName())) {
                     tvName.setText(data.getAuthentics().get(0).getName());
+                } else {
+                    tvName.setText(SharedPreferencesUtils.getTelephone(mContext));
                 }
                 if (!StringUtils.isBlank(data.getAuthentics().get(0).getCompanyName()) && !StringUtils.isBlank(data.getAuthentics().get(0).getPosition())) {
                     tvPosition.setText(data.getAuthentics().get(0).getCompanyName() + " | " + data.getAuthentics().get(0).getPosition());
                 }
+            } else {
+                tvName.setText(SharedPreferencesUtils.getTelephone(mContext));
             }
         }
     }

@@ -38,7 +38,7 @@ public class CirclePhotosAdapter extends RecyclerView.Adapter<CirclePhotosAdapte
 
     @Override
     public void onBindViewHolder(MViewHolder holder, int position) {
-        Glide.with(context).load(photos.get(position)).into(holder.img);
+        Glide.with(context).load(photos.get(position)).placeholder(R.mipmap.ic_default).into(holder.img);
     }
 
     @Override

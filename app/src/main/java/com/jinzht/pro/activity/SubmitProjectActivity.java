@@ -139,7 +139,7 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
                 tvProTag.setImageResource(R.mipmap.tag_rongziwancheng);
                 break;
             case "融资失败":
-                tvProTag.setImageResource(R.mipmap.tag_rongzishibai);
+                tvProTag.setImageResource(R.mipmap.tag_rongziwancheng);
                 break;
             case "预选项目":
                 tvProTag.setImageResource(R.mipmap.tag_yuxuan);
@@ -357,7 +357,7 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
     // 弹窗确认
     private void confirmDialog() {
         final AlertDialog dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
-        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
         Window window = dialog.getWindow();
         window.setContentView(R.layout.dialog_confirm);
@@ -365,7 +365,7 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
         TextView tvContent = (TextView) window.findViewById(R.id.tv_content);
         TextView btnConfirm = (TextView) window.findViewById(R.id.btn_confirm);
         ivTag.setImageResource(R.mipmap.icon_exclamation);
-        tvContent.setText("您还没有上传项目，请先上传项目");
+        tvContent.setText("您还没有上传项目\n请先上传项目");
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

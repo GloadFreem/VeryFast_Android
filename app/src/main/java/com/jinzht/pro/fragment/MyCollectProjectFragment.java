@@ -189,7 +189,7 @@ public class MyCollectProjectFragment extends BaseFragment {
                         holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                     case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzishibai);
+                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                 }
                 holder.itemProjectCompname.setText(datas.get(position).getFullName());

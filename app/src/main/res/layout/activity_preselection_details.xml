@@ -90,6 +90,7 @@
                         android:layout_height="83dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="20dp"
+                        android:src="@mipmap/ic_launcher"
                         app:civ_border_color="#50ffffff"
                         app:civ_border_width="4dp" />
 
@@ -270,7 +271,8 @@
                             android:id="@+id/item_comment_favicon1"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:layout_marginTop="15dp" />
+                            android:layout_marginTop="15dp"
+                            android:src="@mipmap/ic_default_favicon" />
 
                         <TextView
                             android:id="@+id/item_comment_name1"
@@ -327,7 +329,8 @@
                             android:id="@+id/item_comment_favicon2"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:layout_marginTop="15dp" />
+                            android:layout_marginTop="15dp"
+                            android:src="@mipmap/ic_default_favicon" />
 
                         <TextView
                             android:id="@+id/item_comment_name2"

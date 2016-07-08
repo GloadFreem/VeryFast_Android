@@ -21,7 +21,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/item_message_cb_select"
-        android:src="@mipmap/favicon_test"
+        android:src="@mipmap/ic_launcher"
         android:visibility="gone" />
 
     <ImageView

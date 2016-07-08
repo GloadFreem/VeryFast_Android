@@ -5,7 +5,7 @@ package com.jinzht.pro.utils;
  */
 public class Constant {
 
-//    public static final String BASE_URL = "http://192.168.5.159:8080/jinzht/";
+//    public static final String BASE_URL = "http://192.168.5.160:8080/jinzht/";
     public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 微信APP_ID
@@ -280,7 +280,7 @@ public class Constant {
      */
     public static final String GETGOLDINOUTLIST = "requestGoldTradeList.action";
     /**
-     * 邀请好友送金条
+     * 分享APP
      */
     public static final String SHAREAPP = "requestInviteFriends.action";
     /**

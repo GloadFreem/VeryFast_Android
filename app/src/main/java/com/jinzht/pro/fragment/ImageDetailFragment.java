@@ -102,7 +102,7 @@ public class ImageDetailFragment extends Fragment {
 //            }
 //        });
 
-        Glide.with(getActivity()).load(mImageUrl).into(mImageView);
+        Glide.with(getActivity()).load(mImageUrl).placeholder(R.mipmap.ic_default_big).into(mImageView);
         mAttacher.update();
     }
 }

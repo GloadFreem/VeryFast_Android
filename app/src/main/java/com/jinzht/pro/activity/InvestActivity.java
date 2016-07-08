@@ -71,7 +71,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
         btnPay = (Button) findViewById(R.id.invest_btn_pay);// 支付按钮
         btnPay.setOnClickListener(this);
 
-//        setPricePoint(edInputMoney);
+        setPricePoint(edInputMoney);
     }
 
     // 保证金额输入框只能输入两位小数
@@ -97,7 +97,6 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                     if (!s.toString().substring(1, 2).equals(".")) {
                         editText.setText(s.subSequence(0, 1));
                         editText.setSelection(1);
-                        return;
                     }
                 }
             }

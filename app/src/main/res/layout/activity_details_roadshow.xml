@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <View
                 android:layout_width="match_parent"
@@ -93,7 +94,6 @@
                     <RadioButton
                         android:id="@+id/details_rbtn_detail"
                         style="@style/RadioBtn_Details_Tab"
-                        android:checked="true"
                         android:text="详情" />
 
                     <RadioButton
@@ -104,6 +104,7 @@
                     <RadioButton
                         android:id="@+id/details_rbtn_live"
                         style="@style/RadioBtn_Details_Tab"
+                        android:checked="true"
                         android:text="现场" />
                 </RadioGroup>
 

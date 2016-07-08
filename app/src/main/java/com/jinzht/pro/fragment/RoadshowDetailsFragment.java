@@ -187,7 +187,7 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
                 ivTag.setBackgroundResource(R.mipmap.tag_detail_comlete);
                 break;
             case "融资失败":
-                ivTag.setBackgroundResource(R.mipmap.tag_detail_fail);
+                ivTag.setBackgroundResource(R.mipmap.tag_detail_comlete);
                 break;
         }
         tvTitle.setText(data.getAbbrevName());

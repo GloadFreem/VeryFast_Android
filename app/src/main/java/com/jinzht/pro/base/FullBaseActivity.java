@@ -1,12 +1,15 @@
 package com.jinzht.pro.base;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -43,6 +46,16 @@ public abstract class FullBaseActivity extends Activity implements ProgressBarCa
     private ExitReceiver exitReceiver = new ExitReceiver();// 退出应用的广播接收者
     public static final String EXITACTION = "action.exit";// 退出应用的广播接收者的action
 
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.GET_ACCOUNTS,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.READ_PHONE_STATE
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +72,10 @@ public abstract class FullBaseActivity extends Activity implements ProgressBarCa
         MobclickAgent.setSessionContinueMillis(30000l);// 友盟
 //        UiHelp.setSameStatus(true, this);// 设置透明状态栏
         UiHelp.setFullScreenStatus(this);// 设置状态栏跟随应用背景
+
+        // 请求权限
+        verifyStoragePermissions(this);
+
         init();
     }
 
@@ -156,6 +173,18 @@ public abstract class FullBaseActivity extends Activity implements ProgressBarCa
                     SharedPreferencesUtils.saveIsAuthentic(mContext, isAuthentic);
                 }
             }
+        }
+    }
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE);
         }
     }
 }

@@ -29,6 +29,7 @@ import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.SharedPreferencesUtils;
+import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.CircleImageView;
 import com.jinzht.pro.view.PullToRefreshLayout;
@@ -123,7 +124,9 @@ public class Investor1Fragment extends BaseFragment {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            Glide.with(mContext).load(datas.get(position).getUser().getHeadSculpture()).into(holder.itemInvestorFavicon);
+            if (!StringUtils.isBlank(datas.get(position).getUser().getHeadSculpture())) {
+                Glide.with(mContext).load(datas.get(position).getUser().getHeadSculpture()).into(holder.itemInvestorFavicon);
+            }
             holder.itemInvestorName.setText(datas.get(position).getUser().getName());
             holder.itemInvestorPosition.setText(datas.get(position).getUser().getAuthentics().get(0).getPosition());
             holder.itemInvestorCompName.setText(datas.get(position).getUser().getAuthentics().get(0).getCompanyName());

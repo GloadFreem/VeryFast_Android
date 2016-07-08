@@ -31,6 +31,7 @@ import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.SharedPreferencesUtils;
+import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.CircleImageView;
 import com.jinzht.pro.view.PullToRefreshLayout;
@@ -157,7 +158,9 @@ public class Investor2Fragment extends BaseFragment {
                 holder.itemInvestorgFundTitle.setText(funds.get(position).getName());
                 holder.itemInvestorgFundContent.setText(funds.get(position).getContent());
             } else {
-                Glide.with(mContext).load(datas.get(position - funds.size()).getUser().getHeadSculpture()).into(holder.itemInvestorgFavicon);
+                if (!StringUtils.isBlank(datas.get(position - funds.size()).getUser().getHeadSculpture())) {
+                    Glide.with(mContext).load(datas.get(position - funds.size()).getUser().getHeadSculpture()).into(holder.itemInvestorgFavicon);
+                }
                 holder.itemInvestorgName.setText(datas.get(position - funds.size()).getUser().getName());
                 holder.itemInvestorgAddr.setText(datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCity().getName());
                 if (datas.get(position - funds.size()).getAreas().size() == 0) {

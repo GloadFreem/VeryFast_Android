@@ -445,7 +445,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                         holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                     case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzishibai);
+                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
                         break;
                 }
                 holder.itemProjectCompname.setText(rDatas.get(position).getFullName());

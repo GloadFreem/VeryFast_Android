@@ -128,7 +128,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
 
         // 设置tab的单选事件
         rgTab.setOnCheckedChangeListener(this);
-        setSelect(fragments.get(0));
+        setSelect(fragments.get(2));
         GetDetailTask getDetailTask = new GetDetailTask();
         getDetailTask.execute();
         GetVoidTask getVoidTask = new GetVoidTask();

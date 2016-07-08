@@ -16,7 +16,7 @@
             android:id="@+id/item_chat_favicon"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_default_favicon" />
 
         <TextView
             android:id="@+id/item_chat_name"

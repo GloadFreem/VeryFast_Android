@@ -10,7 +10,7 @@
         android:layout_centerInParent="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@android:color/white"
+        android:background="@drawable/bg_dialog"
         android:orientation="vertical"
         android:padding="13dp">
 
