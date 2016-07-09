@@ -389,6 +389,7 @@ public class DialogUtils {
         window.setAttributes(lp);
         window.setContentView(R.layout.dialog_share);
         window.setGravity(Gravity.BOTTOM);//此处可以设置dialog显示的位置
+        window.setWindowAnimations(R.style.ShareDialog_Anim);
         TextView btnQq = (TextView) window.findViewById(R.id.btn_qq);
         TextView btnWechat = (TextView) window.findViewById(R.id.btn_wechat);
         TextView btnWechatCircle = (TextView) window.findViewById(R.id.btn_wechat_circle);
