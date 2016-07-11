@@ -28,7 +28,7 @@ public class PaySecceedActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected int getResourcesId() {
-        return R.layout.activity_pay_secceed;
+        return R.layout.activity_pay_succeed;
     }
 
     @Override

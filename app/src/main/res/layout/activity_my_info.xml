@@ -375,7 +375,7 @@
                 android:lineSpacingExtra="5dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="温馨提示：\n1.实名认证可以获得更多的权限信息\n        2.预计明天上午通过审核" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/myinfo_btn_bottom"

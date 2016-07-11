@@ -1129,7 +1129,6 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             super.onPostExecute(activityPriseBean);
             if (activityPriseBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (activityPriseBean.getStatus() == 200) {
                     if (flag == 1) {
@@ -1380,7 +1379,6 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             super.onPostExecute(shareBean);
             if (shareBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(ActivityDetailActivity.this);

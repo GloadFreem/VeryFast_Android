@@ -163,7 +163,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             }
             break;
             case MSG_AUTH_ERROR: {
-                Toast.makeText(this, R.string.auth_error, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, R.string.auth_error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "授权操作遇到错误", Toast.LENGTH_SHORT).show();
             }
             break;
             case MSG_AUTH_COMPLETE: {

@@ -20,6 +20,7 @@ import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
+import com.jinzht.pro.utils.UiUtils;
 
 /**
  * 关于平台界面
@@ -60,7 +61,7 @@ public class AboutUsActivity extends BaseActivity implements View.OnClickListene
         btnFeedback = (RelativeLayout) findViewById(R.id.about_us_btn_feedback);// 意见反馈
         btnFeedback.setOnClickListener(this);
         try {
-            tvVerson.setText("金指投" + UiHelp.getVersionName(this));
+            tvVerson.setText(UiUtils.getString(R.string.app_name) + UiHelp.getVersionName(this));
         } catch (Exception e) {
             e.printStackTrace();
         }

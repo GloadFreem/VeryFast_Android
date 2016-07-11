@@ -11,7 +11,7 @@
 
     <uses-sdk
         android:minSdkVersion="15"
-        android:targetSdkVersion="22" />
+        android:targetSdkVersion="23" />
 
     <!-- 极光推送的权限 -->
     <permission

@@ -18,8 +18,6 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.UiHelp;
 
-import org.json.JSONObject;
-
 import cn.jpush.android.api.CustomPushNotificationBuilder;
 import cn.jpush.android.api.JPushInterface;
 import de.greenrobot.event.EventBus;
@@ -156,84 +154,6 @@ public class MyReceiver extends BroadcastReceiver {
                 intent.putExtra("id", Integer.parseInt(jPushBean.getContent()));
                 context.startActivity(intent);
                 break;
-        }
-
-        JSONObject jsonObject = new JSONObject(body);
-        if (jsonObject.isNull("api")) {
-            return;
-        }
-        if (jsonObject.getString("api").equals("project")) {// 项目
-            if (!UiHelp.isTopActivity(context)) {
-                Log.i(TAG, "not_top");
-                UiHelp.openJinZht(context, "com.jinzht.pro");
-            }
-            // progect中分了两种类型，纯web(仅有url)和news，news就是有id和url
-            if (jsonObject.opt("id") == null || jsonObject.opt("url") == null) {
-                return;
-            }
-            String id = jsonObject.opt("id") + "";
-            // TODO: 2016/4/29 跳转至融资中的项目详情页
-//            if (!StringUtils.isEmpty(id)) {
-//                Intent intent = new Intent(context, InvestFinacingDetailsActivity.class);
-//                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.putExtra("id", id);
-//                context.startActivity(intent);
-//            }
-        } else if (jsonObject.getString("api").equals("msg")) {// 消息
-            if (!UiHelp.isTopActivity(context)) {
-                Log.i(TAG, "not_top");
-                UiHelp.openJinZht(context, "com.jinzht.pro");
-            }
-            if (jsonObject.opt("id") == null) {
-                return;
-            }
-            String id = jsonObject.opt("id") + "";
-            // TODO: 2016/4/29 跳转至互动专栏页
-//            if (!StringUtils.isEmpty(id)) {
-//                Intent intent = new Intent(context, InteractActivity.class);
-//                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.putExtra("id", id);
-//                context.startActivity(intent);
-//            }
-        } else if (jsonObject.getString("api").equals("web")) {// 网页
-            if (!UiHelp.isTopActivity(context)) {
-                Log.i(TAG, "not_top");
-                UiHelp.openJinZht(context, "com.jinzht.pro");
-            }
-            if (jsonObject.opt("id") == null || jsonObject.opt("url") == null) {
-                return;
-            }
-            String id = jsonObject.opt("id") + "";
-            // TODO: 2016/4/29 跳转到一个网页
-//            if (!StringUtils.isEmpty(id)) {
-//                Intent intent = new Intent(context, WebViewActivity.class);
-//                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.putExtra("url", jsonObject.optString("url"));
-//                context.startActivity(intent);
-            // TODO: 2016/4/29 跳转到新三板的详情页
-//            } else if (!StringUtils.isEquals(id, "null") && !jsonObject.optString("url").equals("")) {
-//                Intent intent = new Intent(context, ThreeWebviewActivity.class);
-//                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.putExtra("id", jsonObject.optString("id"));
-//                intent.putExtra("url", jsonObject.optString("url"));
-//                context.startActivity(intent);
-//            }
-        } else if (jsonObject.getString("api").equals("feeling")) {
-            {
-//				if (!UiHelp.isTopActivity(context)) {
-//					Log.i(TAG, "not_top");
-//					UiHelp.openJinZht(context, "com.jinzht.pro");
-//				}
-//				Intent i = new Intent(context, MainActivity.class);
-//				//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//				context.startActivity(i);
-//				MainActivity.vpFragment.setCurrentItem(3);
-            }
         }
     }
 }

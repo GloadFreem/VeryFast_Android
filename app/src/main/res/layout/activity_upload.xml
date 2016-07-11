@@ -51,7 +51,7 @@
         android:layout_marginTop="55dp"
         android:drawablePadding="26dp"
         android:drawableTop="@mipmap/icon_tel"
-        android:text="400-1234-5896"
-        android:textColor="#319ffd"
-        android:textSize="28sp" />
+        android:text="点击图标呼叫客服"
+        android:textColor="#474747"
+        android:textSize="17sp" />
 </LinearLayout>

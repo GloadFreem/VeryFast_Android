@@ -372,7 +372,6 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
             super.onPostExecute(activityPriseBean);
             if (activityPriseBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                return;
             } else {
                 if (activityPriseBean.getStatus() == 200) {
                     if (flag == 1) {

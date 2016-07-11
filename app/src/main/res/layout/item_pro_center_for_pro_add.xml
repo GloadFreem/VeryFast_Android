@@ -19,7 +19,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/iv_add"
-        android:text="添加项目"
+        android:text="上传项目"
         android:textColor="#474747"
         android:textSize="17sp" />
 

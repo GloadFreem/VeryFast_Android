@@ -22,7 +22,7 @@
             android:layout_height="29dp"
             android:layout_weight="59"
             android:background="@android:color/white"
-            android:hint="互联网金融黑马预测…"
+            android:hint="请输入关键词：活动名、地点…"
             android:padding="5dp"
             android:textSize="17sp" />
 

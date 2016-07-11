@@ -20,6 +20,7 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 
@@ -32,6 +33,8 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
     private TextView tvTitle;// 标题
     private TextView uploadEmail;// 复制邮箱地址
     private TextView uploadTel;// 点击拨打电话
+
+    private String tel;// 获取到的电话号码
 
     @Override
     protected int getResourcesId() {
@@ -68,10 +71,12 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
                 SuperToastUtils.showSuperToast(mContext, 2, "已复制到剪贴板");
                 break;
             case R.id.upload_tel:// 点击拨打电话
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                Uri data = Uri.parse("tel:" + uploadTel.getText().toString());
-                intent.setData(data);
-                startActivity(intent);
+                if (!StringUtils.isBlank(tel)) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    Uri data = Uri.parse("tel:" + tel);
+                    intent.setData(data);
+                    startActivity(intent);
+                }
                 break;
         }
     }
@@ -105,8 +110,11 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (uploadProjectInfo.getStatus() == 200) {
-                    uploadEmail.setText(uploadProjectInfo.getData().getEmail());
-                    uploadTel.setText(uploadProjectInfo.getData().getTel());
+                    if (uploadProjectInfo.getData() != null) {
+                        uploadEmail.setText(uploadProjectInfo.getData().getEmail());
+//                    uploadTel.setText(uploadProjectInfo.getData().getTel());
+                        tel = uploadProjectInfo.getData().getTel();
+                    }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, uploadProjectInfo.getMessage());
                 }

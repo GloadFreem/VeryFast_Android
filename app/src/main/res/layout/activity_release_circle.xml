@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="发布话题"
+            android:text="发布圈子"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
@@ -63,7 +63,7 @@
             android:layout_height="match_parent"
             android:background="@null"
             android:gravity="top"
-            android:hint="发布最新、最热、最前沿的投融资话题"
+            android:hint="发布投融资相关内容"
             android:textColor="@color/bg_text"
             android:textColorHint="#747474"
             android:textSize="15sp" />

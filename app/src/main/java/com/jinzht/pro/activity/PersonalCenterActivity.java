@@ -287,9 +287,12 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
             } else {
                 if (userInfoBean.getStatus() == 200) {
                     data = userInfoBean.getData();
-                    SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(userInfoBean.getData().getExtUserId()));
-                    SharedPreferencesUtils.saveUserId(mContext, userInfoBean.getData().getUserId());
-                    initData();
+                    if (data != null) {
+                        SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(data.getExtUserId()));
+                        SharedPreferencesUtils.saveUserId(mContext, data.getUserId());
+                        SharedPreferencesUtils.saveIsAuthentic(mContext, data.getAuthentics().get(0).getAuthenticstatus().getName());
+                        initData();
+                    }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, userInfoBean.getMessage());
                 }
