@@ -44,7 +44,7 @@ public class DateUtils {
         } else if (time >= 3600 * 48 && time < 3600 * 72) {
             return sb.append("前天").toString();
         } else if (time >= 3600 * 72) {
-            return dateToString(dateStr);
+            return dateStr.substring(5, 10);
         }
         return dateToString(dateStr);
     }
