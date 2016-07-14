@@ -559,6 +559,12 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     // 获取banner数据
     private class GetBannerInfo extends AsyncTask<Void, Void, BannerInfoBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog("");
+        }
+
+        @Override
         protected BannerInfoBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -582,6 +588,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         protected void onPostExecute(BannerInfoBean bannerInfoBean) {
             super.onPostExecute(bannerInfoBean);
             if (bannerInfoBean == null) {
+                dismissProgressDialog();
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 listview.setBackgroundResource(R.mipmap.bg_empty);
             } else {
@@ -598,6 +605,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                         listview.setBackgroundResource(R.mipmap.bg_empty);
                     }
                 } else {
+                    dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, bannerInfoBean.getMessage());
                     listview.setBackgroundResource(R.mipmap.bg_empty);
                 }
@@ -638,6 +646,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         @Override
         protected void onPostExecute(RoadshowProjectListBean roadshowProjectListBean) {
             super.onPostExecute(roadshowProjectListBean);
+            dismissProgressDialog();
             if (roadshowProjectListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败

@@ -60,11 +60,11 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (webview.canGoBack()) {
-                    webview.goBack();
-                } else {
-                    finish();
-                }
+//                if (webview.canGoBack()) {
+//                    webview.goBack();
+//                } else {
+                finish();
+//                }
             }
         });
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
@@ -84,16 +84,16 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
         webview.setWebViewClient(new MyWebViewClient());
         webview.setWebChromeClient(new MyWebChromeClient());
         webview.addJavascriptInterface(getHtmlObject(), "fromJS");// fromJS是给js识别的名称
-        webview.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK && webview.canGoBack()) {
-                    webview.goBack();
-                    return true;
-                }
-                return false;
-            }
-        });
+//        webview.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                if (keyCode == KeyEvent.KEYCODE_BACK && webview.canGoBack()) {
+//                    webview.goBack();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
 
         xStream = new XStream();
 

@@ -298,6 +298,12 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
     // 判断用户是否在易宝注册过
     private class IsRegisteredTask extends AsyncTask<Void, Void, YeepayUserInfoBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog("");
+        }
+
+        @Override
         protected YeepayUserInfoBean doInBackground(Void... params) {
             String body = "";
             YeepayUserInfoBean yeepayUserInfoBean = null;
@@ -324,6 +330,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void onPostExecute(YeepayUserInfoBean bean) {
             super.onPostExecute(bean);
+            dismissProgressDialog();
             if (bean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
