@@ -176,6 +176,8 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             String pos = datas.get(position).getUsers().getAuthentics().get(0).getPosition();
             if (!StringUtils.isBlank(companyName) && !StringUtils.isBlank(pos)) {
                 holder.tvCompPosition.setText(companyName + " | " + pos);
+            } else {
+                holder.tvCompPosition.setText("");
             }
             holder.tvTime.setText(com.jinzht.pro.utils.DateUtils.timeLogic(datas.get(position).getPublicDate()));
 

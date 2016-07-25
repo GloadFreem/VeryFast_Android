@@ -317,7 +317,7 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
         protected void onPostExecute(CommentsListBean commentsListBean) {
             super.onPostExecute(commentsListBean);
             if (commentsListBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+//                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
