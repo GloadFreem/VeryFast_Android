@@ -229,7 +229,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/activity_tv_people_num"
-                        android:text="(369)"
+                        android:text="(0)"
                         android:textColor="@color/custom_orange"
                         android:textSize="17sp" />
 
@@ -296,7 +296,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="11:55" />
+                        android:text="" />
 
                     <View
                         android:layout_width="match_parent"
@@ -504,7 +504,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="11:55" />
+                        android:text="" />
                 </RelativeLayout>
             </LinearLayout>
 

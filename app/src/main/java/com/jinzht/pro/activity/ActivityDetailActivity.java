@@ -1043,7 +1043,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             } else {
                 if (activityAllApplysBean.getStatus() == 200) {
                     applys = activityAllApplysBean.getData();
-                    if (applys != null && applys.size() != 0) {
+                    if (applys != null) {
                         initApplys();
                     }
                 } else {
