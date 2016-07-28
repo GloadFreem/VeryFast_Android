@@ -21,13 +21,37 @@ android {
         //让AS识别libs下的.so第三方包
         jniLibs.srcDirs =['libs']
     }
+
+    // 友盟多渠道打包
+    productFlavors {
+        baidu {}
+        yingyongbao {}
+        _360 {}
+        wandoujia {}
+        xiaomi {}
+        anzhi {}
+        yingyonghui {}
+        jifeng {}
+        mumayi {}
+        uc {}
+        sougou {}
+        oppo {}
+        meizu {}
+        lenovo {}
+        huawei {}
+        vivo {}
+        leshi {}
+    }
+
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile files('libs/eventbus-3.0.0-beta1.jar')
-    compile files('libs/umeng-analytics-v5.6.4.jar')
     compile files('libs/fastjson-1.2.11.jar')
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.github.ybq:Android-SpinKit:1.0.2'
@@ -51,4 +75,5 @@ dependencies {
     compile 'cn.finalteam:galleryfinal:1.4.8.7'
     compile files('libs/jpush-android-2.1.5.jar')
     compile files('libs/xstream-1.4.7.jar')
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }

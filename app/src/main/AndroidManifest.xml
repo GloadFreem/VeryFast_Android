@@ -165,6 +165,10 @@
             android:name="UMENG_APPKEY"
             android:value="556d1f4b67e58ef0d7002f56" />
         <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}" />
+
+        <meta-data
             android:name="TENCTENT"
             android:value="1104722649" />
         <meta-data

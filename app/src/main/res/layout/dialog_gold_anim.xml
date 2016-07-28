@@ -17,8 +17,8 @@
         android:id="@+id/iv_gold_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-50dp"
         android:layout_marginLeft="-20dp"
+        android:layout_marginTop="-50dp"
         android:layout_toRightOf="@id/iv_gold_1"
         android:background="@mipmap/icon_gold_2" />
 
@@ -42,8 +42,8 @@
         android:id="@+id/iv_gold_5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-50dp"
         android:layout_alignRight="@id/iv_gold_1"
+        android:layout_marginTop="-50dp"
         android:background="@mipmap/icon_gold_5" />
 
     <ImageView
@@ -113,7 +113,8 @@
         android:layout_above="@id/btn_confirm"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="54dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
         <TextView
             android:layout_width="wrap_content"

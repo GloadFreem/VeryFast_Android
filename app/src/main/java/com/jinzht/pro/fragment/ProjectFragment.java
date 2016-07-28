@@ -403,7 +403,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     holder.itemProjectImg = (CircleImageView) convertView.findViewById(R.id.item_project_img);
                     holder.itemProjectTitle = (TextView) convertView.findViewById(R.id.item_project_title);
                     holder.itemProjectAddr = (TextView) convertView.findViewById(R.id.item_project_addr);
-                    holder.itemProjectTag = (ImageView) convertView.findViewById(R.id.item_project_tag);
+                    holder.itemCompletedTag = (ImageView) convertView.findViewById(R.id.iv_tag_completed);
                     holder.itemProjectCompname = (TextView) convertView.findViewById(R.id.item_project_compname);
                     holder.itemProjectField1 = (TextView) convertView.findViewById(R.id.item_project_field1);
                     holder.itemProjectField2 = (TextView) convertView.findViewById(R.id.item_project_field2);
@@ -434,19 +434,10 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 Glide.with(mContext).load(rDatas.get(position).getStartPageImage()).into(holder.itemProjectImg);
                 holder.itemProjectTitle.setText(rDatas.get(position).getAbbrevName());
                 holder.itemProjectAddr.setText(rDatas.get(position).getAddress());
-                switch (rDatas.get(position).getFinancestatus().getName()) {
-                    case "待路演":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_dailuyan);
-                        break;
-                    case "融资中":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzizhong);
-                        break;
-                    case "融资成功":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
-                    case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
+                if ("融资成功".equals(rDatas.get(position).getFinancestatus().getName())) {
+                    holder.itemCompletedTag.setVisibility(View.VISIBLE);
+                } else {
+                    holder.itemCompletedTag.setVisibility(View.INVISIBLE);
                 }
                 holder.itemProjectCompname.setText(rDatas.get(position).getFullName());
                 String[] fields = rDatas.get(position).getIndustoryType().split("，");
@@ -506,7 +497,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             private CircleImageView itemProjectImg;
             private TextView itemProjectTitle;
             private TextView itemProjectAddr;
-            private ImageView itemProjectTag;// 路演项目独有
+            private ImageView itemCompletedTag;// 路演项目独有
             private TextView itemProjectCompname;
             private TextView itemProjectField1;
             private TextView itemProjectField2;

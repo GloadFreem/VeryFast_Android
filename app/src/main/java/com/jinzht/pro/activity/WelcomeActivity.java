@@ -22,7 +22,6 @@ import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -54,7 +53,7 @@ public class WelcomeActivity extends FullBaseActivity {
         // 通过WXAPIFactory工厂，获取IWXAPI的实例
         api = WXAPIFactory.createWXAPI(this, Constant.APP_ID, false);
         api.registerApp(Constant.APP_ID);
-        MobclickAgent.updateOnlineConfig(mContext);// 友盟
+//        MobclickAgent.updateOnlineConfig(mContext);// 友盟
 
         if (!SharedPreferencesUtils.getIsNotFirst(mContext)) {
             new Handler().postDelayed(new Runnable() {

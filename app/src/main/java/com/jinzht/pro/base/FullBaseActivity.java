@@ -69,6 +69,7 @@ public abstract class FullBaseActivity extends Activity implements ProgressBarCa
         JPushInterface.init(getApplicationContext());// 极光推送
         mContext = getApplicationContext();
         TAG = getRunningActivityName();
+        MobclickAgent.openActivityDurationTrack(false);// 友盟
         MobclickAgent.setSessionContinueMillis(30000l);// 友盟
 //        UiHelp.setSameStatus(true, this);// 设置透明状态栏
         UiHelp.setFullScreenStatus(this);// 设置状态栏跟随应用背景
