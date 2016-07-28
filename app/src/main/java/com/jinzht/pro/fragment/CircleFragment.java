@@ -169,7 +169,9 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            Glide.with(mContext).load(datas.get(position).getUsers().getHeadSculpture()).into(holder.ivFavicon);
+            if (!StringUtils.isBlank(datas.get(position).getUsers().getHeadSculpture())) {
+                Glide.with(mContext).load(datas.get(position).getUsers().getHeadSculpture()).into(holder.ivFavicon);
+            }
             holder.tvName.setText(datas.get(position).getUsers().getName());
             holder.tvAddr.setText(datas.get(position).getUsers().getAuthentics().get(0).getCity().getName());
             String companyName = datas.get(position).getUsers().getAuthentics().get(0).getCompanyName();

@@ -159,35 +159,47 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
             }
             holder.itemAddr.setText(datas.get(position).getAddress());
             holder.itemDistance.setText("");// 距离
-            // 报名
-            if (datas.get(position).isAttended()) {
-                holder.btnApply.setText("已报名");
+
+            // 是否过期
+            int i = DateUtils.timeDiff4Mins(datas.get(position).getEndTime());
+            Log.i("时间差", String.valueOf(i));
+            if (DateUtils.timeDiff4Mins(datas.get(position).getEndTime()) > 0) {
+                // 已过期
+                holder.btnApply.setText("已过期");
                 holder.btnApply.setBackgroundResource(R.drawable.bg_tv_investor_gray);
                 holder.btnApply.setClickable(false);
             } else {
-                holder.btnApply.setText("立即报名");
-                holder.btnApply.setBackgroundResource(R.drawable.bg_tv_investor_orange);
-                holder.btnApply.setClickable(true);
-                holder.btnApply.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                            applyDialog(datas.get(position).getActionId());
-                            POSITION = position;
-                        } else {
-                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                            Intent intent = new Intent();
-                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                                intent.setClass(mContext, WechatVerifyActivity.class);
+                // 未过期
+                // 是否已报名
+                if (datas.get(position).isAttended()) {
+                    holder.btnApply.setText("已报名");
+                    holder.btnApply.setBackgroundResource(R.drawable.bg_tv_investor_gray);
+                    holder.btnApply.setClickable(false);
+                } else {
+                    holder.btnApply.setText("立即报名");
+                    holder.btnApply.setBackgroundResource(R.drawable.bg_tv_investor_orange);
+                    holder.btnApply.setClickable(true);
+                    holder.btnApply.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                                applyDialog(datas.get(position).getActionId());
+                                POSITION = position;
                             } else {
-                                intent.setClass(mContext, CertificationIDCardActivity.class);
+                                SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
+                                Intent intent = new Intent();
+                                if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                                    intent.setClass(mContext, WechatVerifyActivity.class);
+                                } else {
+                                    intent.setClass(mContext, CertificationIDCardActivity.class);
+                                }
+                                intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
                             }
-                            intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
                         }
-                    }
-                });
+                    });
+                }
             }
             return convertView;
         }

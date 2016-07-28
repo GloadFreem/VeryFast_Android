@@ -243,14 +243,26 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         activityAddr.setText(data.getAddress());
         activityDistance.setText("");
         initPhotos();
-        if (data.isAttended()) {
-            btnApply.setText("已报名");
+
+        // 是否过期
+        int i = DateUtils.timeDiff4Mins(data.getEndTime());
+        Log.i("时间差", String.valueOf(i));
+        if (DateUtils.timeDiff4Mins(data.getEndTime()) > 0) {
+            // 已过期
+            btnApply.setText("已过期");
             btnApply.setBackgroundColor(Color.parseColor("#cccccc"));
             btnApply.setClickable(false);
         } else {
-            btnApply.setText("我要报名");
-            btnApply.setBackgroundColor(UiUtils.getColor(R.color.custom_orange));
-            btnApply.setClickable(true);
+            // 未过期
+            if (data.isAttended()) {
+                btnApply.setText("已报名");
+                btnApply.setBackgroundColor(Color.parseColor("#cccccc"));
+                btnApply.setClickable(false);
+            } else {
+                btnApply.setText("我要报名");
+                btnApply.setBackgroundColor(UiUtils.getColor(R.color.custom_orange));
+                btnApply.setClickable(true);
+            }
         }
     }
 

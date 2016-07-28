@@ -210,7 +210,9 @@
         <activity android:name=".activity.WechatSetPwdActivity" />
         <activity android:name=".activity.SelectProvinceActivity" />
         <activity android:name=".activity.SelectCityActivity" />
-        <activity android:name=".activity.MainActivity" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activity.UploadActivity" />
         <activity android:name=".activity.RoadshowDetailsActivity" />
         <activity android:name=".activity.PreselectionDetailsActivity" />
