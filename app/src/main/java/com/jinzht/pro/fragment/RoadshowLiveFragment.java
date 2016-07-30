@@ -139,17 +139,21 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
                     if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
                         RoadshowDetailsActivity.vpPPt.setScrollable(false);
                     } else {
-                        if (RoadshowDetailsActivity.isPlaying) {// 正在播放，点击暂停
-                            RoadshowDetailsActivity.isPlaying = false;
-                            RoadshowDetailsActivity.vpPPt.setScrollable(true);
-                            ivPlay.setBackgroundResource(R.mipmap.icon_play);
-                            RoadshowDetailsActivity.player.pause();
-                            RoadshowDetailsActivity.postSize = RoadshowDetailsActivity.player.getCurrentPosition();
-                        } else {// 暂停，点击播放
-                            RoadshowDetailsActivity.isPlaying = true;
-                            RoadshowDetailsActivity.vpPPt.setScrollable(false);
-                            ivPlay.setBackgroundResource(R.mipmap.icon_pause);
-                            RoadshowDetailsActivity.playMediaMethod();
+                        if (StringUtils.isBlank(RoadshowDetailsActivity.voiceData.getAudioPath())) {
+                            SuperToastUtils.showSuperToast(mContext, 2, "暂无数据");
+                        } else {
+                            if (RoadshowDetailsActivity.isPlaying) {// 正在播放，点击暂停
+                                RoadshowDetailsActivity.isPlaying = false;
+                                RoadshowDetailsActivity.vpPPt.setScrollable(true);
+                                ivPlay.setBackgroundResource(R.mipmap.icon_play);
+                                RoadshowDetailsActivity.player.pause();
+                                RoadshowDetailsActivity.postSize = RoadshowDetailsActivity.player.getCurrentPosition();
+                            } else {// 暂停，点击播放
+                                RoadshowDetailsActivity.isPlaying = true;
+                                RoadshowDetailsActivity.vpPPt.setScrollable(false);
+                                ivPlay.setBackgroundResource(R.mipmap.icon_pause);
+                                RoadshowDetailsActivity.playMediaMethod();
+                            }
                         }
                     }
                 } else {

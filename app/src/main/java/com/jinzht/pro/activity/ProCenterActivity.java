@@ -228,7 +228,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     holder.itemProjectImg = (CircleImageView) convertView.findViewById(R.id.item_project_img);
                     holder.itemProjectTitle = (TextView) convertView.findViewById(R.id.item_project_title);
                     holder.itemProjectAddr = (TextView) convertView.findViewById(R.id.item_project_addr);
-                    holder.itemProjectTag = (ImageView) convertView.findViewById(R.id.item_project_tag);
+                    holder.itemCompletedTag = (ImageView) convertView.findViewById(R.id.iv_tag_completed);
                     holder.itemProjectCompname = (TextView) convertView.findViewById(R.id.item_project_compname);
                     holder.itemProjectField1 = (TextView) convertView.findViewById(R.id.item_project_field1);
                     holder.itemProjectField2 = (TextView) convertView.findViewById(R.id.item_project_field2);
@@ -262,19 +262,10 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                 Glide.with(mContext).load(proDatas.get(position).getStartPageImage()).into(holder.itemProjectImg);
                 holder.itemProjectTitle.setText(proDatas.get(position).getAbbrevName());
                 holder.itemProjectAddr.setText(proDatas.get(position).getAddress());
-                switch (proDatas.get(position).getFinancestatus().getName()) {
-                    case "待路演":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_dailuyan);
-                        break;
-                    case "融资中":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzizhong);
-                        break;
-                    case "融资成功":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
-                    case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
+                if ("融资成功".equals(proDatas.get(position).getFinancestatus().getName())) {
+                    holder.itemCompletedTag.setVisibility(View.VISIBLE);
+                } else {
+                    holder.itemCompletedTag.setVisibility(View.INVISIBLE);
                 }
                 holder.itemProjectCompname.setText(proDatas.get(position).getFullName());
                 String[] fields = proDatas.get(position).getIndustoryType().split("，");
@@ -370,7 +361,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
             private CircleImageView itemProjectImg;
             private TextView itemProjectTitle;
             private TextView itemProjectAddr;
-            private ImageView itemProjectTag;// 路演独有
+            private ImageView itemCompletedTag;// 路演项目独有
             private TextView itemProjectCompname;
             private TextView itemProjectField1;
             private TextView itemProjectField2;
@@ -431,7 +422,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     holder.itemProjectImg = (CircleImageView) convertView.findViewById(R.id.item_project_img);
                     holder.itemProjectTitle = (TextView) convertView.findViewById(R.id.item_project_title);
                     holder.itemProjectAddr = (TextView) convertView.findViewById(R.id.item_project_addr);
-                    holder.itemProjectTag = (ImageView) convertView.findViewById(R.id.item_project_tag);
+                    holder.itemCompletedTag = (ImageView) convertView.findViewById(R.id.iv_tag_completed);
                     holder.itemProjectCompname = (TextView) convertView.findViewById(R.id.item_project_compname);
                     holder.itemProjectField1 = (TextView) convertView.findViewById(R.id.item_project_field1);
                     holder.itemProjectField2 = (TextView) convertView.findViewById(R.id.item_project_field2);
@@ -446,7 +437,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     holder.itemProjectImg = (CircleImageView) convertView.findViewById(R.id.item_project_img);
                     holder.itemProjectTitle = (TextView) convertView.findViewById(R.id.item_project_title);
                     holder.itemProjectAddr = (TextView) convertView.findViewById(R.id.item_project_addr);
-                    holder.itemProjectTag = (ImageView) convertView.findViewById(R.id.item_project_tag);
+                    holder.itemCompletedTag = (ImageView) convertView.findViewById(R.id.iv_tag_completed);
                     holder.itemProjectCompname = (TextView) convertView.findViewById(R.id.item_project_compname);
                     holder.itemProjectField1 = (TextView) convertView.findViewById(R.id.item_project_field1);
                     holder.itemProjectField2 = (TextView) convertView.findViewById(R.id.item_project_field2);
@@ -485,19 +476,10 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                 Glide.with(mContext).load(investorInvestDatas.get(position).getStartPageImage()).into(holder.itemProjectImg);
                 holder.itemProjectTitle.setText(investorInvestDatas.get(position).getAbbrevName());
                 holder.itemProjectAddr.setText(investorInvestDatas.get(position).getAddress());
-                switch (investorInvestDatas.get(position).getFinancestatus().getName()) {
-                    case "待路演":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_dailuyan);
-                        break;
-                    case "融资中":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzizhong);
-                        break;
-                    case "融资成功":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
-                    case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
+                if ("融资成功".equals(investorInvestDatas.get(position).getFinancestatus().getName())) {
+                    holder.itemCompletedTag.setVisibility(View.VISIBLE);
+                } else {
+                    holder.itemCompletedTag.setVisibility(View.INVISIBLE);
                 }
                 holder.itemProjectCompname.setText(investorInvestDatas.get(position).getFullName());
                 String[] fields = investorInvestDatas.get(position).getIndustoryType().split("，");
@@ -534,19 +516,10 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                 Glide.with(mContext).load(investorCommitDatas.get(newPosition).getStartPageImage()).into(holder.itemProjectImg);
                 holder.itemProjectTitle.setText(investorCommitDatas.get(newPosition).getAbbrevName());
                 holder.itemProjectAddr.setText(investorCommitDatas.get(newPosition).getAddress());
-                switch (investorCommitDatas.get(newPosition).getFinancestatus().getName()) {
-                    case "待路演":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_dailuyan);
-                        break;
-                    case "融资中":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzizhong);
-                        break;
-                    case "融资成功":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
-                    case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
+                if ("融资成功".equals(investorCommitDatas.get(position).getFinancestatus().getName())) {
+                    holder.itemCompletedTag.setVisibility(View.VISIBLE);
+                } else {
+                    holder.itemCompletedTag.setVisibility(View.INVISIBLE);
                 }
                 holder.itemProjectCompname.setText(investorCommitDatas.get(newPosition).getFullName());
                 String[] fields = investorCommitDatas.get(newPosition).getIndustoryType().split("，");
@@ -648,7 +621,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
             private CircleImageView itemProjectImg;
             private TextView itemProjectTitle;
             private TextView itemProjectAddr;
-            private ImageView itemProjectTag;// 路演项目独有
+            private ImageView itemCompletedTag;// 路演项目独有
             private TextView itemProjectCompname;
             private TextView itemProjectField1;
             private TextView itemProjectField2;
@@ -709,7 +682,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     holder.itemProjectImg = (CircleImageView) convertView.findViewById(R.id.item_project_img);
                     holder.itemProjectTitle = (TextView) convertView.findViewById(R.id.item_project_title);
                     holder.itemProjectAddr = (TextView) convertView.findViewById(R.id.item_project_addr);
-                    holder.itemProjectTag = (ImageView) convertView.findViewById(R.id.item_project_tag);
+                    holder.itemCompletedTag = (ImageView) convertView.findViewById(R.id.iv_tag_completed);
                     holder.itemProjectCompname = (TextView) convertView.findViewById(R.id.item_project_compname);
                     holder.itemProjectField1 = (TextView) convertView.findViewById(R.id.item_project_field1);
                     holder.itemProjectField2 = (TextView) convertView.findViewById(R.id.item_project_field2);
@@ -724,7 +697,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     holder.itemProjectImg = (CircleImageView) convertView.findViewById(R.id.item_project_img);
                     holder.itemProjectTitle = (TextView) convertView.findViewById(R.id.item_project_title);
                     holder.itemProjectAddr = (TextView) convertView.findViewById(R.id.item_project_addr);
-                    holder.itemProjectTag = (ImageView) convertView.findViewById(R.id.item_project_tag);
+                    holder.itemCompletedTag = (ImageView) convertView.findViewById(R.id.iv_tag_completed);
                     holder.itemProjectCompname = (TextView) convertView.findViewById(R.id.item_project_compname);
                     holder.itemProjectField1 = (TextView) convertView.findViewById(R.id.item_project_field1);
                     holder.itemProjectField2 = (TextView) convertView.findViewById(R.id.item_project_field2);
@@ -759,19 +732,10 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                 Glide.with(mContext).load(brainInvestDatas.get(position).getStartPageImage()).into(holder.itemProjectImg);
                 holder.itemProjectTitle.setText(brainInvestDatas.get(position).getAbbrevName());
                 holder.itemProjectAddr.setText(brainInvestDatas.get(position).getAddress());
-                switch (brainInvestDatas.get(position).getFinancestatus().getName()) {
-                    case "待路演":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_dailuyan);
-                        break;
-                    case "融资中":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzizhong);
-                        break;
-                    case "融资成功":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
-                    case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
+                if ("融资成功".equals(brainInvestDatas.get(position).getFinancestatus().getName())) {
+                    holder.itemCompletedTag.setVisibility(View.VISIBLE);
+                } else {
+                    holder.itemCompletedTag.setVisibility(View.INVISIBLE);
                 }
                 holder.itemProjectCompname.setText(brainInvestDatas.get(position).getFullName());
                 String[] fields = brainInvestDatas.get(position).getIndustoryType().split("，");
@@ -808,19 +772,10 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                 Glide.with(mContext).load(brainCommentDatas.get(newPosition).getStartPageImage()).into(holder.itemProjectImg);
                 holder.itemProjectTitle.setText(brainCommentDatas.get(newPosition).getAbbrevName());
                 holder.itemProjectAddr.setText(brainCommentDatas.get(newPosition).getAddress());
-                switch (brainCommentDatas.get(newPosition).getFinancestatus().getName()) {
-                    case "待路演":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_dailuyan);
-                        break;
-                    case "融资中":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongzizhong);
-                        break;
-                    case "融资成功":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
-                    case "融资失败":
-                        holder.itemProjectTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                        break;
+                if ("融资成功".equals(brainCommentDatas.get(position).getFinancestatus().getName())) {
+                    holder.itemCompletedTag.setVisibility(View.VISIBLE);
+                } else {
+                    holder.itemCompletedTag.setVisibility(View.INVISIBLE);
                 }
                 holder.itemProjectCompname.setText(brainCommentDatas.get(newPosition).getFullName());
                 String[] fields = brainCommentDatas.get(newPosition).getIndustoryType().split("，");
@@ -888,7 +843,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
             private CircleImageView itemProjectImg;
             private TextView itemProjectTitle;
             private TextView itemProjectAddr;
-            private ImageView itemProjectTag;// 路演项目独有
+            private ImageView itemCompletedTag;// 路演项目独有
             private TextView itemProjectCompname;
             private TextView itemProjectField1;
             private TextView itemProjectField2;

@@ -56,12 +56,14 @@
             android:textSize="14sp" />
 
         <ImageView
-            android:id="@+id/item_project_tag"
+            android:id="@+id/iv_tag_completed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:src="@mipmap/tag_dailuyan" />
+            android:layout_marginRight="12.5dp"
+            android:layout_marginTop="7.5dp"
+            android:src="@mipmap/icon_tag_completed"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/item_project_compname"

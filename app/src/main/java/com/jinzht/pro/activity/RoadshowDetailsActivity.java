@@ -701,7 +701,9 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         if (postSize > 0 && url != null) {//说明，停止过 activity调用过pause方法，跳到停止位置播放
             int sMax = RoadshowLiveFragment.sbVoice.getMax();
             int mMax = player.getDuration();
-            RoadshowLiveFragment.sbVoice.setProgress(postSize * sMax / mMax);
+            if (mMax != 0) {
+                RoadshowLiveFragment.sbVoice.setProgress(postSize * sMax / mMax);
+            }
             new PlayThread(postSize).start();//从postSize位置开始放
         } else {
             new PlayThread(0).start();//表明是第一次开始播放
@@ -771,7 +773,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case VIDEO_FILE_ERROR:// 错误信息
-                    SuperToastUtils.showSuperToast(UiUtils.getContext(), 2, "网络连接异常");
+                    SuperToastUtils.showSuperToast(UiUtils.getContext(), 2, "暂无数据");
                     isPlaying = false;
                     if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(UiUtils.getContext()))) {
                         // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
@@ -790,7 +792,9 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                         int position = player.getCurrentPosition();
                         int mMax = player.getDuration();
                         int sMax = RoadshowLiveFragment.sbVoice.getMax();
-                        RoadshowLiveFragment.sbVoice.setProgress(position * sMax / mMax);
+                        if (mMax != 0) {
+                            RoadshowLiveFragment.sbVoice.setProgress(position * sMax / mMax);
+                        }
 
                         int i = position / 1000;
                         int hour = i / (60 * 60);

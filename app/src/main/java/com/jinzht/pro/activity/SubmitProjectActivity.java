@@ -58,7 +58,7 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
     private RelativeLayout rlRecommend;// 推荐理由输入框背景
     private CircleImageView ivProLogo;// 项目logo
     private TextView tvProTitle;// 项目标题
-    private ImageView tvProTag;// 项目状态
+    private ImageView ivCompletedTag;// 项目状态
     private TextView tvProName;// 项目名
     private TextView tvProDesc;// 项目描述
     private TextView tvPopularity;// 人气指数
@@ -105,7 +105,7 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
         rlRecommend.setOnClickListener(this);
         ivProLogo = (CircleImageView) findViewById(R.id.submit_iv_pro_img);// 项目logo
         tvProTitle = (TextView) findViewById(R.id.submit_tv_pro_title);// 项目标题
-        tvProTag = (ImageView) findViewById(R.id.submit_iv_tag);// 项目状态
+        ivCompletedTag = (ImageView) findViewById(R.id.iv_tag_completed);// 项目状态
         tvProName = (TextView) findViewById(R.id.submit_tv_pro_name);// 项目名
         tvProDesc = (TextView) findViewById(R.id.submit_tv_pro_desc);// 项目描述
         tvPopularity = (TextView) findViewById(R.id.submit_popularity);// 人气指数
@@ -128,22 +128,10 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
     private void initData() {
         Glide.with(this).load(proData.getStartPageImage()).into(ivProLogo);
         tvProTitle.setText(proData.getAbbrevName());
-        switch (proData.getFinancestatus().getName()) {
-            case "融资中":
-                tvProTag.setImageResource(R.mipmap.tag_rongzizhong);
-                break;
-            case "待路演":
-                tvProTag.setImageResource(R.mipmap.tag_dailuyan);
-                break;
-            case "融资完成":
-                tvProTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                break;
-            case "融资失败":
-                tvProTag.setImageResource(R.mipmap.tag_rongziwancheng);
-                break;
-            case "预选项目":
-                tvProTag.setImageResource(R.mipmap.tag_yuxuan);
-                break;
+        if ("融资成功".equals(proData.getFinancestatus().getName())) {
+            ivCompletedTag.setVisibility(View.VISIBLE);
+        } else {
+            ivCompletedTag.setVisibility(View.INVISIBLE);
         }
         tvProName.setText(proData.getFullName());
         tvProDesc.setText(proData.getDescription());
