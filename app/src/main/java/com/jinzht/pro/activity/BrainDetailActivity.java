@@ -80,7 +80,13 @@ public class BrainDetailActivity extends FullBaseActivity implements View.OnClic
         tvName.setText(data.getUser().getName());
         tvPosition.setText(data.getUser().getAuthentics().get(0).getPosition());
         tvCompName.setText(data.getUser().getAuthentics().get(0).getCompanyName());
-        tvAddr.setText(data.getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + data.getUser().getAuthentics().get(0).getCity().getName());
+        String province = data.getUser().getAuthentics().get(0).getCity().getProvince().getName();
+        String city = data.getUser().getAuthentics().get(0).getCity().getName();
+        if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
+            tvAddr.setText(province);
+        } else {
+            tvAddr.setText(province + " | " + city);
+        }
         tvService.setText(data.getUser().getAuthentics().get(0).getIntroduce());
         tvDesc.setText(data.getUser().getAuthentics().get(0).getCompanyIntroduce());
         if (data.isCollected()) {

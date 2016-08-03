@@ -234,7 +234,7 @@
                 android:layout_height="52dp"
                 android:layout_marginLeft="7dp"
                 app:numColor="@color/custom_orange"
-                app:numSize="20sp"
+                app:numSize="17sp"
                 app:roundColor="#d2d2d2"
                 app:roundProgressColor="@color/custom_orange"
                 app:roundWidth="5dp"

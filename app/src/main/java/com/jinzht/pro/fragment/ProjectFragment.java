@@ -446,16 +446,22 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     holder.itemProjectField2.setVisibility(View.INVISIBLE);
                     holder.itemProjectField3.setVisibility(View.INVISIBLE);
                 } else if (fields.length == 1) {
+                    holder.itemProjectField1.setVisibility(View.VISIBLE);
                     holder.itemProjectField1.setText(fields[0]);
                     holder.itemProjectField2.setVisibility(View.INVISIBLE);
                     holder.itemProjectField3.setVisibility(View.INVISIBLE);
                 } else if (fields.length == 2) {
+                    holder.itemProjectField1.setVisibility(View.VISIBLE);
                     holder.itemProjectField1.setText(fields[0]);
+                    holder.itemProjectField2.setVisibility(View.VISIBLE);
                     holder.itemProjectField2.setText(fields[1]);
                     holder.itemProjectField3.setVisibility(View.INVISIBLE);
                 } else if (fields.length == 3) {
+                    holder.itemProjectField1.setVisibility(View.VISIBLE);
                     holder.itemProjectField1.setText(fields[0]);
+                    holder.itemProjectField2.setVisibility(View.VISIBLE);
                     holder.itemProjectField2.setText(fields[1]);
+                    holder.itemProjectField3.setVisibility(View.VISIBLE);
                     holder.itemProjectField3.setText(fields[2]);
                 }
                 holder.itemProjectPopularity.setText(String.valueOf(rDatas.get(position).getCollectionCount()));
@@ -475,16 +481,22 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     holder.itemProjectField2.setVisibility(View.INVISIBLE);
                     holder.itemProjectField3.setVisibility(View.INVISIBLE);
                 } else if (fields.length == 1) {
+                    holder.itemProjectField1.setVisibility(View.VISIBLE);
                     holder.itemProjectField1.setText(fields[0]);
                     holder.itemProjectField2.setVisibility(View.INVISIBLE);
                     holder.itemProjectField3.setVisibility(View.INVISIBLE);
                 } else if (fields.length == 2) {
+                    holder.itemProjectField1.setVisibility(View.VISIBLE);
                     holder.itemProjectField1.setText(fields[0]);
+                    holder.itemProjectField2.setVisibility(View.VISIBLE);
                     holder.itemProjectField2.setText(fields[1]);
                     holder.itemProjectField3.setVisibility(View.INVISIBLE);
                 } else if (fields.length == 3) {
+                    holder.itemProjectField1.setVisibility(View.VISIBLE);
                     holder.itemProjectField1.setText(fields[0]);
+                    holder.itemProjectField2.setVisibility(View.VISIBLE);
                     holder.itemProjectField2.setText(fields[1]);
+                    holder.itemProjectField3.setVisibility(View.VISIBLE);
                     holder.itemProjectField3.setText(fields[2]);
                 }
                 holder.itemProjectPopularity.setText(String.valueOf(pDatas.get(position).getCollectionCount()));

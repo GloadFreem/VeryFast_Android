@@ -139,7 +139,13 @@ public class MyCollectInvestorFragment extends BaseFragment {
                     holder.ivTag.setImageResource(R.mipmap.icon_tag_brain);
                     break;
             }
-            holder.tvAddr.setText(datas.get(position).getUsersByUserCollectedId().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position).getUsersByUserCollectedId().getAuthentics().get(0).getCity().getName());
+            String province = datas.get(position).getUsersByUserCollectedId().getAuthentics().get(0).getCity().getProvince().getName();
+            String city = datas.get(position).getUsersByUserCollectedId().getAuthentics().get(0).getCity().getName();
+            if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
+                holder.tvAddr.setText(province);
+            } else {
+                holder.tvAddr.setText(province + " | " + city);
+            }
             String[] fields = datas.get(position).getUsersByUserCollectedId().getAuthentics().get(0).getIndustoryArea().split("，");
             if (fields.length == 0) {
                 holder.tvField1.setVisibility(View.INVISIBLE);

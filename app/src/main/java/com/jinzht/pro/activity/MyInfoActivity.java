@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.CommonBean;
@@ -98,6 +99,15 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
     protected void init() {
         UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
         findView();
+
+        if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
+            Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivFavicon);
+        } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
+            Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivFavicon);
+        } else {
+            ivFavicon.setImageResource(R.drawable.ic_launcher);
+        }
+
         photo_path = getCacheDir() + "/" + "favicon.jpg";// 头像保存地址
         photoFile = new File(Environment.getExternalStorageDirectory() + "/" + "favicon.jpg");
         EventBus.getDefault().register(this);
@@ -148,11 +158,11 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initData() {
-        if (!StringUtils.isBlank(data.getHeadSculpture())) {
-            Glide.with(mContext).load(data.getHeadSculpture()).into(ivFavicon);
-        } else {
-            ivFavicon.setImageResource(R.drawable.ic_launcher);
-        }
+//        if (!StringUtils.isBlank(data.getHeadSculpture())) {
+//            Glide.with(mContext).load(data.getHeadSculpture()).into(ivFavicon);
+//        } else {
+//            ivFavicon.setImageResource(R.drawable.ic_launcher);
+//        }
         GetInviteCode getInviteCode = new GetInviteCode();
         getInviteCode.execute();
         tvType.setText(data.getAuthentics().get(0).getIdentiytype().getName());
@@ -198,7 +208,13 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                 tvIdcard.setText(idNum);
                 tvComp.setText(data.getAuthentics().get(0).getCompanyName());
                 tvPosition.setText(data.getAuthentics().get(0).getPosition());
-                tvAddr.setText(data.getAuthentics().get(0).getCity().getProvince().getName() + " | " + data.getAuthentics().get(0).getCity().getName());
+                String province = data.getAuthentics().get(0).getCity().getProvince().getName();
+                String city = data.getAuthentics().get(0).getCity().getName();
+                if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
+                    tvAddr.setText(province);
+                } else {
+                    tvAddr.setText(province + " | " + city);
+                }
                 btnIdcard.setClickable(false);
                 tvRemind.setVisibility(View.GONE);
                 btnBottom.setVisibility(View.GONE);
@@ -307,7 +323,13 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                 needRefresh = true;
                 break;
             case "城市":
-                tvAddr.setText(intent.getStringExtra("provinceName") + " | " + intent.getStringExtra("cityName"));
+                String province = intent.getStringExtra("provinceName");
+                String city = intent.getStringExtra("cityName");
+                if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
+                    tvAddr.setText(province);
+                } else {
+                    tvAddr.setText(province + " | " + city);
+                }
                 ChangeAddr changeAddr = new ChangeAddr(intent.getStringExtra("cityId"));
                 changeAddr.execute();
                 break;

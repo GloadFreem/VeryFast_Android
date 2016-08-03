@@ -393,7 +393,11 @@ public class CertificationIDCardActivity extends BaseActivity implements View.On
             String province = intent.getStringExtra("provinceName");
             String city = intent.getStringExtra("cityName");
             if (!StringUtils.isBlank(province) && !StringUtils.isBlank(city)) {
-                btnCompanyAddr1.setText(province + " | " + city);
+                if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
+                    btnCompanyAddr1.setText(province);
+                } else {
+                    btnCompanyAddr1.setText(province + " | " + city);
+                }
             }
             Log.i("选择的城市id", cityId + "");
         } else if ("领域".equals(intent.getStringExtra("TAG"))) {

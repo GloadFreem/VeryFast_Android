@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jinzht.pro.R;
 import com.jinzht.pro.adapter.PersonalCenterRVAdapter;
 import com.jinzht.pro.adapter.RecyclerViewData;
@@ -75,11 +76,11 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
         btnExit.setOnClickListener(this);
 
         if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
-            Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).into(ivFavicon);
+            Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivFavicon);
         } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
-            Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).into(ivFavicon);
+            Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivFavicon);
         } else {
-            Glide.with(mContext).load(R.drawable.ic_launcher).into(ivFavicon);
+            ivFavicon.setImageResource(R.drawable.ic_launcher);
         }
 
         // 处理RecyclerView的item
@@ -91,10 +92,10 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
 
     private void initData() {
         if (!StringUtils.isBlank(data.getHeadSculpture())) {
-            Glide.with(mContext).load(data.getHeadSculpture()).into(ivFavicon);
+            Glide.with(mContext).load(data.getHeadSculpture()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivFavicon);
             SharedPreferencesUtils.saveOnlineFavicon(mContext, data.getHeadSculpture());
         } else {
-            Glide.with(mContext).load(R.drawable.ic_launcher).into(ivFavicon);
+            ivFavicon.setImageResource(R.drawable.ic_launcher);
         }
         if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
             // 微信登录
@@ -344,7 +345,7 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && data != null) {
             if (resultCode == MyInfoActivity.RESULT_CODE) {
-                if (data.getBooleanExtra("needRefresh", false)) {// 更换了头像
+                if (data.getBooleanExtra("needRefresh", false)) {// 修改了信息
                     GetUserInfo getUserInfo = new GetUserInfo();
                     getUserInfo.execute();
                 }

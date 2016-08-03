@@ -130,22 +130,34 @@ public class Investor1Fragment extends BaseFragment {
             holder.itemInvestorName.setText(datas.get(position).getUser().getName());
             holder.itemInvestorPosition.setText(datas.get(position).getUser().getAuthentics().get(0).getPosition());
             holder.itemInvestorCompName.setText(datas.get(position).getUser().getAuthentics().get(0).getCompanyName());
-            holder.itemInvestorAddr.setText(datas.get(position).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position).getUser().getAuthentics().get(0).getCity().getName());
+            String province = datas.get(position).getUser().getAuthentics().get(0).getCity().getProvince().getName();
+            String city = datas.get(position).getUser().getAuthentics().get(0).getCity().getName();
+            if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
+                holder.itemInvestorAddr.setText(province);
+            } else {
+                holder.itemInvestorAddr.setText(province + " | " + city);
+            }
             if (datas.get(position).getAreas().size() == 0) {
                 holder.itemInvestorField1.setVisibility(View.INVISIBLE);
                 holder.itemInvestorField2.setVisibility(View.INVISIBLE);
                 holder.itemInvestorField3.setVisibility(View.INVISIBLE);
             } else if (datas.get(position).getAreas().size() == 1) {
+                holder.itemInvestorField1.setVisibility(View.VISIBLE);
                 holder.itemInvestorField1.setText(datas.get(position).getAreas().get(0));
                 holder.itemInvestorField2.setVisibility(View.INVISIBLE);
                 holder.itemInvestorField3.setVisibility(View.INVISIBLE);
             } else if (datas.get(position).getAreas().size() == 2) {
+                holder.itemInvestorField1.setVisibility(View.VISIBLE);
                 holder.itemInvestorField1.setText(datas.get(position).getAreas().get(0));
+                holder.itemInvestorField2.setVisibility(View.VISIBLE);
                 holder.itemInvestorField2.setText(datas.get(position).getAreas().get(1));
                 holder.itemInvestorField3.setVisibility(View.INVISIBLE);
             } else if (datas.get(position).getAreas().size() == 3) {
+                holder.itemInvestorField1.setVisibility(View.VISIBLE);
                 holder.itemInvestorField1.setText(datas.get(position).getAreas().get(0));
+                holder.itemInvestorField2.setVisibility(View.VISIBLE);
                 holder.itemInvestorField2.setText(datas.get(position).getAreas().get(1));
+                holder.itemInvestorField3.setVisibility(View.VISIBLE);
                 holder.itemInvestorField3.setText(datas.get(position).getAreas().get(2));
             }
             if (datas.get(position).isCollected()) {
@@ -184,7 +196,13 @@ public class Investor1Fragment extends BaseFragment {
                             intent.putExtra("name", datas.get(position).getUser().getName());
                             intent.putExtra("position", datas.get(position).getUser().getAuthentics().get(0).getPosition());
                             intent.putExtra("compName", datas.get(position).getUser().getAuthentics().get(0).getCompanyName());
-                            intent.putExtra("addr", datas.get(position).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position).getUser().getAuthentics().get(0).getCity().getName());
+                            String province = datas.get(position).getUser().getAuthentics().get(0).getCity().getProvince().getName();
+                            String city = datas.get(position).getUser().getAuthentics().get(0).getCity().getName();
+                            if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
+                                intent.putExtra("addr", province);
+                            } else {
+                                intent.putExtra("addr", province + " | " + city);
+                            }
                             startActivity(intent);
                         } else {
                             SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");

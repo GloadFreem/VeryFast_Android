@@ -124,7 +124,13 @@ public class Investor3Fragment extends BaseFragment {
             holder.itemBrainName.setText(datas.get(position).getUser().getName());
             holder.itemBrainPosition.setText(datas.get(position).getUser().getAuthentics().get(0).getPosition());
             holder.itemBrainCompName.setText(datas.get(position).getUser().getAuthentics().get(0).getCompanyName());
-            holder.itemBrainAddr.setText(datas.get(position).getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + datas.get(position).getUser().getAuthentics().get(0).getCity().getName());
+            String province = datas.get(position).getUser().getAuthentics().get(0).getCity().getProvince().getName();
+            String city = datas.get(position).getUser().getAuthentics().get(0).getCity().getName();
+            if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
+                holder.itemBrainAddr.setText(province);
+            } else {
+                holder.itemBrainAddr.setText(province + " | " + city);
+            }
             holder.itemBrainDesc.setText(datas.get(position).getUser().getAuthentics().get(0).getCompanyIntroduce());
             if (datas.get(position).isCollected()) {
                 holder.itemBrainBtnCollect.setBackgroundResource(R.drawable.bg_code_gray);

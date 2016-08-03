@@ -18,6 +18,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
@@ -104,9 +105,9 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
             saveWechatFavicon.execute();
         } else {
             if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
-                Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).into(improveInfoIvUserimage);
+                Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(improveInfoIvUserimage);
             } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
-                Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).into(improveInfoIvUserimage);
+                Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(improveInfoIvUserimage);
             } else {
                 improveInfoIvUserimage.setImageResource(R.drawable.ic_launcher);
             }

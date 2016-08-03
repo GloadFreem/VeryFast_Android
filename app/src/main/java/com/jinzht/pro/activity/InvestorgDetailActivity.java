@@ -102,7 +102,13 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
         tvName.setText(data.getUser().getName());
         tvPosition.setText(data.getUser().getAuthentics().get(0).getPosition());
         tvCompName.setText(data.getUser().getAuthentics().get(0).getCompanyName());
-        tvAddr.setText(data.getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + data.getUser().getAuthentics().get(0).getCity().getName());
+        String province = data.getUser().getAuthentics().get(0).getCity().getProvince().getName();
+        String city = data.getUser().getAuthentics().get(0).getCity().getName();
+        if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
+            tvAddr.setText(province);
+        } else {
+            tvAddr.setText(province + " | " + city);
+        }
         if (data.getAreas().size() == 1) {
             tvField1.setText(data.getAreas().get(0));
             tvField2.setVisibility(View.GONE);
@@ -170,7 +176,13 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
                     intent1.putExtra("name", data.getUser().getName());
                     intent1.putExtra("position", data.getUser().getAuthentics().get(0).getPosition());
                     intent1.putExtra("compName", data.getUser().getAuthentics().get(0).getCompanyName());
-                    intent1.putExtra("addr", data.getUser().getAuthentics().get(0).getCity().getProvince().getName() + " | " + data.getUser().getAuthentics().get(0).getCity().getName());
+                    String province = data.getUser().getAuthentics().get(0).getCity().getProvince().getName();
+                    String city = data.getUser().getAuthentics().get(0).getCity().getName();
+                    if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
+                        intent1.putExtra("addr", province);
+                    } else {
+                        intent1.putExtra("addr", province + " | " + city);
+                    }
                     startActivity(intent1);
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");

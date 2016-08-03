@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.bean.LoginBean;
@@ -79,9 +80,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         loginTvWechat.setOnClickListener(this);
 
         if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
-            Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).into(loginIvUserimage);
+            Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(loginIvUserimage);
         } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
-            Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).into(loginIvUserimage);
+            Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(loginIvUserimage);
         } else {
             loginIvUserimage.setImageResource(R.drawable.ic_launcher);
         }

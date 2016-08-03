@@ -8,9 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jinzht.pro.R;
 import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.utils.SharedPreferencesUtils;
+import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.view.CircleImageView;
@@ -35,6 +37,14 @@ public class InviteCodeActivity extends BaseActivity implements View.OnClickList
     protected void init() {
         UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
         findView();
+
+        if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
+            Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivFavicon);
+        } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
+            Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivFavicon);
+        } else {
+            ivFavicon.setImageResource(R.drawable.ic_launcher);
+        }
     }
 
     private void findView() {
@@ -43,7 +53,6 @@ public class InviteCodeActivity extends BaseActivity implements View.OnClickList
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
         tvTitle.setText("指环码");
         ivFavicon = (CircleImageView) findViewById(R.id.iv_favicon);// 头像
-        Glide.with(this).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).into(ivFavicon);
         tvInviteCode = (TextView) findViewById(R.id.tv_invite_code);// 指环码
         tvInviteCode.setText(getIntent().getStringExtra("inviteCode"));
         btnCopy = (ImageView) findViewById(R.id.btn_copy);// 复制按钮
