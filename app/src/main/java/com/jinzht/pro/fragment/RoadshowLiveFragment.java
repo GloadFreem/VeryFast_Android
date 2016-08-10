@@ -20,10 +20,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
-import com.jinzht.pro.activity.CertificationIDCardActivity;
 import com.jinzht.pro.activity.RoadshowChatActivity;
 import com.jinzht.pro.activity.RoadshowDetailsActivity;
-import com.jinzht.pro.activity.WechatVerifyActivity;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.CommentsListBean;
 import com.jinzht.pro.bean.CommonBean;
@@ -34,7 +32,6 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
-import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.CircleImageView;
@@ -134,76 +131,35 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
         Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.roadshow_btn_play:
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
-                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
-                        RoadshowDetailsActivity.vpPPt.setScrollable(false);
-                    } else {
-                        if (StringUtils.isBlank(RoadshowDetailsActivity.voiceData.getAudioPath())) {
-                            SuperToastUtils.showSuperToast(mContext, 2, "暂无数据");
-                        } else {
-                            if (RoadshowDetailsActivity.isPlaying) {// 正在播放，点击暂停
-                                RoadshowDetailsActivity.isPlaying = false;
-                                RoadshowDetailsActivity.vpPPt.setScrollable(true);
-                                ivPlay.setBackgroundResource(R.mipmap.icon_play);
-                                RoadshowDetailsActivity.player.pause();
-                                RoadshowDetailsActivity.postSize = RoadshowDetailsActivity.player.getCurrentPosition();
-                            } else {// 暂停，点击播放
-                                RoadshowDetailsActivity.isPlaying = true;
-                                RoadshowDetailsActivity.vpPPt.setScrollable(false);
-                                ivPlay.setBackgroundResource(R.mipmap.icon_pause);
-                                RoadshowDetailsActivity.playMediaMethod();
-                            }
-                        }
-                    }
+                if (StringUtils.isBlank(RoadshowDetailsActivity.voiceData.getAudioPath())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "暂无数据");
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                    if (RoadshowDetailsActivity.isPlaying) {// 正在播放，点击暂停
+                        RoadshowDetailsActivity.isPlaying = false;
+                        RoadshowDetailsActivity.vpPPt.setScrollable(true);
+                        ivPlay.setBackgroundResource(R.mipmap.icon_play);
+                        RoadshowDetailsActivity.player.pause();
+                        RoadshowDetailsActivity.postSize = RoadshowDetailsActivity.player.getCurrentPosition();
+                    } else {// 暂停，点击播放
+                        RoadshowDetailsActivity.isPlaying = true;
+                        RoadshowDetailsActivity.vpPPt.setScrollable(false);
+                        ivPlay.setBackgroundResource(R.mipmap.icon_pause);
+                        RoadshowDetailsActivity.playMediaMethod();
                     }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
                 }
                 break;
             case R.id.roadshow_btn_chat_send:// 发送消息
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (!StringUtils.isBlank(edChat.getText().toString())) {
-                        CommentTask commentTask = new CommentTask(edChat.getText().toString());
-                        commentTask.execute();
-                    } else {
-                        SuperToastUtils.showSuperToast(mContext, 2, "请输入聊天内容");
-                    }
+                if (!StringUtils.isBlank(edChat.getText().toString())) {
+                    CommentTask commentTask = new CommentTask(edChat.getText().toString());
+                    commentTask.execute();
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    SuperToastUtils.showSuperToast(mContext, 2, "请输入聊天内容");
                 }
                 break;
             case R.id.btn_fullscreen:// 全屏聊天
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    Intent intent1 = new Intent(mContext, RoadshowChatActivity.class);
-                    startActivityForResult(intent1, REQUEST_CODE);
-                    flag = true;
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
+                Intent intent1 = new Intent(mContext, RoadshowChatActivity.class);
+                startActivityForResult(intent1, REQUEST_CODE);
+                flag = true;
                 break;
         }
     }

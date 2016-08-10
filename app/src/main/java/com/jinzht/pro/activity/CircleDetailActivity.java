@@ -121,29 +121,16 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 onBackPressed();
                 break;
             case R.id.btn_comment:// 发表评论
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (StringUtils.isBlank(edComment.getText().toString())) {
-                        SuperToastUtils.showSuperToast(this, 2, "请输入评论内容");
-                    } else {
-                        if ("评论本条状态".equals(edComment.getHint())) {
-                            CircleCommentTask circleCommentTask = new CircleCommentTask("");
-                            circleCommentTask.execute();
-                        } else {
-                            CircleCommentTask circleCommentTask = new CircleCommentTask(String.valueOf(comments.get((Integer) edComment.getTag() - 1).getUsersByUserId().getUserId()));
-                            circleCommentTask.execute();
-                        }
-                    }
+                if (StringUtils.isBlank(edComment.getText().toString())) {
+                    SuperToastUtils.showSuperToast(this, 2, "请输入评论内容");
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    Intent intent = new Intent();
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
+                    if ("评论本条状态".equals(edComment.getHint())) {
+                        CircleCommentTask circleCommentTask = new CircleCommentTask("");
+                        circleCommentTask.execute();
                     } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
+                        CircleCommentTask circleCommentTask = new CircleCommentTask(String.valueOf(comments.get((Integer) edComment.getTag() - 1).getUsersByUserId().getUserId()));
+                        circleCommentTask.execute();
                     }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
                 }
                 break;
         }
@@ -267,9 +254,17 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
 
             // 处理详情
             if (getItemViewType(position) == 0) {
-                Glide.with(mContext).load(datas.getUsers().getHeadSculpture()).into(holder.ivDetailFavicon);
+                if (!StringUtils.isBlank(datas.getUsers().getHeadSculpture())) {
+                    Glide.with(mContext).load(datas.getUsers().getHeadSculpture()).into(holder.ivDetailFavicon);
+                } else {
+                    holder.ivFavicon.setImageResource(R.mipmap.ic_default_favicon);
+                }
                 holder.tvDetailName.setText(datas.getUsers().getName());
-                holder.tvDetailAddr.setText(datas.getUsers().getAuthentics().get(0).getCity().getName());
+                if (datas.getUsers().getAuthentics().get(0).getCity() != null) {
+                    holder.tvDetailAddr.setText(datas.getUsers().getAuthentics().get(0).getCity().getName());
+                } else {
+                    holder.tvDetailAddr.setText("");
+                }
                 if (!StringUtils.isBlank(datas.getUsers().getAuthentics().get(0).getCompanyName()) && !StringUtils.isBlank(datas.getUsers().getAuthentics().get(0).getPosition())) {
                     holder.tvDetailCompPosition.setText(datas.getUsers().getAuthentics().get(0).getCompanyName() + " | " + datas.getUsers().getAuthentics().get(0).getPosition());
                 }
@@ -305,29 +300,16 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 holder.btnGood.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                            if (datas.isFlag()) {
-                                finalHolder.btnGood.setImageResource(R.mipmap.icon_good);
-                                datas.setFlag(false);
-                                CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 2);
-                                circlePriseTask.execute();
-                            } else {
-                                finalHolder.btnGood.setImageResource(R.mipmap.icon_good_checked);
-                                datas.setFlag(true);
-                                CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 1);
-                                circlePriseTask.execute();
-                            }
+                        if (datas.isFlag()) {
+                            finalHolder.btnGood.setImageResource(R.mipmap.icon_good);
+                            datas.setFlag(false);
+                            CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 2);
+                            circlePriseTask.execute();
                         } else {
-                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                            Intent intent = new Intent();
-                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                                intent.setClass(mContext, WechatVerifyActivity.class);
-                            } else {
-                                intent.setClass(mContext, CertificationIDCardActivity.class);
-                            }
-                            intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            finalHolder.btnGood.setImageResource(R.mipmap.icon_good_checked);
+                            datas.setFlag(true);
+                            CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 1);
+                            circlePriseTask.execute();
                         }
                     }
                 });

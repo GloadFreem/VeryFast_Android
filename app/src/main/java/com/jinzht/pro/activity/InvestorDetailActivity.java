@@ -153,68 +153,32 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
                 onBackPressed();
                 break;
             case R.id.title_btn_share:// 分享
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    ShareTask shareTask = new ShareTask();
-                    shareTask.execute();
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
+                ShareTask shareTask = new ShareTask();
+                shareTask.execute();
                 break;
             case R.id.investor_detail_btn_submit:// 提交项目
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    Intent intent1 = new Intent(mContext, SubmitProjectActivity.class);
-                    intent1.putExtra("id", String.valueOf(data.getUser().getUserId()));
-                    intent1.putExtra("favicon", data.getUser().getHeadSculpture());
-                    intent1.putExtra("name", data.getUser().getName());
-                    intent1.putExtra("position", data.getUser().getAuthentics().get(0).getPosition());
-                    intent1.putExtra("compName", data.getUser().getAuthentics().get(0).getCompanyName());
-                    String province = data.getUser().getAuthentics().get(0).getCity().getProvince().getName();
-                    String city = data.getUser().getAuthentics().get(0).getCity().getName();
-                    if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
-                        intent1.putExtra("addr", province);
-                    } else {
-                        intent1.putExtra("addr", province + " | " + city);
-                    }
-                    startActivity(intent1);
+                Intent intent1 = new Intent(mContext, SubmitProjectActivity.class);
+                intent1.putExtra("id", String.valueOf(data.getUser().getUserId()));
+                intent1.putExtra("favicon", data.getUser().getHeadSculpture());
+                intent1.putExtra("name", data.getUser().getName());
+                intent1.putExtra("position", data.getUser().getAuthentics().get(0).getPosition());
+                intent1.putExtra("compName", data.getUser().getAuthentics().get(0).getCompanyName());
+                String province = data.getUser().getAuthentics().get(0).getCity().getProvince().getName();
+                String city = data.getUser().getAuthentics().get(0).getCity().getName();
+                if ("北京天津上海重庆香港澳门钓鱼岛".contains(province)) {
+                    intent1.putExtra("addr", province);
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    intent1.putExtra("addr", province + " | " + city);
                 }
+                startActivity(intent1);
                 break;
             case R.id.investor_detail_btn_collect:// 关注
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (data.isCollected()) {
-                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(2);
-                        collectInvestorTask.execute();
-                    } else {
-                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(1);
-                        collectInvestorTask.execute();
-                    }
+                if (data.isCollected()) {
+                    CollectInvestorTask collectInvestorTask = new CollectInvestorTask(2);
+                    collectInvestorTask.execute();
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    CollectInvestorTask collectInvestorTask = new CollectInvestorTask(1);
+                    collectInvestorTask.execute();
                 }
                 break;
         }

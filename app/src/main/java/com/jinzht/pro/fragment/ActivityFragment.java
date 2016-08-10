@@ -182,21 +182,8 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                     holder.btnApply.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                                applyDialog(datas.get(position).getActionId());
-                                POSITION = position;
-                            } else {
-                                SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                                Intent intent = new Intent();
-                                if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                                    intent.setClass(mContext, WechatVerifyActivity.class);
-                                } else {
-                                    intent.setClass(mContext, CertificationIDCardActivity.class);
-                                }
-                                intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
+                            applyDialog(datas.get(position).getActionId());
+                            POSITION = position;
                         }
                     });
                 }

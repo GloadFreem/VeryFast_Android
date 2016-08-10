@@ -337,7 +337,7 @@ public class PullToRefreshLayout extends RelativeLayout {
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (mEvents == 0) {
-                    if (((Pullable) pullableView).canPullDown() && canPullDown
+                    if (((Pullable) pullableView) != null && ((Pullable) pullableView).canPullDown() && canPullDown
                             && state != LOADING) {
                         // 可以下拉，正在加载时不能下拉
                         // 对实际滑动距离做缩小，造成用力拉的感觉

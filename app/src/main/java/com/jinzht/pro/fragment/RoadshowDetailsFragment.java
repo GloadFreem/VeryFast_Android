@@ -15,11 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jinzht.pro.R;
-import com.jinzht.pro.activity.CertificationIDCardActivity;
 import com.jinzht.pro.activity.CommonWebViewActivity;
 import com.jinzht.pro.activity.ImagePagerActivity;
-import com.jinzht.pro.activity.RoadshowDetailsActivity;
-import com.jinzht.pro.activity.WechatVerifyActivity;
 import com.jinzht.pro.adapter.ProjectPhotosAdapter;
 import com.jinzht.pro.adapter.ProjectReportsAdapter;
 import com.jinzht.pro.adapter.ProjectTeamsAdapter;
@@ -27,9 +24,8 @@ import com.jinzht.pro.adapter.RecyclerViewData;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.ProjectDetailBean;
 import com.jinzht.pro.callback.ItemClickListener;
-import com.jinzht.pro.utils.Constant;
+import com.jinzht.pro.utils.DialogUtils;
 import com.jinzht.pro.utils.SharedPreferencesUtils;
-import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.RoundProgressBar;
 
 import java.util.ArrayList;
@@ -57,6 +53,7 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
     private ImageView ivMore;// 更多按钮图标
     private RecyclerView rvTeams;// 团队成员表
     private RecyclerView rvReports;// 项目报表
+    private ImageView ivHazy;// 未认证时的遮罩
 
     private boolean isOpen = false;// 项目描述的开关状态
 
@@ -99,6 +96,15 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         ivMore = (ImageView) view.findViewById(R.id.roadshow_img_more);// 更多按钮图标
         rvTeams = (RecyclerView) view.findViewById(R.id.project_rv_teams);// 团队成员表
         rvReports = (RecyclerView) view.findViewById(R.id.project_rv_reports);// 项目报表
+        ivHazy = (ImageView) view.findViewById(R.id.iv_hazy);// 未认证时的遮罩
+        ivHazy.setOnClickListener(this);
+        if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+            rvReports.setVisibility(View.VISIBLE);
+            ivHazy.setVisibility(View.GONE);
+        } else {
+            rvReports.setVisibility(View.GONE);
+            ivHazy.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 
@@ -131,6 +137,13 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
                 } else {// 关闭状态，点击打开
                     descOpen();
                     isOpen = true;
+                }
+                break;
+            case R.id.iv_hazy:// 点击遮罩去认证
+                if ("认证中".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    DialogUtils.confirmDialog(getActivity(), "您的信息正在认证中，通过后方可查看！", "确定");
+                } else {
+                    DialogUtils.goAuthentic(getActivity());
                 }
                 break;
         }
@@ -316,28 +329,10 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         reportsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    // 身份类型是项目方又不是自己时不能点开
-                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
-
-                    } else {
-                        Intent intent = new Intent(mContext, CommonWebViewActivity.class);
-                        intent.putExtra("title", reportDatas.get(position).getContent());
-                        intent.putExtra("url", reportDatas.get(position).getUrl());
-                        startActivity(intent);
-                    }
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    Intent intent = new Intent();
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                intent.putExtra("title", reportDatas.get(position).getContent());
+                intent.putExtra("url", reportDatas.get(position).getUrl());
+                startActivity(intent);
             }
 
             @Override

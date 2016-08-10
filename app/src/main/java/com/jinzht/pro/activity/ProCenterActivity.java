@@ -287,7 +287,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     holder.itemProjectField3.setText(fields[2]);
                 }
                 holder.itemProjectPopularity.setText(String.valueOf(proDatas.get(position).getCollectionCount()));
-                holder.itemProjectTime.setText(String.valueOf(proDatas.get(position).getTimeLeft()));
+                holder.itemProjectTime.setText(String.valueOf(proDatas.get(position).getTimeLeft()) + "天");
                 holder.itemProjectAmount.setText(proDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
                 int progress = (int) ((double) (proDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (proDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
                 holder.itemProjectProgress.setProgress(progress);
@@ -501,7 +501,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     holder.itemProjectField3.setText(fields[2]);
                 }
                 holder.itemProjectPopularity.setText(String.valueOf(investorInvestDatas.get(position).getCollectionCount()));
-                holder.itemProjectTime.setText(String.valueOf(investorInvestDatas.get(position).getTimeLeft()));
+                holder.itemProjectTime.setText(String.valueOf(investorInvestDatas.get(position).getTimeLeft()) + "天");
                 holder.itemProjectAmount.setText(investorInvestDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
                 int progress = (int) ((double) (investorInvestDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (investorInvestDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
                 holder.itemProjectProgress.setProgress(progress);
@@ -541,7 +541,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     holder.itemProjectField3.setText(fields[2]);
                 }
                 holder.itemProjectPopularity.setText(String.valueOf(investorCommitDatas.get(newPosition).getCollectionCount()));
-                holder.itemProjectTime.setText(String.valueOf(investorCommitDatas.get(newPosition).getTimeLeft()));
+                holder.itemProjectTime.setText(String.valueOf(investorCommitDatas.get(newPosition).getTimeLeft()) + "天");
                 holder.itemProjectAmount.setText(investorCommitDatas.get(newPosition).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
                 int progress = (int) ((double) (investorCommitDatas.get(newPosition).getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (investorCommitDatas.get(newPosition).getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
                 holder.itemProjectProgress.setProgress(progress);
@@ -757,7 +757,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     holder.itemProjectField3.setText(fields[2]);
                 }
                 holder.itemProjectPopularity.setText(String.valueOf(brainInvestDatas.get(position).getCollectionCount()));
-                holder.itemProjectTime.setText(String.valueOf(brainInvestDatas.get(position).getTimeLeft()));
+                holder.itemProjectTime.setText(String.valueOf(brainInvestDatas.get(position).getTimeLeft()) + "天");
                 holder.itemProjectAmount.setText(brainInvestDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
                 int progress = (int) ((double) (brainInvestDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (brainInvestDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
                 holder.itemProjectProgress.setProgress(progress);
@@ -797,7 +797,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                     holder.itemProjectField3.setText(fields[2]);
                 }
                 holder.itemProjectPopularity.setText(String.valueOf(brainCommentDatas.get(newPosition).getCollectionCount()));
-                holder.itemProjectTime.setText(String.valueOf(brainCommentDatas.get(newPosition).getTimeLeft()));
+                holder.itemProjectTime.setText(String.valueOf(brainCommentDatas.get(newPosition).getTimeLeft()) + "天");
                 holder.itemProjectAmount.setText(brainCommentDatas.get(newPosition).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
                 int progress = (int) ((double) (brainCommentDatas.get(newPosition).getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (brainCommentDatas.get(newPosition).getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
                 holder.itemProjectProgress.setProgress(progress);

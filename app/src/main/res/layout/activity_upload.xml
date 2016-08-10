@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="9dp"
         android:clickable="true"
-        android:text="xiangmu@jinzht.com"
+        android:text=""
         android:textColor="#319ffd"
         android:textSize="18sp" />
 

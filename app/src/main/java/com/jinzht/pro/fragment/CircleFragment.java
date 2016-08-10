@@ -21,11 +21,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
-import com.jinzht.pro.activity.CertificationIDCardActivity;
 import com.jinzht.pro.activity.CircleDetailActivity;
 import com.jinzht.pro.activity.ImagePagerActivity;
 import com.jinzht.pro.activity.ReleaseCircleActivity;
-import com.jinzht.pro.activity.WechatVerifyActivity;
 import com.jinzht.pro.adapter.CirclePhotosAdapter;
 import com.jinzht.pro.adapter.RecyclerViewData;
 import com.jinzht.pro.base.BaseFragment;
@@ -107,21 +105,8 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.title_btn_right:// 点击发表内容
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    Intent intent = new Intent(mContext, ReleaseCircleActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE);
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    Intent intent = new Intent();
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(mContext, ReleaseCircleActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
         }
     }
@@ -171,9 +156,15 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             }
             if (!StringUtils.isBlank(datas.get(position).getUsers().getHeadSculpture())) {
                 Glide.with(mContext).load(datas.get(position).getUsers().getHeadSculpture()).into(holder.ivFavicon);
+            } else {
+                holder.ivFavicon.setImageResource(R.mipmap.ic_default_favicon);
             }
             holder.tvName.setText(datas.get(position).getUsers().getName());
-            holder.tvAddr.setText(datas.get(position).getUsers().getAuthentics().get(0).getCity().getName());
+            if (datas.get(position).getUsers().getAuthentics().get(0).getCity() != null) {
+                holder.tvAddr.setText(datas.get(position).getUsers().getAuthentics().get(0).getCity().getName());
+            } else {
+                holder.tvAddr.setText("");
+            }
             String companyName = datas.get(position).getUsers().getAuthentics().get(0).getCompanyName();
             String pos = datas.get(position).getUsers().getAuthentics().get(0).getPosition();
             if (!StringUtils.isBlank(companyName) && !StringUtils.isBlank(pos)) {
@@ -248,22 +239,9 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             holder.btnTranspond.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                        POSITION = position;
-                        ShareTask shareTask = new ShareTask();
-                        shareTask.execute();
-                    } else {
-                        SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                        Intent intent = new Intent();
-                        if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                            intent.setClass(mContext, WechatVerifyActivity.class);
-                        } else {
-                            intent.setClass(mContext, CertificationIDCardActivity.class);
-                        }
-                        intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
+                    POSITION = position;
+                    ShareTask shareTask = new ShareTask();
+                    shareTask.execute();
                 }
             });
             holder.tvTranspond.setText(String.valueOf(datas.get(position).getShareCount()));
@@ -272,24 +250,11 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             holder.btnComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                        POSITION = position;
-                        Intent intent = new Intent(mContext, CircleDetailActivity.class);
-                        intent.putExtra("id", String.valueOf(datas.get(position).getPublicContentId()));
-                        intent.putExtra("TAG", 1);
-                        startActivityForResult(intent, REQUEST_CODE);
-                    } else {
-                        SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                        Intent intent = new Intent();
-                        if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                            intent.setClass(mContext, WechatVerifyActivity.class);
-                        } else {
-                            intent.setClass(mContext, CertificationIDCardActivity.class);
-                        }
-                        intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
+                    POSITION = position;
+                    Intent intent = new Intent(mContext, CircleDetailActivity.class);
+                    intent.putExtra("id", String.valueOf(datas.get(position).getPublicContentId()));
+                    intent.putExtra("TAG", 1);
+                    startActivityForResult(intent, REQUEST_CODE);
                 }
             });
 
@@ -311,21 +276,8 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                 @Override
                 public boolean onLongClick(View v) {
                     if (datas.get(position).getUsers().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
-                        if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                            // 弹框提示删除
-                            showDeleteWindow(v, position);
-                        } else {
-                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                            Intent intent = new Intent();
-                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                                intent.setClass(mContext, WechatVerifyActivity.class);
-                            } else {
-                                intent.setClass(mContext, CertificationIDCardActivity.class);
-                            }
-                            intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        }
+                        // 弹框提示删除
+                        showDeleteWindow(v, position);
                     }
                     return true;
                 }
@@ -335,33 +287,20 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             holder.btnGood.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                        if (datas.get(position).isFlag()) {
-                            finalHolder.tvGood.setCompoundDrawablesWithIntrinsicBounds(UiUtils.getDrawable(R.mipmap.icon_good), null, null, null);
-                            datas.get(position).setFlag(false);
-                            datas.get(position).setPriseCount(datas.get(position).getPriseCount() - 1);
-                            finalHolder.tvGood.setText(String.valueOf(datas.get(position).getPriseCount()));
-                            CieclePriseTask cieclePriseTask = new CieclePriseTask(datas.get(position).getPublicContentId(), 2);
-                            cieclePriseTask.execute();
-                        } else {
-                            finalHolder.tvGood.setCompoundDrawablesWithIntrinsicBounds(UiUtils.getDrawable(R.mipmap.icon_good_checked), null, null, null);
-                            datas.get(position).setFlag(true);
-                            datas.get(position).setPriseCount(datas.get(position).getPriseCount() + 1);
-                            finalHolder.tvGood.setText(String.valueOf(datas.get(position).getPriseCount()));
-                            CieclePriseTask cieclePriseTask = new CieclePriseTask(datas.get(position).getPublicContentId(), 1);
-                            cieclePriseTask.execute();
-                        }
+                    if (datas.get(position).isFlag()) {
+                        finalHolder.tvGood.setCompoundDrawablesWithIntrinsicBounds(UiUtils.getDrawable(R.mipmap.icon_good), null, null, null);
+                        datas.get(position).setFlag(false);
+                        datas.get(position).setPriseCount(datas.get(position).getPriseCount() - 1);
+                        finalHolder.tvGood.setText(String.valueOf(datas.get(position).getPriseCount()));
+                        CieclePriseTask cieclePriseTask = new CieclePriseTask(datas.get(position).getPublicContentId(), 2);
+                        cieclePriseTask.execute();
                     } else {
-                        SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                        Intent intent = new Intent();
-                        if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                            intent.setClass(mContext, WechatVerifyActivity.class);
-                        } else {
-                            intent.setClass(mContext, CertificationIDCardActivity.class);
-                        }
-                        intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        finalHolder.tvGood.setCompoundDrawablesWithIntrinsicBounds(UiUtils.getDrawable(R.mipmap.icon_good_checked), null, null, null);
+                        datas.get(position).setFlag(true);
+                        datas.get(position).setPriseCount(datas.get(position).getPriseCount() + 1);
+                        finalHolder.tvGood.setText(String.valueOf(datas.get(position).getPriseCount()));
+                        CieclePriseTask cieclePriseTask = new CieclePriseTask(datas.get(position).getPublicContentId(), 1);
+                        cieclePriseTask.execute();
                     }
                 }
             });

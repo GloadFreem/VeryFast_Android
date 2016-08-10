@@ -26,7 +26,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jinzht.pro.R;
+import com.jinzht.pro.activity.CertificationIDCardActivity;
 import com.jinzht.pro.activity.MainActivity;
+import com.jinzht.pro.activity.WechatVerifyActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -365,6 +367,12 @@ public class DialogUtils {
         ImageView ivTag = (ImageView) window.findViewById(R.id.iv_tag);
         TextView tvContent = (TextView) window.findViewById(R.id.tv_content);
         TextView btnConfirm = (TextView) window.findViewById(R.id.btn_confirm);
+        if ("您的信息正在认证中，通过后方可查看！".equals(content)) {
+            ivTag.setImageResource(R.mipmap.icon_exclamation);
+        }
+        if ("您的身份为项目方，不能查看其他项目方的资料".equals(content)) {
+            ivTag.setImageResource(R.mipmap.icon_exclamation);
+        }
         tvContent.setText(content);
         btnConfirm.setText(confirm);
         btnConfirm.setOnClickListener(new View.OnClickListener() {
@@ -458,4 +466,43 @@ public class DialogUtils {
         });
     }
 
+    // 提示去实名认证的弹窗
+    public static void goAuthentic(final Activity activity) {
+        final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.Custom_Dialog).create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_two_btn);
+        TextView tvContent = (TextView) window.findViewById(R.id.tv_content);
+        TextView btnCancel = (TextView) window.findViewById(R.id.btn_cancel);
+        TextView btnConfirm = (TextView) window.findViewById(R.id.btn_confirm);
+        if ("未认证".equals(SharedPreferencesUtils.getIsAuthentic(activity))) {
+            tvContent.setText("您还没有进行实名认证\n请先实名认证");
+        } else if ("认证失败".equals(SharedPreferencesUtils.getIsAuthentic(activity))) {
+            tvContent.setText("您的实名认证未通过\n请继续认证");
+        }
+        btnCancel.setText("取消");
+        btnConfirm.setText("确定");
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                if (SharedPreferencesUtils.getIsWechatLogin(activity)) {
+                    intent.setClass(activity, WechatVerifyActivity.class);
+                } else {
+                    intent.setClass(activity, CertificationIDCardActivity.class);
+                }
+                intent.putExtra("usertype", SharedPreferencesUtils.getUserType(activity));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                activity.startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+    }
 }

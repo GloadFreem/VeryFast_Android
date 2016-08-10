@@ -203,7 +203,7 @@ public class MyCollectProjectFragment extends BaseFragment {
                     holder.itemProjectField3.setText(fields[2]);
                 }
                 holder.itemProjectPopularity.setText(String.valueOf(datas.get(position).getCollectionCount()));
-                holder.itemProjectTime.setText(String.valueOf(datas.get(position).getTimeLeft()));
+                holder.itemProjectTime.setText(String.valueOf(datas.get(position).getTimeLeft()) + "天");
                 holder.itemProjectAmount.setText(datas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
                 int progress = (int) ((double) (datas.get(position).getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (datas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
                 holder.itemProjectProgress.setProgress(progress);

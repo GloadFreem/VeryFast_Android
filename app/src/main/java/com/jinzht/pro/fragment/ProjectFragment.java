@@ -465,7 +465,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     holder.itemProjectField3.setText(fields[2]);
                 }
                 holder.itemProjectPopularity.setText(String.valueOf(rDatas.get(position).getCollectionCount()));
-                holder.itemProjectTime.setText(String.valueOf(rDatas.get(position).getTimeLeft()));
+                holder.itemProjectTime.setText(String.valueOf(rDatas.get(position).getTimeLeft()) + "天");
                 holder.itemProjectAmount.setText(rDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
                 int progress = (int) ((double) (rDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinancedMount()) / (double) (rDatas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal()) * 100);
                 holder.itemProjectProgress.setProgress(progress);

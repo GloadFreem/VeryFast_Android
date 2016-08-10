@@ -136,31 +136,15 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         GetMemberTask getMemberTask = new GetMemberTask();
         getMemberTask.execute();
 
-        if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-            // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
-            if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
-                vpPPt.setScrollable(false);
-            } else {
-                vpPPt.setScrollable(true);
-            }
-        } else {
-            vpPPt.setScrollable(false);
-        }
+        vpPPt.setScrollable(true);
 
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() { //音频播放完成
             @Override
             public void onCompletion(MediaPlayer mp) {
                 isPlaying = false;
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
-                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
-                        vpPPt.setScrollable(false);
-                    } else {
-                        vpPPt.setScrollable(true);
-                    }
-                } else {
-                    vpPPt.setScrollable(false);
-                }
+
+                vpPPt.setScrollable(true);
+
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
                 postSize = 0;
             }
@@ -199,41 +183,17 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 onBackPressed();
                 break;
             case R.id.title_btn_right2:// 收藏
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (data.isCollected()) {
-                        CollectTask collectTask = new CollectTask(2);
-                        collectTask.execute();
-                    } else {
-                        CollectTask collectTask = new CollectTask(1);
-                        collectTask.execute();
-                    }
+                if (data.isCollected()) {
+                    CollectTask collectTask = new CollectTask(2);
+                    collectTask.execute();
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    CollectTask collectTask = new CollectTask(1);
+                    collectTask.execute();
                 }
                 break;
             case R.id.title_btn_right:// 分享
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    ShareTask shareTask = new ShareTask();
-                    shareTask.execute();
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
+                ShareTask shareTask = new ShareTask();
+                shareTask.execute();
                 break;
             case R.id.details_btn_service:// 给客服打电话
                 CustomerServiceTask customerServiceTask = new CustomerServiceTask();
@@ -250,16 +210,10 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                     intent1.putExtra("fullName", data.getFullName());
                     intent1.putExtra("img", data.getStartPageImage());
                     startActivity(intent1);
+                } else if ("认证中".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    DialogUtils.confirmDialog(this, "您的信息正在认证中，通过后方可查看！", "确定");
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    DialogUtils.goAuthentic(this);
                 }
                 break;
         }
@@ -400,6 +354,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                     if (data != null) {
                         initCollect();
                         userId = data.getUserId();
+                        Log.i("项目的userId", userId + "");
                     }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, projectDetailBean.getMessage());
@@ -775,16 +730,9 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 case VIDEO_FILE_ERROR:// 错误信息
                     SuperToastUtils.showSuperToast(UiUtils.getContext(), 2, "暂无数据");
                     isPlaying = false;
-                    if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(UiUtils.getContext()))) {
-                        // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
-                        if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(UiUtils.getContext()) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(UiUtils.getContext())) {
-                            vpPPt.setScrollable(false);
-                        } else {
-                            vpPPt.setScrollable(true);
-                        }
-                    } else {
-                        vpPPt.setScrollable(false);
-                    }
+
+                    vpPPt.setScrollable(true);
+
                     RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
                     break;
                 case VIDEO_UPDATE_SEEKBAR:// 更新播放进度条
@@ -829,16 +777,9 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             if (player != null && isPlaying) {
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
-                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
-                        vpPPt.setScrollable(false);
-                    } else {
-                        vpPPt.setScrollable(true);
-                    }
-                } else {
-                    vpPPt.setScrollable(false);
-                }
+
+                vpPPt.setScrollable(true);
+
                 player.pause();
                 postSize = player.getCurrentPosition();
             }
@@ -852,16 +793,9 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             if (player != null && isPlaying) {
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
-                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
-                        vpPPt.setScrollable(false);
-                    } else {
-                        vpPPt.setScrollable(true);
-                    }
-                } else {
-                    vpPPt.setScrollable(false);
-                }
+
+                vpPPt.setScrollable(true);
+
                 player.pause();
                 postSize = player.getCurrentPosition();
             }
@@ -875,16 +809,9 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             if (isPlaying) {
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    // 身份类型是项目方又不是自己时不能播放，也不能翻PPT
-                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
-                        vpPPt.setScrollable(false);
-                    } else {
-                        vpPPt.setScrollable(true);
-                    }
-                } else {
-                    vpPPt.setScrollable(false);
-                }
+
+                vpPPt.setScrollable(true);
+
                 player.stop();
             }
             player.release();

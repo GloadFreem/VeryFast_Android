@@ -80,6 +80,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
     private ImageView btnMoreImg;// 查看更多的图标
     private RecyclerView rvTeams;// 团队成员照片
     private RecyclerView rvReports;// 各类报表图标
+    private ImageView ivHazy;// 未认证时的遮罩
     private TextView tvCommentsQuantity;// 评论数量
     private TextView btnMoreComments;// 查看更多评论按钮
     private RelativeLayout rlComment1;// 评论1布局
@@ -162,6 +163,15 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         btnMoreImg = (ImageView) findViewById(R.id.pre_btn_more_img);// 查看更多的图标
         rvTeams = (RecyclerView) findViewById(R.id.project_rv_teams);// 团队成员照片
         rvReports = (RecyclerView) findViewById(R.id.project_rv_reports);// 各类报表图标
+        ivHazy = (ImageView) findViewById(R.id.iv_hazy);// 未认证时的遮罩
+        ivHazy.setOnClickListener(this);
+        if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+            rvReports.setVisibility(View.VISIBLE);
+            ivHazy.setVisibility(View.GONE);
+        } else {
+            rvReports.setVisibility(View.GONE);
+            ivHazy.setVisibility(View.VISIBLE);
+        }
         tvCommentsQuantity = (TextView) findViewById(R.id.pre_tv_comment_quantity);// 评论数量
         btnMoreComments = (TextView) findViewById(R.id.pre_btn_more_comment);// 查看更多评论按钮
         btnMoreComments.setOnClickListener(this);
@@ -188,65 +198,29 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
                 onBackPressed();
                 break;
             case R.id.title_btn_right2:// 点击关注
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (data.isCollected()) {
-                        CollectTask collectTask = new CollectTask(2);
-                        collectTask.execute();
-                    } else {
-                        CollectTask collectTask = new CollectTask(1);
-                        collectTask.execute();
-                    }
+                if (data.isCollected()) {
+                    CollectTask collectTask = new CollectTask(2);
+                    collectTask.execute();
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    CollectTask collectTask = new CollectTask(1);
+                    collectTask.execute();
                 }
                 break;
             case R.id.title_btn_right:// 点击分享
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    ShareTask shareTask = new ShareTask();
-                    shareTask.execute();
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
+                ShareTask shareTask = new ShareTask();
+                shareTask.execute();
                 break;
             case R.id.pre_btn_service:// 打电话给客服
                 CustomerServiceTask customerServiceTask = new CustomerServiceTask();
                 customerServiceTask.execute();
                 break;
             case R.id.pre_btn_collect:// 点击关注
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    if (data.isCollected()) {
-                        CollectTask collectTask = new CollectTask(2);
-                        collectTask.execute();
-                    } else {
-                        CollectTask collectTask = new CollectTask(1);
-                        collectTask.execute();
-                    }
+                if (data.isCollected()) {
+                    CollectTask collectTask = new CollectTask(2);
+                    collectTask.execute();
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    CollectTask collectTask = new CollectTask(1);
+                    collectTask.execute();
                 }
                 break;
             case R.id.pre_btn_more:// 点击查看更多描述和照片
@@ -259,35 +233,18 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
                 }
                 break;
             case R.id.pre_btn_more_comment:// 点击查看跟多评论.
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    Intent intent1 = new Intent(this, PreselectionAllCommentsActivity.class);
-                    intent1.putExtra("id", String.valueOf(data.getProjectId()));
-                    startActivityForResult(intent1, REQUEST_CODE);
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
+                Intent intent1 = new Intent(this, PreselectionAllCommentsActivity.class);
+                intent1.putExtra("id", String.valueOf(data.getProjectId()));
+                startActivityForResult(intent1, REQUEST_CODE);
                 break;
             case R.id.pre_btn_comment:// 点击发表评论
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    CommentDialog();
+                CommentDialog();
+                break;
+            case R.id.iv_hazy:// 点击遮罩去认证
+                if ("认证中".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
+                    DialogUtils.confirmDialog(this, "您的信息正在认证中，通过后方可查看！", "确定");
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    DialogUtils.goAuthentic(this);
                 }
                 break;
         }
@@ -473,28 +430,11 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         reportsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                    // 身份类型是项目方又不是自己时不能点开
-                    if (Constant.USERTYPE_XMF == SharedPreferencesUtils.getUserType(mContext) && RoadshowDetailsActivity.userId != SharedPreferencesUtils.getUserId(mContext)) {
-
-                    } else {
-                        Intent intent = new Intent(mContext, CommonWebViewActivity.class);
-                        intent.putExtra("title", reportDatas.get(position).getContent());
-                        intent.putExtra("url", reportDatas.get(position).getUrl());
-                        startActivity(intent);
-                    }
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                    Intent intent = new Intent();
-                    if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                        intent.setClass(mContext, WechatVerifyActivity.class);
-                    } else {
-                        intent.setClass(mContext, CertificationIDCardActivity.class);
-                    }
-                    intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
+                // 身份类型是项目方又不是自己时不能点开
+                Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                intent.putExtra("title", reportDatas.get(position).getContent());
+                intent.putExtra("url", reportDatas.get(position).getUrl());
+                startActivity(intent);
             }
 
             @Override
@@ -543,6 +483,15 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             tvCommentName2.setText(commentsData.get(1).getUsers().getName());
             tvCommentTime2.setText(DateUtils.timeLogic(commentsData.get(1).getCommentDate()));
             tvCommentContent2.setText(commentsData.get(1).getContent());
+            rlComment1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (commentsData.get(0).getUsers().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
+                        // 弹框提示删除
+                        showDeleteWindow(rlComment1, 0);
+                    }
+                }
+            });
             rlComment2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

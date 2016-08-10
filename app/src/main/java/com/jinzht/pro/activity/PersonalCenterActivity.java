@@ -160,51 +160,25 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                             }
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
+                        } else if ("认证中".equals(data.getAuthentics().get(0).getAuthenticstatus().getName())) {
+                            DialogUtils.confirmDialog(PersonalCenterActivity.this, "您的信息正在认证中，通过后方可查看！", "确定");
                         } else {
-                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                                intent.setClass(mContext, WechatVerifyActivity.class);
-                            } else {
-                                intent.setClass(mContext, CertificationIDCardActivity.class);
-                            }
-                            intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            DialogUtils.goAuthentic(PersonalCenterActivity.this);
                         }
                         break;
                     case 1:// 我的关注
                         if (data == null) {
                             SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                        } else if ("已认证".equals(data.getAuthentics().get(0).getAuthenticstatus().getName())) {
-                            intent.setClass(mContext, MyCollectActivity.class);
-                            startActivity(intent);
                         } else {
-                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                                intent.setClass(mContext, WechatVerifyActivity.class);
-                            } else {
-                                intent.setClass(mContext, CertificationIDCardActivity.class);
-                            }
-                            intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.setClass(mContext, MyCollectActivity.class);
                             startActivity(intent);
                         }
                         break;
                     case 2:// 我的活动
                         if (data == null) {
                             SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                        } else if ("已认证".equals(data.getAuthentics().get(0).getAuthenticstatus().getName())) {
-                            intent.setClass(mContext, MyActivitysActivity.class);
-                            startActivity(intent);
                         } else {
-                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                                intent.setClass(mContext, WechatVerifyActivity.class);
-                            } else {
-                                intent.setClass(mContext, CertificationIDCardActivity.class);
-                            }
-                            intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.setClass(mContext, MyActivitysActivity.class);
                             startActivity(intent);
                         }
                         break;
@@ -215,19 +189,9 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                     case 4:// 项目中心
                         if (data == null) {
                             SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                        } else if ("已认证".equals(data.getAuthentics().get(0).getAuthenticstatus().getName())) {
+                        } else {
                             intent.setClass(mContext, ProCenterActivity.class);
                             intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
-                            startActivity(intent);
-                        } else {
-                            SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                            if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                                intent.setClass(mContext, WechatVerifyActivity.class);
-                            } else {
-                                intent.setClass(mContext, CertificationIDCardActivity.class);
-                            }
-                            intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                         }
                         break;

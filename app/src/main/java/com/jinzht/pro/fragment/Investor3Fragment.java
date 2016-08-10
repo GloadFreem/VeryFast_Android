@@ -16,8 +16,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
 import com.jinzht.pro.activity.BrainDetailActivity;
-import com.jinzht.pro.activity.CertificationIDCardActivity;
-import com.jinzht.pro.activity.WechatVerifyActivity;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.CommonBean;
 import com.jinzht.pro.bean.InvestorListBean;
@@ -27,7 +25,6 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
-import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.CircleImageView;
@@ -147,26 +144,13 @@ public class Investor3Fragment extends BaseFragment {
             holder.itemBrainBtnCollect.setOnClickListener(new View.OnClickListener() {// 关注
                 @Override
                 public void onClick(View v) {
-                    if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
-                        POSITION = position;
-                        if (datas.get(position).isCollected()) {
-                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position).getUser().getUserId(), 2);
-                            collectInvestorTask.execute();
-                        } else {
-                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position).getUser().getUserId(), 1);
-                            collectInvestorTask.execute();
-                        }
+                    POSITION = position;
+                    if (datas.get(position).isCollected()) {
+                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position).getUser().getUserId(), 2);
+                        collectInvestorTask.execute();
                     } else {
-                        SuperToastUtils.showSuperToast(mContext, 2, "您还没有进行实名认证，请先实名认证");
-                        Intent intent = new Intent();
-                        if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
-                            intent.setClass(mContext, WechatVerifyActivity.class);
-                        } else {
-                            intent.setClass(mContext, CertificationIDCardActivity.class);
-                        }
-                        intent.putExtra("usertype", SharedPreferencesUtils.getUserType(mContext));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position).getUser().getUserId(), 1);
+                        collectInvestorTask.execute();
                     }
                 }
             });
