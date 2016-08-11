@@ -132,6 +132,12 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
     // 根据省份id获取市列表
     private class GetCityListTask extends AsyncTask<Void, Void, CityListBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected CityListBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -155,6 +161,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
         @Override
         protected void onPostExecute(CityListBean cityListBean) {
             super.onPostExecute(cityListBean);
+            dismissProgressDialog();
             if (cityListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

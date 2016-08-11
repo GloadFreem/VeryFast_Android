@@ -176,6 +176,14 @@ public class GoldInOutActivity extends BaseActivity implements View.OnClickListe
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected GoldInOutListBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -199,6 +207,7 @@ public class GoldInOutActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(GoldInOutListBean goldInOutListBean) {
             super.onPostExecute(goldInOutListBean);
+            dismissProgressDialog();
             if (goldInOutListBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

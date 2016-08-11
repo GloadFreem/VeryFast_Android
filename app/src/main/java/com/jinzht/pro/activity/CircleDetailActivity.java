@@ -88,16 +88,26 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         findView();
         refreshView.setOnRefreshListener(new PullListener());
         initListView();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (getIntent().getIntExtra("TAG", 0) == 0) {// 详情
+//                    imm.hideSoftInputFromWindow(edComment.getWindowToken(), 0);
+//                } else {
+//                    imm.showSoftInput(edComment, 0);
+//                }
+//            }
+//        }, 80);
+        if (getIntent().getIntExtra("TAG", 0) == 0) {// 详情
+            edComment.setFocusable(false);
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (getIntent().getIntExtra("TAG", 0) == 0) {// 详情
-                    imm.hideSoftInputFromWindow(edComment.getWindowToken(), 0);
-                } else {
-                    imm.showSoftInput(edComment, 0);
-                }
+                edComment.setFocusable(true);
+                edComment.setFocusableInTouchMode(true);
             }
-        }, 80);
+        }, 100);
     }
 
     private void findView() {
@@ -397,6 +407,11 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
 
     // 首次获取详情信息和刷新
     private class GetCircleDetailTask extends AsyncTask<Void, Void, CircleDetailBean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
 
         @Override
         protected CircleDetailBean doInBackground(Void... params) {
@@ -423,6 +438,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(CircleDetailBean circleDetailBean) {
             super.onPostExecute(circleDetailBean);
+            dismissProgressDialog();
             if (circleDetailBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

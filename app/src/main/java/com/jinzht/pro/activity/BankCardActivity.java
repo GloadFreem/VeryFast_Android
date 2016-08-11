@@ -236,6 +236,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            showProgressDialog();
             request = "<request platformNo=\"" + Constant.PLATFORMNO + "\"><platformUserNo>" + "jinzht_0000_" + getIntent().getStringExtra("userId") + "</platformUserNo></request>";
         }
 
@@ -268,6 +269,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
         protected void onPostExecute(YeepaySignBean yeepaySignBean) {
             super.onPostExecute(yeepaySignBean);
             if (yeepaySignBean == null) {
+                dismissProgressDialog();
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (yeepaySignBean.getStatus() == 200) {
@@ -275,6 +277,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
                     GetYeepayAccount getYeepayAccount = new GetYeepayAccount();
                     getYeepayAccount.execute();
                 } else {
+                    dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, yeepaySignBean.getMessage());
                 }
             }
@@ -309,6 +312,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
         @Override
         protected void onPostExecute(YeepayUserInfoBean bean) {
             super.onPostExecute(bean);
+            dismissProgressDialog();
             if (bean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -483,6 +487,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            showProgressDialog();
             Date date = new Date();
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String time = format.format(date);
@@ -521,6 +526,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
             super.onPostExecute(yeepaySignBean);
             if (yeepaySignBean == null) {
                 dialog.dismiss();
+                dismissProgressDialog();
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (yeepaySignBean.getStatus() == 200) {
@@ -530,6 +536,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
                     unbindTask.execute();
                 } else {
                     dialog.dismiss();
+                    dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, yeepaySignBean.getMessage());
                 }
             }
@@ -564,6 +571,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
         @Override
         protected void onPostExecute(YibaoUnbindCallbackInfoBean bean) {
             super.onPostExecute(bean);
+            dismissProgressDialog();
             if (bean == null) {
                 dialog.dismiss();
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

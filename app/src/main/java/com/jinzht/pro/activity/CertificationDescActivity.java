@@ -146,7 +146,7 @@ public class CertificationDescActivity extends BaseActivity implements View.OnCl
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showProgressDialog("");
+            showProgressDialog();
         }
 
         @Override

@@ -196,6 +196,14 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected ProjectCommentBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -220,6 +228,7 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
         @Override
         protected void onPostExecute(ProjectCommentBean projectCommentBean) {
             super.onPostExecute(projectCommentBean);
+            dismissProgressDialog();
             if (projectCommentBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

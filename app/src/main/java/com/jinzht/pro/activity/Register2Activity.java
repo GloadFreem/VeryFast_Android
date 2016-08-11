@@ -87,6 +87,12 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
     // 注册接口
     private class RegisterTask extends AsyncTask<Void, Void, RegisterBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected RegisterBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -115,6 +121,7 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(RegisterBean registerBean) {
             super.onPostExecute(registerBean);
+            dismissProgressDialog();
             if (registerBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

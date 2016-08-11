@@ -197,6 +197,12 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
     // 获取投资人详情
     private class GetInvestorDetail extends AsyncTask<Void, Void, InvestorDetailBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected InvestorDetailBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -220,6 +226,7 @@ public class InvestorDetailActivity extends FullBaseActivity implements View.OnC
         @Override
         protected void onPostExecute(InvestorDetailBean investorDetailBean) {
             super.onPostExecute(investorDetailBean);
+            dismissProgressDialog();
             if (investorDetailBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

@@ -122,6 +122,12 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
     // 获取金条数量
     private class GetGoldCount extends AsyncTask<Void, Void, GoldAccount> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected GoldAccount doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -144,6 +150,7 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void onPostExecute(GoldAccount goldAccount) {
             super.onPostExecute(goldAccount);
+            dismissProgressDialog();
             if (goldAccount == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

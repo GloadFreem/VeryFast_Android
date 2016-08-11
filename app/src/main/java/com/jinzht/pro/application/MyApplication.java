@@ -54,8 +54,8 @@ public class MyApplication extends Application {
         JPushInterface.setDebugMode(false);// 设置开启日志，发布时需关闭
         JPushInterface.init(this);// 初始化
 
-        okHttpClient.setConnectTimeout(5, TimeUnit.SECONDS);
-        okHttpClient.setWriteTimeout(5, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(3, TimeUnit.SECONDS);
+        okHttpClient.setWriteTimeout(10, TimeUnit.SECONDS);
         okHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
 
         // 配置图片选择器

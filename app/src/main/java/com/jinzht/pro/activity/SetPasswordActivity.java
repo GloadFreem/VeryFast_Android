@@ -75,6 +75,12 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
     // 重置密码
     private class ResetPwdTask extends AsyncTask<Void, Void, LoginBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected LoginBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -101,6 +107,7 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(LoginBean loginBean) {
             super.onPostExecute(loginBean);
+            dismissProgressDialog();
             if (loginBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

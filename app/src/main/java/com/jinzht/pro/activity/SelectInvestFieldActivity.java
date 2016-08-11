@@ -150,6 +150,12 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
     // 获取领域列表
     private class GetFieldListTask extends AsyncTask<Void, Void, FieldListBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected FieldListBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -172,6 +178,7 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
         @Override
         protected void onPostExecute(FieldListBean fieldListBean) {
             super.onPostExecute(fieldListBean);
+            dismissProgressDialog();
             if (fieldListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

@@ -3,7 +3,6 @@ package com.jinzht.pro.base;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -158,7 +157,7 @@ public abstract class YeepayWebViewActivity extends BaseActivity {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            showProgressDialog("");
+            showProgressDialog();
             Log.i("要开始的URL", url);
             if (url.startsWith("https") && url.contains("pay/success")) {
                 count++;

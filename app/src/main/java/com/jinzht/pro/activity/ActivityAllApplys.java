@@ -136,6 +136,14 @@ public class ActivityAllApplys extends BaseActivity implements View.OnClickListe
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected ActivityAllApplysBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -160,6 +168,7 @@ public class ActivityAllApplys extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(ActivityAllApplysBean activityAllApplysBean) {
             super.onPostExecute(activityAllApplysBean);
+            dismissProgressDialog();
             if (activityAllApplysBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

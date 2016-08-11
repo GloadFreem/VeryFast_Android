@@ -864,6 +864,14 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected ProCenter4ProBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -888,6 +896,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(ProCenter4ProBean proCenter4ProBean) {
             super.onPostExecute(proCenter4ProBean);
+            dismissProgressDialog();
             if (proCenter4ProBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
@@ -928,6 +937,14 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected ProCenter4InvestorBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -952,6 +969,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(ProCenter4InvestorBean proCenter4InvestorBean) {
             super.onPostExecute(proCenter4InvestorBean);
+            dismissProgressDialog();
             if (proCenter4InvestorBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
@@ -1003,6 +1021,14 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected ProCenter4InvestorBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -1027,6 +1053,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(ProCenter4InvestorBean proCenter4InvestorBean) {
             super.onPostExecute(proCenter4InvestorBean);
+            dismissProgressDialog();
             if (proCenter4InvestorBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
@@ -1078,6 +1105,14 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected ProCenter4BrainBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -1102,6 +1137,7 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(ProCenter4BrainBean proCenter4BrainBean) {
             super.onPostExecute(proCenter4BrainBean);
+            dismissProgressDialog();
             if (proCenter4BrainBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

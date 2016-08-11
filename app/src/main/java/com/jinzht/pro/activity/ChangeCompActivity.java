@@ -91,6 +91,12 @@ public class ChangeCompActivity extends BaseActivity implements View.OnClickList
     // 修改公司名
     private class ChangeCompany extends AsyncTask<Void, Void, CommonBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected CommonBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.endsWith(NetWorkUtils.getNetWorkType(mContext))) {
@@ -114,6 +120,7 @@ public class ChangeCompActivity extends BaseActivity implements View.OnClickList
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            dismissProgressDialog();
             if (commonBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -133,6 +140,12 @@ public class ChangeCompActivity extends BaseActivity implements View.OnClickList
 
     // 修改职位
     private class ChangePosition extends AsyncTask<Void, Void, CommonBean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
         @Override
         protected CommonBean doInBackground(Void... params) {
             String body = "";
@@ -157,6 +170,7 @@ public class ChangeCompActivity extends BaseActivity implements View.OnClickList
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            dismissProgressDialog();
             if (commonBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

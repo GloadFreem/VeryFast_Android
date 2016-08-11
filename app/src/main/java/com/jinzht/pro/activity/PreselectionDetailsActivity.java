@@ -507,6 +507,12 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
     // 获取详情
     private class GetDetailTask extends AsyncTask<Void, Void, ProjectDetailBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected ProjectDetailBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -531,6 +537,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         protected void onPostExecute(ProjectDetailBean projectDetailBean) {
             super.onPostExecute(projectDetailBean);
             if (projectDetailBean == null) {
+                dismissProgressDialog();
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (projectDetailBean.getStatus() == 200) {
@@ -540,6 +547,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
                         initData();
                     }
                 } else {
+                    dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, projectDetailBean.getMessage());
                 }
             }
@@ -573,6 +581,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         @Override
         protected void onPostExecute(ProjectCommentBean projectCommentBean) {
             super.onPostExecute(projectCommentBean);
+            dismissProgressDialog();
             if (projectCommentBean != null) {
                 if (projectCommentBean.getStatus() == 200) {
                     commentsData = projectCommentBean.getData();

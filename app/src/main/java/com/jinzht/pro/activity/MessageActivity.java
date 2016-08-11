@@ -318,6 +318,14 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected MessageListBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -341,6 +349,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(MessageListBean messageListBean) {
             super.onPostExecute(messageListBean);
+            dismissProgressDialog();
             if (messageListBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

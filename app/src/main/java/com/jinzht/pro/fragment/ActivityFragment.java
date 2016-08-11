@@ -367,6 +367,12 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected ActivityApplyBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -391,6 +397,7 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         @Override
         protected void onPostExecute(ActivityApplyBean activityApplyBean) {
             super.onPostExecute(activityApplyBean);
+            dismissProgressDialog();
             if (activityApplyBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -427,6 +434,14 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected ActivityListBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -451,6 +466,7 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         @Override
         protected void onPostExecute(ActivityListBean activityListBean) {
             super.onPostExecute(activityListBean);
+            dismissProgressDialog();
             if (activityListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败

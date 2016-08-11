@@ -209,6 +209,12 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
     // 获取项目数据
     private class GetProjectTask extends AsyncTask<Void, Void, ProCenter4ProBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected ProCenter4ProBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -233,6 +239,7 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
         @Override
         protected void onPostExecute(ProCenter4ProBean proCenter4ProBean) {
             super.onPostExecute(proCenter4ProBean);
+            dismissProgressDialog();
             if (proCenter4ProBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -263,6 +270,12 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected CommonBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -288,6 +301,7 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            dismissProgressDialog();
             if (commonBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

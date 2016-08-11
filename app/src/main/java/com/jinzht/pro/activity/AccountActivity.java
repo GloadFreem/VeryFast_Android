@@ -257,6 +257,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            showProgressDialog();
             request = "<request platformNo=\"" + Constant.PLATFORMNO + "\"><platformUserNo>" + "jinzht_0000_" + userInfo.getExtUserId() + "</platformUserNo></request>";
         }
 
@@ -289,6 +290,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
         protected void onPostExecute(YeepaySignBean yeepaySignBean) {
             super.onPostExecute(yeepaySignBean);
             if (yeepaySignBean == null) {
+                dismissProgressDialog();
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (yeepaySignBean.getStatus() == 200) {
@@ -296,6 +298,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                     GetYeepayAccount getYeepayAccount = new GetYeepayAccount();
                     getYeepayAccount.execute();
                 } else {
+                    dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, yeepaySignBean.getMessage());
                 }
             }
@@ -330,6 +333,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(YeepayUserInfoBean bean) {
             super.onPostExecute(bean);
+            dismissProgressDialog();
             if (bean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

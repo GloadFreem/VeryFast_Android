@@ -564,7 +564,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showProgressDialog("");
+            showProgressDialog();
         }
 
         @Override

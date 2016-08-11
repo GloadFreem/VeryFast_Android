@@ -121,6 +121,12 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
     // 获取省份列表
     private class GetProvinceListTask extends AsyncTask<Void, Void, ProvinceListBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected ProvinceListBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -143,6 +149,7 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
         @Override
         protected void onPostExecute(ProvinceListBean provinceListBean) {
             super.onPostExecute(provinceListBean);
+            dismissProgressDialog();
             if (provinceListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

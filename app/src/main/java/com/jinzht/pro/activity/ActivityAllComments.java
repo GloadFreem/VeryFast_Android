@@ -261,6 +261,14 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected ActivityAllCommentsBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -285,6 +293,7 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(ActivityAllCommentsBean activityAllCommentsBean) {
             super.onPostExecute(activityAllCommentsBean);
+            dismissProgressDialog();
             if (activityAllCommentsBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败

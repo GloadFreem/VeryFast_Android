@@ -300,7 +300,7 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showProgressDialog("");
+            showProgressDialog();
         }
 
         @Override

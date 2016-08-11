@@ -133,9 +133,10 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
 
     // 显示加载中的进度条
     @Override
-    public void showProgressDialog(String message) {
+    public void showProgressDialog() {
         if (dialog == null) {
             dialog = new LoadingProssbar(this);
+            dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         } else {
             if (!dialog.isShowing()) {

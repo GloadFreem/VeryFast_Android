@@ -212,6 +212,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected LoginBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -235,6 +241,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         @Override
         protected void onPostExecute(LoginBean loginBean) {
             super.onPostExecute(loginBean);
+            dismissProgressDialog();
             if (loginBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -265,6 +272,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     // 普通登录接口
     private class LoginTask extends AsyncTask<Void, Void, LoginBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected LoginBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -290,6 +303,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         @Override
         protected void onPostExecute(LoginBean loginBean) {
             super.onPostExecute(loginBean);
+            dismissProgressDialog();
             if (loginBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

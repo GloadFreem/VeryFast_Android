@@ -138,6 +138,14 @@ public class CommitRecordsActivity extends BaseActivity implements View.OnClickL
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected CommitRecordsBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -162,6 +170,7 @@ public class CommitRecordsActivity extends BaseActivity implements View.OnClickL
         @Override
         protected void onPostExecute(CommitRecordsBean commitRecordsBean) {
             super.onPostExecute(commitRecordsBean);
+            dismissProgressDialog();
             if (commitRecordsBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

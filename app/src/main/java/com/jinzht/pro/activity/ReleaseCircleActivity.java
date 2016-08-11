@@ -208,6 +208,9 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
             super.onPostExecute(releaseCircleBean);
             if (releaseCircleBean != null && releaseCircleBean.getStatus() == 200) {
                 EventBus.getDefault().post(new EventMsg("发布成功"));
+                SuperToastUtils.showSuperToast(mContext, 2, "发布成功");
+            } else {
+                SuperToastUtils.showSuperToast(mContext, 2, "发布失败");
             }
         }
     }

@@ -322,6 +322,12 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
     // 获取项目详情
     private class GetDetailTask extends AsyncTask<Void, Void, ProjectDetailBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected ProjectDetailBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -346,6 +352,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         protected void onPostExecute(ProjectDetailBean projectDetailBean) {
             super.onPostExecute(projectDetailBean);
             if (projectDetailBean == null) {
+                dismissProgressDialog();
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (projectDetailBean.getStatus() == 200) {
@@ -357,6 +364,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                         Log.i("项目的userId", userId + "");
                     }
                 } else {
+                    dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, projectDetailBean.getMessage());
                 }
             }
@@ -389,6 +397,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         @Override
         protected void onPostExecute(RoadshowMemberBean roadshowMemberBean) {
             super.onPostExecute(roadshowMemberBean);
+            dismissProgressDialog();
             if (roadshowMemberBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -428,6 +437,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         protected void onPostExecute(RoadshowVoiceBean roadshowVoiceBean) {
             super.onPostExecute(roadshowVoiceBean);
             if (roadshowVoiceBean == null) {
+                dismissProgressDialog();
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (roadshowVoiceBean.getStatus() == 200) {
@@ -447,6 +457,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                         }
                     }
                 } else {
+                    dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, roadshowVoiceBean.getMessage());
                 }
             }

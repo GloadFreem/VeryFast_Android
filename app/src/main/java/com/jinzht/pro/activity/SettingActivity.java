@@ -144,6 +144,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     // 注销登录
     private class LogOutTask extends AsyncTask<Void, Void, CommonBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected CommonBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -166,6 +172,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            dismissProgressDialog();
             if (commonBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -183,6 +190,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     // 检查版本更新
     private class UpdateTask extends AsyncTask<Void, Void, UpdateBean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
         @Override
         protected UpdateBean doInBackground(Void... params) {
             String body = "";
@@ -206,6 +219,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(UpdateBean updateBean) {
             super.onPostExecute(updateBean);
+            dismissProgressDialog();
             if (updateBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

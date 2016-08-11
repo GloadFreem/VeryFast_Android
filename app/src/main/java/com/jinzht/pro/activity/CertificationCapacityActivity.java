@@ -159,6 +159,12 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
     // 获取投资能力列表
     private class GetCapacityListTask extends AsyncTask<Void, Void, CapacityListBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected CapacityListBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -181,6 +187,7 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
         @Override
         protected void onPostExecute(CapacityListBean capacityListBean) {
             super.onPostExecute(capacityListBean);
+            dismissProgressDialog();
             if (capacityListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -199,7 +206,7 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showProgressDialog("");
+            showProgressDialog();
         }
 
         @Override

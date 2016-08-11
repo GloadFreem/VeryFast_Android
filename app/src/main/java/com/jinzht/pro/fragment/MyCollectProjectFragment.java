@@ -227,12 +227,20 @@ public class MyCollectProjectFragment extends BaseFragment {
         }
     }
 
-    // 获取项目列表
+    // 获取我的关注项目列表
     private class GetProjectList extends AsyncTask<Void, Void, RoadshowProjectListBean> {
         private int page;
 
         public GetProjectList(int page) {
             this.page = page;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
         }
 
         @Override
@@ -260,6 +268,7 @@ public class MyCollectProjectFragment extends BaseFragment {
         @Override
         protected void onPostExecute(RoadshowProjectListBean roadshowProjectListBean) {
             super.onPostExecute(roadshowProjectListBean);
+            dismissProgressDialog();
             if (roadshowProjectListBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

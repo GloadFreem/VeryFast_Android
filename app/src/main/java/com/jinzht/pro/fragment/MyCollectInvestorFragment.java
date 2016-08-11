@@ -180,6 +180,7 @@ public class MyCollectInvestorFragment extends BaseFragment {
         }
     }
 
+    // 获取我的关注投资人列表
     private class GetInvestorList extends AsyncTask<Void, Void, MyCollectInvestorBean> {
         private int page;
 

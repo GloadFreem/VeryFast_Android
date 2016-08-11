@@ -277,6 +277,12 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
     // 提交身份类型
     private class SetUserTypeTask extends AsyncTask<Void, Void, SetUserTypeBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected SetUserTypeBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -318,6 +324,7 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(SetUserTypeBean setUserTypeBean) {
             super.onPostExecute(setUserTypeBean);
+            dismissProgressDialog();
             if (setUserTypeBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

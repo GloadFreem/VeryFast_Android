@@ -162,6 +162,14 @@ public class MyActivitysActivity extends BaseActivity implements View.OnClickLis
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (page == 0) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
         protected ActivityListBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -185,6 +193,7 @@ public class MyActivitysActivity extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(ActivityListBean activityListBean) {
             super.onPostExecute(activityListBean);
+            dismissProgressDialog();
             if (activityListBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

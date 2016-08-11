@@ -80,6 +80,12 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
 
     private class FeedbackTask extends AsyncTask<Void, Void, CommonBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected CommonBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -103,6 +109,7 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            dismissProgressDialog();
             if (commonBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

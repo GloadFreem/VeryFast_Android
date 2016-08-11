@@ -63,6 +63,7 @@ public class AboutUsActivity extends BaseActivity implements View.OnClickListene
         try {
             tvVerson.setText(UiUtils.getString(R.string.app_name) + UiHelp.getVersionName(this));
         } catch (Exception e) {
+            tvVerson.setText(UiUtils.getString(R.string.app_name));
             e.printStackTrace();
         }
     }

@@ -5,7 +5,7 @@ package com.jinzht.pro.callback;
  */
 public interface ProgressBarCallBack {
 
-    public void showProgressDialog(String message);
+    public void showProgressDialog();
 
     public void dismissProgressDialog();
 }

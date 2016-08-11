@@ -865,6 +865,12 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     // 获取活动内容详情
     private class GetActivityDetailTask extends AsyncTask<Void, Void, ActivityDetailBean> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected ActivityDetailBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -889,6 +895,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         protected void onPostExecute(ActivityDetailBean activityDetailBean) {
             super.onPostExecute(activityDetailBean);
             if (activityDetailBean == null) {
+                dismissProgressDialog();
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (activityDetailBean.getStatus() == 200) {
@@ -897,6 +904,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                         initData();
                     }
                 } else {
+                    dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, activityDetailBean.getMessage());
                 }
             }
@@ -931,6 +939,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         protected void onPostExecute(ActivityAllApplysBean activityAllApplysBean) {
             super.onPostExecute(activityAllApplysBean);
             if (activityAllApplysBean == null) {
+                dismissProgressDialog();
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
                 if (activityAllApplysBean.getStatus() == 200) {
@@ -939,6 +948,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                         initApplys();
                     }
                 } else {
+                    dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, activityAllApplysBean.getMessage());
                 }
             }
@@ -972,6 +982,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         @Override
         protected void onPostExecute(ActivityAllCommentsBean activityAllCommentsBean) {
             super.onPostExecute(activityAllCommentsBean);
+            dismissProgressDialog();
             if (activityAllCommentsBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -1201,6 +1212,12 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
+        @Override
         protected ActivityApplyBean doInBackground(Void... params) {
             String body = "";
             if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
@@ -1225,6 +1242,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         @Override
         protected void onPostExecute(ActivityApplyBean activityApplyBean) {
             super.onPostExecute(activityApplyBean);
+            dismissProgressDialog();
             if (activityApplyBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
