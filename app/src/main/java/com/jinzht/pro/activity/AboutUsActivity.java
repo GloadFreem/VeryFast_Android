@@ -75,24 +75,40 @@ public class AboutUsActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.about_us_btn_introduce:// 进入平台介绍
-                WebViewTask webViewTask1 = new WebViewTask(Constant.PLATFORMINTRODUCE, "平台介绍");
-                webViewTask1.execute();
+                if (clickable) {
+                    clickable = false;
+                    WebViewTask webViewTask1 = new WebViewTask(Constant.PLATFORMINTRODUCE, "平台介绍");
+                    webViewTask1.execute();
+                }
                 break;
             case R.id.about_us_btn_gudie:// 进入新手指南
-                WebViewTask webViewTask2 = new WebViewTask(Constant.NEWUSERGUIDE, "新手指南");
-                webViewTask2.execute();
+                if (clickable) {
+                    clickable = false;
+                    WebViewTask webViewTask2 = new WebViewTask(Constant.NEWUSERGUIDE, "新手指南");
+                    webViewTask2.execute();
+                }
                 break;
             case R.id.about_us_btn_agreement:// 进入用户协议
-                WebViewTask webViewTask3 = new WebViewTask(Constant.USERPROTOCOL, "用户协议");
-                webViewTask3.execute();
+                if (clickable) {
+                    clickable = false;
+                    WebViewTask webViewTask3 = new WebViewTask(Constant.USERPROTOCOL, "用户协议");
+                    webViewTask3.execute();
+                }
                 break;
             case R.id.about_us_btn_statement:// 进入免责声明
-                WebViewTask webViewTask4 = new WebViewTask(Constant.DISCLAIMER, "免责声明");
-                webViewTask4.execute();
+                if (clickable) {
+                    clickable = false;
+                    WebViewTask webViewTask4 = new WebViewTask(Constant.DISCLAIMER, "免责声明");
+                    webViewTask4.execute();
+                }
                 break;
             case R.id.about_us_btn_feedback:// 进入意见反馈
-                Intent intent = new Intent(this, FeedbackActivity.class);
-                startActivity(intent);
+                if (clickable) {
+                    clickable = false;
+                    Intent intent = new Intent(this, FeedbackActivity.class);
+                    startActivity(intent);
+                }
+                clickable = true;
                 break;
         }
     }
@@ -130,8 +146,9 @@ public class AboutUsActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(WebBean webBean) {
             super.onPostExecute(webBean);
+            clickable = true;
             if (webBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (webBean.getStatus() == 200) {
                     if (!StringUtils.isBlank(webBean.getData().getUrl())) {

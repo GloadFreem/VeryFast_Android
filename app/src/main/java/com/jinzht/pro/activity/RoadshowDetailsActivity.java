@@ -183,21 +183,30 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 onBackPressed();
                 break;
             case R.id.title_btn_right2:// 收藏
-                if (data.isCollected()) {
-                    CollectTask collectTask = new CollectTask(2);
-                    collectTask.execute();
-                } else {
-                    CollectTask collectTask = new CollectTask(1);
-                    collectTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    if (data.isCollected()) {
+                        CollectTask collectTask = new CollectTask(2);
+                        collectTask.execute();
+                    } else {
+                        CollectTask collectTask = new CollectTask(1);
+                        collectTask.execute();
+                    }
                 }
                 break;
             case R.id.title_btn_right:// 分享
-                ShareTask shareTask = new ShareTask();
-                shareTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    ShareTask shareTask = new ShareTask();
+                    shareTask.execute();
+                }
                 break;
             case R.id.details_btn_service:// 给客服打电话
-                CustomerServiceTask customerServiceTask = new CustomerServiceTask();
-                customerServiceTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    CustomerServiceTask customerServiceTask = new CustomerServiceTask();
+                    customerServiceTask.execute();
+                }
                 break;
             case R.id.details_btn_invest:// 认投
                 if ("已认证".equals(SharedPreferencesUtils.getIsAuthentic(mContext))) {
@@ -353,7 +362,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             super.onPostExecute(projectDetailBean);
             if (projectDetailBean == null) {
                 dismissProgressDialog();
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (projectDetailBean.getStatus() == 200) {
                     EventBus.getDefault().postSticky(projectDetailBean.getData());
@@ -399,7 +408,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             super.onPostExecute(roadshowMemberBean);
             dismissProgressDialog();
             if (roadshowMemberBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (roadshowMemberBean.getStatus() == 200) {
                     EventBus.getDefault().postSticky(roadshowMemberBean.getData().get(0));
@@ -438,7 +447,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             super.onPostExecute(roadshowVoiceBean);
             if (roadshowVoiceBean == null) {
                 dismissProgressDialog();
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (roadshowVoiceBean.getStatus() == 200) {
                     if (roadshowVoiceBean.getData() != null && roadshowVoiceBean.getData().size() != 0) {
@@ -549,8 +558,9 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         @Override
         protected void onPostExecute(ProjectCollectBean projectCollectBean) {
             super.onPostExecute(projectCollectBean);
+            clickable = true;
             if (projectCollectBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (projectCollectBean.getStatus() == 200) {
                     if (flag == 1) {
@@ -598,8 +608,9 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         @Override
         protected void onPostExecute(ShareBean shareBean) {
             super.onPostExecute(shareBean);
+            clickable = true;
             if (shareBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(RoadshowDetailsActivity.this);
@@ -636,8 +647,9 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         @Override
         protected void onPostExecute(CustomerServiceBean customerServiceBean) {
             super.onPostExecute(customerServiceBean);
+            clickable = true;
             if (customerServiceBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);

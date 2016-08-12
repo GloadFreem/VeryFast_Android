@@ -65,8 +65,11 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
                 } else if (!setEdPassword1.getText().toString().equals(setEdPassword2.getText().toString())) {
                     SuperToastUtils.showSuperToast(mContext, 2, "密码不一致");
                 } else {
-                    ResetPwdTask resetPwdTask = new ResetPwdTask();
-                    resetPwdTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        ResetPwdTask resetPwdTask = new ResetPwdTask();
+                        resetPwdTask.execute();
+                    }
                 }
                 break;
         }
@@ -107,9 +110,10 @@ public class SetPasswordActivity extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(LoginBean loginBean) {
             super.onPostExecute(loginBean);
+            clickable = true;
             dismissProgressDialog();
             if (loginBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (loginBean.getStatus() == 200) {
                     // 保存用户名和密码

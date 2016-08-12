@@ -121,7 +121,7 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
             }

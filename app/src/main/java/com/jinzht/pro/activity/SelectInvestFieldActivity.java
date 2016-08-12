@@ -180,7 +180,7 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
             super.onPostExecute(fieldListBean);
             dismissProgressDialog();
             if (fieldListBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (fieldListBean.getStatus() == 200) {
                     fields = fieldListBean.getData();

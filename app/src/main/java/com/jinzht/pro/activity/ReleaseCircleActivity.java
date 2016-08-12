@@ -84,8 +84,11 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.title_btn_right:// 发布
                 if (!StringUtils.isBlank(edContent.getText().toString()) || photos.size() != 0) {
-                    ReleaseCircleTask releaseCircleTask = new ReleaseCircleTask();
-                    releaseCircleTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        ReleaseCircleTask releaseCircleTask = new ReleaseCircleTask();
+                        releaseCircleTask.execute();
+                    }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入内容或选择图片");
                 }
@@ -154,6 +157,7 @@ public class ReleaseCircleActivity extends BaseActivity implements View.OnClickL
             SuperToastUtils.showSuperToast(mContext, 2, "发表中...");
             Intent intent = new Intent();
             setResult(RESULT_CODE, intent);
+            clickable = true;
             finish();
         }
 

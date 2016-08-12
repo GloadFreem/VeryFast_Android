@@ -136,8 +136,11 @@ public class CertificationCompActivity extends BaseActivity implements View.OnCl
                     SuperToastUtils.showSuperToast(this, 2, "请填写营业执照注册号");
                 } else {
                     if (usertype == Constant.USERTYPE_XMF) {// 项目方完成认证，弹出完成对话框
-                        AuthenticateTask authenticateTask = new AuthenticateTask();
-                        authenticateTask.execute();
+                        if (clickable) {
+                            clickable = false;
+                            AuthenticateTask authenticateTask = new AuthenticateTask();
+                            authenticateTask.execute();
+                        }
                     } else {// 投资机构、智囊团跳转到个人介绍
                         intent = new Intent(this, CertificationDescActivity.class);
                         intent.putExtra("usertype", usertype);
@@ -270,12 +273,13 @@ public class CertificationCompActivity extends BaseActivity implements View.OnCl
         @Override
         protected void onPostExecute(AuthenticateBean authenticateBean) {
             super.onPostExecute(authenticateBean);
+            clickable = true;
             dismissProgressDialog();
             if (authenticateBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (authenticateBean.getStatus() == 200) {
-                    DialogUtils.confirmToMainDialog(CertificationCompActivity.this,authenticateBean.getMessage());
+                    DialogUtils.confirmToMainDialog(CertificationCompActivity.this, authenticateBean.getMessage());
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, authenticateBean.getMessage());
                 }

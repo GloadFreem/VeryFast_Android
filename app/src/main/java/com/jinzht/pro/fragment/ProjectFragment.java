@@ -592,7 +592,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             super.onPostExecute(bannerInfoBean);
             if (bannerInfoBean == null) {
                 dismissProgressDialog();
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
                 listview.setBackgroundResource(R.mipmap.bg_empty);
             } else {
                 if (bannerInfoBean.getStatus() == 200) {
@@ -651,7 +651,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             super.onPostExecute(roadshowProjectListBean);
             dismissProgressDialog();
             if (roadshowProjectListBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
@@ -718,7 +718,7 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         protected void onPostExecute(PreselectionProjectListBean preselectionProjectListBean) {
             super.onPostExecute(preselectionProjectListBean);
             if (preselectionProjectListBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {

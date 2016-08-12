@@ -102,8 +102,11 @@ public class ChangeTelActivity extends BaseActivity implements View.OnClickListe
                 } else if (StringUtils.length(edPwd.getText().toString()) < 6 || StringUtils.length(edPwd.getText().toString()) > 20) {
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入符合规范的密码");
                 } else {
-                    ChangeTelTask changeTelTask = new ChangeTelTask();
-                    changeTelTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        ChangeTelTask changeTelTask = new ChangeTelTask();
+                        changeTelTask.execute();
+                    }
                 }
                 break;
         }
@@ -137,7 +140,7 @@ public class ChangeTelActivity extends BaseActivity implements View.OnClickListe
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (commonBean.getStatus() == 200) {
                     SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
@@ -167,6 +170,7 @@ public class ChangeTelActivity extends BaseActivity implements View.OnClickListe
         }
     };
 
+    // 更改电话号码
     private class ChangeTelTask extends AsyncTask<Void, Void, CommonBean> {
         @Override
         protected void onPreExecute() {
@@ -202,9 +206,10 @@ public class ChangeTelActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             dismissProgressDialog();
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (commonBean.getStatus() == 200) {
                     try {

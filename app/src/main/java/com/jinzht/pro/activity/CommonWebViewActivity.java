@@ -23,14 +23,12 @@ import com.jinzht.pro.utils.UiHelp;
  */
 public class CommonWebViewActivity extends BaseActivity {
 
-
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
     private LinearLayout titleBtnRight2;// 收藏按钮
     private LinearLayout btnShare;// 分享
     private ProgressBar progressBar;// 进度条
     private WebView webview;// 网页
-
 
     @Override
     protected int getResourcesId() {

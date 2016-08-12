@@ -105,11 +105,14 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                 if (StringUtils.isBlank(edSearch.getText().toString())) {
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入搜索内容");
                 } else {
-                    isSearch = true;
-                    ActivitySearch activitySearch = new ActivitySearch(0);
-                    activitySearch.execute();
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(edSearch.getWindowToken(), 0);
+                    if (clickable) {
+                        clickable = false;
+                        isSearch = true;
+                        ActivitySearch activitySearch = new ActivitySearch(0);
+                        activitySearch.execute();
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(edSearch.getWindowToken(), 0);
+                    }
                 }
                 break;
         }
@@ -338,9 +341,12 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         btnConfirm.setOnClickListener(new View.OnClickListener() {// 确认报名
             @Override
             public void onClick(View v) {
-                ApplyTask applyTask = new ApplyTask(contentId, edt.getText().toString());
-                applyTask.execute();
-                dialog.dismiss();
+                if (clickable) {
+                    clickable = false;
+                    ApplyTask applyTask = new ApplyTask(contentId, edt.getText().toString());
+                    applyTask.execute();
+                    dialog.dismiss();
+                }
             }
         });
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -397,6 +403,7 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         @Override
         protected void onPostExecute(ActivityApplyBean activityApplyBean) {
             super.onPostExecute(activityApplyBean);
+            clickable = true;
             dismissProgressDialog();
             if (activityApplyBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
@@ -466,6 +473,7 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         @Override
         protected void onPostExecute(ActivityListBean activityListBean) {
             super.onPostExecute(activityListBean);
+            clickable = true;
             dismissProgressDialog();
             if (activityListBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

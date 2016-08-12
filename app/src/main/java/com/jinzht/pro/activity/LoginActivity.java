@@ -105,8 +105,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 } else if (StringUtils.length(loginEdPassword.getText().toString()) < 6 || StringUtils.length(loginEdPassword.getText().toString()) > 20) {
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入符合规范的密码");
                 } else {
-                    LoginTask loginTask = new LoginTask();
-                    loginTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        LoginTask loginTask = new LoginTask();
+                        loginTask.execute();
+                    }
                 }
                 break;
             case R.id.login_rl_register:// 点击没有账号，进入注册页面
@@ -114,7 +117,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 startActivity(intent);
                 break;
             case R.id.login_tv_wechat:// 点击微信登录，进入微信授权界面
-                authorize(new Wechat(this));
+                if (clickable) {
+                    clickable = false;
+                    authorize(new Wechat(this));
+                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        clickable = true;
+                    }
+                }, 2000);
                 break;
         }
     }
@@ -133,7 +145,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         plat.setPlatformActionListener(this);//
         plat.SSOSetting(true);//此处设置为false，则在优先采用客户端授权的方法，设置true会采用网页方式
         plat.showUser(null);//获得用户数据
-
     }
 
     // 发送登录信息
@@ -243,7 +254,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             super.onPostExecute(loginBean);
             dismissProgressDialog();
             if (loginBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (loginBean.getStatus() == 200) {
                     SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(loginBean.getData().getExtUserId()));
@@ -303,9 +314,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         @Override
         protected void onPostExecute(LoginBean loginBean) {
             super.onPostExecute(loginBean);
+            clickable = true;
             dismissProgressDialog();
             if (loginBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (loginBean.getStatus() == 200) {
                     String pwd = null;

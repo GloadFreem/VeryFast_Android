@@ -198,29 +198,41 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
                 onBackPressed();
                 break;
             case R.id.title_btn_right2:// 点击关注
-                if (data.isCollected()) {
-                    CollectTask collectTask = new CollectTask(2);
-                    collectTask.execute();
-                } else {
-                    CollectTask collectTask = new CollectTask(1);
-                    collectTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    if (data.isCollected()) {
+                        CollectTask collectTask = new CollectTask(2);
+                        collectTask.execute();
+                    } else {
+                        CollectTask collectTask = new CollectTask(1);
+                        collectTask.execute();
+                    }
                 }
                 break;
             case R.id.title_btn_right:// 点击分享
-                ShareTask shareTask = new ShareTask();
-                shareTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    ShareTask shareTask = new ShareTask();
+                    shareTask.execute();
+                }
                 break;
             case R.id.pre_btn_service:// 打电话给客服
-                CustomerServiceTask customerServiceTask = new CustomerServiceTask();
-                customerServiceTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    CustomerServiceTask customerServiceTask = new CustomerServiceTask();
+                    customerServiceTask.execute();
+                }
                 break;
             case R.id.pre_btn_collect:// 点击关注
-                if (data.isCollected()) {
-                    CollectTask collectTask = new CollectTask(2);
-                    collectTask.execute();
-                } else {
-                    CollectTask collectTask = new CollectTask(1);
-                    collectTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    if (data.isCollected()) {
+                        CollectTask collectTask = new CollectTask(2);
+                        collectTask.execute();
+                    } else {
+                        CollectTask collectTask = new CollectTask(1);
+                        collectTask.execute();
+                    }
                 }
                 break;
             case R.id.pre_btn_more:// 点击查看更多描述和照片
@@ -538,7 +550,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             super.onPostExecute(projectDetailBean);
             if (projectDetailBean == null) {
                 dismissProgressDialog();
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (projectDetailBean.getStatus() == 200) {
                     data = projectDetailBean.getData().getProject();
@@ -626,8 +638,9 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         @Override
         protected void onPostExecute(ProjectCollectBean projectCollectBean) {
             super.onPostExecute(projectCollectBean);
+            clickable = true;
             if (projectCollectBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (projectCollectBean.getStatus() == 200) {
                     if (flag == 1) {
@@ -675,8 +688,9 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         @Override
         protected void onPostExecute(ShareBean shareBean) {
             super.onPostExecute(shareBean);
+            clickable = true;
             if (shareBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(PreselectionDetailsActivity.this);
@@ -721,8 +735,9 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (commonBean.getStatus() == 200) {
                     popupWindow.dismiss();
@@ -748,8 +763,11 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             @Override
             public void onClick(View v) {
                 if (!StringUtils.isBlank(edComment.getText().toString())) {
-                    CommentTask commentTask = new CommentTask(edComment.getText().toString());
-                    commentTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        CommentTask commentTask = new CommentTask(edComment.getText().toString());
+                        commentTask.execute();
+                    }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入评论内容");
                 }
@@ -806,8 +824,9 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         @Override
         protected void onPostExecute(CustomerServiceBean customerServiceBean) {
             super.onPostExecute(customerServiceBean);
+            clickable = true;
             if (customerServiceBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -857,11 +876,14 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteCommentTask deleteCommentTask = new DeleteCommentTask(commentsData.get(position).getCommentId());
-                deleteCommentTask.execute();
-                commentsData.remove(position);
-                initComment();
-                popupWindow.dismiss();
+                if (clickable) {
+                    clickable = false;
+                    DeleteCommentTask deleteCommentTask = new DeleteCommentTask(commentsData.get(position).getCommentId());
+                    deleteCommentTask.execute();
+                    commentsData.remove(position);
+                    initComment();
+                    popupWindow.dismiss();
+                }
             }
         });
         popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0] + view.getWidth() / 2 - UiUtils.dip2px(34), location[1] - UiUtils.dip2px(22));
@@ -899,6 +921,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             if (commonBean != null) {
                 Log.i("删除评论完成", commonBean.getMessage());
             }

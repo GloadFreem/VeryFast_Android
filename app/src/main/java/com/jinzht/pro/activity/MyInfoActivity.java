@@ -284,9 +284,11 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.myinfo_btn_bottom:// 立即认证或催一催或者重新认证
                 if ("催一催".equals(btnBottom.getText().toString())) {
-                    UrgeTask urgeTask = new UrgeTask();
-                    urgeTask.execute();
-                    DialogUtils.confirmDialog(MyInfoActivity.this, "认证加速申请成功!", "确定");
+                    if (clickable) {
+                        clickable = false;
+                        UrgeTask urgeTask = new UrgeTask();
+                        urgeTask.execute();
+                    }
                 } else {
                     if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
                         intent.setClass(this, WechatVerifyActivity.class);
@@ -464,7 +466,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (commonBean.getStatus() == 200) {
                     needRefresh = true;
@@ -535,6 +537,13 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
             } else {
                 return null;
             }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            clickable = true;
+            DialogUtils.confirmDialog(MyInfoActivity.this, "认证加速申请成功!", "确定");
         }
     }
 

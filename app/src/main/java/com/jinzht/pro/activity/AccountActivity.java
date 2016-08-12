@@ -121,67 +121,83 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                 Intent intent = new Intent();
                 switch (position) {
                     case 0:// 银行卡
-                        if (yeepayUserInfo == null) {
-                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                        } else if ("101".equals(yeepayUserInfo.getCode())) {// 没注册，去注册
-                            intent.setClass(mContext, YeepayRegisterActivity.class);
-                            intent.putExtra("TAG", "AccountActivity");
-                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
-                            intent.putExtra("name", userInfo.getAuthentics().get(0).getName());
-                            intent.putExtra("idNo", userInfo.getAuthentics().get(0).getIdentiyCarNo());
-                            intent.putExtra("telephone", userInfo.getTelephone());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivityForResult(intent, REQUEST_CODE);
-                        } else if ("1".equals(yeepayUserInfo.getCode())) {// 已注册，去绑卡
-                            intent.setClass(mContext, BankCardActivity.class);
-                            intent.putExtra("bankNo", yeepayUserInfo.getCardNo());
-                            intent.putExtra("bankName", yeepayUserInfo.getBank());
-                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
-                            startActivity(intent);
-                        } else {// 提示错误
-                            SuperToastUtils.showSuperToast(mContext, 2, yeepayUserInfo.getDescription());
+                        if (clickable) {
+                            clickable = false;
+                            if (yeepayUserInfo == null) {
+                                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
+                            } else if ("101".equals(yeepayUserInfo.getCode())) {// 没注册，去注册
+                                intent.setClass(mContext, YeepayRegisterActivity.class);
+                                intent.putExtra("TAG", "AccountActivity");
+                                intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
+                                intent.putExtra("name", userInfo.getAuthentics().get(0).getName());
+                                intent.putExtra("idNo", userInfo.getAuthentics().get(0).getIdentiyCarNo());
+                                intent.putExtra("telephone", userInfo.getTelephone());
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivityForResult(intent, REQUEST_CODE);
+                            } else if ("1".equals(yeepayUserInfo.getCode())) {// 已注册，去绑卡
+                                intent.setClass(mContext, BankCardActivity.class);
+                                intent.putExtra("bankNo", yeepayUserInfo.getCardNo());
+                                intent.putExtra("bankName", yeepayUserInfo.getBank());
+                                intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
+                                startActivity(intent);
+                            } else {// 提示错误
+                                SuperToastUtils.showSuperToast(mContext, 2, yeepayUserInfo.getDescription());
+                            }
                         }
+                        clickable = true;
                         break;
                     case 1:// 账户充值
-                        if (yeepayUserInfo == null) {
-                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                        } else if ("101".equals(yeepayUserInfo.getCode())) {// 没注册，去注册
-                            intent.setClass(mContext, YeepayRegisterActivity.class);
-                            intent.putExtra("TAG", "AccountActivity");
-                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
-                            intent.putExtra("name", userInfo.getAuthentics().get(0).getName());
-                            intent.putExtra("idNo", userInfo.getAuthentics().get(0).getIdentiyCarNo());
-                            intent.putExtra("telephone", userInfo.getTelephone());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivityForResult(intent, REQUEST_CODE);
-                        } else if ("1".equals(yeepayUserInfo.getCode())) {// 已注册，去充值
-                            intent.setClass(mContext, RechargeActivity.class);
-                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
-                            startActivity(intent);
+                        if (clickable) {
+                            clickable = false;
+                            if (yeepayUserInfo == null) {
+                                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
+                            } else if ("101".equals(yeepayUserInfo.getCode())) {// 没注册，去注册
+                                intent.setClass(mContext, YeepayRegisterActivity.class);
+                                intent.putExtra("TAG", "AccountActivity");
+                                intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
+                                intent.putExtra("name", userInfo.getAuthentics().get(0).getName());
+                                intent.putExtra("idNo", userInfo.getAuthentics().get(0).getIdentiyCarNo());
+                                intent.putExtra("telephone", userInfo.getTelephone());
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivityForResult(intent, REQUEST_CODE);
+                            } else if ("1".equals(yeepayUserInfo.getCode())) {// 已注册，去充值
+                                intent.setClass(mContext, RechargeActivity.class);
+                                intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
+                                startActivity(intent);
+                            }
                         }
+                        clickable = true;
                         break;
                     case 2:// 交易账单
-                        intent.setClass(mContext, BillActivity.class);
-                        startActivity(intent);
+                        if (clickable) {
+                            clickable = false;
+                            intent.setClass(mContext, BillActivity.class);
+                            startActivity(intent);
+                        }
+                        clickable = true;
                         break;
                     case 3:// 资金提现
-                        if (yeepayUserInfo == null) {
-                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
-                        } else if ("101".equals(yeepayUserInfo.getCode())) {// 没注册，去注册
-                            intent.setClass(mContext, YeepayRegisterActivity.class);
-                            intent.putExtra("TAG", "AccountActivity");
-                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
-                            intent.putExtra("name", userInfo.getAuthentics().get(0).getName());
-                            intent.putExtra("idNo", userInfo.getAuthentics().get(0).getIdentiyCarNo());
-                            intent.putExtra("telephone", userInfo.getTelephone());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivityForResult(intent, REQUEST_CODE);
-                        } else if ("1".equals(yeepayUserInfo.getCode())) {// 已注册，去提现
-                            intent.setClass(mContext, YeepayWithdrawActivity.class);
-                            intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivityForResult(intent, REQUEST_CODE);
+                        if (clickable) {
+                            clickable = false;
+                            if (yeepayUserInfo == null) {
+                                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
+                            } else if ("101".equals(yeepayUserInfo.getCode())) {// 没注册，去注册
+                                intent.setClass(mContext, YeepayRegisterActivity.class);
+                                intent.putExtra("TAG", "AccountActivity");
+                                intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
+                                intent.putExtra("name", userInfo.getAuthentics().get(0).getName());
+                                intent.putExtra("idNo", userInfo.getAuthentics().get(0).getIdentiyCarNo());
+                                intent.putExtra("telephone", userInfo.getTelephone());
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivityForResult(intent, REQUEST_CODE);
+                            } else if ("1".equals(yeepayUserInfo.getCode())) {// 已注册，去提现
+                                intent.setClass(mContext, YeepayWithdrawActivity.class);
+                                intent.putExtra("userId", String.valueOf(userInfo.getExtUserId()));
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivityForResult(intent, REQUEST_CODE);
+                            }
                         }
+                        clickable = true;
                         break;
                 }
             }
@@ -291,7 +307,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
             super.onPostExecute(yeepaySignBean);
             if (yeepaySignBean == null) {
                 dismissProgressDialog();
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (yeepaySignBean.getStatus() == 200) {
                     sign = yeepaySignBean.getData().getSign();
@@ -335,7 +351,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
             super.onPostExecute(bean);
             dismissProgressDialog();
             if (bean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 Log.i("易宝账户信息", bean.toString());
                 if ("1".equals(bean.getCode())) {

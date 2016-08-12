@@ -143,14 +143,17 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
                 onBackPressed();
                 break;
             case R.id.btn_praise:// 点赞
-                if (FLAG) {
-                    Log.i("FLAG", "取消点赞");
-                    ActivityPriseTask activityPriseTask = new ActivityPriseTask(2);
-                    activityPriseTask.execute();
-                } else {
-                    Log.i("FLAG", "点赞");
-                    ActivityPriseTask activityPriseTask = new ActivityPriseTask(1);
-                    activityPriseTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    if (FLAG) {
+                        Log.i("FLAG", "取消点赞");
+                        ActivityPriseTask activityPriseTask = new ActivityPriseTask(2);
+                        activityPriseTask.execute();
+                    } else {
+                        Log.i("FLAG", "点赞");
+                        ActivityPriseTask activityPriseTask = new ActivityPriseTask(1);
+                        activityPriseTask.execute();
+                    }
                 }
                 break;
             case R.id.btn_comment:// 评论
@@ -379,8 +382,9 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(ActivityPriseBean activityPriseBean) {
             super.onPostExecute(activityPriseBean);
+            clickable = true;
             if (activityPriseBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (activityPriseBean.getStatus() == 200) {
                     if (flag == 1) {
@@ -442,8 +446,9 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(ActivityCommentBean activityCommentBean) {
             super.onPostExecute(activityCommentBean);
+            clickable = true;
             if (activityCommentBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (activityCommentBean.getStatus() == 200) {
                     popupWindow.dismiss();
@@ -473,11 +478,15 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
         btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!StringUtils.isBlank(edComment.getText().toString())) {
-                    ActivityCommentTask activityCommentTask = new ActivityCommentTask(atUserId, edComment.getText().toString());
-                    activityCommentTask.execute();
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "请输入评论内容");
+                if (clickable) {
+                    clickable = false;
+                    if (!StringUtils.isBlank(edComment.getText().toString())) {
+                        ActivityCommentTask activityCommentTask = new ActivityCommentTask(atUserId, edComment.getText().toString());
+                        activityCommentTask.execute();
+                    } else {
+                        clickable = true;
+                        SuperToastUtils.showSuperToast(mContext, 2, "请输入评论内容");
+                    }
                 }
             }
         });
@@ -530,11 +539,14 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteCommentTask deleteCommentTask = new DeleteCommentTask(comments.get(position).getCommentId());
-                deleteCommentTask.execute();
-                comments.remove(position);
-                myAdapter.notifyDataSetChanged();
-                popupWindow.dismiss();
+                if (clickable) {
+                    clickable = false;
+                    DeleteCommentTask deleteCommentTask = new DeleteCommentTask(comments.get(position).getCommentId());
+                    deleteCommentTask.execute();
+                    comments.remove(position);
+                    myAdapter.notifyDataSetChanged();
+                    popupWindow.dismiss();
+                }
             }
         });
         popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0] + view.getWidth() / 2 - UiUtils.dip2px(34), location[1] - UiUtils.dip2px(33));
@@ -572,6 +584,7 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             if (commonBean != null) {
                 Log.i("删除评论完成", commonBean.getMessage());
                 if (commonBean.getStatus() == 200) {

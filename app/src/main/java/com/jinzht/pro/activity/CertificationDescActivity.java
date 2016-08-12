@@ -118,8 +118,11 @@ public class CertificationDescActivity extends BaseActivity implements View.OnCl
                     position = "";
                 }
                 if (usertype == Constant.USERTYPE_ZNT) {// 智囊团完成认证
-                    AuthenticateTask authenticateTask = new AuthenticateTask();
-                    authenticateTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        AuthenticateTask authenticateTask = new AuthenticateTask();
+                        authenticateTask.execute();
+                    }
                 } else {// 投资人和投资机构跳转至选择投资能力
                     intent = new Intent(this, CertificationCapacityActivity.class);
                     intent.putExtra("usertype", usertype);
@@ -187,9 +190,10 @@ public class CertificationDescActivity extends BaseActivity implements View.OnCl
         @Override
         protected void onPostExecute(AuthenticateBean authenticateBean) {
             super.onPostExecute(authenticateBean);
+            clickable = true;
             dismissProgressDialog();
             if (authenticateBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (authenticateBean.getStatus() == 200) {
                     DialogUtils.confirmToMainDialog(CertificationDescActivity.this, authenticateBean.getMessage());

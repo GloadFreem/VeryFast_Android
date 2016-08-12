@@ -48,6 +48,8 @@ public abstract class BaseActivity extends Activity implements ProgressBarCallBa
     private ExitReceiver exitReceiver = new ExitReceiver();// 退出应用的广播接收者
     public static final String EXITACTION = "action.exit";// 退出应用的广播接收者的action
 
+    protected boolean clickable = true;// 是否可点击
+
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,

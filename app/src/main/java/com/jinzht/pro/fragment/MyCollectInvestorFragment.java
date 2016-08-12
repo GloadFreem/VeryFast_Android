@@ -215,7 +215,7 @@ public class MyCollectInvestorFragment extends BaseFragment {
             super.onPostExecute(myCollectInvestorBean);
             if (myCollectInvestorBean == null) {
                 listview.setBackgroundResource(R.mipmap.bg_empty);
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {

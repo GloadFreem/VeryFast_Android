@@ -11,7 +11,7 @@ import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.view.CircleImageView;
 
 /**
- * 圈子转发界面，没有用到
+ * 圈子转发界面，目前没有用到
  */
 public class TranspondCircleActivity extends BaseActivity implements View.OnClickListener {
 

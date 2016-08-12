@@ -78,8 +78,11 @@ public class ChangePwdActivity extends BaseActivity implements View.OnClickListe
                 } else if (!edPwdNew.getText().toString().equals(edPwdConfirm.getText().toString())) {
                     SuperToastUtils.showSuperToast(mContext, 2, "密码不一致");
                 } else {
-                    ChangePwdTask changePwdTask = new ChangePwdTask();
-                    changePwdTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        ChangePwdTask changePwdTask = new ChangePwdTask();
+                        changePwdTask.execute();
+                    }
                 }
                 break;
         }
@@ -120,9 +123,10 @@ public class ChangePwdActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             dismissProgressDialog();
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (commonBean.getStatus() == 200) {
                     try {

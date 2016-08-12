@@ -152,7 +152,7 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                 switch (position) {
                     case 0:// 资金账户
                         if (data == null) {
-                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                            SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
                         } else if ("已认证".equals(data.getAuthentics().get(0).getAuthenticstatus().getName())) {
                             intent.setClass(mContext, AccountActivity.class);
                             if (data != null) {
@@ -168,7 +168,7 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                         break;
                     case 1:// 我的关注
                         if (data == null) {
-                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                            SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
                         } else {
                             intent.setClass(mContext, MyCollectActivity.class);
                             startActivity(intent);
@@ -176,7 +176,7 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                         break;
                     case 2:// 我的活动
                         if (data == null) {
-                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                            SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
                         } else {
                             intent.setClass(mContext, MyActivitysActivity.class);
                             startActivity(intent);
@@ -188,7 +188,7 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                         break;
                     case 4:// 项目中心
                         if (data == null) {
-                            SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                            SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
                         } else {
                             intent.setClass(mContext, ProCenterActivity.class);
                             intent.putExtra("usertype", data.getAuthentics().get(0).getIdentiytype().getIdentiyTypeId());
@@ -204,8 +204,11 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                         startActivity(intent);
                         break;
                     case 7:// 推荐好友
-                        ShareTask shareTask = new ShareTask();
-                        shareTask.execute();
+                        if (clickable) {
+                            clickable = false;
+                            ShareTask shareTask = new ShareTask();
+                            shareTask.execute();
+                        }
                         break;
                 }
             }
@@ -224,6 +227,12 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
 
     // 获取认证信息
     private class GetUserInfo extends AsyncTask<Void, Void, UserInfoBean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
+
         @Override
         protected UserInfoBean doInBackground(Void... params) {
             String body = "";
@@ -247,8 +256,9 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
         @Override
         protected void onPostExecute(UserInfoBean userInfoBean) {
             super.onPostExecute(userInfoBean);
+            dismissProgressDialog();
             if (userInfoBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (userInfoBean.getStatus() == 200) {
                     data = userInfoBean.getData();
@@ -291,8 +301,9 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
         @Override
         protected void onPostExecute(ShareBean shareBean) {
             super.onPostExecute(shareBean);
+            clickable = true;
             if (shareBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(PersonalCenterActivity.this);

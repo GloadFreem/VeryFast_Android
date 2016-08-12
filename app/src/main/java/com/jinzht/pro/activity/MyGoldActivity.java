@@ -84,16 +84,25 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
                         startActivity(intent);
                         break;
                     case 1:// 邀请送金条
-                        InviteFriendTask inviteFriendTask = new InviteFriendTask();
-                        inviteFriendTask.execute();
+                        if (clickable) {
+                            clickable = false;
+                            InviteFriendTask inviteFriendTask = new InviteFriendTask();
+                            inviteFriendTask.execute();
+                        }
                         break;
                     case 2:// 金条积累规则
-                        GoldGetRule goldGetRule = new GoldGetRule();
-                        goldGetRule.execute();
+                        if (clickable) {
+                            clickable = false;
+                            GoldGetRule goldGetRule = new GoldGetRule();
+                            goldGetRule.execute();
+                        }
                         break;
                     case 3:// 金条使用规则
-                        GoldUseRule goldUseRule = new GoldUseRule();
-                        goldUseRule.execute();
+                        if (clickable) {
+                            clickable = false;
+                            GoldUseRule goldUseRule = new GoldUseRule();
+                            goldUseRule.execute();
+                        }
                         break;
                 }
             }
@@ -152,7 +161,7 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
             super.onPostExecute(goldAccount);
             dismissProgressDialog();
             if (goldAccount == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (goldAccount.getStatus() == 200) {
                     tvGoldAmount.setText(String.valueOf(goldAccount.getData().getCount()));
@@ -188,8 +197,9 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void onPostExecute(ShareBean shareBean) {
             super.onPostExecute(shareBean);
+            clickable = true;
             if (shareBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(MyGoldActivity.this);
@@ -226,8 +236,9 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void onPostExecute(WebBean webBean) {
             super.onPostExecute(webBean);
+            clickable = true;
             if (webBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (webBean.getStatus() == 200) {
                     if (webBean.getData() != null && !StringUtils.isBlank(webBean.getData().getUrl())) {
@@ -268,8 +279,9 @@ public class MyGoldActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void onPostExecute(WebBean webBean) {
             super.onPostExecute(webBean);
+            clickable = true;
             if (webBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (webBean.getStatus() == 200) {
                     if (webBean.getData() != null && !StringUtils.isBlank(webBean.getData().getUrl())) {

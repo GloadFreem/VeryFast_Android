@@ -109,8 +109,11 @@ public class WechatVerifyActivity extends BaseActivity implements View.OnClickLi
                 }
                 break;
             case R.id.wechat_verify_tv_user_agreement:// 点击查看用户协议，跳转到用户协议界面
-                UserProtocolTask userProtocolTask = new UserProtocolTask();
-                userProtocolTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    UserProtocolTask userProtocolTask = new UserProtocolTask();
+                    userProtocolTask.execute();
+                }
                 break;
         }
     }
@@ -143,7 +146,7 @@ public class WechatVerifyActivity extends BaseActivity implements View.OnClickLi
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
             }
@@ -194,8 +197,9 @@ public class WechatVerifyActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(WebBean webBean) {
             super.onPostExecute(webBean);
+            clickable = true;
             if (webBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (webBean.getStatus() == 200) {
                     if (!StringUtils.isBlank(webBean.getData().getUrl())) {

@@ -107,7 +107,7 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
         protected void onPostExecute(UploadProjectInfo uploadProjectInfo) {
             super.onPostExecute(uploadProjectInfo);
             if (uploadProjectInfo == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (uploadProjectInfo.getStatus() == 200) {
                     if (uploadProjectInfo.getData() != null) {

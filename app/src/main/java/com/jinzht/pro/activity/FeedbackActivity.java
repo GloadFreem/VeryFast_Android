@@ -71,8 +71,11 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
                 if (StringUtils.isBlank(edContent.getText().toString())) {
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入反馈内容");
                 } else {
-                    FeedbackTask feedbackTask = new FeedbackTask();
-                    feedbackTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        FeedbackTask feedbackTask = new FeedbackTask();
+                        feedbackTask.execute();
+                    }
                 }
                 break;
         }
@@ -109,9 +112,10 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             dismissProgressDialog();
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (commonBean.getStatus() == 200) {
                     confirmDialog(commonBean.getMessage());

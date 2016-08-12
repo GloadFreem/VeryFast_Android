@@ -144,12 +144,15 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                 } else if (Double.parseDouble(edInputMoney.getText().toString()) < getIntent().getDoubleExtra("limitAmount", 0)) {
                     SuperToastUtils.showSuperToast(mContext, 2, "本项目最小投资额度不低于" + String.valueOf(getIntent().getDoubleExtra("limitAmount", 0)) + "万");
                 } else {
-                    if (StringUtils.isBlank(SharedPreferencesUtils.getExtUserId(mContext))) {
-                        GetUserInfo getUserInfo = new GetUserInfo();
-                        getUserInfo.execute();
-                    } else {
-                        GetSignTask getSignTask = new GetSignTask();
-                        getSignTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        if (StringUtils.isBlank(SharedPreferencesUtils.getExtUserId(mContext))) {
+                            GetUserInfo getUserInfo = new GetUserInfo();
+                            getUserInfo.execute();
+                        } else {
+                            GetSignTask getSignTask = new GetSignTask();
+                            getSignTask.execute();
+                        }
                     }
                 }
                 break;
@@ -220,13 +223,15 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
         protected void onPostExecute(YeepaySignBean yeepaySignBean) {
             super.onPostExecute(yeepaySignBean);
             if (yeepaySignBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                clickable = true;
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (yeepaySignBean.getStatus() == 200) {
                     sign = yeepaySignBean.getData().getSign();
                     IsRegisteredTask isRegisteredTask = new IsRegisteredTask();
                     isRegisteredTask.execute();
                 } else {
+                    clickable = true;
                     SuperToastUtils.showSuperToast(mContext, 2, yeepaySignBean.getMessage());
                 }
             }
@@ -259,7 +264,8 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
         protected void onPostExecute(UserInfoBean bean) {
             super.onPostExecute(bean);
             if (bean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                clickable = true;
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (bean.getStatus() == 200) {
                     SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(bean.getData().getExtUserId()));
@@ -286,9 +292,11 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
                         intent.putExtra("telephone", userInfoBean.getTelephone());
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        clickable = true;
                         finish();
                     }
                 } else {
+                    clickable = true;
                     SuperToastUtils.showSuperToast(mContext, 2, bean.getMessage());
                 }
             }
@@ -330,9 +338,10 @@ public class InvestActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void onPostExecute(YeepayUserInfoBean bean) {
             super.onPostExecute(bean);
+            clickable = true;
             dismissProgressDialog();
             if (bean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 Log.i("易宝账户信息", bean.toString());
                 if ("1".equals(bean.getCode())) {

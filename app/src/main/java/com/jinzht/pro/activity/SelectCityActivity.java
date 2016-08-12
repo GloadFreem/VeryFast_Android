@@ -163,7 +163,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
             super.onPostExecute(cityListBean);
             dismissProgressDialog();
             if (cityListBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (cityListBean.getStatus() == 200) {
                     citys = cityListBean.getData();

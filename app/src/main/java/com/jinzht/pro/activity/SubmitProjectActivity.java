@@ -188,8 +188,11 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.title_btn_right:// 联系客服
-                CustomerServiceTask customerServiceTask = new CustomerServiceTask();
-                customerServiceTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    CustomerServiceTask customerServiceTask = new CustomerServiceTask();
+                    customerServiceTask.execute();
+                }
                 break;
             case R.id.submit_rl_recommend:// 点击此区域弹出键盘
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -199,8 +202,11 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
                 if (StringUtils.isBlank(edRecommend.getText().toString()) || StringUtils.length(edRecommend.getText().toString()) < 20) {
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入20字以上的推荐理由");
                 } else {
-                    SubmitProjectTask submitProjectTask = new SubmitProjectTask(edRecommend.getText().toString());
-                    submitProjectTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        SubmitProjectTask submitProjectTask = new SubmitProjectTask(edRecommend.getText().toString());
+                        submitProjectTask.execute();
+                    }
                 }
                 break;
         }
@@ -241,7 +247,7 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
             super.onPostExecute(proCenter4ProBean);
             dismissProgressDialog();
             if (proCenter4ProBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (proCenter4ProBean.getStatus() == 200) {
                     if (proCenter4ProBean.getData() != null) {
@@ -301,9 +307,10 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             dismissProgressDialog();
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (commonBean.getStatus() == 200) {
                     Intent intent = new Intent(mContext, ProCenterActivity.class);
@@ -341,8 +348,9 @@ public class SubmitProjectActivity extends BaseActivity implements View.OnClickL
         @Override
         protected void onPostExecute(CustomerServiceBean customerServiceBean) {
             super.onPostExecute(customerServiceBean);
+            clickable = true;
             if (customerServiceBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);

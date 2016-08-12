@@ -121,8 +121,11 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                 onBackPressed();
                 break;
             case R.id.improve_info_bt_contact_service:// 点击了联系客服
-                CustomerServiceTask customerServiceTask = new CustomerServiceTask();
-                customerServiceTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    CustomerServiceTask customerServiceTask = new CustomerServiceTask();
+                    customerServiceTask.execute();
+                }
                 break;
             case R.id.improve_info_iv_userimage:// 点击了选择头像
                 choosePhoto();
@@ -131,8 +134,11 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
                 if (usertype == 0) {
                     SuperToastUtils.showSuperToast(this, 2, "请选择您的身份");
                 } else {
-                    SetUserTypeTask setUserTypeTask = new SetUserTypeTask();
-                    setUserTypeTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        SetUserTypeTask setUserTypeTask = new SetUserTypeTask();
+                        setUserTypeTask.execute();
+                    }
                 }
                 break;
         }
@@ -324,9 +330,10 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(SetUserTypeBean setUserTypeBean) {
             super.onPostExecute(setUserTypeBean);
+            clickable = true;
             dismissProgressDialog();
             if (setUserTypeBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (setUserTypeBean.getStatus() == 200) {
                     SharedPreferencesUtils.saveUserType(mContext, usertype);
@@ -371,8 +378,9 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(CustomerServiceBean customerServiceBean) {
             super.onPostExecute(customerServiceBean);
+            clickable = true;
             if (customerServiceBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);

@@ -30,7 +30,6 @@ public class MessageDetail extends BaseActivity {
     protected void init() {
         UiHelp.setSameStatus(true, this);// 设置系统状态栏与应用标题栏背景一致
 
-
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         tvTitle = (TextView) findViewById(R.id.tv_title);// 界面标题
         tvName = (TextView) findViewById(R.id.tv_name);// 来源名称

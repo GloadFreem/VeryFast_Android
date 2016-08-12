@@ -89,8 +89,11 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.register1_bt_contact_service:// 打电话给客服
-                CustomerServiceTask customerServiceTask = new CustomerServiceTask();
-                customerServiceTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    CustomerServiceTask customerServiceTask = new CustomerServiceTask();
+                    customerServiceTask.execute();
+                }
                 break;
             case R.id.register1_tv_getcode:// 点击获取验证码
                 if (StringUtils.isBlank(register1EdTel.getText().toString())) {
@@ -126,8 +129,11 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
                 }
                 break;
             case R.id.register1_tv_user_agreement:// 点击查看用户协议，跳转到用户协议界面
-                UserProtocolTask userProtocolTask = new UserProtocolTask();
-                userProtocolTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    UserProtocolTask userProtocolTask = new UserProtocolTask();
+                    userProtocolTask.execute();
+                }
                 break;
         }
     }
@@ -160,7 +166,7 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 SuperToastUtils.showSuperToast(mContext, 2, commonBean.getMessage());
             }
@@ -211,8 +217,9 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(CustomerServiceBean customerServiceBean) {
             super.onPostExecute(customerServiceBean);
+            clickable = true;
             if (customerServiceBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -251,8 +258,9 @@ public class Register1Activity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(WebBean webBean) {
             super.onPostExecute(webBean);
+            clickable = true;
             if (webBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (webBean.getStatus() == 200) {
                     if (!StringUtils.isBlank(webBean.getData().getUrl())) {

@@ -111,12 +111,18 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 DialogUtils.confirmDialog(this, "缓存清理成功!", "确定");
                 break;
             case R.id.setting_btn_update:// 版本更新
-                UpdateTask updateTask = new UpdateTask();
-                updateTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    UpdateTask updateTask = new UpdateTask();
+                    updateTask.execute();
+                }
                 break;
             case R.id.setting_btn_exit:// 退出登录
-                LogOutTask logOutTask = new LogOutTask();
-                logOutTask.execute();
+                if (clickable) {
+                    clickable = true;
+                    LogOutTask logOutTask = new LogOutTask();
+                    logOutTask.execute();
+                }
                 break;
         }
     }
@@ -172,9 +178,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             dismissProgressDialog();
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (commonBean.getStatus() == 200) {
                     SharedPreferencesUtils.saveInformation(mContext, "", "");
@@ -219,9 +226,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(UpdateBean updateBean) {
             super.onPostExecute(updateBean);
+            clickable = true;
             dismissProgressDialog();
             if (updateBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (updateBean.getStatus() == 200) {
                     updateData = updateBean.getData();

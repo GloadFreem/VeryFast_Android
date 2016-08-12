@@ -239,9 +239,12 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             holder.btnTranspond.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    POSITION = position;
-                    ShareTask shareTask = new ShareTask();
-                    shareTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        POSITION = position;
+                        ShareTask shareTask = new ShareTask();
+                        shareTask.execute();
+                    }
                 }
             });
             holder.tvTranspond.setText(String.valueOf(datas.get(position).getShareCount()));
@@ -287,20 +290,23 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             holder.btnGood.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (datas.get(position).isFlag()) {
-                        finalHolder.tvGood.setCompoundDrawablesWithIntrinsicBounds(UiUtils.getDrawable(R.mipmap.icon_good), null, null, null);
-                        datas.get(position).setFlag(false);
-                        datas.get(position).setPriseCount(datas.get(position).getPriseCount() - 1);
-                        finalHolder.tvGood.setText(String.valueOf(datas.get(position).getPriseCount()));
-                        CieclePriseTask cieclePriseTask = new CieclePriseTask(datas.get(position).getPublicContentId(), 2);
-                        cieclePriseTask.execute();
-                    } else {
-                        finalHolder.tvGood.setCompoundDrawablesWithIntrinsicBounds(UiUtils.getDrawable(R.mipmap.icon_good_checked), null, null, null);
-                        datas.get(position).setFlag(true);
-                        datas.get(position).setPriseCount(datas.get(position).getPriseCount() + 1);
-                        finalHolder.tvGood.setText(String.valueOf(datas.get(position).getPriseCount()));
-                        CieclePriseTask cieclePriseTask = new CieclePriseTask(datas.get(position).getPublicContentId(), 1);
-                        cieclePriseTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        if (datas.get(position).isFlag()) {
+                            finalHolder.tvGood.setCompoundDrawablesWithIntrinsicBounds(UiUtils.getDrawable(R.mipmap.icon_good), null, null, null);
+                            datas.get(position).setFlag(false);
+                            datas.get(position).setPriseCount(datas.get(position).getPriseCount() - 1);
+                            finalHolder.tvGood.setText(String.valueOf(datas.get(position).getPriseCount()));
+                            CieclePriseTask cieclePriseTask = new CieclePriseTask(datas.get(position).getPublicContentId(), 2);
+                            cieclePriseTask.execute();
+                        } else {
+                            finalHolder.tvGood.setCompoundDrawablesWithIntrinsicBounds(UiUtils.getDrawable(R.mipmap.icon_good_checked), null, null, null);
+                            datas.get(position).setFlag(true);
+                            datas.get(position).setPriseCount(datas.get(position).getPriseCount() + 1);
+                            finalHolder.tvGood.setText(String.valueOf(datas.get(position).getPriseCount()));
+                            CieclePriseTask cieclePriseTask = new CieclePriseTask(datas.get(position).getPublicContentId(), 1);
+                            cieclePriseTask.execute();
+                        }
                     }
                 }
             });
@@ -460,6 +466,12 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                 return null;
             }
         }
+
+        @Override
+        protected void onPostExecute(CirclePriseBean circlePriseBean) {
+            super.onPostExecute(circlePriseBean);
+            clickable = true;
+        }
     }
 
     // 分享圈子
@@ -489,6 +501,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         @Override
         protected void onPostExecute(ShareBean shareBean) {
             super.onPostExecute(shareBean);
+            clickable = true;
             if (shareBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -573,11 +586,14 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteCommentTask deleteCommentTask = new DeleteCommentTask(datas.get(position).getPublicContentId());
-                deleteCommentTask.execute();
-                datas.remove(position);
-                myAdapter.notifyDataSetChanged();
-                popupWindow.dismiss();
+                if (clickable) {
+                    clickable = false;
+                    DeleteCommentTask deleteCommentTask = new DeleteCommentTask(datas.get(position).getPublicContentId());
+                    deleteCommentTask.execute();
+                    datas.remove(position);
+                    myAdapter.notifyDataSetChanged();
+                    popupWindow.dismiss();
+                }
             }
         });
         popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0] + view.getWidth() / 2 - UiUtils.dip2px(34), location[1] - UiUtils.dip2px(22));
@@ -615,6 +631,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             if (commonBean != null) {
                 Log.i("删除圈子完成", commonBean.getMessage());
             }

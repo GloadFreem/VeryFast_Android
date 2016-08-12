@@ -102,8 +102,11 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
                 } else if (checkeds.size() == 0) {
                     SuperToastUtils.showSuperToast(this, 2, "请选择投资能力");
                 } else {
-                    AuthenticateTask authenticateTask = new AuthenticateTask();
-                    authenticateTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        AuthenticateTask authenticateTask = new AuthenticateTask();
+                        authenticateTask.execute();
+                    }
                 }
                 break;
         }
@@ -268,6 +271,7 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
         @Override
         protected void onPostExecute(AuthenticateBean authenticateBean) {
             super.onPostExecute(authenticateBean);
+            clickable = true;
             dismissProgressDialog();
             if (authenticateBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");

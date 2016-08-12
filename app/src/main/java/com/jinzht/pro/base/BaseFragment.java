@@ -40,6 +40,8 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
     protected LoadingProssbar dialog;// 加载进度条
     OkHttpException okHttpException = new OkHttpException(this);// okHttp的异常
 
+    protected boolean clickable = true;// 是否可点击
+
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,

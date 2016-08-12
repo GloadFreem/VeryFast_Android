@@ -548,10 +548,13 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                 holder.itemProjectBtnIgnore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {// 忽略
-                        IgnoreTask ignoreTask = new IgnoreTask(investorCommitDatas.get(newPosition).getProjectId());
-                        ignoreTask.execute();
-                        investorCommitDatas.remove(newPosition);
-                        investorAdapter.notifyDataSetInvalidated();
+                        if (clickable) {
+                            clickable = false;
+                            IgnoreTask ignoreTask = new IgnoreTask(investorCommitDatas.get(newPosition).getProjectId());
+                            ignoreTask.execute();
+                            investorCommitDatas.remove(newPosition);
+                            investorAdapter.notifyDataSetInvalidated();
+                        }
                     }
                 });
                 holder.itemProjectBtnLookPro.setOnClickListener(new View.OnClickListener() {
@@ -597,10 +600,13 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                 holder.itemProjectBtnIgnore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {// 忽略
-                        IgnoreTask ignoreTask = new IgnoreTask(investorCommitDatas.get(newPosition).getProjectId());
-                        ignoreTask.execute();
-                        investorCommitDatas.remove(newPosition);
-                        investorAdapter.notifyDataSetInvalidated();
+                        if (clickable) {
+                            clickable = false;
+                            IgnoreTask ignoreTask = new IgnoreTask(investorCommitDatas.get(newPosition).getProjectId());
+                            ignoreTask.execute();
+                            investorCommitDatas.remove(newPosition);
+                            investorAdapter.notifyDataSetInvalidated();
+                        }
                     }
                 });
                 holder.itemProjectBtnLookPro.setOnClickListener(new View.OnClickListener() {
@@ -1263,6 +1269,12 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
             } else {
                 return null;
             }
+        }
+
+        @Override
+        protected void onPostExecute(CommonBean commonBean) {
+            super.onPostExecute(commonBean);
+            clickable = true;
         }
     }
 

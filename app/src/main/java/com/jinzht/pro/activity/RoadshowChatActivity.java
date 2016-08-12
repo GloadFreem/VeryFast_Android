@@ -99,8 +99,11 @@ public class RoadshowChatActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.btn_send:// 发送
                 if (!StringUtils.isBlank(edChat.getText().toString())) {
-                    CommentTask commentTask = new CommentTask(edChat.getText().toString());
-                    commentTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        CommentTask commentTask = new CommentTask(edChat.getText().toString());
+                        commentTask.execute();
+                    }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入聊天内容");
                 }
@@ -231,7 +234,7 @@ public class RoadshowChatActivity extends BaseActivity implements View.OnClickLi
         protected void onPostExecute(CommentsListBean commentsListBean) {
             super.onPostExecute(commentsListBean);
             if (commentsListBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
@@ -317,8 +320,9 @@ public class RoadshowChatActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (commonBean.getStatus() == 200) {
                     needRefresh = true;

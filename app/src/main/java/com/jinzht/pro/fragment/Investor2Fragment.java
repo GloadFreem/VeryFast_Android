@@ -240,13 +240,16 @@ public class Investor2Fragment extends BaseFragment {
                 holder.itemInvestorgBtnCollect.setOnClickListener(new View.OnClickListener() {// 关注
                     @Override
                     public void onClick(View v) {
-                        POSITION = position;
-                        if (datas.get(position - funds.size()).isCollected()) {
-                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - funds.size()).getUser().getUserId(), 2);
-                            collectInvestorTask.execute();
-                        } else {
-                            CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - funds.size()).getUser().getUserId(), 1);
-                            collectInvestorTask.execute();
+                        if (clickable) {
+                            clickable = false;
+                            POSITION = position;
+                            if (datas.get(position - funds.size()).isCollected()) {
+                                CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - funds.size()).getUser().getUserId(), 2);
+                                collectInvestorTask.execute();
+                            } else {
+                                CollectInvestorTask collectInvestorTask = new CollectInvestorTask(datas.get(position - funds.size()).getUser().getUserId(), 1);
+                                collectInvestorTask.execute();
+                            }
                         }
                     }
                 });
@@ -400,6 +403,7 @@ public class Investor2Fragment extends BaseFragment {
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             if (commonBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {

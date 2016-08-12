@@ -713,8 +713,11 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                 applyDialog();
                 break;
             case R.id.activity_btn_share:// 点击分享
-                ShareTask shareTask = new ShareTask();
-                shareTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    ShareTask shareTask = new ShareTask();
+                    shareTask.execute();
+                }
                 break;
             case R.id.activity_btn_more:// 展开更多内容
                 if (isOpen) {// 打开状态，点击关闭
@@ -726,9 +729,13 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                 }
                 break;
             case R.id.activity_btn_quantity_totle:// 查看全部报名人
-                Intent intent1 = new Intent(this, ActivityAllApplys.class);
-                intent1.putExtra("id", data.getActionId());
-                startActivity(intent1);
+                if (clickable) {
+                    clickable = false;
+                    Intent intent1 = new Intent(this, ActivityAllApplys.class);
+                    intent1.putExtra("id", data.getActionId());
+                    startActivity(intent1);
+                }
+                clickable = true;
                 break;
 //            case R.id.rl_apply1:// 报名人1
 //                SuperToastUtils.showSuperToast(this, 2, "报名人1");
@@ -746,10 +753,14 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 //                SuperToastUtils.showSuperToast(this, 2, "报名人5");
 //                break;
             case R.id.activity_btn_comment_totle:// 查看全部点赞和评论
-                Intent intent2 = new Intent(this, ActivityAllComments.class);
-                intent2.putExtra("id", data.getActionId());
-                intent2.putExtra("flag", data.isFlag());
-                startActivityForResult(intent2, REQUEST_CODE);
+                if (clickable) {
+                    clickable = false;
+                    Intent intent2 = new Intent(this, ActivityAllComments.class);
+                    intent2.putExtra("id", data.getActionId());
+                    intent2.putExtra("flag", data.isFlag());
+                    startActivityForResult(intent2, REQUEST_CODE);
+                }
+                clickable = true;
                 break;
             case R.id.activity_tv_comment1:// 回复评论1
                 if (comments.get(0).getUsersByUserId().getUserId() == SharedPreferencesUtils.getUserId(mContext)) {
@@ -792,12 +803,15 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                 }
                 break;
             case R.id.activity_btn_praise:// 点赞
-                if (data.isFlag()) {
-                    ActivityPriseTask activityPriseTask = new ActivityPriseTask(2);
-                    activityPriseTask.execute();
-                } else {
-                    ActivityPriseTask activityPriseTask = new ActivityPriseTask(1);
-                    activityPriseTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    if (data.isFlag()) {
+                        ActivityPriseTask activityPriseTask = new ActivityPriseTask(2);
+                        activityPriseTask.execute();
+                    } else {
+                        ActivityPriseTask activityPriseTask = new ActivityPriseTask(1);
+                        activityPriseTask.execute();
+                    }
                 }
                 break;
             case R.id.activity_btn_comment:// 评论
@@ -896,7 +910,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             super.onPostExecute(activityDetailBean);
             if (activityDetailBean == null) {
                 dismissProgressDialog();
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (activityDetailBean.getStatus() == 200) {
                     data = activityDetailBean.getData();
@@ -940,7 +954,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             super.onPostExecute(activityAllApplysBean);
             if (activityAllApplysBean == null) {
                 dismissProgressDialog();
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (activityAllApplysBean.getStatus() == 200) {
                     applys = activityAllApplysBean.getData();
@@ -984,7 +998,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             super.onPostExecute(activityAllCommentsBean);
             dismissProgressDialog();
             if (activityAllCommentsBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (activityAllCommentsBean.getStatus() == 200) {
                     prises = activityAllCommentsBean.getData().getPrises();
@@ -1030,8 +1044,9 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         @Override
         protected void onPostExecute(ActivityPriseBean activityPriseBean) {
             super.onPostExecute(activityPriseBean);
+            clickable = true;
             if (activityPriseBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (activityPriseBean.getStatus() == 200) {
                     if (flag == 1) {
@@ -1092,8 +1107,9 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         @Override
         protected void onPostExecute(ActivityCommentBean activityCommentBean) {
             super.onPostExecute(activityCommentBean);
+            clickable = true;
             if (activityCommentBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (activityCommentBean.getStatus() == 200) {
                     popupWindow.dismiss();
@@ -1121,11 +1137,15 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!StringUtils.isBlank(edComment.getText().toString())) {
-                    ActivityCommentTask activityCommentTask = new ActivityCommentTask(atUserId, edComment.getText().toString());
-                    activityCommentTask.execute();
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, "请输入评论内容");
+                if (clickable) {
+                    clickable = false;
+                    if (!StringUtils.isBlank(edComment.getText().toString())) {
+                        ActivityCommentTask activityCommentTask = new ActivityCommentTask(atUserId, edComment.getText().toString());
+                        activityCommentTask.execute();
+                    } else {
+                        clickable = true;
+                        SuperToastUtils.showSuperToast(mContext, 2, "请输入评论内容");
+                    }
                 }
             }
         });
@@ -1191,8 +1211,11 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         btnConfirm.setOnClickListener(new View.OnClickListener() {// 确认报名
             @Override
             public void onClick(View v) {
-                ApplyTask applyTask = new ApplyTask(edt.getText().toString());
-                applyTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    ApplyTask applyTask = new ApplyTask(edt.getText().toString());
+                    applyTask.execute();
+                }
             }
         });
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -1242,9 +1265,10 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         @Override
         protected void onPostExecute(ActivityApplyBean activityApplyBean) {
             super.onPostExecute(activityApplyBean);
+            clickable = true;
             dismissProgressDialog();
             if (activityApplyBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (activityApplyBean.getStatus() == 200) {
                     SuperToastUtils.showSuperToast(mContext, 2, activityApplyBean.getMessage());
@@ -1287,8 +1311,9 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         @Override
         protected void onPostExecute(ShareBean shareBean) {
             super.onPostExecute(shareBean);
+            clickable = true;
             if (shareBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(ActivityDetailActivity.this);
@@ -1336,11 +1361,14 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteCommentTask deleteCommentTask = new DeleteCommentTask(comments.get(position).getCommentId());
-                deleteCommentTask.execute();
-                comments.remove(position);
-                initComments();
-                popupWindow.dismiss();
+                if (clickable) {
+                    clickable = false;
+                    DeleteCommentTask deleteCommentTask = new DeleteCommentTask(comments.get(position).getCommentId());
+                    deleteCommentTask.execute();
+                    comments.remove(position);
+                    initComments();
+                    popupWindow.dismiss();
+                }
             }
         });
         popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0] + view.getWidth() / 2 - UiUtils.dip2px(34), location[1] - UiUtils.dip2px(33));
@@ -1378,6 +1406,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             if (commonBean != null) {
                 Log.i("删除评论完成", commonBean.getMessage());
             }

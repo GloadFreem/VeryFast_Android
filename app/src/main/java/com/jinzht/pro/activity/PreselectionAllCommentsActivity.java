@@ -320,6 +320,7 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             if (commonBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -348,8 +349,11 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
             @Override
             public void onClick(View v) {
                 if (!StringUtils.isBlank(edComment.getText().toString())) {
-                    CommentTask commentTask = new CommentTask(edComment.getText().toString());
-                    commentTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        CommentTask commentTask = new CommentTask(edComment.getText().toString());
+                        commentTask.execute();
+                    }
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, "请输入评论内容");
                 }
@@ -404,11 +408,14 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteCommentTask deleteCommentTask = new DeleteCommentTask(datas.get(position).getCommentId());
-                deleteCommentTask.execute();
-                datas.remove(position);
-                myAdapter.notifyDataSetChanged();
-                popupWindow.dismiss();
+                if (clickable) {
+                    clickable = false;
+                    DeleteCommentTask deleteCommentTask = new DeleteCommentTask(datas.get(position).getCommentId());
+                    deleteCommentTask.execute();
+                    datas.remove(position);
+                    myAdapter.notifyDataSetChanged();
+                    popupWindow.dismiss();
+                }
             }
         });
         popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0] + view.getWidth() / 2 - UiUtils.dip2px(34), location[1] - UiUtils.dip2px(22));
@@ -446,6 +453,7 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             if (commonBean != null) {
                 Log.i("删除评论完成", commonBean.getMessage());
                 if (commonBean.getStatus() == 200) {

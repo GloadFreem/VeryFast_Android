@@ -72,8 +72,11 @@ public class WechatSetPwdActivity extends BaseActivity implements View.OnClickLi
                 } else if (!edPwd1.getText().toString().equals(edPwd2.getText().toString())) {
                     SuperToastUtils.showSuperToast(mContext, 2, "密码不一致");
                 } else {
-                    RegisterTask registerTask = new RegisterTask();
-                    registerTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        RegisterTask registerTask = new RegisterTask();
+                        registerTask.execute();
+                    }
                 }
                 break;
         }
@@ -116,9 +119,10 @@ public class WechatSetPwdActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(RegisterBean registerBean) {
             super.onPostExecute(registerBean);
+            clickable = true;
             dismissProgressDialog();
             if (registerBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (registerBean.getStatus() == 200) {
                     String pwd = null;

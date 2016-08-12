@@ -207,10 +207,14 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.btn_bind:
                 if ("绑定银行卡".equals(btnBind.getText())) {
-                    // 去绑卡
-                    Intent intent = new Intent(this, YeepayBindCardActivity.class);
-                    intent.putExtra("userId", getIntent().getStringExtra("userId"));
-                    startActivityForResult(intent, REQUEST_CODE);
+                    if (clickable) {
+                        clickable = false;
+                        // 去绑卡
+                        Intent intent = new Intent(this, YeepayBindCardActivity.class);
+                        intent.putExtra("userId", getIntent().getStringExtra("userId"));
+                        startActivityForResult(intent, REQUEST_CODE);
+                    }
+                    clickable = true;
                 } else {
                     // 解绑
                     confirmUnbind();
@@ -270,7 +274,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
             super.onPostExecute(yeepaySignBean);
             if (yeepaySignBean == null) {
                 dismissProgressDialog();
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (yeepaySignBean.getStatus() == 200) {
                     sign = yeepaySignBean.getData().getSign();
@@ -314,7 +318,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
             super.onPostExecute(bean);
             dismissProgressDialog();
             if (bean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 Log.i("易宝账户信息", bean.toString());
                 if ("1".equals(bean.getCode())) {
@@ -476,8 +480,11 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GetUnbindSignTask getUnbindSignTask = new GetUnbindSignTask();
-                getUnbindSignTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    GetUnbindSignTask getUnbindSignTask = new GetUnbindSignTask();
+                    getUnbindSignTask.execute();
+                }
             }
         });
     }
@@ -525,9 +532,10 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
         protected void onPostExecute(YeepaySignBean yeepaySignBean) {
             super.onPostExecute(yeepaySignBean);
             if (yeepaySignBean == null) {
+                clickable = true;
                 dialog.dismiss();
                 dismissProgressDialog();
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (yeepaySignBean.getStatus() == 200) {
                     unbindSign = yeepaySignBean.getData().getSign();
@@ -535,6 +543,7 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
                     UnbindTask unbindTask = new UnbindTask();
                     unbindTask.execute();
                 } else {
+                    clickable = true;
                     dialog.dismiss();
                     dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, yeepaySignBean.getMessage());
@@ -571,10 +580,11 @@ public class BankCardActivity extends BaseActivity implements View.OnClickListen
         @Override
         protected void onPostExecute(YibaoUnbindCallbackInfoBean bean) {
             super.onPostExecute(bean);
+            clickable = true;
             dismissProgressDialog();
             if (bean == null) {
                 dialog.dismiss();
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 Log.i("解绑信息", bean.toString());
                 if ("1".equals(bean.getCode())) {

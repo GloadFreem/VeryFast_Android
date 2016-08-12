@@ -153,8 +153,11 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
                 onBackPressed();
                 break;
             case R.id.title_btn_share:// 分享
-                ShareTask shareTask = new ShareTask();
-                shareTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    ShareTask shareTask = new ShareTask();
+                    shareTask.execute();
+                }
                 break;
             case R.id.investor_detail_btn_submit:// 提交项目
                 Intent intent1 = new Intent(mContext, SubmitProjectActivity.class);
@@ -173,12 +176,15 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
                 startActivity(intent1);
                 break;
             case R.id.investor_detail_btn_collect:// 关注
-                if (data.isCollected()) {
-                    CollectInvestorTask collectInvestorTask = new CollectInvestorTask(2);
-                    collectInvestorTask.execute();
-                } else {
-                    CollectInvestorTask collectInvestorTask = new CollectInvestorTask(1);
-                    collectInvestorTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    if (data.isCollected()) {
+                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(2);
+                        collectInvestorTask.execute();
+                    } else {
+                        CollectInvestorTask collectInvestorTask = new CollectInvestorTask(1);
+                        collectInvestorTask.execute();
+                    }
                 }
                 break;
         }
@@ -228,7 +234,7 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
             super.onPostExecute(investorDetailBean);
             dismissProgressDialog();
             if (investorDetailBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (investorDetailBean.getStatus() == 200) {
                     data = investorDetailBean.getData();
@@ -275,8 +281,9 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (commonBean.getStatus() == 200) {
                     if (flag == 1) {
@@ -324,8 +331,9 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
         @Override
         protected void onPostExecute(ShareBean shareBean) {
             super.onPostExecute(shareBean);
+            clickable = true;
             if (shareBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(InvestorgDetailActivity.this);

@@ -275,7 +275,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         protected void onPostExecute(BannerInfoBean bannerInfoBean) {
             super.onPostExecute(bannerInfoBean);
             if (bannerInfoBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (bannerInfoBean.getStatus() == 200) {
                     EventBus.getDefault().postSticky(bannerInfoBean);
@@ -313,7 +313,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         protected void onPostExecute(UpdateBean updateBean) {
             super.onPostExecute(updateBean);
             if (updateBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (updateBean.getStatus() == 200) {
                     updateData = updateBean.getData();

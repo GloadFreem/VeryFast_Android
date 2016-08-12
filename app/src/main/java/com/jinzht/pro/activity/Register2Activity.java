@@ -37,7 +37,6 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
     private EditText register2EdPassword2;// 确认密码输入框
     private Button register2BtConfirm;// 下一步按钮
 
-
     @Override
     protected int getResourcesId() {
         return R.layout.activity_register2;
@@ -64,8 +63,11 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.register2_bt_contact_service:// 点击了联系客服
-                CustomerServiceTask customerServiceTask = new CustomerServiceTask();
-                customerServiceTask.execute();
+                if (clickable) {
+                    clickable = false;
+                    CustomerServiceTask customerServiceTask = new CustomerServiceTask();
+                    customerServiceTask.execute();
+                }
                 break;
             case R.id.register2_bt_confirm:// 点击下一步按钮，进入完善信息页面
                 if (StringUtils.isBlank(register2EdPassword1.getText().toString())) {
@@ -77,8 +79,11 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
                 } else if (!register2EdPassword1.getText().toString().equals(register2EdPassword2.getText().toString())) {
                     SuperToastUtils.showSuperToast(mContext, 2, "密码不一致");
                 } else {
-                    RegisterTask registerTask = new RegisterTask();
-                    registerTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        RegisterTask registerTask = new RegisterTask();
+                        registerTask.execute();
+                    }
                 }
                 break;
         }
@@ -121,9 +126,10 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(RegisterBean registerBean) {
             super.onPostExecute(registerBean);
+            clickable = true;
             dismissProgressDialog();
             if (registerBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (registerBean.getStatus() == 200) {
                     String pwd = null;
@@ -171,8 +177,9 @@ public class Register2Activity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(CustomerServiceBean customerServiceBean) {
             super.onPostExecute(customerServiceBean);
+            clickable = true;
             if (customerServiceBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (customerServiceBean.getStatus() == 200) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);

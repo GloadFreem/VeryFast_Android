@@ -74,6 +74,7 @@
     <string name="desc_touziren">具有投资意识、投资能力，正在寻找股权投资标的的高净值投资人及企业家。</string>
     <string name="desc_touzijigou">国内外优秀VC/PE机构、创投机构、专业投资人、金指投领投机构及领投人。</string>
     <string name="desc_zhinangruan">著名投资人、企业家及创业者、证券从业者、会计师、律师、企业管理咨询师等，能为企业快速发展提供建设性意见和建议的“牛”人。</string>
+    <string name="net_error">网络好像出了点问题，检查一下</string>
 
     <string name="pull_to_refresh">下拉刷新</string>
     <string name="release_to_refresh">释放立即刷新</string>

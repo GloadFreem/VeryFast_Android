@@ -134,12 +134,15 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 if (StringUtils.isBlank(edComment.getText().toString())) {
                     SuperToastUtils.showSuperToast(this, 2, "请输入评论内容");
                 } else {
-                    if ("评论本条状态".equals(edComment.getHint())) {
-                        CircleCommentTask circleCommentTask = new CircleCommentTask("");
-                        circleCommentTask.execute();
-                    } else {
-                        CircleCommentTask circleCommentTask = new CircleCommentTask(String.valueOf(comments.get((Integer) edComment.getTag() - 1).getUsersByUserId().getUserId()));
-                        circleCommentTask.execute();
+                    if (clickable) {
+                        clickable = false;
+                        if ("评论本条状态".equals(edComment.getHint())) {
+                            CircleCommentTask circleCommentTask = new CircleCommentTask("");
+                            circleCommentTask.execute();
+                        } else {
+                            CircleCommentTask circleCommentTask = new CircleCommentTask(String.valueOf(comments.get((Integer) edComment.getTag() - 1).getUsersByUserId().getUserId()));
+                            circleCommentTask.execute();
+                        }
                     }
                 }
                 break;
@@ -310,16 +313,19 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 holder.btnGood.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (datas.isFlag()) {
-                            finalHolder.btnGood.setImageResource(R.mipmap.icon_good);
-                            datas.setFlag(false);
-                            CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 2);
-                            circlePriseTask.execute();
-                        } else {
-                            finalHolder.btnGood.setImageResource(R.mipmap.icon_good_checked);
-                            datas.setFlag(true);
-                            CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 1);
-                            circlePriseTask.execute();
+                        if (clickable) {
+                            clickable = false;
+                            if (datas.isFlag()) {
+                                finalHolder.btnGood.setImageResource(R.mipmap.icon_good);
+                                datas.setFlag(false);
+                                CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 2);
+                                circlePriseTask.execute();
+                            } else {
+                                finalHolder.btnGood.setImageResource(R.mipmap.icon_good_checked);
+                                datas.setFlag(true);
+                                CirclePriseTask circlePriseTask = new CirclePriseTask(datas.getPublicContentId(), 1);
+                                circlePriseTask.execute();
+                            }
                         }
                     }
                 });
@@ -608,6 +614,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(CirclePriseBean circlePriseBean) {
             super.onPostExecute(circlePriseBean);
+            clickable = true;
             if (circlePriseBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -679,6 +686,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(CircleCommentBean circleCommentBean) {
             super.onPostExecute(circleCommentBean);
+            clickable = true;
             if (circleCommentBean == null) {
                 SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
             } else {
@@ -708,11 +716,14 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteCommentTask deleteCommentTask = new DeleteCommentTask(comments.get(position).getCommentId());
-                deleteCommentTask.execute();
-                comments.remove(position);
-                listAdapter.notifyDataSetChanged();
-                popupWindow.dismiss();
+                if (clickable) {
+                    clickable = false;
+                    DeleteCommentTask deleteCommentTask = new DeleteCommentTask(comments.get(position).getCommentId());
+                    deleteCommentTask.execute();
+                    comments.remove(position);
+                    listAdapter.notifyDataSetChanged();
+                    popupWindow.dismiss();
+                }
             }
         });
         popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0] + view.getWidth() / 2 - UiUtils.dip2px(34), location[1] - UiUtils.dip2px(22));
@@ -750,6 +761,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(CommonBean commonBean) {
             super.onPostExecute(commonBean);
+            clickable = true;
             if (commonBean != null) {
                 Log.i("删除评论完成", commonBean.getMessage());
             }
