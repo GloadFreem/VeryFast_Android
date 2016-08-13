@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,7 +26,6 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
-import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.CircleImageView;
 import com.jinzht.pro.view.PullToRefreshLayout;
 import com.jinzht.pro.view.PullableListView;
@@ -36,8 +36,10 @@ import java.util.List;
 /**
  * 我的关注中投资人界面
  */
-public class MyCollectInvestorFragment extends BaseFragment {
+public class MyCollectInvestorFragment extends BaseFragment implements View.OnClickListener {
 
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private PullToRefreshLayout refreshView;// 刷新布局
     private PullableListView listview;// 列表
 
@@ -50,6 +52,9 @@ public class MyCollectInvestorFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_collect_investor, container, false);
+        pageError = (LinearLayout) view.findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) view.findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         refreshView = (PullToRefreshLayout) view.findViewById(R.id.refresh_view);// 刷新布局
         listview = (PullableListView) view.findViewById(R.id.listview);// 列表
         return view;
@@ -86,6 +91,19 @@ public class MyCollectInvestorFragment extends BaseFragment {
 
         GetInvestorList getInvestorList = new GetInvestorList(0);
         getInvestorList.execute();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    GetInvestorList getInvestorList = new GetInvestorList(0);
+                    getInvestorList.execute();
+                }
+                break;
+        }
     }
 
     private class MyAdapter extends BaseAdapter {
@@ -213,13 +231,16 @@ public class MyCollectInvestorFragment extends BaseFragment {
         @Override
         protected void onPostExecute(MyCollectInvestorBean myCollectInvestorBean) {
             super.onPostExecute(myCollectInvestorBean);
+            clickable = true;
             if (myCollectInvestorBean == null) {
-                listview.setBackgroundResource(R.mipmap.bg_empty);
-                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (myCollectInvestorBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
@@ -239,13 +260,15 @@ public class MyCollectInvestorFragment extends BaseFragment {
                         myAdapter.notifyDataSetChanged();
                     }
                 } else if (myCollectInvestorBean.getStatus() == 201) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
-                    listview.setBackgroundResource(R.mipmap.bg_empty);
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                    SuperToastUtils.showSuperToast(mContext, 2, myCollectInvestorBean.getMessage());
                 }
             }
         }

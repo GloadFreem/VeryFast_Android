@@ -56,6 +56,8 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
 
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private PullToRefreshLayout refreshView;// 刷新布局
     private PullableListView listview;// 列表
     private LinearLayout llBtn;// 按钮布局
@@ -89,6 +91,9 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
         tvTitle.setText("点赞评论");
+        pageError = (LinearLayout) findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         refreshView = (PullToRefreshLayout) findViewById(R.id.refresh_view);// 刷新布局
         refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
         listview = (PullableListView) findViewById(R.id.listview);// 列表
@@ -158,6 +163,13 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
                 break;
             case R.id.btn_comment:// 评论
                 CommentDialog("", "");
+                break;
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    GetAllCommentsTask getAllCommentsTask = new GetAllCommentsTask(0);
+                    getAllCommentsTask.execute();
+                }
                 break;
         }
     }
@@ -296,13 +308,17 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(ActivityAllCommentsBean activityAllCommentsBean) {
             super.onPostExecute(activityAllCommentsBean);
+            clickable = true;
             dismissProgressDialog();
             if (activityAllCommentsBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (activityAllCommentsBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
@@ -318,12 +334,15 @@ public class ActivityAllComments extends BaseActivity implements View.OnClickLis
                         myAdapter.notifyDataSetChanged();
                     }
                 } else if (activityAllCommentsBean.getStatus() == 201) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                    SuperToastUtils.showSuperToast(mContext, 2, activityAllCommentsBean.getMessage());
                 }
             }
         }

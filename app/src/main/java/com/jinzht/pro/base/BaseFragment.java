@@ -83,6 +83,7 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
         super.onDestroyView();
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
+            dialog = null;
         }
     }
 
@@ -91,6 +92,7 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
         super.onDestroy();
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
+            dialog = null;
         }
         ShareSDK.stopSDK(mContext);
     }
@@ -113,6 +115,7 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
     public void dismissProgressDialog() {
         if (this.dialog != null) {
             dialog.dismiss();
+            dialog = null;
         }
     }
 

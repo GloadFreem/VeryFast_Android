@@ -85,6 +85,13 @@
             android:textSize="17sp" />
     </RelativeLayout>
 
+    <include
+        layout="@layout/layout_error_page"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/message_rl_bottom"
+        android:layout_below="@id/message_rl_title" />
+
     <com.jinzht.pro.view.PullToRefreshLayout
         android:id="@+id/refresh_view"
         android:layout_width="match_parent"

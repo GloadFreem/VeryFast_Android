@@ -22,7 +22,6 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
-import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.view.PullToRefreshLayout;
 import com.jinzht.pro.view.PullableListView;
@@ -37,6 +36,8 @@ public class MyActivitysActivity extends BaseActivity implements View.OnClickLis
 
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private PullToRefreshLayout refreshView;// 刷新布局
     private PullableListView listview;// 活动列表
 
@@ -73,6 +74,9 @@ public class MyActivitysActivity extends BaseActivity implements View.OnClickLis
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
         tvTitle.setText("我的活动");
+        pageError = (LinearLayout) findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         refreshView = (PullToRefreshLayout) findViewById(R.id.refresh_view);// 刷新布局
         listview = (PullableListView) findViewById(R.id.listview);// 活动列表
     }
@@ -82,6 +86,13 @@ public class MyActivitysActivity extends BaseActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.btn_back:
                 finish();
+                break;
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    GetMyActivityListTask getMyActivityListTask = new GetMyActivityListTask(0);
+                    getMyActivityListTask.execute();
+                }
                 break;
         }
     }
@@ -193,14 +204,17 @@ public class MyActivitysActivity extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(ActivityListBean activityListBean) {
             super.onPostExecute(activityListBean);
+            clickable = true;
             dismissProgressDialog();
             if (activityListBean == null) {
-                listview.setBackgroundResource(R.mipmap.bg_empty);
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (activityListBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
@@ -220,13 +234,15 @@ public class MyActivitysActivity extends BaseActivity implements View.OnClickLis
                         myAdapter.notifyDataSetChanged();
                     }
                 } else if (activityListBean.getStatus() == 201) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
-                    listview.setBackgroundResource(R.mipmap.bg_empty);
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                    SuperToastUtils.showSuperToast(mContext, 2, activityListBean.getMessage());
                 }
             }
         }

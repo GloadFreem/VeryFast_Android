@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,7 +22,6 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
-import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 
 import java.util.ArrayList;
@@ -34,6 +34,8 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
 
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private LinearLayout btnConfirm; // 确定
     private ListView lvInvestField;// 省份列表
 
@@ -52,6 +54,9 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
         tvTitle.setText("所在地");
+        pageError = (LinearLayout) findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         btnConfirm = (LinearLayout) findViewById(R.id.btn_confirm);// 确定按钮
         btnConfirm.setVisibility(View.GONE);
         lvInvestField = (ListView) findViewById(R.id.lv_invest_field);// 省份列表
@@ -77,6 +82,13 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
         switch (v.getId()) {
             case R.id.btn_back:// 返回上一页
                 finish();
+                break;
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    GetProvinceListTask getProvinceListTask = new GetProvinceListTask();
+                    getProvinceListTask.execute();
+                }
                 break;
         }
     }
@@ -149,15 +161,17 @@ public class SelectProvinceActivity extends BaseActivity implements View.OnClick
         @Override
         protected void onPostExecute(ProvinceListBean provinceListBean) {
             super.onPostExecute(provinceListBean);
+            clickable = true;
             dismissProgressDialog();
             if (provinceListBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
+                pageError.setVisibility(View.VISIBLE);
             } else {
                 if (provinceListBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
                     provinces = provinceListBean.getData();
                     lvInvestField.setAdapter(new ProvinceAdapter());
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, provinceListBean.getMessage());
+                    pageError.setVisibility(View.VISIBLE);
                 }
             }
         }

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -62,6 +63,8 @@ import de.greenrobot.event.ThreadMode;
 public class CircleFragment extends BaseFragment implements View.OnClickListener {
 
     private LinearLayout titleBtnRight;// title右侧按钮
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private PullToRefreshLayout refreshView;// 刷新布局
     private PullableListView listview;// 列表
 
@@ -78,6 +81,9 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.fragment_circle, container, false);
         titleBtnRight = (LinearLayout) view.findViewById(R.id.title_btn_right);// title右侧按钮
         titleBtnRight.setOnClickListener(this);
+        pageError = (LinearLayout) view.findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) view.findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         refreshView = (PullToRefreshLayout) view.findViewById(R.id.refresh_view);// 刷新布局
         listview = (PullableListView) view.findViewById(R.id.listview);// 列表
         return view;
@@ -107,6 +113,13 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             case R.id.title_btn_right:// 点击发表内容
                 Intent intent = new Intent(mContext, ReleaseCircleActivity.class);
                 startActivityForResult(intent, REQUEST_CODE);
+                break;
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    GetCircleListTask getCircleList = new GetCircleListTask(0);
+                    getCircleList.execute();
+                }
                 break;
         }
     }
@@ -377,13 +390,16 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         @Override
         protected void onPostExecute(CircleListBean circleListBean) {
             super.onPostExecute(circleListBean);
+            clickable = true;
             if (circleListBean == null) {
-                listview.setBackgroundResource(R.mipmap.bg_empty);
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (circleListBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
@@ -403,13 +419,15 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                         myAdapter.notifyDataSetChanged();
                     }
                 } else if (circleListBean.getStatus() == 201) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
-                    listview.setBackgroundResource(R.mipmap.bg_empty);
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                    SuperToastUtils.showSuperToast(mContext, 2, circleListBean.getMessage());
                 }
             }
         }
@@ -503,7 +521,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             super.onPostExecute(shareBean);
             clickable = true;
             if (shareBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (shareBean.getStatus() == 200) {
                     ShareUtils shareUtils = new ShareUtils(getActivity());

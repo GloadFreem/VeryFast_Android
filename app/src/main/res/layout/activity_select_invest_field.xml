@@ -52,12 +52,12 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <include layout="@layout/layout_error_page" />
+
     <ListView
         android:id="@+id/lv_invest_field"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:paddingLeft="17dp">
-
-    </ListView>
+        android:paddingLeft="17dp" />
 </LinearLayout>

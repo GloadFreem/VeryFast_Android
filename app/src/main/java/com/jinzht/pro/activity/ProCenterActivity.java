@@ -25,7 +25,6 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
-import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiHelp;
 import com.jinzht.pro.view.CircleImageView;
 import com.jinzht.pro.view.PullToRefreshLayout;
@@ -42,6 +41,8 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
 
     private LinearLayout btnBack;// 返回
     private TextView title;// 标题
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private PullToRefreshLayout refreshView;// 刷新布局
     private PullableListView listview;// 列表
 
@@ -70,6 +71,9 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         btnBack.setOnClickListener(this);
         title = (TextView) findViewById(R.id.tv_title);// 标题
         title.setText("项目中心");
+        pageError = (LinearLayout) findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         refreshView = (PullToRefreshLayout) findViewById(R.id.refresh_view);// 刷新布局
         listview = (PullableListView) findViewById(R.id.listview);// 列表
 
@@ -151,6 +155,10 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         });
+        initProjectList();
+    }
+
+    private void initProjectList() {
         switch (usertype) {
             case 1:// 项目方
                 GetProject1List getProject1List = new GetProject1List(0);
@@ -178,6 +186,12 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btn_back:// 返回上一页
                 finish();
+                break;
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    initProjectList();
+                }
                 break;
         }
     }
@@ -902,13 +916,17 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(ProCenter4ProBean proCenter4ProBean) {
             super.onPostExecute(proCenter4ProBean);
+            clickable = true;
             dismissProgressDialog();
             if (proCenter4ProBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (proCenter4ProBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
@@ -923,12 +941,15 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                         proAdapter.notifyDataSetChanged();
                     }
                 } else if (proCenter4ProBean.getStatus() == 201) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                    SuperToastUtils.showSuperToast(mContext, 2, proCenter4ProBean.getMessage());
                 }
             }
         }
@@ -975,14 +996,17 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(ProCenter4InvestorBean proCenter4InvestorBean) {
             super.onPostExecute(proCenter4InvestorBean);
+            clickable = true;
             dismissProgressDialog();
             if (proCenter4InvestorBean == null) {
-                listview.setBackgroundResource(R.mipmap.bg_empty);
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (proCenter4InvestorBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
@@ -1006,13 +1030,15 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                         investorAdapter.notifyDataSetChanged();
                     }
                 } else if (proCenter4InvestorBean.getStatus() == 201) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
-                    listview.setBackgroundResource(R.mipmap.bg_empty);
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                    SuperToastUtils.showSuperToast(mContext, 2, proCenter4InvestorBean.getMessage());
                 }
             }
         }
@@ -1059,14 +1085,17 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(ProCenter4InvestorBean proCenter4InvestorBean) {
             super.onPostExecute(proCenter4InvestorBean);
+            clickable = true;
             dismissProgressDialog();
             if (proCenter4InvestorBean == null) {
-                listview.setBackgroundResource(R.mipmap.bg_empty);
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (proCenter4InvestorBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
@@ -1090,13 +1119,15 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                         investorAdapter.notifyDataSetChanged();
                     }
                 } else if (proCenter4InvestorBean.getStatus() == 201) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
-                    listview.setBackgroundResource(R.mipmap.bg_empty);
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                    SuperToastUtils.showSuperToast(mContext, 2, proCenter4InvestorBean.getMessage());
                 }
             }
         }
@@ -1143,14 +1174,17 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(ProCenter4BrainBean proCenter4BrainBean) {
             super.onPostExecute(proCenter4BrainBean);
+            clickable = true;
             dismissProgressDialog();
             if (proCenter4BrainBean == null) {
-                listview.setBackgroundResource(R.mipmap.bg_empty);
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (proCenter4BrainBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
@@ -1174,13 +1208,15 @@ public class ProCenterActivity extends BaseActivity implements View.OnClickListe
                         brainAdapter.notifyDataSetChanged();
                     }
                 } else if (proCenter4BrainBean.getStatus() == 201) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
-                    listview.setBackgroundResource(R.mipmap.bg_empty);
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                    SuperToastUtils.showSuperToast(mContext, 2, proCenter4BrainBean.getMessage());
                 }
             }
         }

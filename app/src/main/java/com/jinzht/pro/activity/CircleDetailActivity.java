@@ -60,6 +60,8 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
 
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private LinearLayout llComment;// 评论输入框布局
     private EditText edComment;// 评论输入框
     private TextView btnComment;// 评论按钮
@@ -115,6 +117,9 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
         tvTitle.setText("详情");
+        pageError = (LinearLayout) findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         llComment = (LinearLayout) findViewById(R.id.ll_comment);// 评论输入框布局
         edComment = (EditText) findViewById(R.id.ed_comment);// 评论输入框
         btnComment = (TextView) findViewById(R.id.btn_comment);// 评论按钮
@@ -144,6 +149,13 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                             circleCommentTask.execute();
                         }
                     }
+                }
+                break;
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    GetCircleDetailTask getCircleDetailTask = new GetCircleDetailTask();
+                    getCircleDetailTask.execute();
                 }
                 break;
         }
@@ -444,14 +456,19 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(CircleDetailBean circleDetailBean) {
             super.onPostExecute(circleDetailBean);
+            clickable = true;
             dismissProgressDialog();
             if (circleDetailBean == null) {
-                listview.setBackgroundResource(R.mipmap.bg_empty);
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
+                llComment.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (circleDetailBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
+                    llComment.setVisibility(View.VISIBLE);
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     datas = circleDetailBean.getData();
@@ -463,10 +480,11 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                     }
                     listview.setAdapter(listAdapter);
                 } else {
-                    listview.setBackgroundResource(R.mipmap.bg_empty);
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
+                    llComment.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                    SuperToastUtils.showSuperToast(mContext, 2, circleDetailBean.getMessage());
                 }
             }
         }
@@ -506,7 +524,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
         protected void onPostExecute(CircleMoreCommentsBean circleMoreCommentsBean) {
             super.onPostExecute(circleMoreCommentsBean);
             if (circleMoreCommentsBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
@@ -616,7 +634,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
             super.onPostExecute(circlePriseBean);
             clickable = true;
             if (circlePriseBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (circlePriseBean.getStatus() == 200) {
                     List<CircleDetailBean.DataBean.ContentprisesBean> contentprises = datas.getContentprises();
@@ -688,7 +706,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
             super.onPostExecute(circleCommentBean);
             clickable = true;
             if (circleCommentBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (circleCommentBean.getStatus() == 200) {
                     imm.hideSoftInputFromWindow(edComment.getWindowToken(), 0);

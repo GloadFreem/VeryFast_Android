@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -53,6 +54,8 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
 
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private PullToRefreshLayout refreshView;// 刷新布局
     private PullableListView listview;// 评论列表
     private ImageButton btnComment;// 评论按钮
@@ -79,6 +82,9 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
         tvTitle.setText("全部评论");
+        pageError = (LinearLayout) findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         refreshView = (PullToRefreshLayout) findViewById(R.id.refresh_view);// 刷新布局
         refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
         listview = (PullableListView) findViewById(R.id.listview);// 评论列表
@@ -127,6 +133,13 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
                 break;
             case R.id.btn_comment:// 评论
                 CommentDialog();
+                break;
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    GetCommentsTask getCommentsTask = new GetCommentsTask(0);
+                    getCommentsTask.execute();
+                }
                 break;
         }
     }
@@ -228,14 +241,19 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
         @Override
         protected void onPostExecute(ProjectCommentBean projectCommentBean) {
             super.onPostExecute(projectCommentBean);
+            clickable = true;
             dismissProgressDialog();
             if (projectCommentBean == null) {
-                listview.setBackgroundResource(R.mipmap.bg_empty);
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
+                btnComment.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (projectCommentBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
+                    btnComment.setVisibility(View.VISIBLE);
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
@@ -255,13 +273,17 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
                         myAdapter.notifyDataSetChanged();
                     }
                 } else if (projectCommentBean.getStatus() == 201) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
+                    btnComment.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
-                    listview.setBackgroundResource(R.mipmap.bg_empty);
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
+                    btnComment.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                    SuperToastUtils.showSuperToast(mContext, 2, projectCommentBean.getMessage());
                 }
             }
         }
@@ -322,7 +344,7 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
             super.onPostExecute(commonBean);
             clickable = true;
             if (commonBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (commonBean.getStatus() == 200) {
                     needRefresh = true;

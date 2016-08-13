@@ -17,13 +17,13 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jinzht.pro.R;
 import com.jinzht.pro.activity.ActivityDetailActivity;
-import com.jinzht.pro.activity.CertificationIDCardActivity;
-import com.jinzht.pro.activity.WechatVerifyActivity;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.ActivityApplyBean;
 import com.jinzht.pro.bean.ActivityListBean;
@@ -34,7 +34,6 @@ import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
-import com.jinzht.pro.utils.SharedPreferencesUtils;
 import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.PullToRefreshLayout;
@@ -52,6 +51,8 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
 
     private EditText edSearch;// 搜索输入框
     private RelativeLayout btnSearch;// 搜索按钮
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private PullToRefreshLayout refreshView;// 刷新布局
     private PullableListView listview;// 活动列表
 
@@ -69,6 +70,9 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         edSearch = (EditText) view.findViewById(R.id.activity_edt_search);// 搜索输入框
         btnSearch = (RelativeLayout) view.findViewById(R.id.activity_btn_search);// 搜索按钮
         btnSearch.setOnClickListener(this);
+        pageError = (LinearLayout) view.findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) view.findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         refreshView = (PullToRefreshLayout) view.findViewById(R.id.refresh_view);// 刷新布局
         listview = (PullableListView) view.findViewById(R.id.activity_lv);// 活动列表
         return view;
@@ -113,6 +117,13 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(edSearch.getWindowToken(), 0);
                     }
+                }
+                break;
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    GetActivityListTask getActivityListTask = new GetActivityListTask(0);
+                    getActivityListTask.execute();
                 }
                 break;
         }
@@ -237,13 +248,16 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
         @Override
         protected void onPostExecute(ActivityListBean activityListBean) {
             super.onPostExecute(activityListBean);
+            clickable = true;
             if (activityListBean == null) {
-                listview.setBackgroundResource(R.mipmap.bg_empty);
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (activityListBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);// 告诉控件刷新成功
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
@@ -263,13 +277,15 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                         myAdapter.notifyDataSetChanged();
                     }
                 } else if (activityListBean.getStatus() == 201) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
-                    listview.setBackgroundResource(R.mipmap.bg_empty);
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
-                    SuperToastUtils.showSuperToast(mContext, 2, activityListBean.getMessage());
                 }
             }
         }
@@ -406,7 +422,7 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
             clickable = true;
             dismissProgressDialog();
             if (activityApplyBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (activityApplyBean.getStatus() == 200) {
                     SuperToastUtils.showSuperToast(mContext, 2, activityApplyBean.getMessage());
@@ -476,7 +492,7 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
             clickable = true;
             dismissProgressDialog();
             if (activityListBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
                 if (activityListBean.getStatus() == 200) {

@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +41,8 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
 
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private ListView certificationLvCapacity;// 投资能力列表
     private Button certificationBtnComplete;// 完成按钮
 
@@ -62,6 +65,9 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
+        pageError = (LinearLayout) findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         certificationLvCapacity = (ListView) findViewById(R.id.certification_lv_capacity);// 投资能力列表
         certificationBtnComplete = (Button) findViewById(R.id.certification_btn_complete);// 完成按钮
         certificationBtnComplete.setOnClickListener(this);
@@ -107,6 +113,13 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
                         AuthenticateTask authenticateTask = new AuthenticateTask();
                         authenticateTask.execute();
                     }
+                }
+                break;
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    GetCapacityListTask getCapacityListTask = new GetCapacityListTask();
+                    getCapacityListTask.execute();
                 }
                 break;
         }
@@ -190,15 +203,17 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
         @Override
         protected void onPostExecute(CapacityListBean capacityListBean) {
             super.onPostExecute(capacityListBean);
+            clickable = true;
             dismissProgressDialog();
             if (capacityListBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                pageError.setVisibility(View.VISIBLE);
             } else {
                 if (capacityListBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
                     capacitys = capacityListBean.getData();
                     certificationLvCapacity.setAdapter(new InvestCapacityAdapt());
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, capacityListBean.getMessage());
+                    pageError.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -274,7 +289,7 @@ public class CertificationCapacityActivity extends BaseActivity implements View.
             clickable = true;
             dismissProgressDialog();
             if (authenticateBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, "请先联网");
+                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (authenticateBean.getStatus() == 200) {
                     DialogUtils.confirmToMainDialog(CertificationCapacityActivity.this, authenticateBean.getMessage());

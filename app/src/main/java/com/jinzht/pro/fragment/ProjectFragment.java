@@ -60,6 +60,8 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 
     private LinearLayout titleBtnLeft;// title的左侧按钮，站内信
     private ImageView titleIvLeft;// 站内信图标
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private PullToRefreshLayout refreshView;// 刷新布局
     private PullableListView listview;// 项目列表
     private MyAdapter myAdapter = new MyAdapter();
@@ -95,6 +97,9 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         titleBtnLeft = (LinearLayout) view.findViewById(R.id.title_btn_left);// title的左侧按钮
         titleBtnLeft.setOnClickListener(this);
         titleIvLeft = (ImageView) view.findViewById(R.id.title_iv_left);// 站内信图标
+        pageError = (LinearLayout) view.findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) view.findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         refreshView = (PullToRefreshLayout) view.findViewById(R.id.refresh_view);// 刷新布局
         listview = (PullableListView) view.findViewById(R.id.listview);// 项目列表
         return view;
@@ -556,6 +561,13 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 startActivity(intent);
                 titleIvLeft.setImageResource(R.mipmap.message_empty);
                 break;
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    GetBannerInfo getBannerInfo = new GetBannerInfo();
+                    getBannerInfo.execute();
+                }
+                break;
         }
     }
 
@@ -590,12 +602,15 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         @Override
         protected void onPostExecute(BannerInfoBean bannerInfoBean) {
             super.onPostExecute(bannerInfoBean);
+            clickable = true;
             if (bannerInfoBean == null) {
                 dismissProgressDialog();
-                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
-                listview.setBackgroundResource(R.mipmap.bg_empty);
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.GONE);
             } else {
                 if (bannerInfoBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
+                    refreshView.setVisibility(View.VISIBLE);
                     bannerData = bannerInfoBean.getData();
                     if (bannerData != null && bannerData.size() != 0) {
                         listview.setBackgroundResource(R.color.bg_main);
@@ -609,8 +624,8 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     }
                 } else {
                     dismissProgressDialog();
-                    SuperToastUtils.showSuperToast(mContext, 2, bannerInfoBean.getMessage());
-                    listview.setBackgroundResource(R.mipmap.bg_empty);
+                    pageError.setVisibility(View.VISIBLE);
+                    refreshView.setVisibility(View.GONE);
                 }
             }
         }

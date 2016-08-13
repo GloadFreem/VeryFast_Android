@@ -289,7 +289,7 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
                     refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);// 告诉控件加载成功
                     if (page == 0) {
                         List<CommentsListBean.DataBean> tempList = commentsListBean.getData();
-                        Collections.reverse(tempList);
+                        Collections.reverse(tempList);// 集合逆序
                         datas = tempList;
                         listview.setAdapter(msgAdapter);
                         listview.setSelection(msgAdapter.getCount());

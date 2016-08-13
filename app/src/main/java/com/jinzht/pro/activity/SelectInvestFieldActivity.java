@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,6 +37,8 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
 
     private LinearLayout btnBack;// 返回
     private TextView tvTitle;// 标题
+    private LinearLayout pageError;// 错误页面
+    private ImageView btnTryagain;// 重试按钮
     private LinearLayout btnConfirm; // 确定
     private ListView lvInvestField;// ListView
 
@@ -55,6 +58,9 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
         btnBack = (LinearLayout) findViewById(R.id.btn_back);// 返回
         btnBack.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tv_title);// 标题
+        pageError = (LinearLayout) findViewById(R.id.page_error);// 错误页面
+        btnTryagain = (ImageView) findViewById(R.id.btn_tryagain);// 重试按钮
+        btnTryagain.setOnClickListener(this);
         btnConfirm = (LinearLayout) findViewById(R.id.btn_confirm);// 确定按钮
         btnConfirm.setOnClickListener(this);
         lvInvestField = (ListView) findViewById(R.id.lv_invest_field);// 投资领域列表
@@ -93,6 +99,13 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
                     intent.putExtra("areaId", (Serializable) checkeds);
                     intent.putExtra("areaName", (Serializable) checkedNames);
                     startActivity(intent);
+                }
+                break;
+            case R.id.btn_tryagain:// 重试加载网络
+                if (clickable) {
+                    clickable = false;
+                    GetFieldListTask getFieldListTask = new GetFieldListTask();
+                    getFieldListTask.execute();
                 }
                 break;
         }
@@ -178,15 +191,17 @@ public class SelectInvestFieldActivity extends BaseActivity implements View.OnCl
         @Override
         protected void onPostExecute(FieldListBean fieldListBean) {
             super.onPostExecute(fieldListBean);
+            clickable = true;
             dismissProgressDialog();
             if (fieldListBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
+                pageError.setVisibility(View.VISIBLE);
             } else {
                 if (fieldListBean.getStatus() == 200) {
+                    pageError.setVisibility(View.GONE);
                     fields = fieldListBean.getData();
                     lvInvestField.setAdapter(new InvestFieldAdapt());
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, fieldListBean.getMessage());
+                    pageError.setVisibility(View.VISIBLE);
                 }
             }
         }

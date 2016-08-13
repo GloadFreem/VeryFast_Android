@@ -1,18 +1,26 @@
-<com.jinzht.pro.view.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/refresh_view"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include layout="@layout/refresh_head" />
+    <include layout="@layout/layout_error_page" />
 
-    <com.jinzht.pro.view.PullableListView
-        android:id="@+id/lv_investor1"
+    <com.jinzht.pro.view.PullToRefreshLayout
+        android:id="@+id/refresh_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bg_main"
-        android:divider="@null"
-        android:dividerHeight="9dp"
-        android:scrollbars="none" />
+        android:layout_height="match_parent">
 
-    <include layout="@layout/load_more" />
-</com.jinzht.pro.view.PullToRefreshLayout>
+        <include layout="@layout/refresh_head" />
+
+        <com.jinzht.pro.view.PullableListView
+            android:id="@+id/lv_investor1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_main"
+            android:divider="@null"
+            android:dividerHeight="9dp"
+            android:scrollbars="none" />
+
+        <include layout="@layout/load_more" />
+    </com.jinzht.pro.view.PullToRefreshLayout>
+</LinearLayout>
