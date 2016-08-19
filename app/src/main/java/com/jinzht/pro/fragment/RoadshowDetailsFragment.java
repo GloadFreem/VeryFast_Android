@@ -26,6 +26,7 @@ import com.jinzht.pro.bean.ProjectDetailBean;
 import com.jinzht.pro.callback.ItemClickListener;
 import com.jinzht.pro.utils.DialogUtils;
 import com.jinzht.pro.utils.SharedPreferencesUtils;
+import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.view.RoundProgressBar;
 
 import java.util.ArrayList;
@@ -292,10 +293,12 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         teamsAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(mContext, CommonWebViewActivity.class);
-                intent.putExtra("title", "团队成员");
-                intent.putExtra("url", data.getTeams().get(position).getUrl());
-                startActivity(intent);
+                if (!StringUtils.isBlank(data.getTeams().get(position).getUrl())) {
+                    Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                    intent.putExtra("title", "团队成员");
+                    intent.putExtra("url", data.getTeams().get(position).getUrl());
+                    startActivity(intent);
+                }
             }
 
             @Override

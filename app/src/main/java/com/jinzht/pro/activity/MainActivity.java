@@ -14,6 +14,7 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jinzht.pro.R;
@@ -23,10 +24,13 @@ import com.jinzht.pro.base.BaseActivity;
 import com.jinzht.pro.base.BaseFragmentActivity;
 import com.jinzht.pro.base.FullBaseActivity;
 import com.jinzht.pro.bean.BannerInfoBean;
+import com.jinzht.pro.bean.EventMsg;
 import com.jinzht.pro.bean.GoldAward;
+import com.jinzht.pro.bean.IsLoginBean;
 import com.jinzht.pro.bean.UpdateBean;
 import com.jinzht.pro.service.DownloadAppService;
 import com.jinzht.pro.utils.AESUtils;
+import com.jinzht.pro.utils.CacheUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.DialogUtils;
 import com.jinzht.pro.utils.FastJsonTools;
@@ -59,6 +63,7 @@ import de.greenrobot.event.EventBus;
  */
 public class MainActivity extends BaseFragmentActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
+    private RelativeLayout rlWithoutNet;// 无网络的提示布局
     private NoScrollViewPager mainViewpager;// 主页的4个模块
     private RadioGroup mainBottomTab;// 主页的4个模块按钮组
     private RadioButton mainBtnProject;// 项目按钮
@@ -70,6 +75,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private UpdateBean.DataBean updateData;// 新版更新信息
     private NumberProgressBar progressBar;// 跟新时的进度条
     public static int downloading_progress = 0;// 下载进度
+
+    private Handler netHandler;// 用于每隔5秒检测
 
     @Override
     protected int getResourcesId() {
@@ -84,15 +91,21 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        getBannerInfo.execute();
         initData();
 
-        // 当天首次登录，送金条
-        if (isTodayFirstLaunch()) {
-            GetLoginGoldAward getLoginGoldAward = new GetLoginGoldAward();
-            getLoginGoldAward.execute();
+        // 登录
+        if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+            IsLoginTask isLoginTask = new IsLoginTask();
+            isLoginTask.execute();
         }
 
-        // 保存是否认证的状态
-        IsAuthenticTask isAuthenticTask = new IsAuthenticTask();
-        isAuthenticTask.execute();
+//        // 当天首次登录，送金条
+//        if (isTodayFirstLaunch()) {
+//            GetLoginGoldAward getLoginGoldAward = new GetLoginGoldAward();
+//            getLoginGoldAward.execute();
+//        }
+//
+//        // 保存是否认证的状态
+//        IsAuthenticTask isAuthenticTask = new IsAuthenticTask();
+//        isAuthenticTask.execute();
 
         // 5s后检查更新
         new Handler().postDelayed(new Runnable() {
@@ -105,6 +118,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     }
 
     private void initView() {
+        rlWithoutNet = (RelativeLayout) findViewById(R.id.rl_without_net);// 无网络的提示布局
         mainViewpager = (NoScrollViewPager) findViewById(R.id.main_viewpager);// 主页的4个模块
         mainBottomTab = (RadioGroup) findViewById(R.id.main_bottom_tab);// 主页的4个模块按钮组
         mainBtnProject = (RadioButton) findViewById(R.id.main_btn_project);// 项目按钮
@@ -118,6 +132,15 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     }
 
     private void initData() {
+        // 检测是否有网络
+        if (NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+            rlWithoutNet.setVisibility(View.VISIBLE);
+        } else {
+            rlWithoutNet.setVisibility(View.GONE);
+        }
+        netHandler = new Handler();
+        netHandler.postDelayed(runnable, 5000);
+
         mainViewpager.setAdapter(new MainFragmentAdapter(getSupportFragmentManager()));
         mainViewpager.setOffscreenPageLimit(4);
         mainViewpager.setCurrentItem(0);
@@ -143,6 +166,19 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             }
         });
     }
+
+    // 5秒获取一次网络状态
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                rlWithoutNet.setVisibility(View.VISIBLE);
+            } else {
+                rlWithoutNet.setVisibility(View.GONE);
+            }
+            netHandler.postDelayed(this, 5000);
+        }
+    };
 
     @Override
     public void onClick(View v) {
@@ -213,6 +249,77 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             return true;
         } else {
             return false;
+        }
+    }
+
+    // 检查用户是否已登录
+    private class IsLoginTask extends AsyncTask<Void, Void, IsLoginBean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            String cacheBanner = (String) CacheUtils.readObject(Constant.CACHE_BANNER);
+            String cacheRoadshowList = (String) CacheUtils.readObject(Constant.CACHE_ROADSHOW_LIST);
+            String cachePreselectionList = (String) CacheUtils.readObject(Constant.CACHE_PRESELECTION_LIST);
+            if (StringUtils.isBlank(cacheBanner) && StringUtils.isBlank(cacheRoadshowList) && StringUtils.isBlank(cachePreselectionList)) {
+                showProgressDialog();
+            }
+        }
+
+        @Override
+        protected IsLoginBean doInBackground(Void... params) {
+            String body = "";
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.post(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.ISLOGIN)),
+                            Constant.BASE_URL + Constant.ISLOGIN,
+                            mContext
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("登录状态", body);
+                return FastJsonTools.getBean(body, IsLoginBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(IsLoginBean isLoginBean) {
+            super.onPostExecute(isLoginBean);
+            if (isLoginBean != null && isLoginBean.getStatus() == 200) {
+                dismissProgressDialog();
+                if (isLoginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
+                    // 已登录，但未选择身份类型，进入选择身份类型
+                    setUserTypeDialog();
+                } else {
+                    // 已登录，且已选择身份类型，进行后续操作
+                    EventBus.getDefault().postSticky(new EventMsg("登录成功"));
+                    // 当天首次登录，送金条
+                    if (isTodayFirstLaunch()) {
+                        GetLoginGoldAward getLoginGoldAward = new GetLoginGoldAward();
+                        getLoginGoldAward.execute();
+                    }
+                    // 保存是否认证的状态
+                    IsAuthenticTask isAuthenticTask = new IsAuthenticTask();
+                    isAuthenticTask.execute();
+                }
+            } else {
+                // 未登录，自动登录
+                AutoLoginTask autoLoginTask = new AutoLoginTask();
+                autoLoginTask.execute();
+            }
+        }
+    }
+
+    @Override
+    public void doAgain() {
+        super.doAgain();
+        // 当天首次登录，送金条
+        if (isTodayFirstLaunch()) {
+            GetLoginGoldAward getLoginGoldAward = new GetLoginGoldAward();
+            getLoginGoldAward.execute();
         }
     }
 
@@ -312,26 +419,20 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(UpdateBean updateBean) {
             super.onPostExecute(updateBean);
-            if (updateBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
-            } else {
-                if (updateBean.getStatus() == 200) {
-                    updateData = updateBean.getData();
-                    try {
-                        if (!StringUtils.isEquals(UiHelp.getVersionName(MainActivity.this), updateData.getVersionStr())) {
-                            if (updateData.isForce()) {
-                                // 强制更新
-                                coerceUpdateDialog(updateData.getContent());
-                            } else {
-                                // 提示更新
-                                remindUpdateDialog(updateData.getContent());
-                            }
+            if (updateBean != null && updateBean.getStatus() == 200) {
+                updateData = updateBean.getData();
+                try {
+                    if (!StringUtils.isEquals(UiHelp.getVersionName(MainActivity.this), updateData.getVersionStr())) {
+                        if (updateData.isForce()) {
+                            // 强制更新
+                            coerceUpdateDialog(updateData.getContent());
+                        } else {
+                            // 提示更新
+                            remindUpdateDialog(updateData.getContent());
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, updateBean.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -479,6 +580,35 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             super.handleMessage(msg);
         }
     };
+
+    // 选择身份弹窗
+    private void setUserTypeDialog() {
+        final AlertDialog dialog = new AlertDialog.Builder(this, R.style.Custom_Dialog).create();
+        dialog.setCancelable(false);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_setusertype);
+        TextView btnConfirm = (TextView) window.findViewById(R.id.btn_confirm);
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 未选择身份类型，进入选择身份类型
+                Intent intent = new Intent(mContext, SetUserTypeActivity.class);
+                if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                    intent.putExtra("isWechatLogin", 1);
+                }
+                startActivity(intent);
+                dialog.dismiss();
+                finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        netHandler.removeCallbacks(runnable);
+    }
 
     @Override
     public void errorPage() {

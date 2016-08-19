@@ -131,19 +131,15 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         setSelect(fragments.get(2));
         GetDetailTask getDetailTask = new GetDetailTask();
         getDetailTask.execute();
-        GetVoidTask getVoidTask = new GetVoidTask();
-        getVoidTask.execute();
-        GetMemberTask getMemberTask = new GetMemberTask();
-        getMemberTask.execute();
 
-        vpPPt.setScrollable(true);
+        vpPPt.setScrollable(true);// PPT可左右滑动
 
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() { //音频播放完成
             @Override
             public void onCompletion(MediaPlayer mp) {
                 isPlaying = false;
 
-                vpPPt.setScrollable(true);
+//                vpPPt.setScrollable(true);// PPT可左右滑动
 
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
                 postSize = 0;
@@ -365,6 +361,10 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (projectDetailBean.getStatus() == 200) {
+                    GetVoidTask getVoidTask = new GetVoidTask();
+                    getVoidTask.execute();
+                    GetMemberTask getMemberTask = new GetMemberTask();
+                    getMemberTask.execute();
                     EventBus.getDefault().postSticky(projectDetailBean.getData());
                     data = projectDetailBean.getData().getProject();
                     if (data != null) {
@@ -372,12 +372,22 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                         userId = data.getUserId();
                         Log.i("项目的userId", userId + "");
                     }
+                } else if (projectDetailBean.getStatus() == 401) {
+                    AutoLoginTask autoLoginTask = new AutoLoginTask();
+                    autoLoginTask.execute();
                 } else {
                     dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, projectDetailBean.getMessage());
                 }
             }
         }
+    }
+
+    @Override
+    public void doAgain() {
+        super.doAgain();
+        GetDetailTask getDetailTask = new GetDetailTask();
+        getDetailTask.execute();
     }
 
     // 获取成员
@@ -408,12 +418,12 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             super.onPostExecute(roadshowMemberBean);
             dismissProgressDialog();
             if (roadshowMemberBean == null) {
-                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
+//                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (roadshowMemberBean.getStatus() == 200) {
                     EventBus.getDefault().postSticky(roadshowMemberBean.getData().get(0));
                 } else {
-                    SuperToastUtils.showSuperToast(mContext, 2, roadshowMemberBean.getMessage());
+//                    SuperToastUtils.showSuperToast(mContext, 2, roadshowMemberBean.getMessage());
                 }
             }
         }
@@ -447,7 +457,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
             super.onPostExecute(roadshowVoiceBean);
             if (roadshowVoiceBean == null) {
                 dismissProgressDialog();
-                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
+//                SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (roadshowVoiceBean.getStatus() == 200) {
                     if (roadshowVoiceBean.getData() != null && roadshowVoiceBean.getData().size() != 0) {
@@ -467,7 +477,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                     }
                 } else {
                     dismissProgressDialog();
-                    SuperToastUtils.showSuperToast(mContext, 2, roadshowVoiceBean.getMessage());
+//                    SuperToastUtils.showSuperToast(mContext, 2, roadshowVoiceBean.getMessage());
                 }
             }
         }
@@ -751,10 +761,10 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case VIDEO_FILE_ERROR:// 错误信息
-                    SuperToastUtils.showSuperToast(UiUtils.getContext(), 2, "暂无数据");
+                    SuperToastUtils.showSuperToast(UiUtils.getContext(), 2, "播放失败");
                     isPlaying = false;
 
-                    vpPPt.setScrollable(true);
+//                    vpPPt.setScrollable(true);
 
                     RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
                     break;
@@ -774,17 +784,17 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                         progress = String.format("%02d:%02d:%02d", hour, minute, second);
 
                         // 更新PPT
-                        for (PPTBean.DataBean bean : pptData) {
-                            if (i >= bean.getStartTime() && i <= bean.getEndTime()) {
-                                vpPPt.setCurrentItem(bean.getSortIndex());
-                            }
-                        }
+//                        for (PPTBean.DataBean bean : pptData) {
+//                            if (i >= bean.getStartTime() && i <= bean.getEndTime()) {
+//                                vpPPt.setCurrentItem(bean.getSortIndex());
+//                            }
+//                        }
 
                         // 当播放到倒数第二页时加载最新PPT
-                        if (vpPPt.getCurrentItem() >= pptData.size() - 3 && vpPPt.getCurrentItem() != 0) {
-                            GetPPTTask getPPTTask = new GetPPTTask(voiceData.getSceneId(), ++pages);
-                            getPPTTask.execute();
-                        }
+//                        if (vpPPt.getCurrentItem() >= pptData.size() - 3 && vpPPt.getCurrentItem() != 0) {
+//                            GetPPTTask getPPTTask = new GetPPTTask(voiceData.getSceneId(), ++pages);
+//                            getPPTTask.execute();
+//                        }
                     }
                     RoadshowLiveFragment.tvVoiceTime.setText(progress);
                     break;
@@ -801,7 +811,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
 
-                vpPPt.setScrollable(true);
+//                vpPPt.setScrollable(true);
 
                 player.pause();
                 postSize = player.getCurrentPosition();
@@ -817,7 +827,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
 
-                vpPPt.setScrollable(true);
+//                vpPPt.setScrollable(true);
 
                 player.pause();
                 postSize = player.getCurrentPosition();
@@ -833,7 +843,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 isPlaying = false;
                 RoadshowLiveFragment.ivPlay.setBackgroundResource(R.mipmap.icon_play);
 
-                vpPPt.setScrollable(true);
+//                vpPPt.setScrollable(true);
 
                 player.stop();
             }

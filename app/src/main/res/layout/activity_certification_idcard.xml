@@ -144,6 +144,7 @@
                         style="@style/ED_Certification"
                         android:layout_toRightOf="@id/certification_tv_idcard"
                         android:hint="@string/input_id_card_num"
+                        android:maxLength="18"
                         android:singleLine="true" />
 
                     <View

@@ -20,9 +20,11 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
 import com.jinzht.pro.activity.CircleDetailActivity;
+import com.jinzht.pro.activity.CommonWebViewActivity;
 import com.jinzht.pro.activity.ImagePagerActivity;
 import com.jinzht.pro.activity.ReleaseCircleActivity;
 import com.jinzht.pro.adapter.CirclePhotosAdapter;
@@ -35,6 +37,7 @@ import com.jinzht.pro.bean.EventMsg;
 import com.jinzht.pro.bean.ShareBean;
 import com.jinzht.pro.callback.ItemClickListener;
 import com.jinzht.pro.utils.AESUtils;
+import com.jinzht.pro.utils.CacheUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.DialogUtils;
 import com.jinzht.pro.utils.FastJsonTools;
@@ -92,27 +95,62 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
         myAdapter = new MyAdapter();
         listview.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null));
 
-        EventBus.getDefault().register(this);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                GetCircleListTask getCircleList = new GetCircleListTask(0);
+//                getCircleList.execute();
+//            }
+//        }, 2000);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                GetCircleListTask getCircleList = new GetCircleListTask(0);
-                getCircleList.execute();
+        // 读取缓存
+        String cacheCircleList = (String) CacheUtils.readObject(Constant.CACHE_CIRCLE_LIST);
+        if (!StringUtils.isBlank(cacheCircleList)) {
+            CircleListBean bean = FastJsonTools.getBean(cacheCircleList, CircleListBean.class);
+            if (bean != null && bean.getStatus() == 200) {
+                datas = bean.getData();
+                if (datas != null && datas.size() != 0) {
+                    listview.setAdapter(myAdapter);
+                }
             }
-        }, 2000);
+        } else {
+            pageError.setVisibility(View.VISIBLE);
+            refreshView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    // 接收是否登录成功的提示
+    @Subscribe(threadMode = ThreadMode.MainThread, sticky = true)
+    public void getLoginInfo(EventMsg msg) {
+        if ("登录成功".equals(msg.getMsg())) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    GetCircleListTask getCircleList = new GetCircleListTask(0);
+                    getCircleList.execute();
+                }
+            }, 2000);
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.title_btn_right:// 点击发表内容
-                Intent intent = new Intent(mContext, ReleaseCircleActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
+                if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                    Intent intent = new Intent(mContext, ReleaseCircleActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
+                } else {
+                    Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                    intent.putExtra("title", "发布圈子");
+                    intent.putExtra("url", "file:///android_asset/error.html");
+                    startActivity(intent);
+                }
                 break;
             case R.id.btn_tryagain:// 重试加载网络
                 if (clickable) {
@@ -266,11 +304,18 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             holder.btnComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    POSITION = position;
-                    Intent intent = new Intent(mContext, CircleDetailActivity.class);
-                    intent.putExtra("id", String.valueOf(datas.get(position).getPublicContentId()));
-                    intent.putExtra("TAG", 1);
-                    startActivityForResult(intent, REQUEST_CODE);
+                    if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                        POSITION = position;
+                        Intent intent = new Intent(mContext, CircleDetailActivity.class);
+                        intent.putExtra("id", String.valueOf(datas.get(position).getPublicContentId()));
+                        intent.putExtra("TAG", 1);
+                        startActivityForResult(intent, REQUEST_CODE);
+                    } else {
+                        Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                        intent.putExtra("title", "圈子详情");
+                        intent.putExtra("url", "file:///android_asset/error.html");
+                        startActivity(intent);
+                    }
                 }
             });
 
@@ -278,11 +323,18 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             convertView.setOnClickListener(new View.OnClickListener() {// 点击条目
                 @Override
                 public void onClick(View v) {
-                    POSITION = position;
-                    Intent intent = new Intent(mContext, CircleDetailActivity.class);
-                    intent.putExtra("id", String.valueOf(datas.get(position).getPublicContentId()));
-                    intent.putExtra("TAG", 0);
-                    startActivityForResult(intent, REQUEST_CODE);
+                    if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                        POSITION = position;
+                        Intent intent = new Intent(mContext, CircleDetailActivity.class);
+                        intent.putExtra("id", String.valueOf(datas.get(position).getPublicContentId()));
+                        intent.putExtra("TAG", 0);
+                        startActivityForResult(intent, REQUEST_CODE);
+                    } else {
+                        Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                        intent.putExtra("title", "圈子详情");
+                        intent.putExtra("url", "file:///android_asset/error.html");
+                        startActivity(intent);
+                    }
                 }
             });
             holder.tvComment.setText(String.valueOf(datas.get(position).getCommentCount()));
@@ -392,8 +444,8 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             super.onPostExecute(circleListBean);
             clickable = true;
             if (circleListBean == null) {
-                pageError.setVisibility(View.VISIBLE);
-                refreshView.setVisibility(View.GONE);
+//                pageError.setVisibility(View.VISIBLE);
+//                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
@@ -407,10 +459,12 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                         if (datas != null && datas.size() != 0) {
                             listview.setBackgroundResource(R.color.bg_main);
                         } else {
-                            listview.setBackgroundResource(R.mipmap.bg_empty);
+//                            listview.setBackgroundResource(R.mipmap.bg_empty);
                         }
                         if (datas != null) {
                             listview.setAdapter(myAdapter);
+                            // 缓存数据
+                            CacheUtils.saveObject(JSON.toJSONString(circleListBean), Constant.CACHE_CIRCLE_LIST);
                         }
                     } else {
                         for (CircleListBean.DataBean dataBean : circleListBean.getData()) {
@@ -419,13 +473,13 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
                         myAdapter.notifyDataSetChanged();
                     }
                 } else if (circleListBean.getStatus() == 201) {
-                    pageError.setVisibility(View.GONE);
-                    refreshView.setVisibility(View.VISIBLE);
+//                    pageError.setVisibility(View.GONE);
+//                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
-                    pageError.setVisibility(View.VISIBLE);
-                    refreshView.setVisibility(View.GONE);
+//                    pageError.setVisibility(View.VISIBLE);
+//                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                 }
@@ -617,7 +671,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0] + view.getWidth() / 2 - UiUtils.dip2px(34), location[1] - UiUtils.dip2px(22));
     }
 
-    // 删除圈子评论
+    // 删除圈子
     private class DeleteCommentTask extends AsyncTask<Void, Void, CommonBean> {
         private int contentId;
 

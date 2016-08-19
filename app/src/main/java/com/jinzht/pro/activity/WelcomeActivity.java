@@ -65,9 +65,26 @@ public class WelcomeActivity extends FullBaseActivity {
                 }
             }, 2000);
         } else {
-            startTime = System.currentTimeMillis();
-            IsLoginTask isLoginTask = new IsLoginTask();
-            isLoginTask.execute();
+//            startTime = System.currentTimeMillis();
+//            IsLoginTask isLoginTask = new IsLoginTask();
+//            isLoginTask.execute();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // 判断是否保存有账号密码，有就进主页，没有就去登录
+                    if (!StringUtils.isBlank(SharedPreferencesUtils.getTelephone(mContext))
+                            && !StringUtils.isBlank(SharedPreferencesUtils.getPassword(mContext))) {
+                        intent = new Intent(mContext, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        intent = new Intent(mContext, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            }, 2000);
         }
     }
 
@@ -136,7 +153,7 @@ public class WelcomeActivity extends FullBaseActivity {
                 }
             } else {
                 // 未登录，自动登录
-                AutoLoginTask autoLoginTask = new AutoLoginTask();
+                WelcomeActivity.AutoLoginTask autoLoginTask = new WelcomeActivity.AutoLoginTask();
                 autoLoginTask.execute();
             }
         }

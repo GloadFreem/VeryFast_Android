@@ -131,18 +131,18 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
         Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.roadshow_btn_play:
-                if (StringUtils.isBlank(RoadshowDetailsActivity.voiceData.getAudioPath())) {
-                    SuperToastUtils.showSuperToast(mContext, 2, "暂无数据");
+                if (RoadshowDetailsActivity.voiceData == null || StringUtils.isBlank(RoadshowDetailsActivity.voiceData.getAudioPath())) {
+                    SuperToastUtils.showSuperToast(mContext, 2, "该项目暂无音频");
                 } else {
                     if (RoadshowDetailsActivity.isPlaying) {// 正在播放，点击暂停
                         RoadshowDetailsActivity.isPlaying = false;
-                        RoadshowDetailsActivity.vpPPt.setScrollable(true);
+//                        RoadshowDetailsActivity.vpPPt.setScrollable(true);
                         ivPlay.setBackgroundResource(R.mipmap.icon_play);
                         RoadshowDetailsActivity.player.pause();
                         RoadshowDetailsActivity.postSize = RoadshowDetailsActivity.player.getCurrentPosition();
                     } else {// 暂停，点击播放
                         RoadshowDetailsActivity.isPlaying = true;
-                        RoadshowDetailsActivity.vpPPt.setScrollable(false);
+//                        RoadshowDetailsActivity.vpPPt.setScrollable(false);
                         ivPlay.setBackgroundResource(R.mipmap.icon_pause);
                         RoadshowDetailsActivity.playMediaMethod();
                     }

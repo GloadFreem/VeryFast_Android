@@ -15,13 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
 import com.jinzht.pro.activity.BrainDetailActivity;
+import com.jinzht.pro.activity.CommonWebViewActivity;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.CommonBean;
+import com.jinzht.pro.bean.EventMsg;
 import com.jinzht.pro.bean.InvestorListBean;
 import com.jinzht.pro.utils.AESUtils;
+import com.jinzht.pro.utils.CacheUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
@@ -35,6 +39,10 @@ import com.jinzht.pro.view.PullableListView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * 智囊团列表
@@ -66,25 +74,62 @@ public class Investor3Fragment extends BaseFragment implements View.OnClickListe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         refreshView.setOnRefreshListener(new PullListener());
         myAdapter = new MyAdapter();
         listview.addHeaderView(LayoutInflater.from(mContext).inflate(R.layout.layout_empty_view_9dp, null));
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                POSITION = position - 1;
-                Intent intent = new Intent(mContext, BrainDetailActivity.class);
-                intent.putExtra("id", String.valueOf(datas.get(position - 1).getUser().getUserId()));
-                startActivityForResult(intent, REQUEST_CODE);
+                if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                    POSITION = position - 1;
+                    Intent intent = new Intent(mContext, BrainDetailActivity.class);
+                    intent.putExtra("id", String.valueOf(datas.get(position - 1).getUser().getUserId()));
+                    startActivityForResult(intent, REQUEST_CODE);
+                } else {
+                    Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                    intent.putExtra("title", "智囊团详情");
+                    intent.putExtra("url", "file:///android_asset/error.html");
+                    startActivity(intent);
+                }
             }
         });
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                GetInvestorListTask getInvestorListTask = new GetInvestorListTask(0);
-                getInvestorListTask.execute();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                GetInvestorListTask getInvestorListTask = new GetInvestorListTask(0);
+//                getInvestorListTask.execute();
+//            }
+//        }, 1500);
+
+        // 读取缓存
+        String cacheInvestor3List = (String) CacheUtils.readObject(Constant.CACHE_INVESTOR3_LIST);
+        if (!StringUtils.isBlank(cacheInvestor3List)) {
+            InvestorListBean bean = FastJsonTools.getBean(cacheInvestor3List, InvestorListBean.class);
+            if (bean != null && bean.getStatus() == 200) {
+                datas = bean.getData();
+                if (datas != null && datas.size() != 0) {
+                    listview.setAdapter(myAdapter);
+                }
             }
-        }, 1500);
+        } else {
+            pageError.setVisibility(View.VISIBLE);
+            refreshView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    // 接收是否登录成功的提示
+    @Subscribe(threadMode = ThreadMode.MainThread, sticky = true)
+    public void getLoginInfo(EventMsg msg) {
+        if ("登录成功".equals(msg.getMsg())) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    GetInvestorListTask getInvestorListTask = new GetInvestorListTask(0);
+                    getInvestorListTask.execute();
+                }
+            }, 1500);
+        }
     }
 
     @Override
@@ -227,8 +272,8 @@ public class Investor3Fragment extends BaseFragment implements View.OnClickListe
             super.onPostExecute(investorListBean);
             clickable = true;
             if (investorListBean == null) {
-                pageError.setVisibility(View.VISIBLE);
-                refreshView.setVisibility(View.GONE);
+//                pageError.setVisibility(View.VISIBLE);
+//                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
@@ -242,10 +287,12 @@ public class Investor3Fragment extends BaseFragment implements View.OnClickListe
                         if (datas != null && datas.size() != 0) {
                             listview.setBackgroundResource(R.color.bg_main);
                         } else {
-                            listview.setBackgroundResource(R.mipmap.bg_empty);
+//                            listview.setBackgroundResource(R.mipmap.bg_empty);
                         }
                         if (datas != null) {
                             listview.setAdapter(myAdapter);
+                            // 缓存数据
+                            CacheUtils.saveObject(JSON.toJSONString(investorListBean), Constant.CACHE_INVESTOR3_LIST);
                         }
                     } else {
                         for (InvestorListBean.DataBean dataBean : investorListBean.getData()) {
@@ -254,13 +301,13 @@ public class Investor3Fragment extends BaseFragment implements View.OnClickListe
                         myAdapter.notifyDataSetChanged();
                     }
                 } else if (investorListBean.getStatus() == 201) {
-                    pageError.setVisibility(View.GONE);
-                    refreshView.setVisibility(View.VISIBLE);
+//                    pageError.setVisibility(View.GONE);
+//                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
-                    pageError.setVisibility(View.VISIBLE);
-                    refreshView.setVisibility(View.GONE);
+//                    pageError.setVisibility(View.VISIBLE);
+//                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                 }
@@ -359,6 +406,18 @@ public class Investor3Fragment extends BaseFragment implements View.OnClickListe
                 myAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

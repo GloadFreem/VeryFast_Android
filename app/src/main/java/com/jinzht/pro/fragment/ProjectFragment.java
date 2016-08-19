@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.jinzht.pro.R;
 import com.jinzht.pro.activity.CommonWebViewActivity;
@@ -33,11 +34,13 @@ import com.jinzht.pro.bean.HaveNotReadMessageBean;
 import com.jinzht.pro.bean.PreselectionProjectListBean;
 import com.jinzht.pro.bean.RoadshowProjectListBean;
 import com.jinzht.pro.utils.AESUtils;
+import com.jinzht.pro.utils.CacheUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.FastJsonTools;
 import com.jinzht.pro.utils.MD5Utils;
 import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpUtils;
+import com.jinzht.pro.utils.StringUtils;
 import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.utils.UiUtils;
 import com.jinzht.pro.view.BannerRoundProgressBar;
@@ -68,9 +71,9 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 
     private Runnable bannerRunnable;// banner自动轮播
     private Handler handler;// 用于自动轮播
-    private boolean isAuto = true;
+    private boolean isAuto = true;// banner是否轮播
     private List<ImageView> imageViews = new ArrayList<>();// banner的图片View
-    private int prePointIndex = 0;// 记录当前指示点的位置
+    private int prePointIndex = 0;// 上一个指示点的位置
 
     private Handler mHandler;// 用于圆形进度
     private int proTotal = 0;// 要显示的全部进度
@@ -90,6 +93,11 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
     private int rPOSITION = 0;
     private int pPOSITION = 0;
     private final static int REQUEST_CODE = 1;
+
+    // 缓存
+    private String cacheBanner;
+    private String cacheRoadshowList;
+    private String cachePreselectionList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -113,22 +121,72 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (flag == 0) {
-                    rPOSITION = position - 1;
-                    Intent intent = new Intent(mContext, RoadshowDetailsActivity.class);
-                    intent.putExtra("id", String.valueOf(rDatas.get(position - 1).getProjectId()));
-                    startActivityForResult(intent, REQUEST_CODE);
+                if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                    if (flag == 0) {
+                        rPOSITION = position - 1;
+                        Intent intent = new Intent(mContext, RoadshowDetailsActivity.class);
+                        intent.putExtra("id", String.valueOf(rDatas.get(position - 1).getProjectId()));
+                        startActivityForResult(intent, REQUEST_CODE);
+                    } else {
+                        pPOSITION = position - 1;
+                        Intent intent = new Intent(mContext, PreselectionDetailsActivity.class);
+                        intent.putExtra("id", String.valueOf(pDatas.get(position - 1).getProjectId()));
+                        startActivityForResult(intent, REQUEST_CODE);
+                    }
                 } else {
-                    pPOSITION = position - 1;
-                    Intent intent = new Intent(mContext, PreselectionDetailsActivity.class);
-                    intent.putExtra("id", String.valueOf(pDatas.get(position - 1).getProjectId()));
-                    startActivityForResult(intent, REQUEST_CODE);
+                    Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                    intent.putExtra("title", "项目详情");
+                    intent.putExtra("url", "file:///android_asset/error.html");
+                    startActivity(intent);
                 }
             }
         });
         isAuto = true;
-        GetBannerInfo getBannerInfo = new GetBannerInfo();
-        getBannerInfo.execute();
+
+        // 读取缓存
+        cacheBanner = (String) CacheUtils.readObject(Constant.CACHE_BANNER);
+        if (!StringUtils.isBlank(cacheBanner)) {
+            BannerInfoBean bannerInfoBean = FastJsonTools.getBean(cacheBanner, BannerInfoBean.class);
+            if (bannerInfoBean != null && bannerInfoBean.getStatus() == 200) {
+                bannerData = bannerInfoBean.getData();
+                if (bannerData != null && bannerData.size() != 0) {
+                    initListHeader();
+                }
+            }
+            Log.i("缓存的banner", cacheBanner + "");
+        } else {
+            pageError.setVisibility(View.VISIBLE);
+            refreshView.setVisibility(View.INVISIBLE);
+        }
+        cacheRoadshowList = (String) CacheUtils.readObject(Constant.CACHE_ROADSHOW_LIST);
+        if (!StringUtils.isBlank(cacheRoadshowList)) {
+            RoadshowProjectListBean roadshowProjectListBean = FastJsonTools.getBean(cacheRoadshowList, RoadshowProjectListBean.class);
+            if (roadshowProjectListBean != null && roadshowProjectListBean.getStatus() == 200) {
+                rDatas = roadshowProjectListBean.getData();
+                if (rDatas != null) {
+                    listview.setAdapter(myAdapter);
+                }
+            }
+        } else {
+            pageError.setVisibility(View.VISIBLE);
+            refreshView.setVisibility(View.INVISIBLE);
+        }
+        cachePreselectionList = (String) CacheUtils.readObject(Constant.CACHE_PRESELECTION_LIST);
+        if (!StringUtils.isBlank(cachePreselectionList)) {
+            PreselectionProjectListBean preselectionProjectListBean = FastJsonTools.getBean(cachePreselectionList, PreselectionProjectListBean.class);
+            if (preselectionProjectListBean != null && preselectionProjectListBean.getStatus() == 200) {
+                pDatas = preselectionProjectListBean.getData();
+                if (pDatas != null) {
+                    listview.setAdapter(myAdapter);
+                }
+            }
+        } else {
+            pageError.setVisibility(View.VISIBLE);
+            refreshView.setVisibility(View.INVISIBLE);
+        }
+
+//        GetBannerInfo getBannerInfo = new GetBannerInfo();
+//        getBannerInfo.execute();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -153,6 +211,15 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 //        }
 //    }
 
+    // 接收是否登录成功的提示
+    @Subscribe(threadMode = ThreadMode.MainThread, sticky = true)
+    public void getLoginInfo(EventMsg msg) {
+        if ("登录成功".equals(msg.getMsg())) {
+            GetBannerInfo getBannerInfo = new GetBannerInfo();
+            getBannerInfo.execute();
+        }
+    }
+
     // 接收推送的站内信，改变未读状态
     @Subscribe(threadMode = ThreadMode.MainThread, sticky = true)
     public void getReceivedMsg(EventMsg msg) {
@@ -166,6 +233,11 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 
     // 添加banner头布局
     private void initListHeader() {
+        if (listview.getHeaderViewsCount() != 0) {
+            listview.removeHeaderView(listview.getChildAt(0));
+            handler = null;
+            bannerRunnable = null;
+        }
         final View header = LayoutInflater.from(mContext).inflate(R.layout.item_banner_and_tab, null);
         final ViewPager projectVpBanner = (ViewPager) header.findViewById(R.id.project_vp_banner);// banner轮播条
         final LinearLayout projectBannerBottombg = (LinearLayout) header.findViewById(R.id.project_banner_bottombg);// banner底部的阴影
@@ -215,6 +287,10 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 final int newPosition = position % imageViews.size();
                 ImageView imageView = imageViews.get(newPosition);
                 // 把要返回的控件添加到容器
+                ViewGroup parent = (ViewGroup) imageView.getParent();
+                if (parent != null) {
+                    parent.removeAllViews();
+                }
                 container.addView(imageView);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -256,6 +332,12 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 int newPosition = position % imageViews.size();
                 // 把前一个点变成normal
                 projectBannerPoints.getChildAt(prePointIndex).setEnabled(false);
+                if (projectBannerPoints.getChildAt(newPosition - 1) != null) {
+                    projectBannerPoints.getChildAt(newPosition - 1).setEnabled(false);
+                }
+                if (projectBannerPoints.getChildAt(newPosition + 3) != null) {
+                    projectBannerPoints.getChildAt(newPosition + 3).setEnabled(false);
+                }
                 // 把相应位置的点变成selected
                 projectBannerPoints.getChildAt(newPosition).setEnabled(true);
                 // 当滑到某一页时，改变文字
@@ -347,7 +429,6 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         });
-
         listview.addHeaderView(header);
     }
 
@@ -576,7 +657,9 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showProgressDialog();
+            if (StringUtils.isBlank(cacheBanner) && StringUtils.isBlank(cacheRoadshowList) && StringUtils.isBlank(cachePreselectionList)) {
+                showProgressDialog();
+            }
         }
 
         @Override
@@ -605,8 +688,8 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             clickable = true;
             if (bannerInfoBean == null) {
                 dismissProgressDialog();
-                pageError.setVisibility(View.VISIBLE);
-                refreshView.setVisibility(View.GONE);
+//                pageError.setVisibility(View.VISIBLE);
+//                refreshView.setVisibility(View.GONE);
             } else {
                 if (bannerInfoBean.getStatus() == 200) {
                     pageError.setVisibility(View.GONE);
@@ -615,17 +698,20 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                     if (bannerData != null && bannerData.size() != 0) {
                         listview.setBackgroundResource(R.color.bg_main);
                         initListHeader();
+                        // 缓存数据
+                        CacheUtils.saveObject(JSON.toJSONString(bannerInfoBean), Constant.CACHE_BANNER);
+
                         GetRoadshowProjectListTask getRoadshowProjectListTask = new GetRoadshowProjectListTask(0);
                         getRoadshowProjectListTask.execute();
                         GetPreselectionProjectListTask getPreselectionProjectListTask = new GetPreselectionProjectListTask(0);
                         getPreselectionProjectListTask.execute();
                     } else {
-                        listview.setBackgroundResource(R.mipmap.bg_empty);
+//                        listview.setBackgroundResource(R.mipmap.bg_empty);
                     }
                 } else {
                     dismissProgressDialog();
-                    pageError.setVisibility(View.VISIBLE);
-                    refreshView.setVisibility(View.GONE);
+//                    pageError.setVisibility(View.VISIBLE);
+//                    refreshView.setVisibility(View.GONE);
                 }
             }
         }
@@ -677,6 +763,8 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                         rDatas = roadshowProjectListBean.getData();
                         if (rDatas != null) {
                             listview.setAdapter(myAdapter);
+                            // 缓存数据
+                            CacheUtils.saveObject(JSON.toJSONString(roadshowProjectListBean), Constant.CACHE_ROADSHOW_LIST);
                         }
                     } else {
                         if (roadshowProjectListBean.getData() != null && roadshowProjectListBean.getData().size() != 0) {
@@ -744,6 +832,8 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                         pDatas = preselectionProjectListBean.getData();
                         if (pDatas != null) {
                             listview.setAdapter(myAdapter);
+                            // 缓存数据
+                            CacheUtils.saveObject(JSON.toJSONString(preselectionProjectListBean), Constant.CACHE_PRESELECTION_LIST);
                         }
                     } else {
                         if (preselectionProjectListBean.getData() != null && preselectionProjectListBean.getData().size() != 0) {

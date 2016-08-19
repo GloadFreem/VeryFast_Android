@@ -2,15 +2,25 @@ package com.jinzht.pro.base;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.TextView;
 
+import com.jinzht.pro.R;
+import com.jinzht.pro.activity.LoginActivity;
+import com.jinzht.pro.activity.SetUserTypeActivity;
+import com.jinzht.pro.bean.EventMsg;
 import com.jinzht.pro.bean.IsAuthenticBean;
+import com.jinzht.pro.bean.LoginBean;
 import com.jinzht.pro.callback.ErrorException;
 import com.jinzht.pro.callback.ProgressBarCallBack;
 import com.jinzht.pro.utils.ACache;
@@ -22,10 +32,13 @@ import com.jinzht.pro.utils.NetWorkUtils;
 import com.jinzht.pro.utils.OkHttpException;
 import com.jinzht.pro.utils.OkHttpUtils;
 import com.jinzht.pro.utils.SharedPreferencesUtils;
+import com.jinzht.pro.utils.SuperToastUtils;
 import com.jinzht.pro.view.LoadingProssbar;
 import com.umeng.analytics.MobclickAgent;
 
+import cn.jpush.android.api.JPushInterface;
 import cn.sharesdk.framework.ShareSDK;
+import de.greenrobot.event.EventBus;
 
 /**
  * Fragment的基类
@@ -162,5 +175,89 @@ public abstract class BaseFragment extends Fragment implements ProgressBarCallBa
             ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE);
         }
+    }
+
+    // 自动登录
+    public class AutoLoginTask extends AsyncTask<Void, Void, LoginBean> {
+        @Override
+        protected LoginBean doInBackground(Void... params) {
+            String body = "";
+            Log.i("极光推送", JPushInterface.getRegistrationID(mContext) + " ");
+            if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                try {
+                    body = OkHttpUtils.loginPost(
+                            MD5Utils.encode(AESUtils.encrypt(Constant.PRIVATE_KEY, Constant.LOGIN)),
+                            "telephone", SharedPreferencesUtils.getTelephone(mContext),
+                            "password", SharedPreferencesUtils.getPassword(mContext),
+                            "regId", JPushInterface.getRegistrationID(mContext),
+                            Constant.BASE_URL + Constant.LOGIN,
+                            mContext);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i("自动登录返回信息", body);
+                return FastJsonTools.getBean(body, LoginBean.class);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(LoginBean loginBean) {
+            super.onPostExecute(loginBean);
+            dismissProgressDialog();
+            if (loginBean != null && loginBean.getStatus() == 200) {
+                // 保存userId
+                SharedPreferencesUtils.saveExtUserId(mContext, String.valueOf(loginBean.getData().getExtUserId()));
+                SharedPreferencesUtils.saveUserId(mContext, loginBean.getData().getUserId());
+                if (loginBean.getData().getIdentityType().getIdentiyTypeId() == -1) {
+                    // 未选择身份类型，进入选择身份类型
+                    setUserTypeDialog();
+                } else {
+                    // 保存userType，后续操作
+                    SharedPreferencesUtils.saveUserType(mContext, loginBean.getData().getIdentityType().getIdentiyTypeId());
+                    EventBus.getDefault().postSticky(new EventMsg("登录成功"));
+                    // 保存是否认证的状态
+                    IsAuthenticTask isAuthenticTask = new IsAuthenticTask();
+                    isAuthenticTask.execute();
+                    // 继续之前的动作
+                    doAgain();
+                }
+            } else {
+                // 自动登录未成功，进入登录页
+                SuperToastUtils.showSuperToast(mContext, 2, "登录状态已改变，请重新登录");
+                Intent intent = new Intent(mContext, LoginActivity.class);
+                startActivity(intent);
+//                finish();
+            }
+        }
+    }
+
+    // 选择身份弹窗
+    private void setUserTypeDialog() {
+        final AlertDialog dialog = new AlertDialog.Builder(getActivity(), R.style.Custom_Dialog).create();
+        dialog.setCancelable(false);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_setusertype);
+        TextView btnConfirm = (TextView) window.findViewById(R.id.btn_confirm);
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 未选择身份类型，进入选择身份类型
+                Intent intent = new Intent(mContext, SetUserTypeActivity.class);
+                if (SharedPreferencesUtils.getIsWechatLogin(mContext)) {
+                    intent.putExtra("isWechatLogin", 1);
+                }
+                startActivity(intent);
+                dialog.dismiss();
+//                finish();
+            }
+        });
+    }
+
+    // 登录成功后继续之前的操作
+    public void doAgain() {
+
     }
 }

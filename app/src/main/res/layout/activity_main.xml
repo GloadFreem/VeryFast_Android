@@ -27,6 +27,26 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_without_net"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="45dp"
+        android:background="#4c5264"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@mipmap/icon_without_net"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text="当前网络不用，请检查网络设置"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
     <RadioGroup
         android:id="@+id/main_bottom_tab"
         android:layout_width="match_parent"

@@ -10,26 +10,42 @@ import com.jinzht.pro.view.supertoasts.SuperToast;
  */
 public class SuperToastUtils {
 
+    public static SuperToast superToast;
+
     public static void showSuperToast(Context context, int flag, String message) {
-        final SuperToast superToast = new SuperToast(context);
-        toastEffect(flag, superToast);
-        superToast.setDuration(SuperToast.Duration.SHORT);
-        superToast.setBackground(SuperToast.Background.ORANGE);
-        superToast.setTextSize(SuperToast.TextSize.MEDIUM);
-        superToast.setText(message);
-        superToast.setGravity(Gravity.CENTER, 10, 50);
-        superToast.show();
+//        final SuperToast superToast = new SuperToast(context);
+        if (superToast == null) {
+            superToast = new SuperToast(context);
+        }
+        if (superToast.isShowing()) {
+            superToast.setText(message);
+        } else {
+            toastEffect(flag, superToast);
+            superToast.setDuration(SuperToast.Duration.VERY_SHORT);
+            superToast.setBackground(SuperToast.Background.ORANGE);
+            superToast.setTextSize(SuperToast.TextSize.MEDIUM);
+            superToast.setText(message);
+            superToast.setGravity(Gravity.CENTER, 10, 50);
+            superToast.show();
+        }
     }
 
     public static void showSuperToast(Context context, int flag, int message) {
-        final SuperToast superToast = new SuperToast(context);
-        toastEffect(flag, superToast);
-        superToast.setDuration(SuperToast.Duration.SHORT);
-        superToast.setBackground(SuperToast.Background.ORANGE);
-        superToast.setTextSize(SuperToast.TextSize.MEDIUM);
-        superToast.setText(context.getResources().getString(message));
-        superToast.setGravity(Gravity.CENTER, 10, 50);
-        superToast.show();
+//        final SuperToast superToast = new SuperToast(context);
+        if (superToast == null) {
+            superToast = new SuperToast(context);
+        }
+        if (superToast.isShowing()) {
+            superToast.setText(context.getResources().getString(message));
+        } else {
+            toastEffect(flag, superToast);
+            superToast.setDuration(SuperToast.Duration.VERY_SHORT);
+            superToast.setBackground(SuperToast.Background.ORANGE);
+            superToast.setTextSize(SuperToast.TextSize.MEDIUM);
+            superToast.setText(context.getResources().getString(message));
+            superToast.setGravity(Gravity.CENTER, 10, 50);
+            superToast.show();
+        }
     }
 
     // 弹出方式

@@ -132,8 +132,6 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         findView();
         GetDetailTask getDetailTask = new GetDetailTask();
         getDetailTask.execute();
-        GetCommentsTask getCommentsTask = new GetCommentsTask();
-        getCommentsTask.execute();
     }
 
     private void findView() {
@@ -553,17 +551,29 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
                 SuperToastUtils.showSuperToast(mContext, 2, R.string.net_error);
             } else {
                 if (projectDetailBean.getStatus() == 200) {
+                    GetCommentsTask getCommentsTask = new GetCommentsTask();
+                    getCommentsTask.execute();
                     data = projectDetailBean.getData().getProject();
                     reportDatas = projectDetailBean.getData().getExtr();
                     if (data != null) {
                         initData();
                     }
+                } else if (projectDetailBean.getStatus() == 401) {
+                    AutoLoginTask autoLoginTask = new AutoLoginTask();
+                    autoLoginTask.execute();
                 } else {
                     dismissProgressDialog();
                     SuperToastUtils.showSuperToast(mContext, 2, projectDetailBean.getMessage());
                 }
             }
         }
+    }
+
+    @Override
+    public void doAgain() {
+        super.doAgain();
+        GetDetailTask getDetailTask = new GetDetailTask();
+        getDetailTask.execute();
     }
 
     // 获取评论列表
@@ -853,16 +863,6 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
         }
     }
 
-    @Override
-    public void errorPage() {
-
-    }
-
-    @Override
-    public void blankPage() {
-
-    }
-
     // 删除评论弹窗
     private void showDeleteWindow(View view, final int position) {
         ImageButton button = new ImageButton(mContext);
@@ -927,4 +927,15 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             }
         }
     }
+
+    @Override
+    public void errorPage() {
+
+    }
+
+    @Override
+    public void blankPage() {
+
+    }
+
 }

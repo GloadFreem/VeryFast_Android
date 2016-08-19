@@ -22,12 +22,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.jinzht.pro.R;
 import com.jinzht.pro.activity.ActivityDetailActivity;
+import com.jinzht.pro.activity.CommonWebViewActivity;
 import com.jinzht.pro.base.BaseFragment;
 import com.jinzht.pro.bean.ActivityApplyBean;
 import com.jinzht.pro.bean.ActivityListBean;
+import com.jinzht.pro.bean.EventMsg;
+import com.jinzht.pro.bean.InvestorListBean;
 import com.jinzht.pro.utils.AESUtils;
+import com.jinzht.pro.utils.CacheUtils;
 import com.jinzht.pro.utils.Constant;
 import com.jinzht.pro.utils.DateUtils;
 import com.jinzht.pro.utils.FastJsonTools;
@@ -43,6 +48,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * 活动列表界面
@@ -81,25 +90,62 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         refreshView.setOnRefreshListener(new PullListener());// 设置刷新接口
         myAdapter = new MyAdapter();
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(mContext, ActivityDetailActivity.class);
-                intent.putExtra("id", datas.get(position).getActionId());
-                startActivityForResult(intent, REQUEST_CODE);
-                POSITION = position;
+                if (!NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                    Intent intent = new Intent(mContext, ActivityDetailActivity.class);
+                    intent.putExtra("id", datas.get(position).getActionId());
+                    startActivityForResult(intent, REQUEST_CODE);
+                    POSITION = position;
+                } else {
+                    Intent intent = new Intent(mContext, CommonWebViewActivity.class);
+                    intent.putExtra("title", "活动详情");
+                    intent.putExtra("url", "file:///android_asset/error.html");
+                    startActivity(intent);
+                }
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                GetActivityListTask getActivityListTask = new GetActivityListTask(0);
-                getActivityListTask.execute();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                GetActivityListTask getActivityListTask = new GetActivityListTask(0);
+//                getActivityListTask.execute();
+//            }
+//        }, 2500);
+
+        // 读取缓存
+        String cacheActivitysList = (String) CacheUtils.readObject(Constant.CACHE_ACTIVITYS_LIST);
+        if (!StringUtils.isBlank(cacheActivitysList)) {
+            ActivityListBean bean = FastJsonTools.getBean(cacheActivitysList, ActivityListBean.class);
+            if (bean != null && bean.getStatus() == 200) {
+                datas = bean.getData();
+                if (datas != null && datas.size() != 0) {
+                    listview.setAdapter(myAdapter);
+                }
             }
-        }, 2500);
+        } else {
+            pageError.setVisibility(View.VISIBLE);
+            refreshView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    // 接收是否登录成功的提示
+    @Subscribe(threadMode = ThreadMode.MainThread, sticky = true)
+    public void getLoginInfo(EventMsg msg) {
+        if ("登录成功".equals(msg.getMsg())) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    GetActivityListTask getActivityListTask = new GetActivityListTask(0);
+                    getActivityListTask.execute();
+                }
+            }, 2500);
+        }
     }
 
     @Override
@@ -250,8 +296,8 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
             super.onPostExecute(activityListBean);
             clickable = true;
             if (activityListBean == null) {
-                pageError.setVisibility(View.VISIBLE);
-                refreshView.setVisibility(View.GONE);
+//                pageError.setVisibility(View.VISIBLE);
+//                refreshView.setVisibility(View.GONE);
                 refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                 refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
             } else {
@@ -269,6 +315,8 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                         }
                         if (datas != null) {
                             listview.setAdapter(myAdapter);
+                            // 缓存数据
+                            CacheUtils.saveObject(JSON.toJSONString(activityListBean), Constant.CACHE_ACTIVITYS_LIST);
                         }
                     } else {
                         for (ActivityListBean.DataBean dataBean : activityListBean.getData()) {
@@ -277,13 +325,13 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                         myAdapter.notifyDataSetChanged();
                     }
                 } else if (activityListBean.getStatus() == 201) {
-                    pageError.setVisibility(View.GONE);
-                    refreshView.setVisibility(View.VISIBLE);
+//                    pageError.setVisibility(View.GONE);
+//                    refreshView.setVisibility(View.VISIBLE);
                     pages--;
                     refreshView.loadmoreFinish(PullToRefreshLayout.LAST);// 告诉控件加载到最后一页
                 } else {
-                    pageError.setVisibility(View.VISIBLE);
-                    refreshView.setVisibility(View.GONE);
+//                    pageError.setVisibility(View.VISIBLE);
+//                    refreshView.setVisibility(View.GONE);
                     refreshView.refreshFinish(PullToRefreshLayout.FAIL);// 告诉控件刷新失败
                     refreshView.loadmoreFinish(PullToRefreshLayout.FAIL);// 告诉控件加载失败
                 }
@@ -517,6 +565,18 @@ public class ActivityFragment extends BaseFragment implements View.OnClickListen
                 }
             }
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

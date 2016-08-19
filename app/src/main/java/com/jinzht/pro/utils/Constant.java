@@ -5,7 +5,7 @@ package com.jinzht.pro.utils;
  */
 public class Constant {
 
-//    public static final String BASE_URL = "http://192.168.5.169:8080/jinzht/";
+//    public static final String BASE_URL = "http://192.168.5.149:8080/jinzht/";
     public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 微信APP_ID
@@ -15,6 +15,38 @@ public class Constant {
      * 私钥
      */
     public static final String PRIVATE_KEY = "jinzht_server_security";
+    /**
+     * banner缓存
+     */
+    public static final String CACHE_BANNER = "cache_banner";
+    /**
+     * 路演项目列表缓存
+     */
+    public static final String CACHE_ROADSHOW_LIST = "cache_roadshow_list";
+    /**
+     * 预选项目列表缓存
+     */
+    public static final String CACHE_PRESELECTION_LIST = "cache_preselection_list";
+    /**
+     * 个人投资者列表缓存
+     */
+    public static final String CACHE_INVESTOR1_LIST = "cache_investor1_list";
+    /**
+     * 机构投资者列表缓存
+     */
+    public static final String CACHE_INVESTOR2_LIST = "cache_investor2_list";
+    /**
+     * 智囊团列表缓存
+     */
+    public static final String CACHE_INVESTOR3_LIST = "cache_investor3_list";
+    /**
+     * 圈子列表缓存
+     */
+    public static final String CACHE_CIRCLE_LIST = "cache_circle_list";
+    /**
+     * 活动列表缓存
+     */
+    public static final String CACHE_ACTIVITYS_LIST = "cache_activitys_list";
     /**
      * 照相选择照片
      */
@@ -422,7 +454,6 @@ public class Constant {
     /**
      * 易宝回跳页面
      */
-//    public static final String YEEPAY_CALLBACK = "requestFinanceCallBackUrl.action";
     public static final String YEEPAY_CALLBACK = "YibaoCallback.jsp";
     /**
      * 易宝回调通知

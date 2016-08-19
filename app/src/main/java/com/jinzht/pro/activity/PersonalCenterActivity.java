@@ -268,11 +268,21 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
                         SharedPreferencesUtils.saveIsAuthentic(mContext, data.getAuthentics().get(0).getAuthenticstatus().getName());
                         initData();
                     }
+                } else if (userInfoBean.getStatus() == 401) {
+                    AutoLoginTask autoLoginTask = new AutoLoginTask();
+                    autoLoginTask.execute();
                 } else {
                     SuperToastUtils.showSuperToast(mContext, 2, userInfoBean.getMessage());
                 }
             }
         }
+    }
+
+    @Override
+    public void doAgain() {
+        super.doAgain();
+        GetUserInfo getUserInfo = new GetUserInfo();
+        getUserInfo.execute();
     }
 
     // 分享APP
@@ -327,6 +337,7 @@ public class PersonalCenterActivity extends BaseActivity implements View.OnClick
             }
         }
     }
+
 
     @Override
     public void errorPage() {
