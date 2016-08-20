@@ -216,7 +216,11 @@ public class RoadshowLiveFragment extends BaseFragment implements View.OnClickLi
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            Glide.with(mContext).load(datas.get(position).getUsers().getHeadSculpture()).into(holder.itemChatFavicon);
+            Glide.with(mContext)
+                    .load(datas.get(position).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(holder.itemChatFavicon);
             holder.itemChatName.setText(datas.get(position).getUsers().getName());
             holder.itemChatMsg.setText(datas.get(position).getContent());
             if (DateUtils.timeDiff4Mins(datas.get(position).getCommentDate()) < 2) {

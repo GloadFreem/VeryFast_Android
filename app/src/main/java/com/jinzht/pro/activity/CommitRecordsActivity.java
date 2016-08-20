@@ -118,7 +118,11 @@ public class CommitRecordsActivity extends BaseActivity implements View.OnClickL
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            Glide.with(mContext).load(datas.get(position).getUser().getHeadSculpture()).into(holder.ivFavicon);
+            Glide.with(mContext)
+                    .load(datas.get(position).getUser().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(holder.ivFavicon);
             holder.tvName.setText(datas.get(position).getUser().getAuthentics().get(0).getName());
             holder.tvPosition.setText(datas.get(position).getUser().getAuthentics().get(0).getCompanyName() + datas.get(position).getUser().getAuthentics().get(0).getPosition());
             holder.tvTime.setText(DateUtils.timeLogic(datas.get(position).getRecord().getRecordDate()));

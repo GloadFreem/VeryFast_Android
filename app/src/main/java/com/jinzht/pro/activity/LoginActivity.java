@@ -80,9 +80,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         loginTvWechat.setOnClickListener(this);
 
         if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
-            Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(loginIvUserimage);
+            Glide.with(mContext)
+                    .load(SharedPreferencesUtils.getLocalFavicon(mContext))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .into(loginIvUserimage);
         } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
-            Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(loginIvUserimage);
+            Glide.with(mContext)
+                    .load(SharedPreferencesUtils.getOnlineFavicon(mContext))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .into(loginIvUserimage);
         } else {
             loginIvUserimage.setImageResource(R.drawable.ic_launcher);
         }

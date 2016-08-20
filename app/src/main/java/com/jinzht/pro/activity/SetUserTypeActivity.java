@@ -100,14 +100,30 @@ public class SetUserTypeActivity extends BaseActivity implements View.OnClickLis
 
         if (getIntent().getIntExtra("isWechatLogin", 0) == 1) {
             // 微信登录，下载微信头像
-            Glide.with(mContext).load(getIntent().getStringExtra("favicon")).into(improveInfoIvUserimage);
+            Glide.with(mContext)
+                    .load(getIntent().getStringExtra("favicon"))
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .into(improveInfoIvUserimage);
             SaveWechatFavicon saveWechatFavicon = new SaveWechatFavicon();
             saveWechatFavicon.execute();
         } else {
             if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
-                Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(improveInfoIvUserimage);
+                Glide.with(mContext)
+                        .load(SharedPreferencesUtils.getLocalFavicon(mContext))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .placeholder(R.mipmap.ic_launcher)
+                        .error(R.mipmap.ic_launcher)
+                        .into(improveInfoIvUserimage);
             } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
-                Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(improveInfoIvUserimage);
+                Glide.with(mContext)
+                        .load(SharedPreferencesUtils.getOnlineFavicon(mContext))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .placeholder(R.mipmap.ic_launcher)
+                        .error(R.mipmap.ic_launcher)
+                        .into(improveInfoIvUserimage);
             } else {
                 improveInfoIvUserimage.setImageResource(R.drawable.ic_launcher);
             }

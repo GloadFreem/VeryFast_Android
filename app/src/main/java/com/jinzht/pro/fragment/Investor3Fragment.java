@@ -181,7 +181,11 @@ public class Investor3Fragment extends BaseFragment implements View.OnClickListe
                 holder = (ViewHolder) convertView.getTag();
             }
             if (!StringUtils.isBlank(datas.get(position).getUser().getHeadSculpture())) {
-                Glide.with(mContext).load(datas.get(position).getUser().getHeadSculpture()).into(holder.itemBrainFavicon);
+                Glide.with(mContext)
+                        .load(datas.get(position).getUser().getHeadSculpture())
+                        .placeholder(R.mipmap.ic_default_favicon)
+                        .error(R.mipmap.ic_default_favicon)
+                        .into(holder.itemBrainFavicon);
             }
             holder.itemBrainName.setText(datas.get(position).getUser().getName());
             holder.itemBrainPosition.setText(datas.get(position).getUser().getAuthentics().get(0).getPosition());

@@ -185,7 +185,11 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            Glide.with(mContext).load(datas.get(position).getUsers().getHeadSculpture()).into(holder.ivFavicon);
+            Glide.with(mContext)
+                    .load(datas.get(position).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(holder.ivFavicon);
             holder.tvName.setText(datas.get(position).getUsers().getName());
             holder.tvTime.setText(DateUtils.timeLogic(datas.get(position).getCommentDate()));
             holder.tvContent.setText(datas.get(position).getContent());

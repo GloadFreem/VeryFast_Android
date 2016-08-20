@@ -280,7 +280,11 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
             // 处理详情
             if (getItemViewType(position) == 0) {
                 if (!StringUtils.isBlank(datas.getUsers().getHeadSculpture())) {
-                    Glide.with(mContext).load(datas.getUsers().getHeadSculpture()).into(holder.ivDetailFavicon);
+                    Glide.with(mContext)
+                            .load(datas.getUsers().getHeadSculpture())
+                            .placeholder(R.mipmap.ic_default_favicon)
+                            .error(R.mipmap.ic_default_favicon)
+                            .into(holder.ivDetailFavicon);
                 } else {
                     holder.ivFavicon.setImageResource(R.mipmap.ic_default_favicon);
                 }
@@ -382,10 +386,18 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 // 处理评论
             } else {
                 if (comments.get(position - 1).getUsersByAtUserId() != null) {// 有回复
-                    Glide.with(mContext).load(comments.get(position - 1).getUsersByUserId().getHeadSculpture()).into(holder.ivFavicon);
+                    Glide.with(mContext)
+                            .load(comments.get(position - 1).getUsersByUserId().getHeadSculpture())
+                            .placeholder(R.mipmap.ic_default_favicon)
+                            .error(R.mipmap.ic_default_favicon)
+                            .into(holder.ivFavicon);
                     holder.tvName.setText(comments.get(position - 1).getUsersByUserId().getName() + " 回复 " + comments.get(position - 1).getUsersByAtUserId().getName());
                 } else {
-                    Glide.with(mContext).load(comments.get(position - 1).getUsersByUserId().getHeadSculpture()).into(holder.ivFavicon);
+                    Glide.with(mContext)
+                            .load(comments.get(position - 1).getUsersByUserId().getHeadSculpture())
+                            .placeholder(R.mipmap.ic_default_favicon)
+                            .error(R.mipmap.ic_default_favicon)
+                            .into(holder.ivFavicon);
                     holder.tvName.setText(comments.get(position - 1).getUsersByUserId().getName());
                 }
                 holder.tvTime.setText(DateUtils.timeLogic(comments.get(position - 1).getPublicDate()));

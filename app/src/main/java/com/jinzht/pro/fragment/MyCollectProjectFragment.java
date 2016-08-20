@@ -167,7 +167,11 @@ public class MyCollectProjectFragment extends BaseFragment implements View.OnCli
             }
             if (getItemViewType(position) == 0) {
                 // 预选项目列表
-                Glide.with(mContext).load(datas.get(position).getStartPageImage()).into(holder.itemProjectImg);
+                Glide.with(mContext)
+                        .load(datas.get(position).getStartPageImage())
+                        .placeholder(R.mipmap.ic_default_favicon)
+                        .error(R.mipmap.ic_default_favicon)
+                        .into(holder.itemProjectImg);
                 holder.itemProjectTitle.setText(datas.get(position).getAbbrevName());
                 holder.itemProjectAddr.setText(datas.get(position).getAddress());
                 holder.itemProjectCompname.setText(datas.get(position).getFullName());
@@ -193,7 +197,11 @@ public class MyCollectProjectFragment extends BaseFragment implements View.OnCli
                 holder.itemProjectAmount.setText(datas.get(position).getRoadshows().get(0).getRoadshowplan().getFinanceTotal() + "万");
             } else {
                 // 路演项目列表
-                Glide.with(mContext).load(datas.get(position).getStartPageImage()).into(holder.itemProjectImg);
+                Glide.with(mContext)
+                        .load(datas.get(position).getStartPageImage())
+                        .placeholder(R.mipmap.ic_default_favicon)
+                        .error(R.mipmap.ic_default_favicon)
+                        .into(holder.itemProjectImg);
                 holder.itemProjectTitle.setText(datas.get(position).getAbbrevName());
                 holder.itemProjectAddr.setText(datas.get(position).getAddress());
                 if ("融资成功".equals(datas.get(position).getFinancestatus().getName())) {

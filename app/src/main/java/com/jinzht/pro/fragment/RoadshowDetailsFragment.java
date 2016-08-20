@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -55,6 +56,10 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
     private RecyclerView rvTeams;// 团队成员表
     private RecyclerView rvReports;// 项目报表
     private ImageView ivHazy;// 未认证时的遮罩
+    private RelativeLayout rlCompInfoTitle;// 公司状况布局标题
+    private LinearLayout llCompInfo;// 公司状况布局
+    private LinearLayout llTeam;// 团队布局
+    private LinearLayout llReports;// 报表布局
 
     private boolean isOpen = false;// 项目描述的开关状态
 
@@ -106,6 +111,10 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
             rvReports.setVisibility(View.GONE);
             ivHazy.setVisibility(View.VISIBLE);
         }
+        rlCompInfoTitle = (RelativeLayout) view.findViewById(R.id.rl_comp_info_title);// 公司状况布局标题
+        llCompInfo = (LinearLayout) view.findViewById(R.id.ll_comp_info);// 公司状况布局
+        llTeam = (LinearLayout) view.findViewById(R.id.ll_team);// 团队布局
+        llReports = (LinearLayout) view.findViewById(R.id.ll_reports);// 报表布局
         return view;
     }
 
@@ -125,6 +134,8 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         if (reportDatas.size() != 0) {
             // 报表处理
             initReport();
+        } else {
+            llReports.setVisibility(View.GONE);
         }
     }
 
@@ -278,7 +289,15 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         favicons.clear();
         names.clear();
         positions.clear();
-        if (data.getTeams() == null) {
+        if ((data.getTeams() == null || data.getTeams().size() == 0) && (reportDatas == null || reportDatas.size() == 0)) {
+//            llCompInfo.setVisibility(View.GONE);
+            rlCompInfoTitle.setVisibility(View.GONE);
+            llTeam.setVisibility(View.GONE);
+            llReports.setVisibility(View.GONE);
+            return;
+        }
+        if (data.getTeams() == null || data.getTeams().size() == 0) {
+            llTeam.setVisibility(View.GONE);
             return;
         }
         for (ProjectDetailBean.DataBean.ProjectBean.TeamsBean bean : data.getTeams()) {
@@ -318,7 +337,8 @@ public class RoadshowDetailsFragment extends BaseFragment implements View.OnClic
         // 准备数据
         reportImgs.clear();
         reportNames.clear();
-        if (reportDatas == null) {
+        if (reportDatas == null || reportDatas.size() == 0) {
+            llReports.setVisibility(View.GONE);
             return;
         }
         for (ProjectDetailBean.DataBean.ExtrBean bean : reportDatas) {

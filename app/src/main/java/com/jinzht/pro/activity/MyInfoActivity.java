@@ -101,9 +101,21 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         findView();
 
         if (!StringUtils.isBlank(SharedPreferencesUtils.getLocalFavicon(mContext))) {
-            Glide.with(mContext).load(SharedPreferencesUtils.getLocalFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivFavicon);
+            Glide.with(mContext)
+                    .load(SharedPreferencesUtils.getLocalFavicon(mContext))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(ivFavicon);
         } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
-            Glide.with(mContext).load(SharedPreferencesUtils.getOnlineFavicon(mContext)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivFavicon);
+            Glide.with(mContext)
+                    .load(SharedPreferencesUtils.getOnlineFavicon(mContext))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(ivFavicon);
         } else {
             ivFavicon.setImageResource(R.drawable.ic_launcher);
         }

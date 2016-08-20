@@ -133,7 +133,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     private void initData() {
         // 检测是否有网络
-        if (NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+        if (NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))
+                && mainViewpager.getCurrentItem() == 0) {
             rlWithoutNet.setVisibility(View.VISIBLE);
         } else {
             rlWithoutNet.setVisibility(View.GONE);
@@ -152,15 +153,23 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 switch (position) {
                     case 0:
                         mainBottomTab.check(R.id.main_btn_project);
+                        if (NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                            rlWithoutNet.setVisibility(View.VISIBLE);
+                        } else {
+                            rlWithoutNet.setVisibility(View.GONE);
+                        }
                         break;
                     case 1:
                         mainBottomTab.check(R.id.main_btn_investor);
+                        rlWithoutNet.setVisibility(View.GONE);
                         break;
                     case 2:
                         mainBottomTab.check(R.id.main_btn_circle);
+                        rlWithoutNet.setVisibility(View.GONE);
                         break;
                     case 3:
                         mainBottomTab.check(R.id.main_btn_activity);
+                        rlWithoutNet.setVisibility(View.GONE);
                         break;
                 }
             }
@@ -171,7 +180,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+            if (NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))
+                    && mainViewpager.getCurrentItem() == 0) {
                 rlWithoutNet.setVisibility(View.VISIBLE);
             } else {
                 rlWithoutNet.setVisibility(View.GONE);

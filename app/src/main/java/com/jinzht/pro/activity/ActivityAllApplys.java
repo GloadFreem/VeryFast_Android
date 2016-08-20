@@ -123,7 +123,11 @@ public class ActivityAllApplys extends BaseActivity implements View.OnClickListe
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            Glide.with(mContext).load(applys.get(position).getUsers().getHeadSculpture()).into(holder.ivFavicon);
+            Glide.with(mContext)
+                    .load(applys.get(position).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(holder.ivFavicon);
             holder.tvName.setText(applys.get(position).getUsers().getAuthentics().get(0).getName());
             holder.tvPosition.setText(applys.get(position).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(position).getUsers().getAuthentics().get(0).getPosition());
             holder.tvTime.setText(DateUtils.timeLogic(applys.get(position).getEnrollDate()));

@@ -61,7 +61,11 @@ public class RoadshowMemberFragment extends BaseFragment implements View.OnClick
     }
 
     private void initData() {
-        Glide.with(mContext).load(data.getIcon()).into(ivFavicon);
+        Glide.with(mContext)
+                .load(data.getIcon())
+                .placeholder(R.mipmap.ic_default_favicon)
+                .error(R.mipmap.ic_default_favicon)
+                .into(ivFavicon);
         tvName.setText(data.getName());
         tvCompNamePosition.setText(data.getCompany() + data.getPosition());
         tvAddr.setText(data.getAddress());

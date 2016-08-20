@@ -368,6 +368,16 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                     EventBus.getDefault().postSticky(projectDetailBean.getData());
                     data = projectDetailBean.getData().getProject();
                     if (data != null) {
+                        // 初始化PPT第一页
+                        ImageView imageView = new ImageView(UiUtils.getContext());
+                        // 设置图片缩放类型
+                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        Glide.with(UiUtils.getContext()).load(data.getStartPageImage()).into(imageView);
+                        imageViews.add(imageView);
+                        vpPPt.setAdapter(pptAdapter);
+                        vpPPt.setOffscreenPageLimit(5);
+                        vpPPt.setCurrentItem(0);
+                        // 初始化收藏状态
                         initCollect();
                         userId = data.getUserId();
                         Log.i("项目的userId", userId + "");
@@ -462,7 +472,9 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
                 if (roadshowVoiceBean.getStatus() == 200) {
                     if (roadshowVoiceBean.getData() != null && roadshowVoiceBean.getData().size() != 0) {
                         EventBus.getDefault().postSticky(roadshowVoiceBean.getData().get(0));
-                        voiceData = roadshowVoiceBean.getData().get(0);
+                        if (roadshowVoiceBean.getData() != null) {
+                            voiceData = roadshowVoiceBean.getData().get(0);
+                        }
                         url = roadshowVoiceBean.getData().get(0).getAudioPath();
                         GetPPTTask getPPTTask = new GetPPTTask(roadshowVoiceBean.getData().get(0).getSceneId(), pages);
                         getPPTTask.execute();
@@ -845,6 +857,7 @@ public class RoadshowDetailsActivity extends BaseFragmentActivity implements Vie
 
 //                vpPPt.setScrollable(true);
 
+                player.pause();
                 player.stop();
             }
             player.release();

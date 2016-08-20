@@ -142,7 +142,11 @@ public class MyCollectInvestorFragment extends BaseFragment implements View.OnCl
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            Glide.with(mContext).load(datas.get(position).getUsersByUserCollectedId().getHeadSculpture()).into(holder.ivFavicon);
+            Glide.with(mContext)
+                    .load(datas.get(position).getUsersByUserCollectedId().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(holder.ivFavicon);
             holder.tvName.setText(datas.get(position).getUsersByUserCollectedId().getName());
             holder.tvPosition.setText(datas.get(position).getUsersByUserCollectedId().getAuthentics().get(0).getPosition());
             holder.tvCompName.setText(datas.get(position).getUsersByUserCollectedId().getAuthentics().get(0).getCompanyName());

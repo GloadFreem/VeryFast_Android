@@ -233,11 +233,11 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
 
     // 添加banner头布局
     private void initListHeader() {
-        if (listview.getHeaderViewsCount() != 0) {
-            listview.removeHeaderView(listview.getChildAt(0));
-            handler = null;
-            bannerRunnable = null;
-        }
+//        if (listview.getHeaderViewsCount() != 0) {
+//            listview.removeHeaderView(listview.getChildAt(0));
+//            handler = null;
+//            bannerRunnable = null;
+//        }
         final View header = LayoutInflater.from(mContext).inflate(R.layout.item_banner_and_tab, null);
         final ViewPager projectVpBanner = (ViewPager) header.findViewById(R.id.project_vp_banner);// banner轮播条
         final LinearLayout projectBannerBottombg = (LinearLayout) header.findViewById(R.id.project_banner_bottombg);// banner底部的阴影
@@ -429,7 +429,9 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         });
-        listview.addHeaderView(header);
+        if (listview.getHeaderViewsCount() == 0) {
+            listview.addHeaderView(header);
+        }
     }
 
     private class MyAdapter extends BaseAdapter {

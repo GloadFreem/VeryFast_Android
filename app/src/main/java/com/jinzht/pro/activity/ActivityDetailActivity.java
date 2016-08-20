@@ -329,7 +329,11 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             rlApply5.setVisibility(View.GONE);
         }
         if (applys.size() == 1) {
-            Glide.with(mContext).load(applys.get(0).getUsers().getHeadSculpture()).into(favicon1);
+            Glide.with(mContext)
+                    .load(applys.get(0).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon1);
             name1.setText(applys.get(0).getUsers().getAuthentics().get(0).getName());
             position1.setText(applys.get(0).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(0).getUsers().getAuthentics().get(0).getPosition());
             time1.setText(DateUtils.timeLogic(applys.get(0).getEnrollDate()));
@@ -340,12 +344,20 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             rlApply5.setVisibility(View.GONE);
         }
         if (applys.size() == 2) {
-            Glide.with(mContext).load(applys.get(0).getUsers().getHeadSculpture()).into(favicon1);
+            Glide.with(mContext)
+                    .load(applys.get(0).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon1);
             name1.setText(applys.get(0).getUsers().getAuthentics().get(0).getName());
             position1.setText(applys.get(0).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(0).getUsers().getAuthentics().get(0).getPosition());
             time1.setText(DateUtils.timeLogic(applys.get(0).getEnrollDate()));
 
-            Glide.with(mContext).load(applys.get(1).getUsers().getHeadSculpture()).into(favicon2);
+            Glide.with(mContext)
+                    .load(applys.get(1).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon2);
             name2.setText(applys.get(1).getUsers().getAuthentics().get(0).getName());
             position2.setText(applys.get(1).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(1).getUsers().getAuthentics().get(0).getPosition());
             time2.setText(DateUtils.timeLogic(applys.get(1).getEnrollDate()));
@@ -355,17 +367,29 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             rlApply5.setVisibility(View.GONE);
         }
         if (applys.size() == 3) {
-            Glide.with(mContext).load(applys.get(0).getUsers().getHeadSculpture()).into(favicon1);
+            Glide.with(mContext)
+                    .load(applys.get(0).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon1);
             name1.setText(applys.get(0).getUsers().getAuthentics().get(0).getName());
             position1.setText(applys.get(0).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(0).getUsers().getAuthentics().get(0).getPosition());
             time1.setText(DateUtils.timeLogic(applys.get(0).getEnrollDate()));
 
-            Glide.with(mContext).load(applys.get(1).getUsers().getHeadSculpture()).into(favicon2);
+            Glide.with(mContext)
+                    .load(applys.get(1).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon2);
             name2.setText(applys.get(1).getUsers().getAuthentics().get(0).getName());
             position2.setText(applys.get(1).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(1).getUsers().getAuthentics().get(0).getPosition());
             time2.setText(DateUtils.timeLogic(applys.get(1).getEnrollDate()));
 
-            Glide.with(mContext).load(applys.get(2).getUsers().getHeadSculpture()).into(favicon3);
+            Glide.with(mContext)
+                    .load(applys.get(2).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon3);
             name3.setText(applys.get(2).getUsers().getAuthentics().get(0).getName());
             position3.setText(applys.get(2).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(2).getUsers().getAuthentics().get(0).getPosition());
             time3.setText(DateUtils.timeLogic(applys.get(2).getEnrollDate()));
@@ -374,22 +398,38 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             rlApply5.setVisibility(View.GONE);
         }
         if (applys.size() == 4) {
-            Glide.with(mContext).load(applys.get(0).getUsers().getHeadSculpture()).into(favicon1);
+            Glide.with(mContext)
+                    .load(applys.get(0).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon1);
             name1.setText(applys.get(0).getUsers().getAuthentics().get(0).getName());
             position1.setText(applys.get(0).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(0).getUsers().getAuthentics().get(0).getPosition());
             time1.setText(DateUtils.timeLogic(applys.get(0).getEnrollDate()));
 
-            Glide.with(mContext).load(applys.get(1).getUsers().getHeadSculpture()).into(favicon2);
+            Glide.with(mContext)
+                    .load(applys.get(1).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon2);
             name2.setText(applys.get(1).getUsers().getAuthentics().get(0).getName());
             position2.setText(applys.get(1).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(1).getUsers().getAuthentics().get(0).getPosition());
             time2.setText(DateUtils.timeLogic(applys.get(1).getEnrollDate()));
 
-            Glide.with(mContext).load(applys.get(2).getUsers().getHeadSculpture()).into(favicon3);
+            Glide.with(mContext)
+                    .load(applys.get(2).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon3);
             name3.setText(applys.get(2).getUsers().getAuthentics().get(0).getName());
             position3.setText(applys.get(2).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(2).getUsers().getAuthentics().get(0).getPosition());
             time3.setText(DateUtils.timeLogic(applys.get(2).getEnrollDate()));
 
-            Glide.with(mContext).load(applys.get(3).getUsers().getHeadSculpture()).into(favicon4);
+            Glide.with(mContext)
+                    .load(applys.get(3).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon4);
             name4.setText(applys.get(3).getUsers().getAuthentics().get(0).getName());
             position4.setText(applys.get(3).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(3).getUsers().getAuthentics().get(0).getPosition());
             time4.setText(DateUtils.timeLogic(applys.get(3).getEnrollDate()));
@@ -397,27 +437,47 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             rlApply5.setVisibility(View.GONE);
         }
         if (applys.size() >= 5) {
-            Glide.with(mContext).load(applys.get(0).getUsers().getHeadSculpture()).into(favicon1);
+            Glide.with(mContext)
+                    .load(applys.get(0).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon1);
             name1.setText(applys.get(0).getUsers().getAuthentics().get(0).getName());
             position1.setText(applys.get(0).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(0).getUsers().getAuthentics().get(0).getPosition());
             time1.setText(DateUtils.timeLogic(applys.get(0).getEnrollDate()));
 
-            Glide.with(mContext).load(applys.get(1).getUsers().getHeadSculpture()).into(favicon2);
+            Glide.with(mContext)
+                    .load(applys.get(1).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon2);
             name2.setText(applys.get(1).getUsers().getAuthentics().get(0).getName());
             position2.setText(applys.get(1).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(1).getUsers().getAuthentics().get(0).getPosition());
             time2.setText(DateUtils.timeLogic(applys.get(1).getEnrollDate()));
 
-            Glide.with(mContext).load(applys.get(2).getUsers().getHeadSculpture()).into(favicon3);
+            Glide.with(mContext)
+                    .load(applys.get(2).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon3);
             name3.setText(applys.get(2).getUsers().getAuthentics().get(0).getName());
             position3.setText(applys.get(2).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(2).getUsers().getAuthentics().get(0).getPosition());
             time3.setText(DateUtils.timeLogic(applys.get(2).getEnrollDate()));
 
-            Glide.with(mContext).load(applys.get(3).getUsers().getHeadSculpture()).into(favicon4);
+            Glide.with(mContext)
+                    .load(applys.get(3).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon4);
             name4.setText(applys.get(3).getUsers().getAuthentics().get(0).getName());
             position4.setText(applys.get(3).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(3).getUsers().getAuthentics().get(0).getPosition());
             time4.setText(DateUtils.timeLogic(applys.get(3).getEnrollDate()));
 
-            Glide.with(mContext).load(applys.get(4).getUsers().getHeadSculpture()).into(favicon5);
+            Glide.with(mContext)
+                    .load(applys.get(4).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(favicon5);
             name5.setText(applys.get(4).getUsers().getAuthentics().get(0).getName());
             position5.setText(applys.get(4).getUsers().getAuthentics().get(0).getCompanyName() + applys.get(4).getUsers().getAuthentics().get(0).getPosition());
             time5.setText(DateUtils.timeLogic(applys.get(4).getEnrollDate()));

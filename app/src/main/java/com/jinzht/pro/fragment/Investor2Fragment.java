@@ -221,7 +221,11 @@ public class Investor2Fragment extends BaseFragment implements View.OnClickListe
                 holder.itemInvestorgFundContent.setText(funds.get(position).getContent());
             } else {
                 if (!StringUtils.isBlank(datas.get(position - funds.size()).getUser().getHeadSculpture())) {
-                    Glide.with(mContext).load(datas.get(position - funds.size()).getUser().getHeadSculpture()).into(holder.itemInvestorgFavicon);
+                    Glide.with(mContext)
+                            .load(datas.get(position - funds.size()).getUser().getHeadSculpture())
+                            .placeholder(R.mipmap.ic_default_favicon)
+                            .error(R.mipmap.ic_default_favicon)
+                            .into(holder.itemInvestorgFavicon);
                 }
                 holder.itemInvestorgName.setText(datas.get(position - funds.size()).getUser().getName());
                 String province = datas.get(position - funds.size()).getUser().getAuthentics().get(0).getCity().getProvince().getName();

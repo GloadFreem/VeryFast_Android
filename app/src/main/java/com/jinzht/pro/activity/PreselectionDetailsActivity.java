@@ -81,6 +81,9 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
     private RecyclerView rvTeams;// 团队成员照片
     private RecyclerView rvReports;// 各类报表图标
     private ImageView ivHazy;// 未认证时的遮罩
+    private LinearLayout llCompInfo;// 公司状况布局
+    private LinearLayout llTeam;// 团队布局
+    private LinearLayout llReports;// 报表布局
     private TextView tvCommentsQuantity;// 评论数量
     private TextView btnMoreComments;// 查看更多评论按钮
     private RelativeLayout rlComment1;// 评论1布局
@@ -170,6 +173,9 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             rvReports.setVisibility(View.GONE);
             ivHazy.setVisibility(View.VISIBLE);
         }
+        llCompInfo = (LinearLayout) findViewById(R.id.ll_comp_info);// 公司状况布局
+        llTeam = (LinearLayout) findViewById(R.id.ll_team);// 团队布局
+        llReports = (LinearLayout) findViewById(R.id.ll_reports);// 报表布局
         tvCommentsQuantity = (TextView) findViewById(R.id.pre_tv_comment_quantity);// 评论数量
         btnMoreComments = (TextView) findViewById(R.id.pre_btn_more_comment);// 查看更多评论按钮
         btnMoreComments.setOnClickListener(this);
@@ -390,7 +396,12 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
     // 团队成员处理
     private void initTeam() {
         // 准备数据
-        if (data.getTeams() == null) {
+        if ((data.getTeams() == null || data.getTeams().size() == 0) && (reportDatas == null || reportDatas.size() == 0)) {
+            llCompInfo.setVisibility(View.GONE);
+            return;
+        }
+        if (data.getTeams() == null || data.getTeams().size() == 0) {
+            llTeam.setVisibility(View.GONE);
             return;
         }
         for (ProjectDetailBean.DataBean.ProjectBean.TeamsBean bean : data.getTeams()) {
@@ -425,7 +436,8 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
 
     // 报表处理
     private void initReport() {
-        if (reportDatas == null) {
+        if (reportDatas == null || reportDatas.size() == 0) {
+            llReports.setVisibility(View.GONE);
             return;
         }
         // 准备数据
@@ -468,7 +480,11 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             rlComment2.setVisibility(View.GONE);
         } else if (commentsData.size() == 1) {
             rlComment1.setVisibility(View.VISIBLE);
-            Glide.with(mContext).load(commentsData.get(0).getUsers().getHeadSculpture()).into(ivCommentFavicon1);
+            Glide.with(mContext)
+                    .load(commentsData.get(0).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(ivCommentFavicon1);
             tvCommentName1.setText(commentsData.get(0).getUsers().getName());
             tvCommentTime1.setText(DateUtils.timeLogic(commentsData.get(0).getCommentDate()));
             tvCommentContent1.setText(commentsData.get(0).getContent());
@@ -484,12 +500,20 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             });
         } else if (commentsData.size() >= 2) {
             rlComment1.setVisibility(View.VISIBLE);
-            Glide.with(mContext).load(commentsData.get(0).getUsers().getHeadSculpture()).into(ivCommentFavicon1);
+            Glide.with(mContext)
+                    .load(commentsData.get(0).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(ivCommentFavicon1);
             tvCommentName1.setText(commentsData.get(0).getUsers().getName());
             tvCommentTime1.setText(DateUtils.timeLogic(commentsData.get(0).getCommentDate()));
             tvCommentContent1.setText(commentsData.get(0).getContent());
             rlComment2.setVisibility(View.VISIBLE);
-            Glide.with(mContext).load(commentsData.get(1).getUsers().getHeadSculpture()).into(ivCommentFavicon2);
+            Glide.with(mContext)
+                    .load(commentsData.get(1).getUsers().getHeadSculpture())
+                    .placeholder(R.mipmap.ic_default_favicon)
+                    .error(R.mipmap.ic_default_favicon)
+                    .into(ivCommentFavicon2);
             tvCommentName2.setText(commentsData.get(1).getUsers().getName());
             tvCommentTime2.setText(DateUtils.timeLogic(commentsData.get(1).getCommentDate()));
             tvCommentContent2.setText(commentsData.get(1).getContent());

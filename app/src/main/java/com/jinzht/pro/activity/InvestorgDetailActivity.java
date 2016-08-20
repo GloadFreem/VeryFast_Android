@@ -98,7 +98,11 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
 
     // 填充数据
     private void initData() {
-        Glide.with(this).load(data.getUser().getHeadSculpture()).into(ivFavicon);
+        Glide.with(this)
+                .load(data.getUser().getHeadSculpture())
+                .placeholder(R.mipmap.ic_default_favicon)
+                .error(R.mipmap.ic_default_favicon)
+                .into(ivFavicon);
         tvName.setText(data.getUser().getName());
         tvPosition.setText(data.getUser().getAuthentics().get(0).getPosition());
         tvCompName.setText(data.getUser().getAuthentics().get(0).getCompanyName());
