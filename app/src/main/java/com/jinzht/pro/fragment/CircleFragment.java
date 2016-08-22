@@ -185,7 +185,6 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder = null;
             if (convertView == null) {
-                //1
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_circle, null);
                 holder.ivFavicon = (CircleImageView) convertView.findViewById(R.id.iv_favicon);
