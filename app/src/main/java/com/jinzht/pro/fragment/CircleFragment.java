@@ -208,7 +208,7 @@ public class CircleFragment extends BaseFragment implements View.OnClickListener
             if (!StringUtils.isBlank(datas.get(position).getUsers().getHeadSculpture())) {
                 Glide.with(mContext)
                         .load(datas.get(position).getUsers().getHeadSculpture())
-                        .placeholder(R.mipmap.ic_default_favicon)
+//                        .placeholder(R.mipmap.ic_default_favicon)
                         .error(R.mipmap.ic_default_favicon)
                         .into(holder.ivFavicon);
             } else {

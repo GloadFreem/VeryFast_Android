@@ -120,7 +120,7 @@ public class CommitRecordsActivity extends BaseActivity implements View.OnClickL
             }
             Glide.with(mContext)
                     .load(datas.get(position).getUser().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(holder.ivFavicon);
             holder.tvName.setText(datas.get(position).getUser().getAuthentics().get(0).getName());

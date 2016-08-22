@@ -63,7 +63,7 @@ public class WelcomeActivity extends FullBaseActivity {
                     startActivity(intent);
                     finish();
                 }
-            }, 2000);
+            }, 800);
         } else {
 //            startTime = System.currentTimeMillis();
 //            IsLoginTask isLoginTask = new IsLoginTask();
@@ -84,7 +84,7 @@ public class WelcomeActivity extends FullBaseActivity {
                         finish();
                     }
                 }
-            }, 2000);
+            }, 800);
         }
     }
 

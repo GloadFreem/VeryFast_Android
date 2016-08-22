@@ -482,7 +482,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             rlComment1.setVisibility(View.VISIBLE);
             Glide.with(mContext)
                     .load(commentsData.get(0).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(ivCommentFavicon1);
             tvCommentName1.setText(commentsData.get(0).getUsers().getName());
@@ -502,7 +502,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             rlComment1.setVisibility(View.VISIBLE);
             Glide.with(mContext)
                     .load(commentsData.get(0).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(ivCommentFavicon1);
             tvCommentName1.setText(commentsData.get(0).getUsers().getName());
@@ -511,7 +511,7 @@ public class PreselectionDetailsActivity extends BaseActivity implements View.On
             rlComment2.setVisibility(View.VISIBLE);
             Glide.with(mContext)
                     .load(commentsData.get(1).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(ivCommentFavicon2);
             tvCommentName2.setText(commentsData.get(1).getUsers().getName());

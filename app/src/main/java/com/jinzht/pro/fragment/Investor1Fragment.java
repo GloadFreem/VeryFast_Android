@@ -190,7 +190,7 @@ public class Investor1Fragment extends BaseFragment implements View.OnClickListe
             if (!StringUtils.isBlank(datas.get(position).getUser().getHeadSculpture())) {
                 Glide.with(mContext)
                         .load(datas.get(position).getUser().getHeadSculpture())
-                        .placeholder(R.mipmap.ic_default_favicon)
+//                        .placeholder(R.mipmap.ic_default_favicon)
                         .error(R.mipmap.ic_default_favicon)
                         .into(holder.itemInvestorFavicon);
             }

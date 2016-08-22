@@ -100,7 +100,7 @@ public class InvestorgDetailActivity extends FullBaseActivity implements View.On
     private void initData() {
         Glide.with(this)
                 .load(data.getUser().getHeadSculpture())
-                .placeholder(R.mipmap.ic_default_favicon)
+//                .placeholder(R.mipmap.ic_default_favicon)
                 .error(R.mipmap.ic_default_favicon)
                 .into(ivFavicon);
         tvName.setText(data.getUser().getName());

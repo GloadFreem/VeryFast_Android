@@ -331,7 +331,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         if (applys.size() == 1) {
             Glide.with(mContext)
                     .load(applys.get(0).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon1);
             name1.setText(applys.get(0).getUsers().getAuthentics().get(0).getName());
@@ -346,7 +346,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         if (applys.size() == 2) {
             Glide.with(mContext)
                     .load(applys.get(0).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon1);
             name1.setText(applys.get(0).getUsers().getAuthentics().get(0).getName());
@@ -355,7 +355,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
             Glide.with(mContext)
                     .load(applys.get(1).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon2);
             name2.setText(applys.get(1).getUsers().getAuthentics().get(0).getName());
@@ -369,7 +369,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         if (applys.size() == 3) {
             Glide.with(mContext)
                     .load(applys.get(0).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon1);
             name1.setText(applys.get(0).getUsers().getAuthentics().get(0).getName());
@@ -378,7 +378,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
             Glide.with(mContext)
                     .load(applys.get(1).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon2);
             name2.setText(applys.get(1).getUsers().getAuthentics().get(0).getName());
@@ -387,7 +387,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
             Glide.with(mContext)
                     .load(applys.get(2).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon3);
             name3.setText(applys.get(2).getUsers().getAuthentics().get(0).getName());
@@ -400,7 +400,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         if (applys.size() == 4) {
             Glide.with(mContext)
                     .load(applys.get(0).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon1);
             name1.setText(applys.get(0).getUsers().getAuthentics().get(0).getName());
@@ -409,7 +409,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
             Glide.with(mContext)
                     .load(applys.get(1).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon2);
             name2.setText(applys.get(1).getUsers().getAuthentics().get(0).getName());
@@ -418,7 +418,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
             Glide.with(mContext)
                     .load(applys.get(2).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon3);
             name3.setText(applys.get(2).getUsers().getAuthentics().get(0).getName());
@@ -427,7 +427,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
             Glide.with(mContext)
                     .load(applys.get(3).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon4);
             name4.setText(applys.get(3).getUsers().getAuthentics().get(0).getName());
@@ -439,7 +439,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         if (applys.size() >= 5) {
             Glide.with(mContext)
                     .load(applys.get(0).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon1);
             name1.setText(applys.get(0).getUsers().getAuthentics().get(0).getName());
@@ -448,7 +448,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
             Glide.with(mContext)
                     .load(applys.get(1).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon2);
             name2.setText(applys.get(1).getUsers().getAuthentics().get(0).getName());
@@ -457,7 +457,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
             Glide.with(mContext)
                     .load(applys.get(2).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon3);
             name3.setText(applys.get(2).getUsers().getAuthentics().get(0).getName());
@@ -466,7 +466,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
             Glide.with(mContext)
                     .load(applys.get(3).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon4);
             name4.setText(applys.get(3).getUsers().getAuthentics().get(0).getName());
@@ -475,7 +475,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
             Glide.with(mContext)
                     .load(applys.get(4).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(favicon5);
             name5.setText(applys.get(4).getUsers().getAuthentics().get(0).getName());

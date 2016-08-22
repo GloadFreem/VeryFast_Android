@@ -8,8 +8,8 @@ android {
         applicationId "com.jinzht.pro"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 24
-        versionName "3.0.5"
+        versionCode 25
+        versionName "3.0.6"
     }
     buildTypes {
         release {

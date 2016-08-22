@@ -105,7 +105,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                     .load(SharedPreferencesUtils.getLocalFavicon(mContext))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(ivFavicon);
         } else if (!StringUtils.isBlank(SharedPreferencesUtils.getOnlineFavicon(mContext))) {
@@ -113,7 +113,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                     .load(SharedPreferencesUtils.getOnlineFavicon(mContext))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(ivFavicon);
         } else {

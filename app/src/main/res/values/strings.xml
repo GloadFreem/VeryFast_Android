@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">金指投</string>
-    <string name="verson_name">3.0.3</string>
+    <string name="verson_name">3.0.6</string>
     <string name="input_tel">请输入手机号码</string>
     <string name="input_password">请输入密码</string>
     <string name="confirm_password">请确认密码</string>

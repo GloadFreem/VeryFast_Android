@@ -187,7 +187,7 @@ public class PreselectionAllCommentsActivity extends BaseActivity implements Vie
             }
             Glide.with(mContext)
                     .load(datas.get(position).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(holder.ivFavicon);
             holder.tvName.setText(datas.get(position).getUsers().getName());

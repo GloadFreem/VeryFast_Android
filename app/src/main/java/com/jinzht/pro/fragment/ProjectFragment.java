@@ -155,8 +155,10 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
             }
             Log.i("缓存的banner", cacheBanner + "");
         } else {
-            pageError.setVisibility(View.VISIBLE);
-            refreshView.setVisibility(View.INVISIBLE);
+            if (NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.INVISIBLE);
+            }
         }
         cacheRoadshowList = (String) CacheUtils.readObject(Constant.CACHE_ROADSHOW_LIST);
         if (!StringUtils.isBlank(cacheRoadshowList)) {
@@ -168,8 +170,10 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         } else {
-            pageError.setVisibility(View.VISIBLE);
-            refreshView.setVisibility(View.INVISIBLE);
+            if (NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.INVISIBLE);
+            }
         }
         cachePreselectionList = (String) CacheUtils.readObject(Constant.CACHE_PRESELECTION_LIST);
         if (!StringUtils.isBlank(cachePreselectionList)) {
@@ -181,8 +185,10 @@ public class ProjectFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         } else {
-            pageError.setVisibility(View.VISIBLE);
-            refreshView.setVisibility(View.INVISIBLE);
+            if (NetWorkUtils.NETWORK_TYPE_DISCONNECT.equals(NetWorkUtils.getNetWorkType(mContext))) {
+                pageError.setVisibility(View.VISIBLE);
+                refreshView.setVisibility(View.INVISIBLE);
+            }
         }
 
 //        GetBannerInfo getBannerInfo = new GetBannerInfo();

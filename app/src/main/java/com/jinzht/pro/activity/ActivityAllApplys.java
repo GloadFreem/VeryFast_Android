@@ -125,7 +125,7 @@ public class ActivityAllApplys extends BaseActivity implements View.OnClickListe
             }
             Glide.with(mContext)
                     .load(applys.get(position).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(holder.ivFavicon);
             holder.tvName.setText(applys.get(position).getUsers().getAuthentics().get(0).getName());

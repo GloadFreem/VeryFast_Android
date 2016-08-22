@@ -169,7 +169,7 @@ public class MyCollectProjectFragment extends BaseFragment implements View.OnCli
                 // 预选项目列表
                 Glide.with(mContext)
                         .load(datas.get(position).getStartPageImage())
-                        .placeholder(R.mipmap.ic_default_favicon)
+//                        .placeholder(R.mipmap.ic_default_favicon)
                         .error(R.mipmap.ic_default_favicon)
                         .into(holder.itemProjectImg);
                 holder.itemProjectTitle.setText(datas.get(position).getAbbrevName());
@@ -199,7 +199,7 @@ public class MyCollectProjectFragment extends BaseFragment implements View.OnCli
                 // 路演项目列表
                 Glide.with(mContext)
                         .load(datas.get(position).getStartPageImage())
-                        .placeholder(R.mipmap.ic_default_favicon)
+//                        .placeholder(R.mipmap.ic_default_favicon)
                         .error(R.mipmap.ic_default_favicon)
                         .into(holder.itemProjectImg);
                 holder.itemProjectTitle.setText(datas.get(position).getAbbrevName());

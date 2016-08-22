@@ -282,7 +282,7 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 if (!StringUtils.isBlank(datas.getUsers().getHeadSculpture())) {
                     Glide.with(mContext)
                             .load(datas.getUsers().getHeadSculpture())
-                            .placeholder(R.mipmap.ic_default_favicon)
+//                            .placeholder(R.mipmap.ic_default_favicon)
                             .error(R.mipmap.ic_default_favicon)
                             .into(holder.ivDetailFavicon);
                 } else {
@@ -388,14 +388,14 @@ public class CircleDetailActivity extends BaseActivity implements View.OnClickLi
                 if (comments.get(position - 1).getUsersByAtUserId() != null) {// 有回复
                     Glide.with(mContext)
                             .load(comments.get(position - 1).getUsersByUserId().getHeadSculpture())
-                            .placeholder(R.mipmap.ic_default_favicon)
+//                            .placeholder(R.mipmap.ic_default_favicon)
                             .error(R.mipmap.ic_default_favicon)
                             .into(holder.ivFavicon);
                     holder.tvName.setText(comments.get(position - 1).getUsersByUserId().getName() + " 回复 " + comments.get(position - 1).getUsersByAtUserId().getName());
                 } else {
                     Glide.with(mContext)
                             .load(comments.get(position - 1).getUsersByUserId().getHeadSculpture())
-                            .placeholder(R.mipmap.ic_default_favicon)
+//                            .placeholder(R.mipmap.ic_default_favicon)
                             .error(R.mipmap.ic_default_favicon)
                             .into(holder.ivFavicon);
                     holder.tvName.setText(comments.get(position - 1).getUsersByUserId().getName());

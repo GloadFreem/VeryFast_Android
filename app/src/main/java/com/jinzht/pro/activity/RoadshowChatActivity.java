@@ -172,7 +172,7 @@ public class RoadshowChatActivity extends BaseActivity implements View.OnClickLi
             }
             Glide.with(mContext)
                     .load(datas.get(position).getUsers().getHeadSculpture())
-                    .placeholder(R.mipmap.ic_default_favicon)
+//                    .placeholder(R.mipmap.ic_default_favicon)
                     .error(R.mipmap.ic_default_favicon)
                     .into(holder.itemChatFavicon);
             holder.itemChatName.setText(datas.get(position).getUsers().getName());
