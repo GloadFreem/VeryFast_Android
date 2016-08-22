@@ -5,8 +5,8 @@ package com.jinzht.pro.utils;
  */
 public class Constant {
 
-//    public static final String BASE_URL = "http://192.168.5.120:8080/jinzht/";
-    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
+    public static final String BASE_URL = "http://192.168.5.137:8080/jinzht/";
+//    public static final String BASE_URL = "http://www.jinzht.com:8080/jinzht/";
     /**
      * 微信APP_ID
      */
